@@ -144,6 +144,9 @@
 				RelativePath="..\..\src\Hex.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\misc\ModifyMenu.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\misc\MultiTypeCombo.cpp">
 			</File>
 			<File
@@ -245,6 +248,9 @@
 				RelativePath="..\..\src\Hex.h">
 			</File>
 			<File
+				RelativePath="..\..\src\misc\ModifyMenu.h">
+			</File>
+			<File
 				RelativePath="..\..\src\misc\MultiTypeCombo.h">
 			</File>
 			<File
@@ -261,6 +267,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\Utf8_16.h">
+			</File>
+			<File
+				RelativePath="..\..\src\keys.h">
 			</File>
 			<File
 				RelativePath="..\..\src\resource.h">

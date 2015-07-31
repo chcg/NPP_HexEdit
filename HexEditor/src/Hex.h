@@ -53,7 +53,8 @@ const TCHAR rgbSelTxt[]		= _T("RGB Selection Text");
 const TCHAR rgbSelBk[]		= _T("RGB Selection Background");
 const TCHAR rgbDiffTxt[]	= _T("RGB Difference Text");
 const TCHAR rgbDiffBk[]		= _T("RGB Difference Background");
-const TCHAR rgbBkMk[]		= _T("RGB Bookmark");
+const TCHAR rgbBkMkTxt[]	= _T("RGB Bookmark Text");
+const TCHAR rgbBkMkBk[]		= _T("RGB Bookmark Background");
 const TCHAR rgbCurLine[]	= _T("RGB Current Line");
 const TCHAR percent[]		= _T("Autostart Percent");
 const TCHAR focusRect[]		= _T("Focus Rect");
@@ -63,8 +64,8 @@ const TCHAR COMPARE_PATH[]	= _T("\\Compare");
 
 #define AUTOSTART_MAX	(1024000)
 #define FIND_BLOCK		(1024000)
-#define CACHE_SIZE		(16384)
-#define CACHE_FILL		(CACHE_SIZE / 4)
+#define CACHE_SIZE		(8192)
+#define CACHE_FILL		(CACHE_SIZE * 3 / 4)
 #define COMP_BLOCK		(1024000)
 
 
@@ -104,7 +105,8 @@ typedef enum eColorType
 	HEX_COLOR_SEL_BK,
 	HEX_COLOR_DIFF_TXT,
 	HEX_COLOR_DIFF_BK,
-	HEX_COLOR_BKMK,
+	HEX_COLOR_BKMK_TXT,
+	HEX_COLOR_BKMK_BK,
 	HEX_COLOR_CUR_LINE
 } eColorType;
 
@@ -149,12 +151,12 @@ typedef enum eNppCoding
 
 typedef struct tCmpResult
 {
-	LPBYTE				pOpenCnt;				// file open count
+    struct tCmpResult*  pCmpRef;                // compare reference to other view
 	TCHAR				szFileName[MAX_PATH];	// file name to compare data
 	HANDLE				hFile;					// file handle to compare results
-	CHAR				cmpCache[CACHE_SIZE];	// display cache
 	INT					offCmpCache;			// display cache offset
 	INT					lenCmpCache;			// display cache length
+	CHAR				cmpCache[CACHE_SIZE];	// display cache
 } tCmpResult;
 
 typedef struct tHexProp
@@ -193,7 +195,8 @@ typedef struct tColor
 	COLORREF			rgbSelBk;				// selected background color
 	COLORREF			rgbDiffTxt;				// differnece text color
 	COLORREF			rgbDiffBk;				// difference background color
-	COLORREF			rgbBkMk;				// bookmark color
+	COLORREF			rgbBkMkTxt;				// bookmark text color
+	COLORREF			rgbBkMkBk;				// bookmark background color
 	COLORREF			rgbCurLine;				// current line backgound color
 } tColor;
 
@@ -255,6 +258,12 @@ typedef struct tMenu {
 	TCHAR			szName[128];
 	vector<tMenu>	vSubMenu;
 } tMenu;
+
+typedef struct tShortCut {
+    BOOL            isEnable;
+    UINT            uID;
+    ShortcutKey     scKey;
+} tShortCut;
 
 #define G_FONTSIZE_MAX		10
 #define FONTSIZE_DEFAULT	6		// 16
@@ -328,9 +337,6 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 
 /* Extended Window Funcions */
 eNppCoding GetNppEncoding(void);
-void ChangeNppMenu(BOOL toHexStyle, HWND hSci);
-void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
-void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
 void ClientToScreen(HWND hWnd, RECT* rect);
 void ScreenToClient(HWND hWnd, RECT* rect);
 

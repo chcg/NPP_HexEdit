@@ -29,6 +29,7 @@
 #include "ToolTip.h"
 #include "tables.h"
 #include "SysMsg.h"
+#include "ModifyMenu.h"
 #include <stdlib.h>
 
 #include <shlwapi.h>
@@ -82,14 +83,6 @@ HexEdit*		pCurHexEdit		= NULL;
 
 /* get system information */
 BOOL	isNotepadCreated		= FALSE;
-
-/* notepad menus */
-BOOL			isMenuHex		= FALSE;
-vector<tMenu>	vMenuInfoFile;
-vector<tMenu>	vMenuInfoEdit;
-vector<tMenu>	vMenuInfoSearch;
-vector<tMenu>	vMenuInfoView;
-
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  reasonForCall, 
@@ -150,10 +143,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			propDlg.destroy();
 			delete funcItem[0]._pShKey;
 
-			vMenuInfoFile.clear();
-			vMenuInfoEdit.clear();
-			vMenuInfoSearch.clear();
-			vMenuInfoView.clear();
+            ClearMenuStructures();
 
 			if (g_TBHex.hToolbarBmp)
 				::DeleteObject(g_TBHex.hToolbarBmp);
@@ -286,6 +276,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			{
 				isNotepadCreated = TRUE;
 				SystemUpdate();
+                GetShortCuts(nppData._nppHandle);
 				break;
 			}
 			case NPPN_FILEOPENED:
@@ -400,7 +391,8 @@ void loadSettings(void)
 	prop.colorProp.rgbSelBk		= ::GetPrivateProfileInt(dlgEditor, rgbSelBk, RGB(0x88,0x88,0xff), iniFilePath);
 	prop.colorProp.rgbDiffTxt	= ::GetPrivateProfileInt(dlgEditor, rgbDiffTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
 	prop.colorProp.rgbDiffBk	= ::GetPrivateProfileInt(dlgEditor, rgbDiffBk, RGB(0xff,0x88,0x88), iniFilePath);
-	prop.colorProp.rgbBkMk		= ::GetPrivateProfileInt(dlgEditor, rgbBkMk, RGB(0xFF,0x00,0x00), iniFilePath);
+	prop.colorProp.rgbBkMkTxt	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
+	prop.colorProp.rgbBkMkBk	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkBk, RGB(0xFF,0x00,0x00), iniFilePath);
 	prop.colorProp.rgbCurLine	= ::GetPrivateProfileInt(dlgEditor, rgbCurLine, RGB(0xDF,0xDF,0xDF), iniFilePath);
 	::GetPrivateProfileString(dlgEditor, fontname, _T("Courier New"), prop.fontProp.szFontName, 256, iniFilePath);
 	prop.fontProp.iFontSizeElem	= ::GetPrivateProfileInt(dlgEditor, fontsize, FONTSIZE_DEFAULT, iniFilePath);
@@ -433,7 +425,8 @@ void saveSettings(void)
 	::WritePrivateProfileString(dlgEditor, rgbSelBk, _itot(prop.colorProp.rgbSelBk, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, rgbDiffTxt, _itot(prop.colorProp.rgbDiffTxt, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, rgbDiffBk, _itot(prop.colorProp.rgbDiffBk, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbBkMk, _itot(prop.colorProp.rgbBkMk, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, rgbBkMkTxt, _itot(prop.colorProp.rgbBkMkTxt, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, rgbBkMkBk, _itot(prop.colorProp.rgbBkMkBk, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, rgbCurLine, _itot(prop.colorProp.rgbCurLine, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, fontname, prop.fontProp.szFontName, iniFilePath);
 	::WritePrivateProfileString(dlgEditor, fontsize, _itot(prop.fontProp.iFontSizeElem, temp, 10), iniFilePath);
@@ -567,8 +560,10 @@ COLORREF getColor(eColorType type)
 			return prop.colorProp.rgbDiffTxt;
 		case HEX_COLOR_DIFF_BK:
 			return prop.colorProp.rgbDiffBk;
-		case HEX_COLOR_BKMK:
-			return prop.colorProp.rgbBkMk;
+		case HEX_COLOR_BKMK_TXT:
+			return prop.colorProp.rgbBkMkTxt;
+		case HEX_COLOR_BKMK_BK:
+			return prop.colorProp.rgbBkMkBk;
 		case HEX_COLOR_CUR_LINE:
 			return prop.colorProp.rgbCurLine;
 	}
@@ -653,6 +648,7 @@ HWND getCurrentHScintilla(void)
 
 void toggleHexEdit(void)
 {
+    GetShortCuts(nppData._nppHandle);
 	pCurHexEdit->doDialog(TRUE);
 	DialogUpdate();
 	setMenu();
@@ -724,6 +720,14 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			}
 			break;
 		}
+        case WM_COPYDATA:
+        {
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("WM_COPYDATA\n"));
+			SystemUpdate();
+            pCurHexEdit->SetStatusBar();
+            break;
+        }
 		case WM_COMMAND:
 		{
 			/* necessary for focus change between main and second SCI handle */
@@ -826,14 +830,12 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 			switch (LOWORD(wParam))
 			{
-#if 0
 				case IDM_FILE_RELOAD:
 				{
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
 					pCurHexEdit->SetCompareResult(NULL);
 					break;
 				}
-#endif
 				case IDM_SEARCH_FIND:
 				case IDM_SEARCH_REPLACE:
 				{
@@ -1456,27 +1458,33 @@ void DoCompare(void)
 		LPSTR	buffer2 = (LPSTR)new CHAR[COMP_BLOCK+1];
 
 		/* get text size to comapre */
-		INT		length1 = ScintillaMsg(nppData._scintillaMainHandle, SCI_GETTEXTLENGTH) + 1;
-		INT		length2 = ScintillaMsg(nppData._scintillaSecondHandle, SCI_GETTEXTLENGTH) + 1;
+		INT		maxLength1 = ScintillaMsg(nppData._scintillaMainHandle, SCI_GETTEXTLENGTH) + 1;
+		INT		maxLength2 = ScintillaMsg(nppData._scintillaSecondHandle, SCI_GETTEXTLENGTH) + 1;
 
 		/* get max length */
 		INT		curPos		= 0;
-		INT		maxLength	= length1;
-		if (length2 > length1)
-			maxLength = length2;
+		INT		maxLength	= maxLength1;
+		INT		minLength	= maxLength1;
+        if (maxLength2 > maxLength1) {
+			maxLength = maxLength2;
+        } else {
+			minLength = maxLength2;
+        }
 
-		while (curPos < maxLength)
+		while (curPos < minLength)
 		{
-			UINT	posSrc	= 0;
-			UINT	length	= ((maxLength - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength % COMP_BLOCK));
+		    CHAR	val	    = FALSE;
+			INT	    posSrc	= 0;
+			INT	    length1	= ((maxLength1 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength1 % COMP_BLOCK));
+			INT	    length2	= ((maxLength2 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength2 % COMP_BLOCK));
 
-			ScintillaGetText(nppData._scintillaMainHandle, buffer1, curPos, length - 1);
-			ScintillaGetText(nppData._scintillaSecondHandle, buffer2, curPos, length - 1);
+		    ScintillaGetText(nppData._scintillaMainHandle, buffer1, curPos, length1 - 1);
+            ScintillaGetText(nppData._scintillaSecondHandle, buffer2, curPos, length2 - 1);
 
-			CHAR	val	= FALSE;
-
-			while (posSrc < length)
+			while ((posSrc < length1) && (posSrc < length2))
 			{
+				DWORD	hasWritten	= 0;
+
 				if (buffer1[posSrc] != buffer2[posSrc])
 				{
 					val		= TRUE;
@@ -1487,13 +1495,12 @@ void DoCompare(void)
 				posSrc++;
 
 				/* write to file */
-				DWORD	hasWritten	= 0;
 				if (hexProp1.bits == 1) {
 					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
-					val = FALSE;
+                    val	= FALSE;
 				} else if ((posSrc % hexProp1.bits) == 0) {
 					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
-					val = FALSE;
+                    val	= FALSE;
 				}
 			}
 
@@ -1510,10 +1517,31 @@ void DoCompare(void)
 		}
 		else
 		{
-			tCmpResult*	pCmpResult = (tCmpResult*)new tCmpResult;
-			*pCmpResult = cmpResult;
-			hexEdit1.SetCompareResult(pCmpResult);
-			hexEdit2.SetCompareResult(pCmpResult);
+			DWORD	hasWritten	= 0;
+			CHAR    val		    = TRUE;
+
+            for (UINT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+			    ::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
+            }
+
+            /* create two structures for each view */
+			tCmpResult* pCmpResult1 = (tCmpResult*)new tCmpResult;
+			tCmpResult* pCmpResult2 = (tCmpResult*)new tCmpResult;
+
+            if ((pCmpResult1 != NULL) && (pCmpResult2 != NULL))
+            {
+                /* set data */
+			    *pCmpResult1 = cmpResult;
+			    *pCmpResult2 = cmpResult;
+
+                hexEdit1.SetCompareResult(pCmpResult1, pCmpResult2);
+                hexEdit2.SetCompareResult(pCmpResult2, pCmpResult1);
+            }
+            else
+            {
+		        delete pCmpResult1;
+		        delete pCmpResult2;
+            }
 		}
 
 		delete [] buffer1;
@@ -1550,348 +1578,6 @@ eNppCoding GetNppEncoding(void)
 	return ret;
 }
 
-void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
-{
-	if ((toHexStyle == isMenuHex) || (hSci != g_HSource))
-		return;
-
-	TCHAR	text[64];
-	HMENU	hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
-
-	if (hMenu == NULL)
-		return;
-
-	/* store if menu will be modified */
-	isMenuHex = toHexStyle;
-
-	if (vMenuInfoFile.size() == 0) {
-		StoreNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_FILE), vMenuInfoFile);
-	} else {
-		UpdateNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_FILE), vMenuInfoFile);
-	}
-	if (vMenuInfoEdit.size() == 0) {
-		StoreNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_EDIT), vMenuInfoEdit);
-	} else {
-		UpdateNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_EDIT), vMenuInfoEdit);
-	}
-	if (vMenuInfoSearch.size() == 0) {
-		StoreNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_SEARCH), vMenuInfoSearch);
-	} else {
-		UpdateNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_SEARCH), vMenuInfoSearch);
-	}
-	if (vMenuInfoView.size() == 0) {
-		StoreNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_VIEW), vMenuInfoView);
-	} else {
-		UpdateNppMenuInfo(::GetSubMenu(hMenu, MENUINDEX_VIEW), vMenuInfoView);
-	}
-
-	/* create own menu for FILE */
-	if (vMenuInfoFile.size() != 0)
-	{
-		HMENU	hMenuTemp = ::CreatePopupMenu();
-
-		if (isMenuHex == TRUE)
-		{
-			BOOL	lastSep = FALSE;
-			for (size_t nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
-				switch (vMenuInfoFile[nPos].uID) {
-					case 0:
-					{
-						if (vMenuInfoFile[nPos].uFlags & MF_SEPARATOR) {
-							lastSep = TRUE;
-						} else {
-							lastSep = FALSE;
-						}
-						break;
-					}
-					case IDM_FILE_NEW:
-					case IDM_FILE_OPEN:
-					case IDM_FILE_CLOSE:
-					case IDM_FILE_CLOSEALL:
-					case IDM_FILE_CLOSEALL_BUT_CURRENT:
-					case IDM_FILE_SAVE:
-					case IDM_FILE_SAVEALL:
-					case IDM_FILE_SAVEAS:
-					case IDM_FILE_EXIT:
-					case IDM_FILE_LOADSESSION:
-					case IDM_FILE_SAVESESSION:
-					case IDM_FILE_RELOAD:
-					case IDM_FILE_SAVECOPYAS:
-					case IDM_FILE_DELETE:
-					case IDM_FILE_RENAME:
-					{
-						if (lastSep == TRUE) {
-							::AppendMenu(hMenuTemp, MF_BYPOSITION | MF_SEPARATOR, nPos, NULL);
-						}
-						::AppendMenu(hMenuTemp, 
-							vMenuInfoFile[nPos].uFlags | MF_STRING,
-							vMenuInfoFile[nPos].uID, vMenuInfoFile[nPos].szName);
-						lastSep = FALSE;
-						break;
-					}
-					default:
-						break;
-				}
-			}
-		}
-		else
-		{
-			for (size_t nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
-				::AppendMenu(hMenuTemp, 
-					vMenuInfoFile[nPos].uFlags | (vMenuInfoFile[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
-					vMenuInfoFile[nPos].uID, vMenuInfoFile[nPos].szName);
-			}
-		}
-
-		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_FILE, text, 64, MF_BYPOSITION);
-		::DestroyMenu(::GetSubMenu(hMenu, MENUINDEX_FILE));
-		::ModifyMenu(hMenu, MENUINDEX_FILE, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-	}
-
-	/* create own menu for EDIT */
-	if (vMenuInfoEdit.size() != 0)
-	{
-		HMENU	hMenuTemp = ::CreatePopupMenu();
-
-		if (isMenuHex == TRUE)
-		{
-			BOOL	lastSep = FALSE;
-			for (size_t nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
-				switch (vMenuInfoEdit[nPos].uID) {
-					case 0:
-					{
-						if (vMenuInfoEdit[nPos].uFlags & MF_SEPARATOR) {
-							lastSep = TRUE;
-						} else {
-							lastSep = FALSE;
-						}
-						break;
-					}
-					case IDM_EDIT_CUT:
-					case IDM_EDIT_COPY:
-					case IDM_EDIT_UNDO:
-					case IDM_EDIT_REDO:
-					case IDM_EDIT_PASTE:
-					case IDM_EDIT_DELETE:
-					case IDM_EDIT_SELECTALL:
-					case IDM_EDIT_SETREADONLY:
-					case IDM_EDIT_FULLPATHTOCLIP:
-					case IDM_EDIT_FILENAMETOCLIP:
-					case IDM_EDIT_CURRENTDIRTOCLIP:
-					case IDM_EDIT_CLEARREADONLY:
-					case IDM_OPEN_ALL_RECENT_FILE:
-					case IDM_CLEAN_RECENT_FILE_LIST:
-					{
-						if (lastSep == TRUE) {
-							::AppendMenu(hMenuTemp, MF_BYPOSITION | MF_SEPARATOR, nPos, NULL);
-						}
-						::AppendMenu(hMenuTemp, 
-							vMenuInfoEdit[nPos].uFlags | MF_STRING,
-							vMenuInfoEdit[nPos].uID, vMenuInfoEdit[nPos].szName);
-						lastSep = FALSE;
-						break;
-					}
-					default:
-						break;
-				}
-			}
-		}
-		else
-		{
-			for (size_t nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
-				::AppendMenu(hMenuTemp, 
-					vMenuInfoEdit[nPos].uFlags | (vMenuInfoEdit[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
-					vMenuInfoEdit[nPos].uID, vMenuInfoEdit[nPos].szName);
-			}
-		}
-
-		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_EDIT, text, 64, MF_BYPOSITION);
-		::DestroyMenu(::GetSubMenu(hMenu, MENUINDEX_EDIT));
-		::ModifyMenu(hMenu, MENUINDEX_EDIT, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-	}
-
-	/* create own menu for SEARCH */
-	if (vMenuInfoSearch.size() != 0)
-	{
-		HMENU	hMenuTemp = ::CreatePopupMenu();
-
-		if (isMenuHex == TRUE)
-		{
-			BOOL	lastSep = FALSE;
-			for (size_t nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
-				switch (vMenuInfoSearch[nPos].uID) {
-					case 0:
-					{
-						if (vMenuInfoSearch[nPos].uFlags & MF_SEPARATOR) {
-							lastSep = TRUE;
-						} else {
-							lastSep = FALSE;
-						}
-						break;
-					}
-					case IDM_SEARCH_FIND:
-					case IDM_SEARCH_FINDNEXT:
-					case IDM_SEARCH_REPLACE:
-					case IDM_SEARCH_GOTOLINE:
-					case IDM_SEARCH_TOGGLE_BOOKMARK:
-					case IDM_SEARCH_NEXT_BOOKMARK:
-					case IDM_SEARCH_PREV_BOOKMARK:
-					case IDM_SEARCH_CLEAR_BOOKMARKS:
-					case IDM_SEARCH_FINDPREV:
-					case IDM_SEARCH_FINDINFILES:
-					case IDM_SEARCH_VOLATILE_FINDNEXT:
-					case IDM_SEARCH_VOLATILE_FINDPREV:
-					case IDM_SEARCH_CUTMARKEDLINES:
-					case IDM_SEARCH_COPYMARKEDLINES:
-					case IDM_SEARCH_PASTEMARKEDLINES:
-					case IDM_SEARCH_DELETEMARKEDLINES:
-					{
-						if (lastSep == TRUE) {
-							::AppendMenu(hMenuTemp, MF_BYPOSITION | MF_SEPARATOR, nPos, NULL);
-						}
-						::AppendMenu(hMenuTemp, 
-							vMenuInfoSearch[nPos].uFlags | MF_STRING,
-							vMenuInfoSearch[nPos].uID, vMenuInfoSearch[nPos].szName);
-						lastSep = FALSE;
-						break;
-					}
-					default:
-						break;
-				}
-			}
-		}
-		else
-		{
-			for (size_t nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
-				::AppendMenu(hMenuTemp, 
-					vMenuInfoSearch[nPos].uFlags | (vMenuInfoSearch[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
-					vMenuInfoSearch[nPos].uID, vMenuInfoSearch[nPos].szName);
-			}
-		}
-
-		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_SEARCH, text, 64, MF_BYPOSITION);
-		::DestroyMenu(::GetSubMenu(hMenu, MENUINDEX_SEARCH));
-		::ModifyMenu(hMenu, MENUINDEX_SEARCH, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-	}
-
-	/* create own menu for VIEW */
-	if (vMenuInfoView.size() != 0)
-	{
-		HMENU	hMenuTemp = ::CreatePopupMenu();
-
-		if (isMenuHex == TRUE)
-		{
-			BOOL	lastSep = FALSE;
-			for (size_t nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
-				switch (vMenuInfoView[nPos].uID) {
-					case 0:
-					{
-						if (vMenuInfoView[nPos].uFlags & MF_SEPARATOR) {
-							lastSep = TRUE;
-						} else {
-							lastSep = FALSE;
-						}
-						break;
-					}
-					case IDM_VIEW_FULLSCREENTOGGLE:
-					case IDM_VIEW_ALWAYSONTOP:
-					case IDM_VIEW_ZOOMIN:
-					case IDM_VIEW_ZOOMOUT:
-					case IDM_VIEW_ZOOMRESTORE:
-					case IDM_VIEW_GOTO_ANOTHER_VIEW:
-					case IDM_VIEW_CLONE_TO_ANOTHER_VIEW:
-					case IDM_VIEW_SWITCHTO_OTHER_VIEW:
-					{
-						if (lastSep == TRUE) {
-							::AppendMenu(hMenuTemp, MF_SEPARATOR, nPos, NULL);
-						}
-						::AppendMenu(hMenuTemp, 
-							vMenuInfoView[nPos].uFlags | MF_STRING,
-							vMenuInfoView[nPos].uID, vMenuInfoView[nPos].szName);
-						lastSep = FALSE;
-						break;
-					}
-					default:
-						break;
-				}
-			}
-		}
-		else
-		{
-			for (size_t nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
-				HMENU	hSubMenu = NULL;
-				tMenu	testMenu = vMenuInfoView[nPos];
-				if (vMenuInfoView[nPos].uFlags & MF_POPUP) {
-					hSubMenu = ::CreatePopupMenu();
-					for (size_t nPosSub = 0; nPosSub < vMenuInfoView[nPos].vSubMenu.size(); nPosSub++) {
-						::AppendMenu(hSubMenu, vMenuInfoView[nPos].vSubMenu[nPosSub].uFlags | MF_STRING,
-							vMenuInfoView[nPos].vSubMenu[nPosSub].uID, vMenuInfoView[nPos].vSubMenu[nPosSub].szName);
-					}
-					::AppendMenu(hMenuTemp, MF_POPUP | MF_STRING, (UINT_PTR)hSubMenu, vMenuInfoView[nPos].szName);
-				} else {
-					::AppendMenu(hMenuTemp, 
-						vMenuInfoView[nPos].uFlags | (vMenuInfoView[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
-						vMenuInfoView[nPos].uID, vMenuInfoView[nPos].szName);
-				}
-			}
-		}
-
-		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_VIEW, text, 64, MF_BYPOSITION);
-		::DestroyMenu(::GetSubMenu(hMenu, MENUINDEX_VIEW));
-		::ModifyMenu(hMenu, MENUINDEX_VIEW, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-	}
-
-	/* activate/deactive menu entries */
-	::EnableMenuItem(hMenu, MENUINDEX_FORMAT, MF_BYPOSITION | (toHexStyle?MF_GRAYED:MF_ENABLED));
-	::EnableMenuItem(hMenu, MENUINDEX_LANGUAGE, MF_BYPOSITION | (toHexStyle?MF_GRAYED:MF_ENABLED));
-	::EnableMenuItem(hMenu, MENUINDEX_MACRO, MF_BYPOSITION | (toHexStyle?MF_GRAYED:MF_ENABLED));
-	::EnableMenuItem(hMenu, MENUINDEX_RUN, MF_BYPOSITION | (toHexStyle?MF_GRAYED:MF_ENABLED));
-	::DrawMenuBar(nppData._nppHandle);
-}
-
-void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
-{
-	tMenu	menuItem;
-	UINT	elemCnt	= ::GetMenuItemCount(hMenuItem);
-
-	vMenuInfo.clear();
-
-	for (size_t nPos = 0; nPos < elemCnt; nPos++)
-	{
-		menuItem.uID = ::GetMenuItemID(hMenuItem, (int)nPos);
-		menuItem.uFlags	= ::GetMenuState(hMenuItem, (UINT)nPos, MF_BYPOSITION);
-
-		::GetMenuString(hMenuItem, (UINT)nPos, menuItem.szName, sizeof(menuItem.szName) / sizeof(TCHAR), MF_BYPOSITION);
-		if ((menuItem.uID == 0) || (menuItem.uID == -1))
-		{
-			HMENU	hSubMenu = ::GetSubMenu(hMenuItem, (int)nPos);
-			if (hSubMenu != NULL) {
-				StoreNppMenuInfo(hSubMenu, menuItem.vSubMenu);
-			}
-		}
-		vMenuInfo.push_back(menuItem);
-	}
-}
-
-void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
-{
-	UINT	nPos	= 0;
-	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
-
-	for (size_t i = 0; i < vMenuInfo.size() && ((vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0)); i++)
-	{
-		if (vMenuInfo[i].uID == ::GetMenuItemID(hMenuItem, nPos)) {
-			vMenuInfo[i].uFlags = ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);
-			nPos++;
-		} else if (::GetMenuState(hMenuItem, nPos, MF_BYPOSITION) & MF_SEPARATOR) {
-			nPos++;
-		}
-	}
-}
 
 void ClientToScreen(HWND hWnd, RECT* rect)
 {

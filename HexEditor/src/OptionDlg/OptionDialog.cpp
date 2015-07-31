@@ -100,7 +100,8 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			_ColCmbSelBk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_SEL_BK));
 			_ColCmbDiffTxt.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_DIFF_TXT));
 			_ColCmbDiffBk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_DIFF_BK));
-			_ColCmbBkMk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_BKMK));
+			_ColCmbBkMkTxt.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_BKMK_TXT));
+			_ColCmbBkMkBk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_BKMK_BK));
 			_ColCmbCurLine.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_CURLINE));
 
 			/* init the font name combo */
@@ -170,8 +171,12 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 					_ColCmbDiffBk.onSelect();
 					break;
 
-				case IDC_COMBO_BKMK:
-					_ColCmbBkMk.onSelect();
+				case IDC_COMBO_BKMK_TXT:
+					_ColCmbBkMkTxt.onSelect();
+					break;
+
+				case IDC_COMBO_BKMK_BK:
+					_ColCmbBkMkBk.onSelect();
 					break;
 
 				case IDC_COMBO_CURLINE:
@@ -241,7 +246,8 @@ void OptionDlg::TabUpdate(void)
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_DIFF_TXT),		bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_DIFF_BK),		bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_BKMK),			bColor);
-	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_BKMK),			bColor);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_BKMK_TXT),		bColor);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_BKMK_BK),		bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_CURLINE),		bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_CURLINE),		bColor);
 
@@ -334,7 +340,8 @@ void OptionDlg::SetParams(void)
 	_ColCmbSelBk.setColor(_pProp->colorProp.rgbSelBk);
 	_ColCmbDiffTxt.setColor(_pProp->colorProp.rgbDiffTxt);
 	_ColCmbDiffBk.setColor(_pProp->colorProp.rgbDiffBk);
-	_ColCmbBkMk.setColor(_pProp->colorProp.rgbBkMk);
+	_ColCmbBkMkTxt.setColor(_pProp->colorProp.rgbBkMkTxt);
+	_ColCmbBkMkBk.setColor(_pProp->colorProp.rgbBkMkBk);
 	_ColCmbCurLine.setColor(_pProp->colorProp.rgbCurLine);
 }
 
@@ -425,7 +432,8 @@ BOOL OptionDlg::GetParams(void)
 		_ColCmbSelBk.getColor(&_pProp->colorProp.rgbSelBk);
 		_ColCmbDiffTxt.getColor(&_pProp->colorProp.rgbDiffTxt);
 		_ColCmbDiffBk.getColor(&_pProp->colorProp.rgbDiffBk);
-		_ColCmbBkMk.getColor(&_pProp->colorProp.rgbBkMk);
+		_ColCmbBkMkTxt.getColor(&_pProp->colorProp.rgbBkMkTxt);
+		_ColCmbBkMkBk.getColor(&_pProp->colorProp.rgbBkMkBk);
 		_ColCmbCurLine.getColor(&_pProp->colorProp.rgbCurLine);
 	}
 	else

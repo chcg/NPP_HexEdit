@@ -68,7 +68,8 @@ private:
 	ColorCombo		_ColCmbSelBk;
 	ColorCombo		_ColCmbDiffTxt;
 	ColorCombo		_ColCmbDiffBk;
-	ColorCombo		_ColCmbBkMk;
+	ColorCombo		_ColCmbBkMkTxt;
+	ColorCombo		_ColCmbBkMkBk;
 	ColorCombo		_ColCmbCurLine;
 
 	tProp*			_pProp;

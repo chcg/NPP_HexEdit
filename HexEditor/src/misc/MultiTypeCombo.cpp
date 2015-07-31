@@ -63,7 +63,7 @@ LRESULT MultiTypeCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 			if (g_clipboard.text != NULL)
 			{
-				tComboInfo	info;
+				tComboInfo	info = {0};
 
 				info.length = g_clipboard.length;
 				memcpy(info.text, g_clipboard.text, info.length);
@@ -75,7 +75,7 @@ LRESULT MultiTypeCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				}
 				else
 				{
-					::SendMessage(hwnd, EM_REPLACESEL, 0, (LPARAM)info.text);
+					::SendMessageA(hwnd, EM_REPLACESEL, 0, (LPARAM)info.text);
 				}
 				return 0;
 			}

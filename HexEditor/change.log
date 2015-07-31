@@ -2,6 +2,22 @@
 Change-log for HexEditor.dll
 
 ------------------------------------------------------------------------------------
+09/09/09  v0.9.5 :
+------------------------------------------------------------------------------------
+	Fix: Menu of Npp++ isn't displayed properly after using hex [NPP-P-B-2799622]
+    Fix: HEX v0.9.3 forgets scroll position when switching tabs [NPP-P-B-2721661]
+    Fix: "Repleace" misspell in HEX-Editor plugins Help dialog [NPP-P-B-2351008]
+    Fix: Opening a file from outside with enabled Hex-Mode cause graphic issues.
+    Fix: "Go to another view" causes a crash if no document is opened.
+    Fix: Compare has no limitations anymore.
+    Fix: Bookmark color wasn't stored.
+    Fix: Restriction of Simple Compare removed.
+    Fix: Paste of data into combo box of Find dialog doesn't work in ANSI/HEX mode
+    New: Changed Bookmark style.
+    New: Shortcuts for Undo, Redo, Copy, Cut, Paste and Select All are now in sync
+         with the Notepad++ shortcuts.
+    
+------------------------------------------------------------------------------------
 09/04/11  v0.9.4 :
 ------------------------------------------------------------------------------------
     Fix: HEX v0.9.3 forgets scroll position when switching tabs [NPP-P-B-2721661]

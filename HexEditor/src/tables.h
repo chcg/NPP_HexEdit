@@ -123,6 +123,9 @@ int ASCIIConvert(char* text)
 {
 	UINT val = 0;
 
+    if (text == NULL)
+        return val;
+
 	for (UINT i = 0; i < strlen(text); i++)
 	{
 		val <<= 4;

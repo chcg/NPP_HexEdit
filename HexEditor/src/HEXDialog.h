@@ -292,32 +292,40 @@ public:
 	{
 		for (size_t i = 0; i < _hexProp.size(); i++) {
 			if (_hexProp[i].pCmpResult != NULL) {
-				_hexProp[i].pCmpResult->pOpenCnt--;
-				if (_hexProp[i].pCmpResult->pOpenCnt == 0) {
+				if (_hexProp[i].pCmpResult->pCmpRef != NULL) {
+                    _hexProp[i].pCmpResult->pCmpRef->pCmpRef = NULL;
+                } else {
 					::CloseHandle(_hexProp[i].pCmpResult->hFile);
 					::DeleteFile(_hexProp[i].pCmpResult->szFileName);
-					delete _hexProp[i].pCmpResult;
 				}
 				_hexProp[i].pCmpResult = NULL;
 			}
 		}
 	};
 
-	void SetCompareResult(tCmpResult* pCmpResult)
+	void SetCompareResult(tCmpResult* pCmpResult, tCmpResult* pCmpRef = NULL)
 	{
 		if (pCmpResult == NULL) {
 			if (_pCurProp->pCmpResult != NULL) {
-				_pCurProp->pCmpResult->pOpenCnt--;
-				if (_pCurProp->pCmpResult->pOpenCnt == 0) {
+                /* if a reference exist mark in them that this was deleted */
+				if (_pCurProp->pCmpResult->pCmpRef != NULL) {
+                    _pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
+                } else {
 					::CloseHandle(_pCurProp->pCmpResult->hFile);
 					::DeleteFile(_pCurProp->pCmpResult->szFileName);
-					delete _pCurProp->pCmpResult;
 				}
+    			delete _pCurProp->pCmpResult;
 				_pCurProp->pCmpResult = NULL;
 			}
 		} else {
+            /* this avoids resource leak */
+            if (_pCurProp->pCmpResult != NULL) {
+				if (_pCurProp->pCmpResult->pCmpRef != NULL)
+                    _pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
+                delete _pCurProp->pCmpResult;
+            }
 			_pCurProp->pCmpResult = pCmpResult;
-			_pCurProp->pCmpResult->pOpenCnt++;
+			_pCurProp->pCmpResult->pCmpRef = pCmpRef;
 		}
 		::RedrawWindow(_hListCtrl, NULL, NULL, TRUE);
 	}

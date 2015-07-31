@@ -67,10 +67,11 @@
     #define IDC_COMBO_DIFF_TXT 	    		    (IDD_OPTION_DLG + 34)
     #define IDC_COMBO_DIFF_BK  	    		    (IDD_OPTION_DLG + 35)
     #define IDC_STATIC_BKMK   	    		    (IDD_OPTION_DLG + 36)
-    #define IDC_COMBO_BKMK	 	    		    (IDD_OPTION_DLG + 37)
-	#define IDC_CHECK_FOCUSRC					(IDD_OPTION_DLG + 38)
-    #define IDC_STATIC_CURLINE	    		    (IDD_OPTION_DLG + 39)
-    #define IDC_COMBO_CURLINE 	    		    (IDD_OPTION_DLG + 40)
+    #define IDC_COMBO_BKMK_TXT 	    		    (IDD_OPTION_DLG + 37)
+    #define IDC_COMBO_BKMK_BK 	    		    (IDD_OPTION_DLG + 38)
+	#define IDC_CHECK_FOCUSRC					(IDD_OPTION_DLG + 39)
+    #define IDC_STATIC_CURLINE	    		    (IDD_OPTION_DLG + 40)
+    #define IDC_COMBO_CURLINE 	    		    (IDD_OPTION_DLG + 41)
 
 #define    IDD_GOTO_DLG          20300
     #define IDC_EDIT_GOTO                       (IDD_GOTO_DLG + 1)
