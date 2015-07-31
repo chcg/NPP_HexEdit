@@ -323,6 +323,15 @@
 				RelativePath="..\..\res\hex.bmp">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\lang\NativeLang_ger.ini">
+		</File>
+		<File
+			RelativePath="..\..\lang\NativeLang_template.ini">
+		</File>
+		<File
+			RelativePath="..\..\change.log">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -162,9 +162,6 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 								/* get window rect */
 								::GetWindowRect(_hListCtrl, &rc);
 
-								/* get background brush */
-								_hBkBrush  = ::CreateSolidBrush(getColor(HEX_COLOR_REG_BK));
-
 								/* create memory DC for flicker free paint */
 								_hMemDc		= ::CreateCompatibleDC(lpCD->nmcd.hdc);
 								_hBmp		= ::CreateCompatibleBitmap(lpCD->nmcd.hdc, rc.right - rc.left, rc.bottom - rc.top);
@@ -189,6 +186,14 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 							case CDDS_ITEMPREPAINT:
 								/* calculate new drawing context size for blitting */
 								ListView_GetItemRect(_hListCtrl, lpCD->nmcd.dwItemSpec, &rc, LVIR_BOUNDS);
+
+								/* get background brush */
+								if (lpCD->nmcd.dwItemSpec == _pCurProp->cursorItem) {
+									_hBkBrush  = ::CreateSolidBrush(getColor(HEX_COLOR_CUR_LINE));
+								} else {
+									_hBkBrush  = ::CreateSolidBrush(getColor(HEX_COLOR_REG_BK));
+								}
+
 								if (_rcMemDc.bottom == 0) {
 
 									/* set initial mem rect */
@@ -817,6 +822,9 @@ void HexEdit::UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc)
 	{
 		/* set the current file attributes */
 		_pCurProp = &_hexProp[openDoc];
+		if ((_pCurProp->isVisible == TRUE) && (!isVisible())) {
+			UpdateHeader(TRUE);
+		}
 		doDialog();
 	}
 	else
@@ -834,8 +842,6 @@ void HexEdit::doDialog(BOOL toggle)
 	/* toggle view if user requested */
 	if (toggle == TRUE)
 	{
-		extern UINT	currentSC;
-
 		_pCurProp->isVisible ^= TRUE;
 
 		/* get modification state */
@@ -860,113 +866,16 @@ void HexEdit::doDialog(BOOL toggle)
 			_pCurProp->editType			= HEX_EDIT_HEX;
 			_pCurProp->selection		= HEX_SEL_NORM;
 
-			if ((_pCurProp->isLittle == FALSE) || (_pCurProp->bits == HEX_BYTE))
-			{
-				/* start convert and select items */
-				UINT	selStart		= SciSubClassWrp::execute(SCI_GETSELECTIONSTART);
-				UINT	selEnd			= SciSubClassWrp::execute(SCI_GETSELECTIONEND);
+			/* get code page information before convert */
+			_pCurProp->codePage = GetNppEncoding();
 
-				/* get code page information before convert */
-				_pCurProp->codePage = GetNppEncoding();
-
-				switch (_pCurProp->codePage)
-				{
-					case HEX_CODE_NPP_UTF8_BOM:
-					{
-						::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
-						::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
-						_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH, 0, 0);
-						SetSelection(selStart+3, selEnd+3, HEX_SEL_NORM, (selEnd+3) % VIEW_ROW == 0);
-						break;
-					}
-					case HEX_CODE_NPP_USCBE:
-					case HEX_CODE_NPP_USCLE:
-					{
-						UINT	posStart	= 2;
-						UINT	posEnd		= 2;
-						UINT	curPos		= 0;
-
-						while ((curPos <= selStart) || (curPos <= selEnd)) {
-							BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
-							if ((byte & 0x80) == 0) curPos++;
-							else if ((byte & 0xF8) == 0xF0) curPos+=4;
-							else if ((byte & 0xF0) == 0xE0) curPos+=3;
-							else if ((byte & 0xE0) == 0xC0) curPos+=2;
-							if (curPos <= selStart) posStart += 2;
-							if (curPos <= selEnd) posEnd += 2;
-						}
-						::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
-						::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
-						SetSelection(posStart, posEnd, HEX_SEL_NORM, posEnd % VIEW_ROW == 0);
-						break;
-					}
-					case HEX_CODE_NPP_ASCI:
-					case HEX_CODE_NPP_UTF8:
-					default:
-					{
-						_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH, 0, 0);
-						SetSelection(selStart, selEnd, HEX_SEL_NORM, selEnd % VIEW_ROW == 0);
-						break;
-					}
-				}
-				
-				_pCurProp->firstVisRow = _pCurProp->cursorItem;
-			}
-			else
-			{
-				::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
-			}
+			/* convert cursor positions */
+			ConvertSelNppToHEX();
 		}
 		else
 		{
-			UniMode	um	= (UniMode)::SendMessage(_nppData._nppHandle, NPPM_ENCODESCI, currentSC, 0);
-
-			if ((_pCurProp->isLittle == FALSE) || (_pCurProp->bits == HEX_BYTE))
-			{
-				INT	selStart	= GetAnchor();
-				INT	selEnd		= GetCurrentPos();
-
-				switch (um)
-				{
-					case uniUTF8:
-					{
-						SciSubClassWrp::execute(SCI_SETSEL, 
-							SciSubClassWrp::execute(SCI_POSITIONBEFORE, SciSubClassWrp::execute(SCI_POSITIONAFTER, selStart-3)),
-							SciSubClassWrp::execute(SCI_POSITIONAFTER, SciSubClassWrp::execute(SCI_POSITIONBEFORE, selEnd-3)));
-						break;
-					}
-					case uni16BE:
-					case uni16LE:
-					{
-						UINT	posStart	= 0;
-						UINT	posEnd		= 0;
-						UINT	curPos		= 0;
-						UINT	addPos		= 0;
-
-						selStart = selStart/2 - 1;
-						selEnd	 = selEnd/2 - 1;
-
-						while ((selStart > 0) || (selEnd > 0)) {
-							BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
-							if ((byte & 0x80) == 0) curPos++, addPos=1;
-							else if ((byte & 0xF8) == 0xF0) curPos+=4, addPos=4;
-							else if ((byte & 0xF0) == 0xE0) curPos+=3, addPos=3;
-							else if ((byte & 0xE0) == 0xC0) curPos+=2, addPos=2;
-							if (selStart > 0) posStart += addPos, selStart--;
-							if (selEnd > 0) posEnd += addPos, selEnd--;
-						}
-						SciSubClassWrp::execute(SCI_SETSEL, posStart, posEnd);
-						break;
-					}
-					case uni8Bit:
-					case uniCookie:
-					default:
-					{
-						SciSubClassWrp::execute(SCI_SETSEL, selStart, selEnd);
-						break;
-					}
-				}
-			}
+			/* convert cursor positions */
+			ConvertSelHEXToNpp();
 		}
 		
 		if ((isModified == FALSE) && (isModifiedBefore == FALSE)) {
@@ -1035,7 +944,7 @@ void HexEdit::MoveView(void)
 		_iOldHorDiff = iNewHorDiff;
 		_iOldVerDiff = iNewVerDiff;
 	}
-	else if ((_openDoc == -1) && (_hParentHandle == _nppData._scintillaSecondHandle))
+	else if ((_openDoc == -1) && (::IsWindowVisible(_hParentHandle) == TRUE))
 	{
 		::ShowWindow(_hParentHandle, SW_HIDE);
 		::ShowWindow(_hSelf, SW_HIDE);
@@ -2309,13 +2218,15 @@ void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 	ListView_GetItemText(_hListCtrl, iItem, 0, text, 17);
 	ListView_GetSubItemRect(_hListCtrl, iItem, 0, LVIR_LABEL, &rc);
 
+	/* get size of text */
+	::GetTextExtentPoint(hDc, text, _pCurProp->addWidth, &size);
+
 	/* correct postion to get better visiual gap */
 	rc.right -= 2;
 
 	::SetTextColor(hDc, getColor(HEX_COLOR_REG_TXT));
 	::DrawText(hDc, text, _pCurProp->addWidth, &rc, DT_LEFT | DT_HEX_VIEW);
 
-	::GetTextExtentPoint(hDc, text, _pCurProp->addWidth, &size);
 	rc.left += size.cx;
 
 	/* draw bookmark */
@@ -3615,6 +3526,9 @@ BOOL HexEdit::GlobalKeys(WPARAM wParam, LPARAM lParam)
 			}
 			::SendMessage(_hListCtrl, WM_KEYDOWN, VK_LEFT, 0);
 			break;
+		case VK_DELETE:
+			Delete();
+			break;
 		default:
 			return TRUE;
 	}
@@ -4245,3 +4159,213 @@ void HexEdit::SetStatusBar(void)
 }
 
 
+void HexEdit::ConvertSelNppToHEX(void)
+{
+	if (_pCurProp == NULL)
+		return;
+
+	extern 
+	UINT	currentSC;
+	UINT	selStart		= SciSubClassWrp::execute(SCI_GETSELECTIONSTART);
+	UINT	selEnd			= SciSubClassWrp::execute(SCI_GETSELECTIONEND);
+	UINT	offset			= 0;
+
+	if ((_pCurProp->isLittle == FALSE) || (_pCurProp->bits == HEX_BYTE))
+	{
+		switch (_pCurProp->codePage)
+		{
+			case HEX_CODE_NPP_UTF8_BOM:
+			{
+				::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
+				::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
+				_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH, 0, 0);
+				SetSelection(selStart+3, selEnd+3, HEX_SEL_NORM, (selEnd+3) % VIEW_ROW == 0);
+				break;
+			}
+			case HEX_CODE_NPP_USCBE:
+			case HEX_CODE_NPP_USCLE:
+			{
+				UINT	posStart	= 2;
+				UINT	posEnd		= 2;
+				UINT	curPos		= 0;
+
+				while ((curPos <= selStart) || (curPos <= selEnd)) {
+					BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
+					if ((byte & 0x80) == 0) curPos++;
+					else if ((byte & 0xF8) == 0xF0) curPos+=4;
+					else if ((byte & 0xF0) == 0xE0) curPos+=3;
+					else if ((byte & 0xE0) == 0xC0) curPos+=2;
+					if (curPos <= selStart) posStart += 2;
+					if (curPos <= selEnd) posEnd += 2;
+				}
+				::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
+				::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
+				_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH, 0, 0);
+				SetSelection(posStart, posEnd, HEX_SEL_NORM, posEnd % VIEW_ROW == 0);
+				break;
+			}
+			case HEX_CODE_NPP_ASCI:
+			case HEX_CODE_NPP_UTF8:
+			default:
+			{
+				_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH, 0, 0);
+				SetSelection(selStart, selEnd, HEX_SEL_NORM, selEnd % VIEW_ROW == 0);
+				break;
+			}
+		}
+		
+		_pCurProp->firstVisRow = _pCurProp->cursorItem;
+	}
+	else
+	{
+		if (selStart > selEnd) {
+			selStart = selEnd;
+		}
+
+		switch (_pCurProp->codePage)
+		{
+			case HEX_CODE_NPP_UTF8_BOM:
+			{
+				::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
+				::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
+
+				selStart += 3;
+				break;
+			}
+			case HEX_CODE_NPP_USCBE:
+			case HEX_CODE_NPP_USCLE:
+			{
+				UINT	posStart	= 2;
+				UINT	curPos		= 0;
+
+				while (curPos <= selStart) {
+					BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
+					if ((byte & 0x80) == 0) curPos++;
+					else if ((byte & 0xF8) == 0xF0) curPos+=4;
+					else if ((byte & 0xF0) == 0xE0) curPos+=3;
+					else if ((byte & 0xE0) == 0xC0) curPos+=2;
+					if (curPos <= selStart) posStart += 2;
+				}
+				::SendMessage(_nppData._nppHandle, NPPM_DECODESCI, currentSC, 0);
+				::SendMessage(_nppData._nppHandle, WM_COMMAND, IDM_FORMAT_ANSI, 0);
+
+				selStart = posStart;
+				break;
+			}
+			case HEX_CODE_NPP_ASCI:
+			case HEX_CODE_NPP_UTF8:
+			default:
+			{
+				break;
+			}
+		}
+		offset = selStart % _pCurProp->bits;
+		selStart = (selStart - offset) + (_pCurProp->bits - offset - 1);
+		SetSelection(selStart, selStart);
+	}
+}
+
+void HexEdit::ConvertSelHEXToNpp(void)
+{
+	if (_pCurProp == NULL)
+		return;
+
+	extern 
+	UINT	currentSC;
+	INT		selStart	= GetAnchor();
+	INT		selEnd		= GetCurrentPos();
+	INT		offset		= 0;
+
+	UniMode	um	= (UniMode)::SendMessage(_nppData._nppHandle, NPPM_ENCODESCI, currentSC, 0);
+
+	if ((_pCurProp->isLittle == FALSE) || (_pCurProp->bits == HEX_BYTE))
+	{
+		switch (um)
+		{
+			case uniUTF8:
+			{
+				SciSubClassWrp::execute(SCI_SETSEL, 
+					SciSubClassWrp::execute(SCI_POSITIONBEFORE, SciSubClassWrp::execute(SCI_POSITIONAFTER, selStart-3)),
+					SciSubClassWrp::execute(SCI_POSITIONAFTER, SciSubClassWrp::execute(SCI_POSITIONBEFORE, selEnd-3)));
+				break;
+			}
+			case uni16BE:
+			case uni16LE:
+			{
+				UINT	posStart	= 0;
+				UINT	posEnd		= 0;
+				UINT	curPos		= 0;
+				UINT	addPos		= 0;
+
+				selStart = selStart/2 - 1;
+				selEnd	 = selEnd/2 - 1;
+
+				while ((selStart > 0) || (selEnd > 0)) {
+					BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
+					if ((byte & 0x80) == 0) curPos++, addPos=1;
+					else if ((byte & 0xF8) == 0xF0) curPos+=4, addPos=4;
+					else if ((byte & 0xF0) == 0xE0) curPos+=3, addPos=3;
+					else if ((byte & 0xE0) == 0xC0) curPos+=2, addPos=2;
+					if (selStart > 0) posStart += addPos, selStart--;
+					if (selEnd > 0) posEnd += addPos, selEnd--;
+				}
+				SciSubClassWrp::execute(SCI_SETSEL, posStart, posEnd);
+				break;
+			}
+			case uni8Bit:
+			case uniCookie:
+			default:
+			{
+				SciSubClassWrp::execute(SCI_SETSEL, selStart, selEnd);
+				break;
+			}
+		}
+	}
+	else
+	{
+		if (selStart > selEnd) {
+			selStart = selEnd;
+		}
+
+		offset = selStart % _pCurProp->bits;
+		selStart = (selStart - offset) + (_pCurProp->bits - offset - 1);
+
+		switch (um)
+		{
+			case uniUTF8:
+			{
+				SciSubClassWrp::execute(SCI_SETSEL, 
+					SciSubClassWrp::execute(SCI_POSITIONBEFORE, SciSubClassWrp::execute(SCI_POSITIONAFTER, selStart-3)),
+					SciSubClassWrp::execute(SCI_POSITIONBEFORE, SciSubClassWrp::execute(SCI_POSITIONAFTER, selStart-3)));
+				break;
+			}
+			case uni16BE:
+			case uni16LE:
+			{
+				UINT	posStart	= 0;
+				UINT	curPos		= 0;
+				UINT	addPos		= 0;
+
+				selStart = selStart/2 - 1;
+
+				while (selStart > 0) {
+					BYTE byte = (BYTE)SciSubClassWrp::execute(SCI_GETCHARAT, curPos);
+					if ((byte & 0x80) == 0) curPos++, addPos=1;
+					else if ((byte & 0xF8) == 0xF0) curPos+=4, addPos=4;
+					else if ((byte & 0xF0) == 0xE0) curPos+=3, addPos=3;
+					else if ((byte & 0xE0) == 0xC0) curPos+=2, addPos=2;
+					if (selStart > 0) posStart += addPos, selStart--;
+				}
+				SciSubClassWrp::execute(SCI_SETSEL, posStart, posStart);
+				break;
+			}
+			case uni8Bit:
+			case uniCookie:
+			default:
+			{
+				SciSubClassWrp::execute(SCI_SETSEL, selStart, selStart);
+				break;
+			}
+		}
+	}
+}

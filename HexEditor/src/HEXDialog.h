@@ -127,6 +127,7 @@ public:
 	void Cut(void);
 	void Copy(void);
 	void Paste(void);
+	void Delete(void);
 	void SelectAll(void);
 	void ZoomIn(void);
 	void ZoomOut(void);
@@ -283,7 +284,6 @@ private:
 
 	void TrackMenu(POINT pt);
 	BOOL ShouldDeleteCompare(void);
-	void Delete(void);
 
 	/* for address text */
 	void DrawAddressText(HDC hDc, DWORD item);
@@ -306,6 +306,7 @@ private:
 
 
 	INT  CalcCursorPos(LV_HITTESTINFO info);
+	void ConvertCursorPos(void);
 	BOOL GlobalKeys(WPARAM wParam, LPARAM lParam);
 	void SelectionKeys(WPARAM wParam, LPARAM lParam);
 	void SetPosition(UINT pos, BOOL isLittle = FALSE);
@@ -316,6 +317,9 @@ private:
 
 	void ToggleBookmark(UINT item);
 	void UpdateBookmarks(UINT firstElem, INT length);
+
+	void ConvertSelNppToHEX(void);
+	void ConvertSelHEXToNpp(void);
 
 	INT CalcStride(INT posBeg, INT posEnd)
 	{
@@ -351,8 +355,8 @@ private:
 		}
 
 		_hFont = ::CreateFont(g_iFontSize[_fontSize], 0, 0, 0,
-			(isFontBold() == TRUE) ? FW_BOLD : 0, isFontItalic(), isFontUnderline(),
-			0, ANSI_CHARSET, 0, OUT_TT_ONLY_PRECIS, 0, FIXED_PITCH | FF_DONTCARE, getFontName());
+			(isFontBold() == TRUE) ? FW_BOLD : FW_NORMAL, isFontItalic(), isFontUnderline(),
+			0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, ANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
 		if (_hFont)
 		{
 			::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
@@ -405,7 +409,11 @@ private:
 	void DrawCursor(HDC hDc, RECT & rcPos, BOOL drawRect = FALSE)
 	{
 		if (drawRect == TRUE) {
-			::DrawFocusRect(hDc, &rcPos);
+			if (isFocusRect() == TRUE) {
+				::DrawFocusRect(hDc, &rcPos);
+			} else {
+				::PatBlt(hDc, rcPos.left, rcPos.bottom - 2, rcPos.right - rcPos.left, 2, DSTINVERT);
+			}
 		} else if (_isCurOn == TRUE) {
 			::PatBlt(hDc, rcPos.left, rcPos.top, 2, rcPos.bottom - rcPos.top, PATINVERT);
 		}

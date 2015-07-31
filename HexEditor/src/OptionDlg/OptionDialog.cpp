@@ -101,6 +101,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			_ColCmbDiffTxt.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_DIFF_TXT));
 			_ColCmbDiffBk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_DIFF_BK));
 			_ColCmbBkMk.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_BKMK));
+			_ColCmbCurLine.init(_hInst, _hParent, ::GetDlgItem(_hSelf, IDC_COMBO_CURLINE));
 
 			/* init the font name combo */
 			LOGFONT lf;
@@ -173,6 +174,10 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 					_ColCmbBkMk.onSelect();
 					break;
 
+				case IDC_COMBO_CURLINE:
+					_ColCmbCurLine.onSelect();
+					break;
+
 				default:
 					return FALSE;
 			}
@@ -237,6 +242,8 @@ void OptionDlg::TabUpdate(void)
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_DIFF_BK),		bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_BKMK),			bColor);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_BKMK),			bColor);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_CURLINE),		bColor);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_CURLINE),		bColor);
 
 	/* set tab visibility state of "Font" */
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_FONTNAME),		bFont);
@@ -247,6 +254,7 @@ void OptionDlg::TabUpdate(void)
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_BOLD),			bFont);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_ITALIC),		bFont);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_UNDERLINE),		bFont);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_FOCUSRC),		bFont);
 
 	if (bExt == TRUE) {
 		::SetFocus(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST));
@@ -315,6 +323,9 @@ void OptionDlg::SetParams(void)
 	if (_pProp->fontProp.isCapital == TRUE) {
 		::SendDlgItemMessage(_hSelf, IDC_CHECK_CLM, BM_SETCHECK, BST_CHECKED, 0); 
 	}
+	if (_pProp->fontProp.isFocusRect == TRUE) {
+		::SendDlgItemMessage(_hSelf, IDC_CHECK_FOCUSRC, BM_SETCHECK, BST_CHECKED, 0); 
+	}
 
 	/* set colors */
 	_ColCmbRegTxt.setColor(_pProp->colorProp.rgbRegTxt);
@@ -324,6 +335,7 @@ void OptionDlg::SetParams(void)
 	_ColCmbDiffTxt.setColor(_pProp->colorProp.rgbDiffTxt);
 	_ColCmbDiffBk.setColor(_pProp->colorProp.rgbDiffBk);
 	_ColCmbBkMk.setColor(_pProp->colorProp.rgbBkMk);
+	_ColCmbCurLine.setColor(_pProp->colorProp.rgbCurLine);
 }
 
 
@@ -405,6 +417,7 @@ BOOL OptionDlg::GetParams(void)
 		_pProp->fontProp.isItalic		= (::SendDlgItemMessage(_hSelf, IDC_CHECK_ITALIC, BM_GETCHECK, 0, 0) == BST_CHECKED);
 		_pProp->fontProp.isUnderline	= (::SendDlgItemMessage(_hSelf, IDC_CHECK_UNDERLINE, BM_GETCHECK, 0, 0) == BST_CHECKED);
 		_pProp->fontProp.isCapital		= (::SendDlgItemMessage(_hSelf, IDC_CHECK_CLM, BM_GETCHECK, 0, 0) == BST_CHECKED);
+		_pProp->fontProp.isFocusRect	= (::SendDlgItemMessage(_hSelf, IDC_CHECK_FOCUSRC, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
 		_ColCmbRegTxt.getColor(&_pProp->colorProp.rgbRegTxt);
 		_ColCmbRegBk.getColor(&_pProp->colorProp.rgbRegBk);
@@ -412,7 +425,7 @@ BOOL OptionDlg::GetParams(void)
 		_ColCmbSelBk.getColor(&_pProp->colorProp.rgbSelBk);
 		_ColCmbDiffTxt.getColor(&_pProp->colorProp.rgbDiffTxt);
 		_ColCmbDiffBk.getColor(&_pProp->colorProp.rgbDiffBk);
-		_ColCmbBkMk.getColor(&_pProp->colorProp.rgbBkMk);
+		_ColCmbCurLine.getColor(&_pProp->colorProp.rgbCurLine);
 	}
 	else
 	{

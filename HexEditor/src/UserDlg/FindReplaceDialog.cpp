@@ -310,6 +310,7 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 	INT			posEnd		= 0;
 	INT			wrapPos		= 0;
 	BOOL		loopEnd		= FALSE;
+	BOOL		doWrap		= FALSE;
 	BOOL		wrapDone	= FALSE;
 	tComboInfo	info		= {0};
 
@@ -354,7 +355,15 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 
 		/* copy data into scintilla handle (encoded if necessary) and select string */
 
-		length = FIND_BLOCK;
+		if ((wrapDone == TRUE) && (lenSrc < FIND_BLOCK)) {
+			if (_whichDirection == DIR_DOWN) {
+				length = wrapPos + info.length + 1;
+			} else {
+				length = FIND_BLOCK;
+			}
+		} else {
+			length = FIND_BLOCK;
+		}
 
 		if (_whichDirection == DIR_DOWN)
 		{
@@ -368,11 +377,12 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 		}
 		else
 		{
-			offset = posEnd - FIND_BLOCK;
+			posEnd -= FIND_BLOCK;
+			offset = posEnd;
 			if (LittleEndianChange(_hSCI, hSciSrc, &offset, &length) == TRUE)
 			{
-				ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg - offset);
-				ScintillaMsg(_hSCI, SCI_SETTARGETEND, posBeg - length);
+				ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg);
+				ScintillaMsg(_hSCI, SCI_SETTARGETEND, posEnd - offset);
 				isConverted = TRUE;
 			}
 		}
@@ -380,7 +390,7 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 		if (isConverted == TRUE)
 		{
 			/* find string */
-			UINT posFind = ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, info.length, (LPARAM)info.text);
+			INT posFind = ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, info.length, (LPARAM)info.text);
 			if (posFind != -1)
 			{
 				/* found */
@@ -394,53 +404,67 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 			else
 			{
 				/* calculate new start find position */
-				if (_whichDirection == DIR_DOWN) {
-					posBeg = offset + length;
-				} else {
-					posBeg = offset;
-				}
-
-				/* test if out of bounding */
-				if ((posBeg >= lenSrc) || (posBeg <= 0))
+				if (_whichDirection == DIR_DOWN)
 				{
-					if (_isWrap == FALSE)
-					{
-						/* not found and wrapping mode is off */
-						::MessageBox(_hSelf, _T("Can't find"),(_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
-						loopEnd = TRUE;
+					posBeg = offset + length;
+
+					/* test if out of bound */
+					if ((posBeg >= lenSrc) && (wrapDone == FALSE)) {
+						posBeg = 0;
+						/* notify wrap is done */
+						doWrap = TRUE;
+					} else if (posBeg != lenSrc) {
+						/* calculate new start find position */
+						posBeg -= (info.length + 1);
 					}
-					else
-					{
-						/* wrap around */
-						if (_whichDirection == DIR_DOWN) {
-							posBeg = 0;
-						} else {
-							posBeg = lenSrc;
-						}
-					}
-					/* notify wrap is done */
-					wrapDone = TRUE;
-				}
+
+					/* indicate that wrap is still done */
+					wrapDone = doWrap;
+
+				} 
 				else
 				{
-					/* calculate new start find position */
-					if (_whichDirection == DIR_DOWN) {
-						posBeg -= (info.length + 1);
-					} else {
-						posBeg += (info.length - 1);
+					/* indicate wrap done next time */
+					wrapDone = doWrap;
+
+					posBeg = offset;
+
+					/* test if out of bound */
+					if ((posBeg <= 0) && (wrapDone == FALSE)) {
+						posBeg = lenSrc;
+						/* notify wrap is done */
+						doWrap = TRUE;
+					} else if (posBeg != 0) {
+						/* calculate new start find position */
+						posBeg += (info.length + 1);
 					}
 				}
-				posEnd = posBeg;
 
 				/* if wrap was done and posBeg is jump over the wrapPos (start pos on function call)... */
 				if ((wrapDone == TRUE) &&
-					(((_whichDirection == DIR_DOWN) && (posBeg > wrapPos)) ||
-					 ((_whichDirection == DIR_UP  ) && (posBeg < wrapPos))))
+					(((_whichDirection == DIR_DOWN) && (posBeg >= wrapPos)) ||
+					 ((_whichDirection == DIR_UP  ) && (posEnd <= wrapPos))))
 				{
 					/* ... leave the function */
-					::MessageBox(_hSelf, _T("Can't find"),(_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
+					TCHAR	text[128];
+					TCHAR	TEMP[128];
+
+					if (NLGetText(_hInst, _hParent, _T("CantFind"), TEMP, 128)) {
+						_tcscpy(text, TEMP);
+						if (NLGetText(_hInst, _hParent, (_findReplace == TRUE)?_T("Replace"):_T("Find"), TEMP, 128)) {
+							::MessageBox(_hParent, text, TEMP, MB_OK);
+						} else {
+							::MessageBox(_hParent, text, (_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
+						}
+					} else {
+						::MessageBox(_hSelf, _T("Can't find"),(_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
+					}
+
 					loopEnd = TRUE;
 				}
+
+				/* for further calculation */
+				posEnd = posBeg;
 			}
 			CleanScintillaBuf(_hSCI);
 		}
@@ -611,21 +635,41 @@ void FindReplaceDlg::processAll(UINT process)
 		} while (loopEnd == FALSE);
 	}
 
+	TCHAR	TEMP[128];
+	TCHAR	text[128];
+
 	/* display result */
 	if (cnt == 0)
 	{
-		::MessageBox(_hSelf, _T("Can't find"), _T("Find"), MB_OK);
+		if (NLGetText(_hInst, _hParent, _T("CantFind"), TEMP, 128)) {
+			_tcscpy(text, TEMP);
+			if (NLGetText(_hInst, _hParent, _T("Find"), TEMP, 128)) {
+				::MessageBox(_hParent, text, TEMP, MB_OK);
+			} else {
+				::MessageBox(_hParent, text, _T("Find"), MB_OK);
+			}
+		} else {
+			::MessageBox(_hSelf, _T("Can't find"), _T("Find"), MB_OK);
+		}
 	}
 	else
 	{
-		CHAR	text[128];
-
-		itoa(cnt, text, 10);
 		switch (process)
 		{
 			case COUNT:
 			{
-				strcat(text, " tokens are found.");
+				if (NLGetText(_hInst, _hParent, _T("Tokens Found"), TEMP, 128)) {
+					_stprintf(text, TEMP, cnt);
+				} else {
+					_stprintf(text, _T("%i tokens are found."), cnt);
+				}
+
+				if (NLGetText(_hInst, _hParent, _T("Count"), TEMP, 128)) {
+					::MessageBox(_hParent, text, TEMP, MB_OK);
+				} else {
+					::MessageBox(_hParent, text, _T("Count"), MB_OK);
+				}
+
 				_pFindCombo->addText(_find);
 				break;
 			}
@@ -635,13 +679,27 @@ void FindReplaceDlg::processAll(UINT process)
 				::SendMessage(_hParentHandle, HEXM_GETPOS, 0, (LPARAM)&pos);
 				::SendMessage(_hParentHandle, HEXM_SETPOS, 0, (LPARAM)pos);
 
-				strcat(text, " tokens are replaced.\n");
+				if (NLGetText(_hInst, _hParent, _T("Tokens Replaced"), TEMP, 128)) {
+					_stprintf(text, TEMP, cnt);
+				} else {
+					_stprintf(text, _T("%i tokens are replaced.\n"), cnt);
+				}
+
 				if (cntError != 0)
 				{
-					CHAR	temp[16];
-					strcat(text, itoa(cntError, temp, 10));
-					strcat(text, " tokens are skipped, because of alignment error.\n");
+					if (NLGetText(_hInst, _hParent, _T("Tokens Skipped"), TEMP, 128)) {
+						_stprintf(text, TEMP, text, cntError);
+					} else {
+						_stprintf(text, _T("%s%i tokens are skipped, because of alignment error.\n"), text, cntError);
+					}
 				}
+
+				if (NLGetText(_hInst, _hParent, _T("Replace"), TEMP, 128)) {
+					::MessageBox(_hParent, text, TEMP, MB_OK);
+				} else {
+					::MessageBox(_hParent, text, _T("Replace"), MB_OK);
+				}
+
 				_pFindCombo->addText(_find);
 				_pReplaceCombo->addText(_replace);
 				break;
@@ -649,13 +707,6 @@ void FindReplaceDlg::processAll(UINT process)
 			default:
 				break;
 		}
-#ifdef UNICODE
-		TCHAR	wText[128];
-		::MultiByteToWideChar(CP_ACP, 0, text, -1, wText, 128);
-		::MessageBox(_hSelf, wText, _T("Find"), MB_OK);
-#else
-		::MessageBox(_hSelf, text, "Find", MB_OK);
-#endif
 		_pFindCombo->addText(_find);
 	}
 }

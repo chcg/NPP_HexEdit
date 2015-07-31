@@ -2,6 +2,21 @@
 Change-log for HexEditor.dll
 
 ------------------------------------------------------------------------------------
+09/03/03  v0.9.3 :
+------------------------------------------------------------------------------------
+    Fix: HexEditor 0.9.2 hangs on wrap around search [NPP-P-B-2612666]
+    Fix: "Find box" sometimes cleared aft. clicking on "Find Next" [NPP-P-B-2413462]
+    Fix: Normal-/Hex-Mode change replaces the cursor/selection now correctly.
+    Fix: Hex-Editor causes redrawing problems when using "Go to another View".
+    Fix: View not currectly freshed when opening a supported file type on a new N++.
+    Fix: Better NativeLang support in dialog "Find" and "Replace".
+    Fix: Hidden menu will be now correctet restricted.
+    Fix: Color selection dialog now restore the current color.
+    Fix: Fonts are now drawn in anti alias mode.
+    New: Selected line now with different background color (changeable in Options). 
+    New: Selected mirror of character is now underlined (changeable in Options). 
+
+------------------------------------------------------------------------------------
 08/12/08  v0.9.2 :
 ------------------------------------------------------------------------------------
     Fix: Crashes in HexEditor (Unicode) [NPP-P-B-2393522]

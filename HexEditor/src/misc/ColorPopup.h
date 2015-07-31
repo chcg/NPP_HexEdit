@@ -28,6 +28,7 @@ class ColorPopup : public Window
 {
 public :
     ColorPopup() : Window(), isColorChooserLaunched(false) {};
+	ColorPopup(COLORREF defaultColor) : Window(), isColorChooserLaunched(false), _color(defaultColor) {};
 	~ColorPopup(){};
 
 	void init(HINSTANCE hInst, HWND hParent, HWND hNpp) {

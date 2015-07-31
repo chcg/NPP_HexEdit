@@ -63,7 +63,7 @@ BEGIN
     LTEXT           "eMail:",IDC_STATIC_EMAIL,12,41,21,9
     CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
                     IDC_STATIC_THX,7,67,216,25
-    CTEXT           "HEX-Editor Plugin for Notepad++ v5.1                         v0.9.2",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v5.1                         v0.9.3",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "http://sourceforge.net/projects/npp-plugins",
@@ -86,7 +86,7 @@ BEGIN
                     15,181,200,10
 END
 
-IDD_OPTION_DLG DIALOGEX 0, 0, 225, 124
+IDD_OPTION_DLG DIALOGEX 0, 0, 225, 142
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
@@ -94,7 +94,7 @@ CAPTION "Hex-Editor Options"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Tab1",IDC_TAB_PROP,"SysTabControl32",TCS_MULTILINE | 
-                    WS_TABSTOP,7,7,211,92
+                    WS_TABSTOP,7,7,211,109
     CONTROL         "8-Bit",IDC_RADIO_8,"Button",BS_AUTORADIOBUTTON | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,30,30,10,
                     WS_EX_TRANSPARENT
@@ -135,7 +135,10 @@ BEGIN
     COMBOBOX        IDC_COMBO_FONTSIZE,83,46,50,30,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "Capital letters mode",IDC_CHECK_CLM,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_TABSTOP,17,64,79,12,
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_TABSTOP,17,64,120,12,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Mirror of Cursor is Rect",IDC_CHECK_FOCUSRC,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_TABSTOP,17,77,120,12,
                     WS_EX_TRANSPARENT
     CONTROL         "Bold",IDC_CHECK_BOLD,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_TABSTOP,145,50,70,12,WS_EX_TRANSPARENT
@@ -163,8 +166,11 @@ BEGIN
     LTEXT           "Bookmark:",IDC_STATIC_BKMK,17,84,100,10
     COMBOBOX        IDC_COMBO_BKMK,125,82,40,30,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "Ok",IDOK,110,103,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,168,103,50,14
+    LTEXT           "Current Line:",IDC_STATIC_CURLINE,17,100,100,10
+    COMBOBOX        IDC_COMBO_CURLINE,170,98,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Ok",IDOK,110,121,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,168,121,50,14
 END
 
 IDD_COLOR_POPUP DIALOGEX 0, 0, 132, 113
@@ -345,7 +351,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 218
         TOPMARGIN, 7
-        BOTTOMMARGIN, 117
+        BOTTOMMARGIN, 135
     END
 
     IDD_GOTO_DLG, DIALOG
@@ -378,8 +384,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,2,0
- PRODUCTVERSION 0,9,2,0
+ FILEVERSION 0,9,3,0
+ PRODUCTVERSION 0,9,3,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -397,12 +403,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.9.2"
+            VALUE "FileVersion", "0.9.3"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.9.2"
+            VALUE "ProductVersion", "0.9.3"
             VALUE "SpecialBuild", "UNICODE"
         END
     END

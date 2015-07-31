@@ -220,7 +220,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 	if (((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
 		 (notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)))
 	{
-		SystemUpdate();
+//		SystemUpdate();
 
 		switch (notifyCode->nmhdr.code)
 		{
@@ -281,11 +281,13 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			case NPPN_READY:
 			{
 				isNotepadCreated = TRUE;
+				SystemUpdate();
 				break;
 			}
 			case NPPN_FILEOPENED:
 			case NPPN_FILECLOSED:
 			{
+				OutputDebugString(_T("NPPN_FILEOPENED\n"));
 				SystemUpdate();
 				pCurHexEdit->doDialog();
 				break;
@@ -383,12 +385,14 @@ void loadSettings(void)
 	prop.colorProp.rgbDiffTxt	= ::GetPrivateProfileInt(dlgEditor, rgbDiffTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
 	prop.colorProp.rgbDiffBk	= ::GetPrivateProfileInt(dlgEditor, rgbDiffBk, RGB(0xff,0x88,0x88), iniFilePath);
 	prop.colorProp.rgbBkMk		= ::GetPrivateProfileInt(dlgEditor, rgbBkMk, RGB(0xFF,0x00,0x00), iniFilePath);
+	prop.colorProp.rgbCurLine	= ::GetPrivateProfileInt(dlgEditor, rgbCurLine, RGB(0xDF,0xDF,0xDF), iniFilePath);
 	::GetPrivateProfileString(dlgEditor, fontname, _T("Courier New"), prop.fontProp.szFontName, 256, iniFilePath);
 	prop.fontProp.iFontSizeElem	= ::GetPrivateProfileInt(dlgEditor, fontsize, FONTSIZE_DEFAULT, iniFilePath);
 	prop.fontProp.isCapital		= ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
 	prop.fontProp.isBold		= ::GetPrivateProfileInt(dlgEditor, bold, FALSE, iniFilePath);
 	prop.fontProp.isItalic		= ::GetPrivateProfileInt(dlgEditor, italic, FALSE, iniFilePath);
 	prop.fontProp.isUnderline	= ::GetPrivateProfileInt(dlgEditor, underline, FALSE, iniFilePath);
+	prop.fontProp.isFocusRect	= ::GetPrivateProfileInt(dlgEditor, focusRect, FALSE, iniFilePath);
 }
 
 /***
@@ -414,12 +418,14 @@ void saveSettings(void)
 	::WritePrivateProfileString(dlgEditor, rgbDiffTxt, _itot(prop.colorProp.rgbDiffTxt, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, rgbDiffBk, _itot(prop.colorProp.rgbDiffBk, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, rgbBkMk, _itot(prop.colorProp.rgbBkMk, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, rgbCurLine, _itot(prop.colorProp.rgbCurLine, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, fontname, prop.fontProp.szFontName, iniFilePath);
 	::WritePrivateProfileString(dlgEditor, fontsize, _itot(prop.fontProp.iFontSizeElem, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, capital, _itot(prop.fontProp.isCapital, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, bold, _itot(prop.fontProp.isBold, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, italic, _itot(prop.fontProp.isItalic, temp, 10), iniFilePath);
 	::WritePrivateProfileString(dlgEditor, underline, _itot(prop.fontProp.isUnderline, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, focusRect, _itot(prop.fontProp.isFocusRect, temp, 10), iniFilePath);
 }
 
 /***
@@ -444,7 +450,7 @@ void setHexMask(void)
  */
 void setMenu(void)
 {
-	HMENU		hMenu	= ::GetMenu(nppData._nppHandle);
+	HMENU		hMenu	= (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
 	tHexProp	hexProp	= pCurHexEdit->GetHexProp();
 
 	::EnableMenuItem(hMenu, funcItem[4]._cmdID, MF_BYCOMMAND | (hexProp.isVisible?0:MF_GRAYED));
@@ -524,6 +530,11 @@ BOOL isFontUnderline(void)
 	return prop.fontProp.isUnderline;
 }
 
+BOOL isFocusRect(void)
+{
+	return prop.fontProp.isFocusRect;
+}
+
 COLORREF getColor(eColorType type)
 {
 	switch (type)
@@ -542,6 +553,8 @@ COLORREF getColor(eColorType type)
 			return prop.colorProp.rgbDiffBk;
 		case HEX_COLOR_BKMK:
 			return prop.colorProp.rgbBkMk;
+		case HEX_COLOR_CUR_LINE:
+			return prop.colorProp.rgbCurLine;
 	}
 }
 
@@ -700,6 +713,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			if (HIWORD(wParam) == SCEN_SETFOCUS)
 			{
 				ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+				OutputDebugString(_T("SCEN_SETFOCUS\n"));
 				SystemUpdate();
 			}
 
@@ -715,6 +729,9 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 						return TRUE;
 					case IDM_EDIT_PASTE:
 						pCurHexEdit->Paste();
+						return TRUE;
+					case IDM_EDIT_DELETE:
+						pCurHexEdit->Delete();
 						return TRUE;
 					case IDM_EDIT_SELECTALL:
 						pCurHexEdit->SelectAll();
@@ -846,6 +863,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 				case IDM_FILE_NEW:
 				{
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+					OutputDebugString(_T("IDC_PREV/NEXT_DOC\n"));
 					SystemUpdate();
 					pCurHexEdit->doDialog();
 					pCurHexEdit->SetStatusBar();
@@ -857,15 +875,14 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 					tHexProp hexProp = pCurHexEdit->GetHexProp();
 
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+					OutputDebugString(_T("TO_ANOTHER_VIEW\n"));
 					SystemUpdate();
-
 					pCurHexEdit->SetHexProp(hexProp);
 					pCurHexEdit->doDialog();
 					pCurHexEdit->SetStatusBar();
 					break;
 				}
-				case IDM_VIEW_SWITCHTO_MAIN:
-				case IDM_VIEW_SWITCHTO_SUB:
+				case IDM_VIEW_SWITCHTO_OTHER_VIEW:
 				{
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
 					pCurHexEdit->SetStatusBar();
@@ -880,6 +897,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		case NPPM_DOOPEN:
 		{
 			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("DOOPEN\n"));
 			SystemUpdate();
 			pCurHexEdit->doDialog();
 			break;
@@ -892,6 +910,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 				(notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)) &&
 				(notifyCode->nmhdr.code == SCN_SAVEPOINTREACHED))
 			{
+				OutputDebugString(_T("SAVEPOINTREACHED\n"));
 				SystemUpdate();
 				if (TRUE != pCurHexEdit->GetModificationState())
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
@@ -903,6 +922,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 				case TCN_SELCHANGE:
 				{
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+					OutputDebugString(_T("TCN_SELCHANGED\n"));
 					SystemUpdate();
 					pCurHexEdit->SetStatusBar();
 					break;
@@ -914,6 +934,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 					tHexProp hexProp	 = pCurHexEdit->GetHexProp();
 
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+					OutputDebugString(_T("TCN_DROPPED\n"));
 					SystemUpdate();
 
 					if (pOldHexEdit != pCurHexEdit)
@@ -954,6 +975,8 @@ void SystemUpdate(void)
 {
 	if (isNotepadCreated == FALSE)
 		return;
+
+	OutputDebugString(_T("SystemUpdate\n"));
 
 	UINT		oldSC		= currentSC;
 	UINT		newDocCnt	= 0;
@@ -1456,7 +1479,7 @@ void DoCompare(void)
 eNppCoding GetNppEncoding(void)
 {
 	eNppCoding	ret		= HEX_CODE_NPP_ASCI;
-	HMENU		hMenu	= ::GetMenu(nppData._nppHandle);
+	HMENU		hMenu	= (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
 
 	if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2BE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
@@ -1484,7 +1507,10 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		return;
 
 	TCHAR	text[64];
-	HMENU	hMenu			= ::GetMenu(nppData._nppHandle);
+	HMENU	hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
+
+	if (hMenu == NULL)
+		return;
 
 	/* store if menu will be modified */
 	isMenuHex = toHexStyle;
@@ -1728,8 +1754,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 					case IDM_VIEW_ZOOMRESTORE:
 					case IDM_VIEW_GOTO_ANOTHER_VIEW:
 					case IDM_VIEW_CLONE_TO_ANOTHER_VIEW:
-					case IDM_VIEW_SWITCHTO_MAIN:
-					case IDM_VIEW_SWITCHTO_SUB:
+					case IDM_VIEW_SWITCHTO_OTHER_VIEW:
 					{
 						if (lastSep == TRUE) {
 							::AppendMenu(hMenuTemp, MF_SEPARATOR, nPos, NULL);

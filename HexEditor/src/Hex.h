@@ -59,7 +59,9 @@ const TCHAR rgbSelBk[]		= _T("RGB Selection Background");
 const TCHAR rgbDiffTxt[]	= _T("RGB Difference Text");
 const TCHAR rgbDiffBk[]		= _T("RGB Difference Background");
 const TCHAR rgbBkMk[]		= _T("RGB Bookmark");
+const TCHAR rgbCurLine[]	= _T("RGB Current Line");
 const TCHAR percent[]		= _T("Autostart Percent");
+const TCHAR focusRect[]		= _T("Focus Rect");
 
 const TCHAR HEXEDIT_INI[]	= _T("\\HexEditor.ini");
 const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
@@ -104,7 +106,8 @@ typedef enum
 	HEX_COLOR_SEL_BK,
 	HEX_COLOR_DIFF_TXT,
 	HEX_COLOR_DIFF_BK,
-	HEX_COLOR_BKMK
+	HEX_COLOR_BKMK,
+	HEX_COLOR_CUR_LINE
 } eColorType;
 
 typedef enum
@@ -182,6 +185,7 @@ typedef struct
 	COLORREF			rgbDiffTxt;				// differnece text color
 	COLORREF			rgbDiffBk;				// difference background color
 	COLORREF			rgbBkMk;				// bookmark color
+	COLORREF			rgbCurLine;				// current line backgound color
 } tColor;
 
 typedef struct
@@ -198,6 +202,7 @@ typedef struct
 	BOOL				isBold;					// font is bold
 	BOOL				isItalic;				// font is italic
 	BOOL				isUnderline;			// font is underline
+	BOOL				isFocusRect;			// marker in dump is a focus rect
 } tFont;
 
 typedef struct
@@ -287,6 +292,7 @@ void setFontSizeElem(UINT iElem);
 BOOL isFontBold(void);
 BOOL isFontItalic(void);
 BOOL isFontUnderline(void);
+BOOL isFocusRect(void);
 COLORREF getColor(eColorType type);
 
 void toggleHexEdit(void);

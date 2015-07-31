@@ -58,7 +58,7 @@ LRESULT ColorCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 			pt.y = rc.bottom;
 
 			if (_pColorPopup == NULL) {
-				_pColorPopup = new ColorPopup;
+				_pColorPopup = new ColorPopup(_rgbCol);
 				_pColorPopup->init(_hInst, hwnd, _hNpp);
 				_pColorPopup->doDialog(pt);
 			}
