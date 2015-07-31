@@ -20,8 +20,10 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include "FindReplaceDialog.h"
 #include "PluginInterface.h"
 #include "tables.h"
+#include <uxtheme.h>
 
 
+typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
 #define CB_SETMINVISIBLE 0x1701
 
 
@@ -34,10 +36,14 @@ void FindReplaceDlg::doDialog(HWND hParent, BOOL findReplace)
     if (!isCreated())
 	{
         create(IDD_FINDREPLACE_DLG);
-		::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
+		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 
 		/* create new scintilla handle */
-		_hSCI = (HWND)::SendMessage(_nppData._nppHandle, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+		_hSCI = (HWND)::SendMessage(_nppData._nppHandle, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+
+			ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
+			if (EnableDlgTheme != NULL)
+				EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
 	}
 
 	/* set kind of dialog */
@@ -109,12 +115,6 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 						changeCoding();
 					break;
 				}
-				case IDC_SWITCH:
-				{
-					_findReplace ^= TRUE;
-					updateDialog();
-					break;
-				}
 				case IDC_CHECK_TRANSPARENT :
 				{
 					setTrans();
@@ -150,7 +150,19 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 				default :
 					break;
 			}
-			break;}
+			break;
+		}
+		case WM_NOTIFY:
+		{
+			NMHDR	nmhdr = *((LPNMHDR)lParam);
+
+			if ((nmhdr.idFrom == IDC_SWITCH) && (nmhdr.code == TCN_SELCHANGE))
+			{
+				_findReplace ^= TRUE;
+				updateDialog();
+			}
+			break;
+		}
 		case WM_HSCROLL :
 		{
 			if ((HWND)lParam == ::GetDlgItem(_hSelf, IDC_SLIDER_PERCENTAGE))
@@ -166,6 +178,16 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 
 void FindReplaceDlg::initDialog(void)
 {
+	TCITEM		item;
+
+	item.mask		= TCIF_TEXT;
+	item.pszText	= "Find";
+	item.cchTextMax	= (int)strlen(item.pszText);
+	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 0, (LPARAM)&item);
+	item.pszText	= "Replace";
+	item.cchTextMax	= (int)strlen(item.pszText);
+	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 1, (LPARAM)&item);
+
 	/* init comboboxes */
 	_pFindCombo			= new MultiTypeCombo;
 	_pReplaceCombo		= new MultiTypeCombo;
@@ -209,6 +231,7 @@ void FindReplaceDlg::initDialog(void)
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_TRANSPARENT), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_SLIDER_PERCENTAGE), SW_HIDE);
 	}
+	changeCoding();
 }
 
 

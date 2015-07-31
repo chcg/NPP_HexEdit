@@ -64,7 +64,7 @@ void HexEdit::init(HINSTANCE hInst, NppData nppData, LPCTSTR iniFilePath)
     if (!isCreated())
 	{
         create(IDD_HEX_DLG);
-//		::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
+//		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 	}
 }
 
@@ -709,7 +709,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 }
 
 
-void HexEdit::UpdateDocs(char** pFiles, UINT numFiles, INT openDoc)
+void HexEdit::UpdateDocs(const char** pFiles, UINT numFiles, INT openDoc)
 {
 	/* update current visible line */
 	GetLineVis();
@@ -819,10 +819,10 @@ void HexEdit::doDialog(BOOL toggle)
 			_pCurProp->cursorSubItem	= 1;
 			_pCurProp->cursorPos		= 0;
 
-			::SendMessage(_nppData._nppHandle, WM_DECODE_SCI, currentSC, 0);
+			::SendMessage(_nppData._nppHandle, NPPM_DECODE_SCI, currentSC, 0);
 		}
 		else
-			::SendMessage(_nppData._nppHandle, WM_ENCODE_SCI, currentSC, 0);
+			::SendMessage(_nppData._nppHandle, NPPM_ENCODE_SCI, currentSC, 0);
 		
 		if ((isModified == FALSE) && (isModifiedBefore == FALSE))
 			ScintillaMsg(SCI_SETSAVEPOINT);
@@ -960,7 +960,7 @@ void HexEdit::Copy(void)
 		clipboard.selection = _pCurProp->selection;
 
 		/* copy data into scintilla handle (encoded if necessary) */
-		hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+		hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 		LittleEndianChange(hSCI, _hParentHandle);
 		
 		/* get text */
@@ -1030,7 +1030,7 @@ void HexEdit::Copy(void)
 
 		/* destory scintilla handle */
 		::SendMessage(hSCI, SCI_UNDO, 0, 0);
-		::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 		
 		/* convert to hex if usefull */
 		if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -1038,18 +1038,18 @@ void HexEdit::Copy(void)
 			tClipboard	data = clipboard;
 			ChangeClipboardDataToHex(&data);
 			/* store selected text in scintilla clipboard */
-			ScintillaMsg(SCI_COPYTEXT, data.length+1, (LPARAM)data.text);
+			::SendMessage(_hParentHandle, SCI_COPYTEXT, data.length+1, (LPARAM)data.text);
 			delete [] data.text;
 		}
 		else
 		{
 			/* store selected text in scintilla clipboard */
-			ScintillaMsg(SCI_COPYTEXT, clipboard.length+1, (LPARAM)clipboard.text);
+			::SendMessage(_hParentHandle, SCI_COPYTEXT, clipboard.length+1, (LPARAM)clipboard.text);
 		}
 
 		/* delete old text and store to clipboard */
 		if (g_clipboard.text != NULL)
-			delete g_clipboard.text;
+			delete [] g_clipboard.text;
 		g_clipboard = clipboard;
 	}
 }
@@ -1074,7 +1074,7 @@ void HexEdit::Cut(void)
 		clipboard.selection = _pCurProp->selection;
 
 		/* copy data into scintilla handle (encoded if necessary) */
-		hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+		hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 		LittleEndianChange(hSCI, _hParentHandle);
 		
 		/* get text */
@@ -1156,7 +1156,7 @@ void HexEdit::Cut(void)
 		
 		/* destory scintilla handle */
 		::SendMessage(hSCI, SCI_UNDO, 0, 0);
-		::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 
 		/* convert to hex if usefull */
 		if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -1164,13 +1164,13 @@ void HexEdit::Cut(void)
 			tClipboard	data = clipboard;
 			ChangeClipboardDataToHex(&data);
 			/* store selected text in scintilla clipboard */
-			ScintillaMsg(SCI_COPYTEXT, data.length+1, (LPARAM)data.text);
+			::SendMessage(_hParentHandle, SCI_COPYTEXT, data.length+1, (LPARAM)data.text);
 			delete [] data.text;
 		}
 		else
 		{
 			/* store selected text in scintilla clipboard */
-			ScintillaMsg(SCI_COPYTEXT, clipboard.length+1, (LPARAM)clipboard.text);
+			::SendMessage(_hParentHandle, SCI_COPYTEXT, clipboard.length+1, (LPARAM)clipboard.text);
 		}
 
 		/* delete old text and store to clipboard */
@@ -1193,7 +1193,7 @@ void HexEdit::Paste(void)
 	if (g_clipboard.text == NULL)
 	{
 		/* copy data into scintilla handle (encoded if necessary) */
-		HWND hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+		HWND hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 		ScintillaMsg(hSCI, SCI_PASTE);
 
 		UINT	length = ScintillaMsg(SCI_GETTEXTLENGTH);
@@ -1286,7 +1286,7 @@ void HexEdit::Paste(void)
 
 		/* destory scintilla handle */
 		::SendMessage(hSCI, SCI_UNDO, 0, 0);
-		::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 	}	
 	else
 	{
@@ -1298,7 +1298,7 @@ void HexEdit::Paste(void)
 			posBeg = posEnd;
 
 		/* copy data into scintilla handle (encoded if necessary) */
-		hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+		hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 		LittleEndianChange(hSCI, _hParentHandle);
 		
 		switch (g_clipboard.selection)
@@ -1368,7 +1368,7 @@ void HexEdit::Paste(void)
 		}
 		/* destory scintilla handle */
 		::SendMessage(hSCI, SCI_UNDO, 0, 0);
-		::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 
 	}
 	ScintillaMsg(SCI_ENDUNDOACTION);
@@ -1423,25 +1423,13 @@ void HexEdit::ReadArrayToList(LPTSTR text, INT iItem, INT iSubItem)
 	/* create addresses */
 	if (iSubItem == 0)
 	{
-		char	temp[129] = "\0";
-
-		itoa(iItem * _pCurProp->columns * _pCurProp->bits, temp, 16);
-
-		strcpy(text, "0000000000000000");
-
-		/* to upper case when requested */
 		if (getCLM())
 		{
-			UINT	j = 0;
-			for (size_t i = 16 - strlen(temp); i < 15; i++)
-			{
-				text[i] = toupper(temp[j]);
-				j++;
-			}
+			sprintf(text, "%016X", iItem * _pCurProp->columns * _pCurProp->bits);
 		}
 		else
 		{
-			strcpy(&text[16 - strlen(temp)], temp);
+			sprintf(text, "%016x", iItem * _pCurProp->columns * _pCurProp->bits);
 		}
 	}
 	/* create dump */
@@ -1831,7 +1819,7 @@ void HexEdit::OnDeleteBlock(void)
 		posBeg = posEnd;
 
 	/* copy data into scintilla handle (encoded if necessary) */
-	hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+	hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 	LittleEndianChange(hSCI, getCurrentHScintilla());
 
 	/* get params of Hex Edit */
@@ -1857,7 +1845,7 @@ void HexEdit::OnDeleteBlock(void)
 				
 				/* free allocated space */
 				::SendMessage(hSCI, SCI_UNDO, 0, 0);
-				::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 				return;
 			}
 
@@ -1870,7 +1858,7 @@ void HexEdit::OnDeleteBlock(void)
 	
 	/* free allocated space */
 	::SendMessage(hSCI, SCI_UNDO, 0, 0);
-	::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 }
 
 
@@ -3158,23 +3146,23 @@ void HexEdit::SetStatusBar(void)
 		char buffer[64];
 
 		/* set mode */
-		::SendMessage(_hParent, WM_SETSTATUSBAR, STATUSBAR_DOC_TYPE, (LPARAM)"Hex Edit View");
+		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_TYPE, (LPARAM)"Hex Edit View");
 		/* set doc length */
 		sprintf(buffer, "nb char : %d", _currLength);
-		::SendMessage(_hParent, WM_SETSTATUSBAR, STATUSBAR_DOC_SIZE, (LPARAM)buffer);
+		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_SIZE, (LPARAM)buffer);
 
 		/* set doc length */
 		sprintf(buffer, "Ln : %d    Col : %d    Sel : %d", 
 			_pCurProp->cursorItem + 1, 
 			(GetCurrentPos() % VIEW_ROW) + 1,
 			(GetCurrentPos() > GetAnchor() ? GetCurrentPos()-GetAnchor() : GetAnchor()-GetCurrentPos()));
-		::SendMessage(_hParent, WM_SETSTATUSBAR, STATUSBAR_CUR_POS, (LPARAM)buffer);
+		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_CUR_POS, (LPARAM)buffer);
 
 		/* display information in which mode it is (binary or hex) */
-		::SendMessage(_hParent, WM_SETSTATUSBAR, STATUSBAR_EOF_FORMAT, (LPARAM)(_pCurProp->isBin == FALSE?"Hex":"Binary"));
+		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_EOF_FORMAT, (LPARAM)(_pCurProp->isBin == FALSE?"Hex":"Binary"));
 
 		/* display information in which mode it is (BigEndian or Little) */
-		::SendMessage(_hParent, WM_SETSTATUSBAR, STATUSBAR_UNICODE_TYPE, (LPARAM)(_pCurProp->isLittle == FALSE?"BigEndian":"LittleEndian"));
+		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_UNICODE_TYPE, (LPARAM)(_pCurProp->isLittle == FALSE?"BigEndian":"LittleEndian"));
 	}
 }
 

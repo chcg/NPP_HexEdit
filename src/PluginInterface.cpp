@@ -320,7 +320,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 		if (notifyCode->nmhdr.code == NPPN_TB_MODIFICATION)
 		{
 			g_TBHex.hToolbarBmp = (HBITMAP)::LoadImage((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDB_TB_HEX), IMAGE_BITMAP, 0, 0, (LR_DEFAULTSIZE | LR_LOADMAP3DCOLORS));
-			::SendMessage(nppData._nppHandle, WM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
+			::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
 		}
 		if (notifyCode->nmhdr.code == NPPN_READY)
 		{
@@ -380,7 +380,7 @@ void setMenu(void)
  */
 void checkMenu(BOOL state)
 {
-	::SendMessage(nppData._nppHandle, WM_PIMENU_CHECK, (WPARAM)funcItem[0]._cmdID, (LPARAM)state);
+	::SendMessage(nppData._nppHandle, NPPM_PIMENU_CHECK, (WPARAM)funcItem[0]._cmdID, (LPARAM)state);
 }
 
 /***
@@ -442,7 +442,7 @@ void UpdateCurrentHScintilla(void)
 {
 	UINT		newSC		= SC_MAINHANDLE;
 
-	::SendMessage(nppData._nppHandle, WM_GETCURRENTSCINTILLA, 0, (LPARAM)&newSC);
+	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&newSC);
 	g_HSource = (newSC == SC_MAINHANDLE)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
 	currentSC = newSC;
 }
@@ -604,9 +604,9 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 					char oldPath[MAX_PATH];
 					char newPath[MAX_PATH];
 
-					::SendMessage(nppData._nppHandle, WM_GET_FULLCURRENTPATH, 0, (LPARAM)oldPath);
+					::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)oldPath);
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					::SendMessage(nppData._nppHandle, WM_GET_FULLCURRENTPATH, 0, (LPARAM)newPath);
+					::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)newPath);
 					_curHexEdit->FileNameChanged(newPath);
 					if (::SendMessage(g_HSource, SCI_GETMODIFY, 0, 0) == 0)
 					{
@@ -728,39 +728,39 @@ void SystemUpdate(void)
 
 	/* update open files */
 	UpdateCurrentHScintilla();
-	::SendMessage(nppData._nppHandle, WM_GET_FULLCURRENTPATH, 0, (LPARAM)pszNewPath);
+	::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)pszNewPath);
 
 	if ((strcmp(pszNewPath, currentPath) != 0) || (oldSC != currentSC))
 	{
 		/* set new file */
 		strcpy(currentPath, pszNewPath);
 
-		INT		i = 0;
-		INT		docCnt1;
-		INT		docCnt2;
-		char	**fileNames1;
-		char	**fileNames2;
+		INT			i = 0;
+		INT			docCnt1;
+		INT			docCnt2;
+		const char	**fileNames1;
+		const char	**fileNames2;
 		
 		/* update doc information */
-		docCnt1		= (INT)::SendMessage(nppData._nppHandle, WM_NBOPENFILES, 0, (LPARAM)PRIMARY_VIEW);
-		docCnt2		= (INT)::SendMessage(nppData._nppHandle, WM_NBOPENFILES, 0, (LPARAM)SECOND_VIEW);
-		fileNames1	= (char **)new char*[docCnt1];
-		fileNames2	= (char **)new char*[docCnt2];
+		docCnt1		= (INT)::SendMessage(nppData._nppHandle, NPPM_NBOPENFILES, 0, (LPARAM)PRIMARY_VIEW);
+		docCnt2		= (INT)::SendMessage(nppData._nppHandle, NPPM_NBOPENFILES, 0, (LPARAM)SECOND_VIEW);
+		fileNames1	= (const char **)new char*[docCnt1];
+		fileNames2	= (const char **)new char*[docCnt2];
 
 		for (i = 0; i < docCnt1; i++)
 			fileNames1[i] = (char*)new char[MAX_PATH];
 		for (i = 0; i < docCnt2; i++)
 			fileNames2[i] = (char*)new char[MAX_PATH];
 
-		if (::SendMessage(nppData._nppHandle, WM_GETOPENFILENAMES_PRIMARY, (WPARAM)fileNames1, (LPARAM)docCnt1))
+		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_PRIMARY, (WPARAM)fileNames1, (LPARAM)docCnt1))
 		{
-			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, WM_GETCURRENTDOCINDEX, 0, 0);
+			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, 0);
 			hexEdit1.UpdateDocs(fileNames1, docCnt1, openDoc1);
 		}
 
-		if (::SendMessage(nppData._nppHandle, WM_GETOPENFILENAMES_SECOND, (WPARAM)fileNames2, (LPARAM)docCnt2))
+		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_SECOND, (WPARAM)fileNames2, (LPARAM)docCnt2))
 		{
-			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, WM_GETCURRENTDOCINDEX, 0, 1);
+			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, 1);
 			hexEdit2.UpdateDocs(fileNames2, docCnt2, openDoc2);
 		}
 
@@ -873,7 +873,6 @@ void ChangeClipboardDataToHex(tClipboard *clipboard)
 	}
 
 	clipboard->text[clipboard->length] = 0;
-	delete [] text;
 }
 
 void LittleEndianChange(HWND hTarget, HWND hSource)
@@ -964,7 +963,7 @@ eError replaceLittleToBig(HWND hSource, INT startPos, INT lengthOld, INT lengthN
 
 	/* get new text */
 	::SendMessage(hSource, SCI_SETSELECTIONSTART, startPos, 0);
-	::SendMessage(hSource, SCI_SETSELECTIONEND, startPos + lengthNew - 1, 0);
+	::SendMessage(hSource, SCI_SETSELECTIONEND, startPos + lengthNew, 0);
 	::SendMessage(hSource, SCI_GETSELTEXT, 0, (LPARAM)text);
 
 	/* set in target */

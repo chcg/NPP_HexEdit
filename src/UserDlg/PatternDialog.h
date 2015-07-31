@@ -43,7 +43,7 @@ public:
     virtual void destroy() {
 		/* deregister this dialog */
 		display(false);
-		::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (LPARAM)_hSelf);
+		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (LPARAM)_hSelf);
 	};
 
 

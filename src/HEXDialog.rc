@@ -64,7 +64,7 @@ BEGIN
                     IDC_STATIC,7,67,216,25
     LTEXT           "Swaps between Hex and ANSI view.\nGives the possibility to add columns\nfilled with a pattern.\nReplace a box selection with pattern.\nChange standard properties of Hex- \nEditor here.\nShows this help dialog.",
                     IDC_STATIC,97,112,123,59
-    CTEXT           "HEX-Editor Plugin for Notepad++ v4.0.2                        v0.7",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v4.0.2                        v0.8.1",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "View in HEX\nInsert Columns...\n\nPattern Repleace...\nOptions...\n\nHelp...",
@@ -74,7 +74,7 @@ BEGIN
     LTEXT           "URL:",IDC_STATIC,12,52,21,9
 END
 
-IDD_OPTION_DLG DIALOGEX 0, 0, 225, 107
+IDD_OPTION_DLG DIALOGEX 0, 0, 225, 124
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
@@ -104,13 +104,12 @@ BEGIN
     LTEXT           "Column count:",IDC_STATIC_COLUMN,118,30,46,8,SS_NOTIFY,
                     WS_EX_TRANSPARENT
     EDITTEXT        IDC_COLUMN_EDIT,172,28,38,12,ES_CENTER | ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "Ok",IDOK,110,86,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,168,86,50,14
+    DEFPUSHBUTTON   "Ok",IDOK,110,103,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,168,103,50,14
     CONTROL         "Capital letters mode",IDC_CHECK_CLM,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_TABSTOP,19,28,79,12,
                     WS_EX_TRANSPARENT
-    CONTROL         "Tab1",IDC_TAB_PROP,"SysTabControl32",TCS_BUTTONS,7,7,
-                    211,13
+    CONTROL         "Tab1",IDC_TAB_PROP,"SysTabControl32",0x0,7,7,211,91
     EDITTEXT        IDC_EDIT_EXTLIST,22,49,180,12,ES_AUTOHSCROLL
     LTEXT           "Extensions:                                                  e.g.: .dat .exe",
                     IDC_STATIC_EXAMPLE,22,40,180,8
@@ -136,55 +135,55 @@ BEGIN
     LTEXT           "0123456789",IDC_LASTLINE,100,52,70,8
 END
 
-IDD_FINDREPLACE_DLG DIALOGEX 36, 44, 317, 118
+IDD_FINDREPLACE_DLG DIALOGEX 36, 44, 317, 130
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
 CAPTION "Find"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "Find Next",IDOK,217,6,90,14,WS_GROUP
-    COMBOBOX        IDC_COMBO_FIND,68,6,131,50,CBS_DROPDOWN | 
+    CONTROL         "",IDC_SWITCH,"SysTabControl32",0x0,0,0,317,130
+    DEFPUSHBUTTON   "Find Next",IDOK,217,20,90,14,WS_GROUP
+    COMBOBOX        IDC_COMBO_FIND,68,20,131,50,CBS_DROPDOWN | 
                     CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_COMBO_REPLACE,68,25,131,50,CBS_DROPDOWN | 
+    COMBOBOX        IDC_COMBO_REPLACE,68,39,131,50,CBS_DROPDOWN | 
                     CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "&Count",IDC_COUNT,217,24,90,14
-    PUSHBUTTON      "&Replace",IDC_REPLACE,217,24,90,14
-    PUSHBUTTON      "Replace &All",IDC_REPLACEALL,217,42,90,14
+    PUSHBUTTON      "&Count",IDC_COUNT,217,38,90,14
+    PUSHBUTTON      "&Replace",IDC_REPLACE,217,38,90,14
+    PUSHBUTTON      "Replace &All",IDC_REPLACEALL,217,56,90,14
     CONTROL         "In selection",IDC_CHECK_IN_SEL,"Button",BS_AUTOCHECKBOX | 
-                    WS_DISABLED | WS_TABSTOP,153,44,56,10
-    COMBOBOX        IDC_COMBO_DATATYPE,68,44,71,77,CBS_DROPDOWNLIST | 
+                    WS_DISABLED | WS_TABSTOP,153,58,56,10
+    COMBOBOX        IDC_COMBO_DATATYPE,68,58,71,77,CBS_DROPDOWNLIST | 
                     CBS_DISABLENOSCROLL | WS_TABSTOP
-    PUSHBUTTON      "&Switch dialog",IDC_SWITCH,217,61,90,14
-    PUSHBUTTON      "Close",IDCANCEL,217,79,90,14
+    PUSHBUTTON      "Close",IDCANCEL,217,74,90,14
     CONTROL         "Wrap aroun&d",IDC_CHECK_WRAP,"Button",BS_AUTOCHECKBOX | 
-                    BS_MULTILINE | WS_GROUP | WS_TABSTOP,7,64,64,16
+                    BS_MULTILINE | WS_GROUP | WS_TABSTOP,6,78,64,16
     CONTROL         "Match &case",IDC_CHECK_MATCHCASE,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,7,78,68,12
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,6,92,68,12
     CONTROL         "&Up",IDC_RADIO_DIRUP,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,81,73,45,12
+                    WS_GROUP,81,87,45,12
     CONTROL         "&Down",IDC_RADIO_DIRDOWN,"Button",BS_AUTORADIOBUTTON,81,
-                    84,45,12
+                    98,45,12
     CONTROL         "Top",IDC_RADIO_TOP,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,153,75,28,10
+                    WS_GROUP,153,89,28,10
     CONTROL         "Middle",IDC_RADIO_MIDDLE,"Button",BS_AUTORADIOBUTTON,
-                    153,87,36,10
+                    153,101,36,10
     CONTROL         "Bottom",IDC_RADIO_BOTTOM,"Button",BS_AUTORADIOBUTTON,
-                    153,99,39,10
+                    153,113,39,10
     CONTROL         "Transparency",IDC_CHECK_TRANSPARENT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,102,55,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,6,116,55,10
     CONTROL         "",IDC_SLIDER_PERCENTAGE,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | NOT WS_VISIBLE | WS_TABSTOP,71,102,53,10
-    LTEXT           "Find what :",IDC_STATIC,7,8,55,8
-    LTEXT           "Re&place with :",IDC_STATIC_REPLACE,7,27,55,8
-    LTEXT           "Data &type :",IDC_STATIC,7,47,58,8,WS_TABSTOP
-    GROUPBOX        "Direction",IDC_STATIC,75,64,64,34,WS_GROUP
-    GROUPBOX        "Display Position",IDC_STATIC,147,64,62,48
-    GROUPBOX        "",IDC_STATIC_REPALL,147,36,164,22
+                    TBS_NOTICKS | NOT WS_VISIBLE | WS_TABSTOP,71,116,53,10
+    LTEXT           "Find what :",IDC_STATIC,6,22,55,8
+    LTEXT           "Re&place with :",IDC_STATIC_REPLACE,6,41,55,8
+    LTEXT           "Data &type :",IDC_STATIC,6,61,58,8,WS_TABSTOP
+    GROUPBOX        "Direction",IDC_STATIC,75,78,64,34,WS_GROUP
+    GROUPBOX        "Display Position",IDC_STATIC,147,78,62,48
+    GROUPBOX        "",IDC_STATIC_REPALL,148,50,164,22
 END
 
 IDD_PATTERN_DLG DIALOGEX 0, 0, 254, 44
-STYLE DS_SYSMODAL | DS_SETFONT | DS_3DLOOK | WS_POPUP | WS_CAPTION | 
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
 CAPTION "Replace Pattern/Insert Column"
@@ -263,7 +262,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 218
         TOPMARGIN, 7
-        BOTTOMMARGIN, 100
+        BOTTOMMARGIN, 117
     END
 
     IDD_GOTO_DLG, DIALOG
@@ -274,14 +273,6 @@ BEGIN
         VERTGUIDE, 170
         TOPMARGIN, 7
         BOTTOMMARGIN, 60
-    END
-
-    IDD_FINDREPLACE_DLG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 311
-        TOPMARGIN, 6
-        BOTTOMMARGIN, 112
     END
 
     IDD_PATTERN_DLG, DIALOG
@@ -303,8 +294,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,7,0,0
- PRODUCTVERSION 0,7,0,0
+ FILEVERSION 0,8,1,0
+ PRODUCTVERSION 0,8,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -322,12 +313,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.7"
+            VALUE "FileVersion", "0.8.1"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2007 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.7"
+            VALUE "ProductVersion", "0.8.1"
         END
     END
     BLOCK "VarFileInfo"

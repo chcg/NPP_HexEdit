@@ -77,7 +77,7 @@ void StaticDialog::create(int dialogID, bool isRTL)
 		throw int(666);
 	}
 
-	::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGADD, (WPARAM)_hSelf);
+	::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (WPARAM)_hSelf);
 }
 
 BOOL CALLBACK StaticDialog::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) 

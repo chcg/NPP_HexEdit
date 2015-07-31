@@ -25,7 +25,7 @@ void GotoDlg::doDialog(HWND hHexEdit)
     if (!isCreated())
 	{
         create(IDD_GOTO_DLG);
-		::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
+		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 		goToCenter();
 	}
 
@@ -102,7 +102,7 @@ BOOL CALLBACK GotoDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 		case WM_DESTROY :
 		{
 			/* deregister this dialog */
-			::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (LPARAM)_hSelf);
+			::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (LPARAM)_hSelf);
 
 			/* save view mode setting */
 			::WritePrivateProfileString(dlgEditor, gotoProp, (_isHex == TRUE)?"1":"0", _iniFilePath);

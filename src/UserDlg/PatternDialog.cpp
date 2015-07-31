@@ -55,7 +55,7 @@ void PatternDlg::doDialog(HWND hHexEdit)
 	{
         create(IDD_PATTERN_DLG);
 		goToCenter();
-		::SendMessage(_hParent, WM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
+		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 	}
 
 	_hParentHandle = hHexEdit;
@@ -136,7 +136,7 @@ BOOL PatternDlg::onInsert(void)
 	char		buffer[128];
 
 	/* copy data into scintilla handle (encoded if necessary) */
-	hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+	hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 	LittleEndianChange(hSCI, getCurrentHScintilla());
 
 	/* get params of Hex Edit */
@@ -203,7 +203,7 @@ BOOL PatternDlg::onInsert(void)
 
 	/* free allocated space */
 	::SendMessage(hSCI, SCI_UNDO, 0, 0);
-	::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 	delete [] pattern;
 
 	/* add text to combo ;) */
@@ -239,7 +239,7 @@ BOOL PatternDlg::onReplace(void)
 	}
 
 	/* copy data into scintilla handle (encoded if necessary) */
-	hSCI = (HWND)::SendMessage(_hParent, WM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+	hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 	LittleEndianChange(hSCI, getCurrentHScintilla());
 
 	/* get params of Hex Edit */
@@ -288,7 +288,7 @@ BOOL PatternDlg::onReplace(void)
 
 			/* free allocated space */
 			::SendMessage(hSCI, SCI_UNDO, 0, 0);
-			::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+			::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 
 			return FALSE;
 		}
@@ -335,7 +335,7 @@ BOOL PatternDlg::onReplace(void)
 				
 				/* free allocated space */
 				::SendMessage(hSCI, SCI_UNDO, 0, 0);
-				::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 				delete [] pattern;
 
 				return FALSE;
@@ -354,7 +354,7 @@ BOOL PatternDlg::onReplace(void)
 	
 	/* free allocated space */
 	::SendMessage(hSCI, SCI_UNDO, 0, 0);
-	::SendMessage(_hParent, WM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
 
 	/* add text to combo ;) */
 	_pCombo->addText(_pattern);

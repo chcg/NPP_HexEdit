@@ -19,7 +19,9 @@
 #include "PluginInterface.h"
 #include <Commctrl.h>
 #include <shlobj.h>
+#include <uxtheme.h>
 
+typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
 
 
 static char*	szTabNames[11] = {
@@ -48,10 +50,14 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 		case WM_INITDIALOG:
 		{
 			TCITEM		item;
-			item.mask		= TCIF_TEXT;
 
 			goToCenter();
+
+			ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
+			if (EnableDlgTheme != NULL)
+                EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
 			
+			item.mask		= TCIF_TEXT;
 			item.pszText	= szTabNames[PROP_VIEW];
 			item.cchTextMax	= (int)strlen(szTabNames[PROP_VIEW]);
 			::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_INSERTITEM, PROP_VIEW, (LPARAM)&item);

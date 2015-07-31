@@ -23,7 +23,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -63,18 +63,18 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
+				Optimization="0"
 				GlobalOptimizations="FALSE"
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="FALSE"
-				FavorSizeOrSpeed="1"
+				FavorSizeOrSpeed="0"
 				OmitFramePointers="TRUE"
-				OptimizeForProcessor="0"
-				OptimizeForWindowsApplication="FALSE"
+				OptimizeForProcessor="1"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="../../src,../../src/HelpDlg,../../src/MISC,../../src/OptionDlg,../../src/UserDlg"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS"
 				StringPooling="TRUE"
-				RuntimeLibrary="4"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -140,12 +140,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\PluginInterface.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						RuntimeLibrary="1"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\StaticDialog.cpp">
