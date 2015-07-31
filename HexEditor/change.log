@@ -1,0 +1,64 @@
+
+Change-log for HexEditor.dll
+
+------------------------------------------------------------------------------------
+08/07/01  v0.9.0 :
+------------------------------------------------------------------------------------
+    Fix: When using the "Replace All" while the replace-string is greater than the 
+         find-string, the function stops before it reaches the end of file
+         [NPP-P-B-1897604]
+    Fix: The "Unicode string" option in the Search dialog shows plain ASCII texts 
+         only [NPP-P-B-1899671]
+    Fix: Paste does nothing when clipboard was filled from outside [NPP-P-B-1807069]
+    Fix: Resource leak by using the find/replace operation [NPP-P-B-1936857]
+    Fix: Breaks Unicode "Cyrillic" input to the main window [NPP-P-B-1977701]
+    Fix: Better shortcut support
+    New: Highlight selected text when toggling between HEX mode and N++.
+         [NPP-P-FR-1874110]
+    New: Bookmarks !!!
+    New: Simple Compare !!!
+    New: User is able to customize the font
+    New: User is able to customize a different set of colors
+    New: Multi-language support implemented. NativeLang plug-in needed
+    Change: Goto dialog supports now offsets
+    Change: Goto dialog allows in hex mode to jump to every address
+    Change: The user can customize now the "Address" width
+    Change: Enhanced the graphical interface on selection
+
+------------------------------------------------------------------------------------
+07/07/25  v0.8.4 :
+------------------------------------------------------------------------------------
+    Fix: Problems with new Notepad++ version 4.2 (Column Editor)
+    Change: Now using NPPM_GETPLUGINSCONFIGDIR to get ini file location
+    
+------------------------------------------------------------------------------------
+07/05/28  v0.8.3 :
+------------------------------------------------------------------------------------
+    Fix: Every crash is now prevent while switching between files
+    Fix: Correct display of Find/Replace on shortcut in Notepad
+    
+------------------------------------------------------------------------------------
+07/05/04  v0.8.2 :
+    Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version.
+------------------------------------------------------------------------------------
+    Fix: When user started Notepad "clean", it crashed by hitting a key
+    
+------------------------------------------------------------------------------------
+07/05/02  v0.8.1 :
+    Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version
+------------------------------------------------------------------------------------
+    Fix: After deleting a selected block, the selection wasn't cleared
+    Fix: HEX Address column was incorrect
+    Fix: Coping of HEX code crashed Notepad
+    
+------------------------------------------------------------------------------------
+07/03/13  v0.7 :
+------------------------------------------------------------------------------------
+    Fix: Resource leak during Scintillas UNDO/REDO stack
+    Fix: Flickering when switching between documents
+    
+------------------------------------------------------------------------------------
+07/03/01  v0.7 Beta 1 :
+------------------------------------------------------------------------------------
+    Changes: Porting the project to .NET.
+    Fix: Crashing on Notepad startup

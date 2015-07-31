@@ -1,0 +1,432 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "hexresource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// German (Germany) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_HEX_DLG DIALOGEX 0, 0, 153, 103
+STYLE DS_SETFONT | WS_CHILD
+FONT 10, "Courier New", 0, 0, 0x0
+BEGIN
+    CONTROL         "List1",IDC_HEX_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_OWNERDATA | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER,0,0,115,75,
+                    WS_EX_ACCEPTFILES
+END
+
+IDD_COLUMN_DLG DIALOGEX 36, 44, 99, 22
+STYLE DS_SETFONT | DS_SETFOREGROUND | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | 
+    WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Column Count"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_COLUMN_EDIT,5,5,31,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "Ok",IDOK,47,5,46,12
+END
+
+IDD_HELP_DLG DIALOGEX 0, 0, 230, 220
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_BORDER
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Ok",IDOK,93,199,50,14
+    LTEXT           "jens.plugin.npp@gmx.de",IDC_EMAIL_LINK,65,41,80,9
+    LTEXT           "Author:",IDC_STATIC_AUTHOR,12,31,51,9
+    GROUPBOX        "Menu entries",IDC_STATIC_MENU,7,99,216,95
+    LTEXT           "eMail:",IDC_STATIC_EMAIL,12,41,21,9
+    CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
+                    IDC_STATIC_THX,7,67,216,25
+    CTEXT           "HEX-Editor Plugin for Notepad++ v4.2                         v0.9.0",
+                    IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
+                    WS_EX_TRANSPARENT
+    LTEXT           "http://sourceforge.net/projects/npp-plugins",
+                    IDC_NPP_PLUGINS_URL,65,52,158,9
+    LTEXT           "URL:",IDC_STATIC,12,52,21,9
+    LTEXT           "Jens Lorenz",IDC_STATIC,65,31,39,8
+    LTEXT           "View in HEX\t\tSwaps between Hex and ANSI view.",
+                    IDC_STATIC_HELP_0,15,109,200,8
+    LTEXT           "Compare HEX\t\tCompares two files and marks the\n\t\t\tdifference.",
+                    IDC_STATIC_HELP_1,15,117,200,17
+    LTEXT           "Clear Compare Result\tRemoves the marked difference.",
+                    IDC_STATIC_HELP_2,15,133,200,8
+    LTEXT           "Insert Columns...\tGives the possibility to add columns\n\t\t\tfilled with a pattern.",
+                    IDC_STATIC_HELP_4,15,141,200,17
+    LTEXT           "Pattern Repleace...\tReplace a box selection with pattern.",
+                    IDC_STATIC_HELP_5,15,157,200,8
+    LTEXT           "Options...\t\tChange here the properties of\n\t\t\tHex-Editor.",
+                    IDC_STATIC_HELP_7,15,165,200,17
+    LTEXT           "Help...\t\t\tShows this help dialog.",IDC_STATIC_HELP_8,
+                    15,181,200,10
+END
+
+IDD_OPTION_DLG DIALOGEX 0, 0, 225, 124
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Hex-Editor Options"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "Tab1",IDC_TAB_PROP,"SysTabControl32",TCS_MULTILINE | 
+                    WS_TABSTOP,7,7,211,92
+    CONTROL         "8-Bit",IDC_RADIO_8,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,30,30,10,
+                    WS_EX_TRANSPARENT
+    CONTROL         "16-Bit",IDC_RADIO_16,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_TABSTOP,19,41,34,10,WS_EX_TRANSPARENT
+    CONTROL         "32-Bit",IDC_RADIO_32,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_TABSTOP,19,52,34,10,WS_EX_TRANSPARENT
+    CONTROL         "64-Bit",IDC_RADIO_64,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_TABSTOP,19,63,34,10,WS_EX_TRANSPARENT
+    CONTROL         "Hexadecimal",IDC_RADIO_HEX,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,79,30,57,10,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Binary",IDC_RADIO_BIN,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_TABSTOP,79,41,66,10,WS_EX_TRANSPARENT
+    CONTROL         "Big-Endian",IDC_RADIO_BIG,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,153,30,50,10,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Little-Endian",IDC_RADIO_LITTLE,"Button",
+                    BS_AUTORADIOBUTTON | BS_NOTIFY | WS_TABSTOP,153,41,55,10,
+                    WS_EX_TRANSPARENT
+    LTEXT           "Column Count:",IDC_STATIC_COLUMN,98,64,56,8,SS_NOTIFY,
+                    WS_EX_TRANSPARENT
+    EDITTEXT        IDC_COLUMN_EDIT,162,62,38,12,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Address Width:",IDC_STATIC_ADDWIDTH,98,80,56,8,
+                    SS_NOTIFY,WS_EX_TRANSPARENT
+    EDITTEXT        IDC_ADDWIDTH_EDIT,162,78,38,12,ES_CENTER | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_EXTLIST,22,49,180,12,ES_AUTOHSCROLL
+    LTEXT           "Extensions:                                              e.g.: .dat .exe",
+                    IDC_STATIC_EXAMPLE,22,40,180,8
+    LTEXT           "Font Name:",IDC_STATIC_FONTNAME,17,30,65,10
+    COMBOBOX        IDC_COMBO_FONTNAME,83,28,125,30,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Font Size:",IDC_STATIC_FONTSIZE,17,48,60,10
+    COMBOBOX        IDC_COMBO_FONTSIZE,83,46,50,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Capital letters mode",IDC_CHECK_CLM,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_TABSTOP,17,64,79,12,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Bold",IDC_CHECK_BOLD,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_TABSTOP,145,50,70,12,WS_EX_TRANSPARENT
+    CONTROL         "Italic",IDC_CHECK_ITALIC,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_TABSTOP,145,63,70,12,WS_EX_TRANSPARENT
+    CONTROL         "Underline",IDC_CHECK_UNDERLINE,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_TABSTOP,145,76,70,12,WS_EX_TRANSPARENT
+    CTEXT           "Text",IDC_STATIC_TXT,125,24,40,10
+    CTEXT           "Back",IDC_STATIC_BK,170,24,40,10
+    LTEXT           "Regular Text:",IDC_STATIC_REGTXT,17,36,100,10
+    COMBOBOX        IDC_COMBO_REGTXT_TXT,125,34,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_REGTXT_BK,170,34,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Selection:",IDC_STATIC_SEL,17,52,100,10
+    COMBOBOX        IDC_COMBO_SEL_TXT,125,50,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_SEL_BK,170,50,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Compare:",IDC_STATIC_DIFF,17,68,100,10
+    COMBOBOX        IDC_COMBO_DIFF_TXT,125,66,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_DIFF_BK,170,66,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Bookmark:",IDC_STATIC_BKMK,17,84,100,10
+    COMBOBOX        IDC_COMBO_BKMK,125,82,40,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Ok",IDOK,110,103,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,168,103,50,14
+END
+
+IDD_COLOR_POPUP DIALOGEX 0, 0, 132, 113
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LISTBOX         IDC_COLOR_LIST,7,7,117,79,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | LBS_MULTICOLUMN | NOT WS_BORDER | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "More Colors...",IDOK,39,92,55,14
+END
+
+IDD_GOTO_DLG DIALOGEX 26, 41, 269, 86
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Go To..."
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_GOTO,96,18,74,12,ES_LOWERCASE | ES_AUTOHSCROLL
+    CONTROL         "...to Line",IDC_CHECK_LINE,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_TABSTOP,192,63,63,10
+    DEFPUSHBUTTON   "&Go !",IDOK,192,18,70,14
+    PUSHBUTTON      "I'm going &nowhere",IDCANCEL,192,36,70,14
+    LTEXT           "You are here:",IDC_STATIC_HERE,7,7,93,8
+    LTEXT           "0123456789",IDC_CURRLINE,100,7,70,8
+    LTEXT           "You want to go:",IDC_STATIC_GO,7,20,85,8
+    LTEXT           "You can't go further than:",IDC_STATIC_MAX,7,39,93,8,
+                    NOT WS_GROUP
+    LTEXT           "0123456789",IDC_LASTLINE,100,39,70,8
+    CONTROL         "Address",IDC_RADIO_ADDRESS,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,15,63,78,10
+    CONTROL         "Offset",IDC_RADIO_OFFSET,"Button",BS_AUTORADIOBUTTON,
+                    100,63,70,10
+    GROUPBOX        "",IDC_STATIC,7,53,255,25
+END
+
+IDD_FINDREPLACE_DLG DIALOGEX 36, 44, 331, 169
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Find"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_SWITCH,"SysTabControl32",0x0,0,0,331,169
+    DEFPUSHBUTTON   "Find Next",IDOK,231,20,90,14,WS_GROUP
+    COMBOBOX        IDC_COMBO_FIND,68,20,154,50,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_REPLACE,68,39,153,50,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Count",IDC_COUNT,231,38,90,14
+    PUSHBUTTON      "&Replace",IDC_REPLACE,231,38,90,14
+    PUSHBUTTON      "Replace &All",IDC_REPLACEALL,231,56,90,14
+    CONTROL         "In &selection",IDC_CHECK_IN_SEL,"Button",
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,156,58,73,10
+    COMBOBOX        IDC_COMBO_DATATYPE,68,58,71,77,CBS_DROPDOWNLIST | 
+                    CBS_DISABLENOSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Close",IDCANCEL,231,74,90,14
+    CONTROL         "Wrap ar&ound",IDC_CHECK_WRAP,"Button",BS_AUTOCHECKBOX | 
+                    BS_MULTILINE | WS_GROUP | WS_TABSTOP,6,77,137,17
+    CONTROL         "Match &case",IDC_CHECK_MATCHCASE,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,6,94,138,12
+    CONTROL         "&Up",IDC_RADIO_DIRUP,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,155,87,45,12
+    CONTROL         "&Down",IDC_RADIO_DIRDOWN,"Button",BS_AUTORADIOBUTTON,
+                    155,98,45,12
+    CONTROL         "Top",IDC_RADIO_TOP,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,155,125,28,10
+    CONTROL         "Middle",IDC_RADIO_MIDDLE,"Button",BS_AUTORADIOBUTTON,
+                    155,137,36,10
+    CONTROL         "Bottom",IDC_RADIO_BOTTOM,"Button",BS_AUTORADIOBUTTON,
+                    155,149,39,10
+    CONTROL         "Transparency",IDC_CHECK_TRANSPARENT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,6,150,55,10
+    CONTROL         "",IDC_SLIDER_PERCENTAGE,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | NOT WS_VISIBLE | WS_TABSTOP,68,150,53,10
+    LTEXT           "Find what :",IDC_STATIC_FIND,6,22,55,8
+    LTEXT           "Re&place with :",IDC_STATIC_REPLACE,6,41,55,8
+    LTEXT           "Data &type :",IDC_STATIC_TYPE,6,61,58,8,WS_TABSTOP
+    GROUPBOX        "Direction",IDC_STATIC_DIRECTION,149,78,62,34,WS_GROUP
+    GROUPBOX        "Display Position",IDC_STATIC_POSITION,149,114,62,48
+    GROUPBOX        "",IDC_STATIC_REPALL,149,50,177,22
+END
+
+IDD_PATTERN_DLG DIALOGEX 0, 0, 254, 44
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Replace Pattern/Insert Column"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Hex pattern:",IDC_STATIC_PATTERN,7,7,41,12,
+                    SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_PATTERN,51,7,196,56,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "At column:",IDC_STATIC_COL,7,23,41,12,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_COL,51,23,16,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    RTEXT           "Count:",IDC_STATIC_COUNT,70,23,41,12,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_COUNT,112,23,16,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "Cancel",IDCANCEL,197,23,50,14,WS_GROUP
+    DEFPUSHBUTTON   "Ok",IDOK,142,23,50,14,WS_GROUP
+END
+
+IDD_COMPARE_DLG DIALOGEX 0, 0, 186, 53
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Hex-Editor Compare"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Left",IDC_BUTTON_LEFT,31,32,50,14
+    PUSHBUTTON      "Right",IDC_BUTTON_RIGHT,99,32,50,14
+    PUSHBUTTON      "Top",IDC_BUTTON_TOP,31,32,50,14
+    PUSHBUTTON      "Bottom",IDC_BUTTON_BOTTOM,99,32,50,14
+    CTEXT           "The layout settings are differnt.\nWould you like to set to left or to right view?",
+                    IDC_STATIC_COMPARE_LR,12,7,159,17
+    CTEXT           "The layout settings are differnt.\nWould you like to set to top or to bottom view?",
+                    IDC_STATIC_COMPARE_TB,12,7,159,17
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""hexresource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COLUMN_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 93
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 17
+    END
+
+    IDD_HELP_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 223
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 213
+    END
+
+    IDD_OPTION_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 218
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 117
+    END
+
+    IDD_GOTO_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 262
+        VERTGUIDE, 100
+        VERTGUIDE, 170
+        VERTGUIDE, 192
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 78
+    END
+
+    IDD_PATTERN_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 247
+        VERTGUIDE, 48
+        VERTGUIDE, 51
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 37
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,8,3,0
+ PRODUCTVERSION 0,8,3,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
+            VALUE "CompanyName", "jens.plugin.npp@gmx.de"
+            VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
+            VALUE "FileVersion", "0.8.3"
+            VALUE "InternalName", "HexEditor for npp.exe"
+            VALUE "LegalCopyright", "Copyright 2006-2007 by Jens Lorenz"
+            VALUE "OriginalFilename", "HexEditor.dll"
+            VALUE "ProductName", "Hex Edit Plugin"
+            VALUE "ProductVersion", "0.8.3"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TB_HEX              BITMAP                  "..\\res\\hex.bmp"
+#endif    // German (Germany) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,302 @@
+//this file is part of Hex Edit Plugin for Notepad++
+//Copyright (C)2006 Jens Lorenz <jens.plugin.npp@gmx.de>
+//
+//This program is free software; you can redistribute it and/or
+//modify it under the terms of the GNU General Public License
+//as published by the Free Software Foundation; either
+//version 2 of the License, or (at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program; if not, write to the Free Software
+//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+/**	Version Management for Notepad++ **/
+#define		_OutputDebugString_
+/** End **/
+
+
+#ifndef HEX_H
+#define HEX_H
+
+#define TITLETIP_CLASSNAME "MyToolTip"
+
+#include "Scintilla.h"
+#include "Notepad_plus_rc.h"
+#include "PluginInterface.h"
+#include "NativeLang_def.h"
+#include <windows.h>
+#include <TCHAR.h>
+#include <vector>
+
+using namespace std;
+
+
+const TCHAR dlgEditor[]		= _T("HEX-Editor");
+const TCHAR addWidth[]		= _T("Address Width");
+const TCHAR columns[]		= _T("Columns");
+const TCHAR bits[]			= _T("Bits");
+const TCHAR bin[]			= _T("Binary");
+const TCHAR little[]		= _T("Little");
+const TCHAR fontname[]		= _T("Font Name");
+const TCHAR fontsize[]		= _T("Font Size");
+const TCHAR bold[]			= _T("Bold");
+const TCHAR italic[]		= _T("Italic");
+const TCHAR underline[]		= _T("Underline");
+const TCHAR capital[]		= _T("Capitel");
+const TCHAR gotoProp[]		= _T("GotoIsHex");
+const TCHAR extensions[]	= _T("Extensions");
+const TCHAR rgbRegTxt[]		= _T("RGB Regular Text");
+const TCHAR rgbRegBk[]		= _T("RGB Regular Background");
+const TCHAR rgbSelTxt[]		= _T("RGB Selection Text");
+const TCHAR rgbSelBk[]		= _T("RGB Selection Background");
+const TCHAR rgbDiffTxt[]	= _T("RGB Difference Text");
+const TCHAR rgbDiffBk[]		= _T("RGB Difference Background");
+const TCHAR rgbBkMk[]		= _T("RGB Bookmark");
+
+
+const TCHAR HEXEDIT_INI[]	= _T("\\HexEditor.ini");
+const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
+
+
+#define HEX_BYTE		1
+#define HEX_WORD		2
+#define HEX_DWORD		4
+#define HEX_LONG		8
+
+typedef enum 
+{
+	HEX_EDIT_HEX,
+	HEX_EDIT_ASCII
+} eEdit;
+
+typedef enum 
+{
+	HEX_SEL_NORM,
+	HEX_SEL_VERTICAL,
+	HEX_SEL_HORIZONTAL,
+	HEX_SEL_BLOCK
+} eSel;
+
+typedef enum
+{
+	HEX_LINE_FIRST,
+	HEX_LINE_MIDDLE,
+	HEX_LINE_LAST
+} eLineVis;
+
+typedef enum
+{
+	HEX_COLOR_REG_TXT,
+	HEX_COLOR_REG_BK,
+	HEX_COLOR_SEL_TXT,
+	HEX_COLOR_SEL_BK,
+	HEX_COLOR_DIFF_TXT,
+	HEX_COLOR_DIFF_BK,
+	HEX_COLOR_BKMK
+} eColorType;
+
+typedef enum
+{
+	HEX_COLOR_REG,
+	HEX_COLOR_SEL,
+	HEX_COLOR_DIFF
+} eSelType;
+
+typedef enum
+{
+	HEX_ITEM_FIRST,
+	HEX_ITEM_MIDDLE,
+	HEX_ITEM_LAST,
+	HEX_ITEM_MIDDLE_FULL
+} eSelItem;
+
+
+#define		COMBO_STR_MAX	1024
+
+typedef struct
+{
+	INT 			length;
+	TCHAR			text[COMBO_STR_MAX];
+} tComboInfo;
+
+typedef struct
+{
+	LONG				lAddress;				// bookmark address
+	UINT				iItem;					// row of bookmark
+} tBkMk;
+
+typedef struct
+{	
+	char				pszFileName[MAX_PATH];	// identifier of struct
+	BOOL				isModified;				// stores the modification state
+	BOOL				isVisible;				// is current file visible
+	BOOL				addWidth;				// width of address field
+	SHORT				columns;				// number of columns
+	SHORT				bits;					// number of bits used
+	BOOL				isBin;					// shows in binary
+	BOOL				isLittle;				// shows in little endian
+	eEdit				editType;				// edit in hex or in ascii
+	UINT				firstVisRow;			// last selected scroll position
+	vector<tBkMk>		vBookmarks;				// bookmarks of the view
+
+	BOOL				isSel;					// is text selected...
+	eSel				selection;				// selection type
+	UINT				cursorItem;				// (selection end) / (pos) item
+	UINT				cursorSubItem;			// (selection end) / (pos) sub item
+	UINT				cursorPos;				// cursor position
+	UINT				anchorItem;				// selection start item
+	UINT				anchorSubItem;			// selection start sub item
+	UINT				anchorPos;				// start position edit position
+
+	LPSTR				pCompareData;			// pointer to highlight different data
+} tHexProp;
+
+typedef struct
+{
+	COLORREF			rgbRegTxt;				// regular text color
+	COLORREF			rgbRegBk;				// regular background color
+	COLORREF			rgbSelTxt;				// selected text color
+	COLORREF			rgbSelBk;				// selected background color
+	COLORREF			rgbDiffTxt;				// differnece text color
+	COLORREF			rgbDiffBk;				// difference background color
+	COLORREF			rgbBkMk;				// bookmark color
+} tColor;
+
+typedef struct
+{
+	BOOL				isCapital;				// hex view in capital letters
+	CHAR				szFontName[128];		// font name of view
+	UINT				iFontSizeElem;			// font size element (content is not size!!!)
+	BOOL				isBold;					// font is bold
+	BOOL				isItalic;				// font is italic
+	BOOL				isUnderline;			// font is underline
+} tFont;
+
+typedef struct
+{	
+	tHexProp			hexProp;				// default hex property
+	CHAR				szExtensions[256];		// auto association to enable hex view
+	tColor				colorProp;				// color settings
+	tFont				fontProp;				// font settings
+} tProp;
+
+
+typedef struct
+{
+	char*		text;
+	UINT		length;
+	eSel		selection;
+	UINT		stride;
+	UINT		items;
+} tClipboard;
+
+
+typedef enum
+{
+	HEX_CODE_NPP_ASCI = 0,
+	HEX_CODE_NPP_UTF8,
+	HEX_CODE_NPP_UTF8_BOM,
+	HEX_CODE_NPP_USCBE,
+	HEX_CODE_NPP_USCLE
+} eNppCoding;
+
+typedef enum
+{
+	E_OK		= 0,
+	E_START		= -1,
+	E_STRIDE	= -2
+} eError;
+
+enum UniMode {
+	uni8Bit, 
+	uniUTF8,
+	uni16BE,
+	uni16LE,
+	uniCookie,
+	uniEnd
+};
+
+#define G_FONTSIZE_MAX		10
+#define FONTSIZE_DEFAULT	6		// 16
+const UINT g_iFontSize[G_FONTSIZE_MAX] = {8, 9, 10, 11, 12, 14, 16, 18, 20, 22};
+
+#define LITTLE_REPLEACE_ERROR 																	\
+  if (NLMessageBox(_hInst, _hParent, "MsgBox ReplError", MB_ICONERROR | MB_OK) == FALSE)		\
+	::MessageBox(_hParent, "In Little-Endian-Mode the replacing values could only be column\n"	\
+						   "wise. For example in 16-bit mode the find length could be 2 and\n"	\
+						   "replace length 8 or other way round.",								\
+						   "Hex-Editor Error",														\
+						   MB_OK | MB_ICONERROR)
+
+#define LITTLE_DELETE_ERROR 																	\
+  if (NLMessageBox(_hInst, _hParent, "MsgBox DelError", MB_ICONERROR | MB_OK) == FALSE)			\
+	::MessageBox(_hParent, "In Little-Endian-Mode deleting of values could only be column wise.",\
+						   "Hex-Editor Error",														\
+						   MB_OK | MB_ICONERROR)
+
+
+
+UINT ScintillaMsg(HWND hWnd, UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
+void ScintillaGetText(HWND hWnd, char* text, INT start, INT end);
+UINT ScintillaMsg(UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
+void ScintillaGetText(char* text, INT start, INT end);
+void CleanScintillaBuf(HWND hWnd);
+void UpdateCurrentHScintilla(void);
+HWND getCurrentHScintilla(void);
+
+
+
+void loadSettings(void);
+void saveSettings(void);
+void setHexMask(void);
+void initMenu(void);
+
+void checkMenu(BOOL state);
+tHexProp getProp(void);
+BOOL getCLM(void);
+LPCSTR getFontName(void);
+UINT getFontSize(void);
+UINT getFontSizeElem(void);
+void setFontSizeElem(UINT iElem);
+BOOL isFontBold(void);
+BOOL isFontItalic(void);
+BOOL isFontUnderline(void);
+COLORREF getColor(eColorType type);
+
+void toggleHexEdit(void);
+void compareHex(void);
+void clearCompare(void);
+void openPropDlg(void);
+void insertColumnsDlg(void);
+void replacePatternDlg(void);
+void openHelpDlg(void);
+LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void setMenu(void);
+void ActivateWindow(void);
+void SystemUpdate(void);
+void GetSecondFileName(void);
+void DialogUpdate(void);
+void DoCompare(void);
+
+/* Global Function of HexEdit */
+BOOL IsExtensionRegistered(LPCTSTR file);
+void ChangeClipboardDataToHex(tClipboard *clipboard);
+void LittleEndianChange(HWND hTarget, HWND hSource);
+eError replaceLittleToBig(HWND hSource, INT startPos, INT lengthOld, INT lengthNew);
+
+/* Extended Window Funcions */
+eNppCoding GetNppEncoding(void);
+void ChangeNppMenu(BOOL toHexStyle, HWND hSci);
+void AppendNppMenu(HMENU hNppMenu, UINT idItem, HMENU & hMenu);
+void ClientToScreen(HWND hWnd, RECT* rect);
+void ScreenToClient(HWND hWnd, RECT* rect);
+
+
+#endif //HEX_H
+
