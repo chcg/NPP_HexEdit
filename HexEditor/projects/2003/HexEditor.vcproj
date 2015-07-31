@@ -15,7 +15,7 @@
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -60,7 +60,7 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -72,7 +72,7 @@
 				OptimizeForProcessor="1"
 				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="../../src,../../src/HelpDlg,../../src/MISC,../../src/OptionDlg,../../src/UserDlg,../../../Common/Ccpp,../../../NativeLang/src"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS;UNICODE"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
@@ -88,6 +88,8 @@
 				OutputFile="C:/Programme/Notepad++/Plugins/HexEditor.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
+				GenerateMapFile="TRUE"
+				MapFileName="C:\Projects\NppPlugins\HexEditor\map\HexEditor.map"
 				SubSystem="2"
 				StackReserveSize="0"
 				OptimizeReferences="2"
@@ -277,6 +279,12 @@
 				</File>
 				<File
 					RelativePath="..\..\..\Common\Ccpp\PluginInterface.h">
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							AdditionalDependencies=""/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\Common\Ccpp\SciSubClassWrp.h">

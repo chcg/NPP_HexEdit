@@ -40,18 +40,16 @@ void MultiTypeCombo::init(HWND hNpp, HWND hCombo)
 	_hNpp	= hNpp;
 	_hCombo	= hCombo;
 
-	::SetWindowLong(_hSelf, GWL_STYLE, WS_VISIBLE | WS_CHILD);
-	::SetWindowLong(_hSelf, GWL_EXSTYLE, CBS_DROPDOWN | CBS_AUTOHSCROLL);
+	::SetWindowLongPtr(_hSelf, GWL_STYLE, WS_VISIBLE | WS_CHILD);
+	::SetWindowLongPtr(_hSelf, GWL_EXSTYLE, CBS_DROPDOWN | CBS_AUTOHSCROLL);
 
 	/* subclass combo to get edit messages */
 	COMBOBOXINFO	comboBoxInfo;
 	comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 
 	::SendMessage(_hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&comboBoxInfo);
-	::SetWindowLong(comboBoxInfo.hwndItem, GWL_USERDATA, reinterpret_cast<LONG>(this));
-	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongW(comboBoxInfo.hwndItem, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
-
-	_baseCoding = GetNppEncoding();
+	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWL_USERDATA, reinterpret_cast<LONG>(this));
+	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(comboBoxInfo.hwndItem, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
 }
 
 
@@ -63,44 +61,7 @@ LRESULT MultiTypeCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		{
 			extern tClipboard g_clipboard;
 
-			if (g_clipboard.text == NULL)
-			{
-				if ((_currDataType == HEX_CODE_ASCI) ||
-					(_currDataType == HEX_CODE_HEX))
-				{
-					if (OpenClipboard(_hParent))
-					{
-						eCodingType coding	= HEX_CODE_ASCI;
-						HGLOBAL		hglb	= NULL;
-
-						if (IsClipboardFormatAvailable(CF_TEXT))
-						{
-							hglb   = GetClipboardData(CF_TEXT);
-						}
-						if (IsClipboardFormatAvailable(CF_UNICODETEXT))
-						{
-							hglb   = GetClipboardData(CF_UNICODETEXT);
-							coding = HEX_CODE_UNI;
-						}
-
-						if (hglb != NULL) 
-						{
-							tComboInfo	info;
-
-							info.length = (INT)::GlobalSize(hglb);
-							memcpy(info.text, ::GlobalLock(hglb), info.length);
-
-							decode(&info, coding);
-							encode(&info, _currDataType);
-							SendMessage(hwnd, EM_REPLACESEL, FALSE, (LPARAM)info.text);
-							GlobalUnlock(hglb);
-						}
-						CloseClipboard();
-						return 0;
-					}
-				}
-			}
-			else
+			if (g_clipboard.text != NULL)
 			{
 				tComboInfo	info;
 
@@ -168,8 +129,8 @@ void MultiTypeCombo::addText(tComboInfo info)
 
 	tEncComboInfo	encInfo;
 
-	encInfo.comboInfo	= info	;
-	encInfo.codePage	= GetNppEncoding();
+	encInfo.comboInfo	= info;
+	encInfo.codePage	= _docCodePage;
 
 	/* item missed create new and select it correct */
 	if (hasFoundOn == -1)
@@ -227,7 +188,7 @@ eCodingType MultiTypeCombo::setCodingType(eCodingType code)
 		tEncComboInfo	encInfo;
 
 		encInfo.comboInfo	= _currData	;
-		encInfo.codePage	= GetNppEncoding();
+		encInfo.codePage	= _docCodePage;
 		selectComboText(encInfo);
 	}
 	else
@@ -238,13 +199,17 @@ eCodingType MultiTypeCombo::setCodingType(eCodingType code)
 	return oldDataType;
 }
 
+void MultiTypeCombo::setDocCodePage(eNppCoding codepage)
+{
+	_docCodePage = codepage;
+}
 
 BOOL MultiTypeCombo::setComboText(tComboInfo info, UINT message)
 {	
 	tEncComboInfo	encInfo;
 
 	encInfo.comboInfo	= info;
-	encInfo.codePage	= GetNppEncoding();
+	encInfo.codePage	= _docCodePage;
 	return setComboText(encInfo, message);
 }
 
@@ -265,19 +230,19 @@ BOOL MultiTypeCombo::setComboText(tEncComboInfo info, UINT message)
 	}
 	else
 	{
-		::SendMessage(_hCombo, message, 0, (LPARAM)info.text);
+		::SendMessageA(_hCombo, message, 0, (LPARAM)info.text);
 	}
 
 	return isAdd;
 }
 
 
-void MultiTypeCombo::getComboText(char* str)
+void MultiTypeCombo::getComboText(CHAR* str)
 {
 	if (_currDataType == HEX_CODE_UNI) {
 		::SendMessageW(_hCombo, WM_GETTEXT, COMBO_STR_MAX, (LPARAM)str);
 	} else {
-		::SendMessage(_hCombo, WM_GETTEXT, COMBO_STR_MAX, (LPARAM)str);
+		::SendMessageA(_hCombo, WM_GETTEXT, COMBO_STR_MAX, (LPARAM)str);
 	}
 }
 
@@ -290,7 +255,7 @@ void MultiTypeCombo::selectComboText(tEncComboInfo info)
 	if (_currDataType == HEX_CODE_UNI) {
 		lResult = ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text);
 	} else {
-		lResult = ::SendMessage(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text);
+		lResult = ::SendMessageA(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text);
 	}
 	::SendMessage(_hCombo, CB_SETCURSEL, lResult, 0);
 }
@@ -308,9 +273,9 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 		}
 		case HEX_CODE_UNI:
 		{
-			char			buffer[COMBO_STR_MAX * 2];
+			CHAR			buffer[COMBO_STR_MAX * 2];
 			UINT			length		= 0;
-			eNppCoding		nppCoding	= GetNppEncoding();
+			eNppCoding		nppCoding	= _docCodePage;
 			INT				uniMask		= IS_TEXT_UNICODE_NOT_UNICODE_MASK;
 			UINT			codePage	= 0;
 
@@ -351,48 +316,56 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 		{
 			INT	length = (INT)strlen(info->text);
 
-			char *temp	= (char*)new char[length+1];
-			char *corr	= (char*)new char[length+1];
-			char *ptr   = NULL;
+			LPSTR temp	= (LPSTR)new CHAR[length+1];
+			LPSTR corr	= (LPSTR)new CHAR[length+1];
+			LPSTR ptr   = NULL;
 
-			/* makes string 'AA BB CC' -> 'AABBCC' */
-			temp[0] = 0;
-			strcpy(corr, info->text);
-			ptr = strtok(corr, " ");
-
-			while (ptr != NULL)
+			if ((temp != NULL) && (corr != NULL))
 			{
-				strcat(temp, ptr);
-				ptr = strtok(NULL, " ");
-			}
-			delete [] corr;
+				/* makes string 'AA BB CC' -> 'AABBCC' */
+				temp[0] = 0;
+				strcpy(corr, info->text);
+				ptr = strtok(corr, " ");
 
-			/* if sting is odd -> return */
-			length = strlen(temp);
-			if (length & 0x1)
-			{
-				HWND hWnd = ::GetActiveWindow();
-				if (NLMessageBox(_hInst, _hNpp, "MsgBox OddDigits", MB_ICONWARNING | MB_OK) == FALSE)
-					::MessageBox(_hNpp, "There are odd digits. The data will be trunkated!", "Hex-Editor", MB_ICONWARNING | MB_OK);
-				length--;
-			}
-
-			for (INT i = length - 1; i >= 0; --i)
-			{
-				info->text[i] = 0;
-				for (INT j = 0; j < 2; j++)
+				while (ptr != NULL)
 				{
-					info->text[i] <<= 4;
-					info->text[i] |= decMask[temp[2*i+j]];
+					strcat(temp, ptr);
+					ptr = strtok(NULL, " ");
 				}
+
+				/* if sting is odd -> return */
+				length = strlen(temp);
+				if (length & 0x1)
+				{
+					HWND hWnd = ::GetActiveWindow();
+					if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK) == FALSE)
+						::MessageBox(_hNpp, _T("There are odd digits. The data will be trunkated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
+					length--;
+				}
+
+				for (INT i = length - 1; i >= 0; --i)
+				{
+					info->text[i] = 0;
+					for (INT j = 0; j < 2; j++)
+					{
+						info->text[i] <<= 4;
+						info->text[i] |= decMask[temp[2*i+j]];
+					}
+				}
+				info->length = (INT)(length >> 1);
+				info->text[info->length] = 0;
 			}
-			info->length = (INT)(length >> 1);
-			info->text[info->length] = 0;
-			delete [] temp;
+
+			if (corr != NULL) {
+				delete [] corr;
+			}
+			if (temp != NULL) {
+				delete [] temp;
+			}
 			break;
 		}
 		default:
-			OutputDebugString("Decode Error!!!\n");
+			OutputDebugString(_T("Decode Error!!!\n"));
 			break;
 	}
 }
@@ -404,7 +377,7 @@ void MultiTypeCombo::encode(tComboInfo* info, eCodingType type)
 	tEncComboInfo	encInfo;
 	
 	encInfo.comboInfo	= *info;
-	encInfo.codePage	= GetNppEncoding();
+	encInfo.codePage	= _docCodePage;
 	encode(&encInfo, type);
 	*info = encInfo.comboInfo;
 }
@@ -419,7 +392,7 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 		}
 		case HEX_CODE_UNI:
 		{
-			char			buffer[COMBO_STR_MAX * 2];
+			CHAR			buffer[COMBO_STR_MAX * 2];
 			size_t			length		= 0;
 			INT				uniMask		= IS_TEXT_UNICODE_NOT_UNICODE_MASK;
 			UINT			codePage	= CP_ACP;
@@ -462,17 +435,20 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 		{
 			if (info->length != 0)
 			{
-				char *temp	= (char*)new char[info->length+1];
-				memcpy(temp, info->text, info->length);
-
-				strcpy(info->text, hexMask[(UCHAR)temp[0]]);
-				for (INT i = 1; (i < info->length) && ((i*3) < COMBO_STR_MAX); i++)
+				LPSTR temp	= (LPSTR)new CHAR[info->length+1];
+				if (temp != NULL)
 				{
-					strcat(info->text, " ");
-					strcat(info->text, hexMask[(UCHAR)temp[i]]);
+					memcpy(temp, info->text, info->length);
+
+					strcpy(info->text, hexMask[(UCHAR)temp[0]]);
+					for (INT i = 1; (i < info->length) && ((i*3) < COMBO_STR_MAX); i++)
+					{
+						strcat(info->text, " ");
+						strcat(info->text, hexMask[(UCHAR)temp[i]]);
+					}
+					info->length = (info->length * 3) - 1;
+					delete [] temp;
 				}
-				info->length = (info->length * 3) - 1;
-				delete [] temp;
 			}
 			break;
 		}

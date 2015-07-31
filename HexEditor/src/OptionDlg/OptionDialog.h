@@ -27,6 +27,12 @@
 
 using namespace std;
 
+#ifdef UNICODE
+#define string wstring
+#endif
+
+
+
 class OptionDlg : public StaticDialog
 {
 

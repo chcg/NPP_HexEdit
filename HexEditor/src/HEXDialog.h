@@ -46,7 +46,7 @@ using namespace std;
 extern tClipboard	g_clipboard;
 
 
-class HexEdit : public StaticDialog //Window
+class HexEdit : public StaticDialog, private SciSubClassWrp
 {
 public:
 	HexEdit(void);
@@ -55,10 +55,8 @@ public:
 
 	void destroy(void)
 	{
-		if (_SciWrp.OrigSciWndProc != NULL)	{
-			/* restore subclasses */
-			_SciWrp.CleanUp();
-		}
+		/* restore subclasses */
+		SciSubClassWrp::CleanUp();
 
 		if (_hFont) {
 			/* destroy font */
@@ -68,31 +66,29 @@ public:
 
    	void doDialog(BOOL toggle = FALSE);
 
-	void UpdateDocs(const char** pFiles, UINT numFiles, INT openDoc);
+	void UpdateDocs(LPCWSTR* pFiles, UINT numFiles, INT openDoc);
 
-	void FileNameChanged(char* newPath)
+	void FileNameChanged(LPWSTR newPath)
 	{
 		if (_openDoc == -1)
 			return;
 
-		strcpy(_hexProp[_openDoc].pszFileName, newPath);
+		wcscpy(_hexProp[_openDoc].pszFileName, newPath);
 	};
 
 	void SetParentNppHandle(HWND hWnd, UINT cont)
 	{
 		/* restore subclasses */
-		if (_SciWrp.OrigSciWndProc != NULL)	{
-			_SciWrp.CleanUp();
-		}
+		SciSubClassWrp::CleanUp();
 
 		/* store given parent handle */
 		_hParentHandle = hWnd;
 
 		/* intial subclassing */
 		if (cont == MAIN_VIEW) {
-			_SciWrp.Init(hWnd, wndParentProc0);
+			SciSubClassWrp::Init(hWnd, wndParentProc0);
 		} else {
-			_SciWrp.Init(hWnd, wndParentProc1);
+			SciSubClassWrp::Init(hWnd, wndParentProc1);
 		}
 	};
 
@@ -102,6 +98,13 @@ public:
 		{
 			*_pCurProp = prop;
 
+			_oldAnchorItem		= prop.anchorItem;
+			_oldAnchorSubItem	= prop.anchorSubItem;
+			_oldAnchorCurPos	= prop.anchorPos;
+			_oldCursorItem		= prop.cursorItem;
+			_oldCursorSubItem	= prop.cursorSubItem;
+			_oldCursorCurPos	= prop.cursorPos;
+
 			if (_pCurProp->isVisible == TRUE) {
 				UpdateHeader();
 				::RedrawWindow(_hListCtrl, NULL, NULL, TRUE);
@@ -109,14 +112,14 @@ public:
 		}
 	};
 
-	const tHexProp* GetHexProp(void)
+	tHexProp GetHexProp(void)
 	{
 		if (_pCurProp != NULL) {
 			GetLineVis();
-			return _pCurProp;
+			return *_pCurProp;
 		} 
-		tHexProp	prop;
-		return &prop;
+		tHexProp prop;
+		return prop;
 	};
 
 
@@ -124,16 +127,24 @@ public:
 	void Cut(void);
 	void Copy(void);
 	void Paste(void);
+	void SelectAll(void);
 	void ZoomIn(void);
 	void ZoomOut(void);
 	void ZoomRestore(void);
 	void ToggleBookmark(void);
 	void NextBookmark(void);
 	void PrevBookmark(void);
+	void ClearBookmarks(void);
+	void CutBookmarkLines(void);
+	void CopyBookmarkLines(void);
+	void PasteBookmarkLines(void);
+	void DeleteBookmarkLines(void);
 
 	void RedoUndo(UINT position, INT length, UINT code)
 	{
 		if (_pCurProp == NULL)
+			return;
+		if (_pCurProp->isVisible == FALSE)
 			return;
 
 		if (_iUnReCnt == -1) {
@@ -149,7 +160,11 @@ public:
 		if (code & SC_LASTSTEPINUNDOREDO) {
 			if (code & SC_MOD_INSERTTEXT) {
 				if (_iUnReCnt > 1) {
-					SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + length, HEX_SEL_BLOCK);
+					if (position < _uFirstPos) {
+						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + length, HEX_SEL_BLOCK);
+					} else {
+						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + length, HEX_SEL_BLOCK);
+					}
 				} else {
 					SetSelection(position, position + length, HEX_SEL_NORM, (position + length) % VIEW_ROW == 0);
 				}
@@ -159,6 +174,7 @@ public:
 			_iUnReCnt = -1;
 			_uUnReCode = 0;
 		}
+		EnsureVisible(_pCurProp->cursorItem, _pCurProp->cursorSubItem);
 	};
 
 	void TestLineLength()
@@ -167,7 +183,7 @@ public:
 			return;
 
 		/* correct length of file */
-		_currLength = _SciWrp.execute(SCI_GETLENGTH);
+		_currLength = SciSubClassWrp::execute(SCI_GETLENGTH);
 
 		/* correct item count */
 		if ((_currLength == GetCurrentPos()) && (_pCurProp->anchorPos == 0)) {
@@ -235,25 +251,10 @@ public:
 		return _pCurProp->isModified;
 	};
 
-	BOOL SetFont()
+	void UpdateFont(void)
 	{
-		BOOL	ret = FALSE;
-
-		if (_hFont) {
-			::DeleteObject(_hFont);
-		}
-
-		_hFont = ::CreateFont(g_iFontSize[_fontSize], 0, 0, 0,
-			(isFontBold() == TRUE) ? FW_BOLD : 0, isFontItalic(), isFontUnderline(),
-			0, ANSI_CHARSET, 0, 0, 0, 0, getFontName());
-		if (_hFont)
-		{
-			::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
-			UpdateHeader();
-			ret = TRUE;
-		}
-
-		return ret;
+		_fontSize	= getFontSizeElem();
+		SetFont();
 	};
 
 	void SetCompareResult(LPSTR compareData)
@@ -265,15 +266,17 @@ public:
 		::RedrawWindow(_hListCtrl, NULL, NULL, TRUE);
 	}
 
+	void SetStatusBar(void);
+
 protected :
 	BOOL CALLBACK run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
-	void ReadArrayToList(LPTSTR text,INT iItem, INT iSubItem);
-	void AddressConvert(LPTSTR text, INT length);
-	void DumpConvert(LPTSTR text, UINT length);
-	void BinHexConvert(LPTSTR text, INT length);
+	void ReadArrayToList(LPSTR text,INT iItem, INT iSubItem);
+	void AddressConvert(LPSTR text, INT length);
+	void DumpConvert(LPSTR text, UINT length);
+	void BinHexConvert(LPSTR text, INT length);
 	void MoveView(void);
 	void SetLineVis(UINT pos, eLineVis mode);
 	void GetLineVis(void);
@@ -291,7 +294,7 @@ private:
 	BOOL OnCharItem(WPARAM wParam, LPARAM lParam);
 	void SelectItem(UINT iItem, UINT iSubItem, INT iCursor = 0);
 	void DrawItemText(HDC hDc, DWORD item, INT subItem);
-	void DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPSTR text, UINT beg, UINT length, eSelItem sel, eSelType type);
+	void DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UINT beg, UINT length, eSelItem sel, eSelType type);
 
 	/* for edit in dump */
 	void OnMouseClickDump(WPARAM wParam, LPARAM lParam);
@@ -299,7 +302,7 @@ private:
 	BOOL OnCharDump(WPARAM wParam, LPARAM lParam);
 	void SelectDump(INT iItem, INT iCursor);
 	void DrawDumpText(HDC hDc, DWORD item, INT subItem);
-	void DrawPartOfDumpText(HDC hDc, RECT rc, LPSTR text, UINT beg, UINT length, eSelType type);
+	void DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT length, eSelType type);
 
 
 	INT  CalcCursorPos(LV_HITTESTINFO info);
@@ -313,9 +316,6 @@ private:
 
 	void ToggleBookmark(UINT item);
 	void UpdateBookmarks(UINT firstElem, INT length);
-
-	void SetStatusBar(void);
-
 
 	INT CalcStride(INT posBeg, INT posEnd)
 	{
@@ -340,6 +340,27 @@ private:
 	LRESULT runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK wndListProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 		return (((HexEdit *)(::GetWindowLong(hwnd, GWL_USERDATA)))->runProcList(hwnd, Message, wParam, lParam));
+	};
+
+	BOOL SetFont(void)
+	{
+		BOOL	ret = FALSE;
+
+		if (_hFont) {
+			::DeleteObject(_hFont);
+		}
+
+		_hFont = ::CreateFont(g_iFontSize[_fontSize], 0, 0, 0,
+			(isFontBold() == TRUE) ? FW_BOLD : 0, isFontItalic(), isFontUnderline(),
+			0, ANSI_CHARSET, 0, OUT_TT_ONLY_PRECIS, 0, FIXED_PITCH | FF_DONTCARE, getFontName());
+		if (_hFont)
+		{
+			::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
+			UpdateHeader();
+			ret = TRUE;
+		}
+
+		return ret;
 	};
 
 	void runCursor(HWND hwnd, UINT Message, WPARAM wParam, unsigned long lParam)
@@ -385,8 +406,7 @@ private:
 	{
 		if (drawRect == TRUE) {
 			::DrawFocusRect(hDc, &rcPos);
-		}
-		else if (_isCurOn == TRUE) {
+		} else if (_isCurOn == TRUE) {
 			::PatBlt(hDc, rcPos.left, rcPos.top, 2, rcPos.bottom - rcPos.top, PATINVERT);
 		}
 	};
@@ -431,9 +451,8 @@ private:
 			_oldCursorItem		= _pCurProp->cursorItem;
 			_oldCursorSubItem	= _pCurProp->cursorSubItem;
 			_oldCursorCurPos	= _pCurProp->cursorPos;
-
-			InvalidateNotepad();
 		}
+		InvalidateNotepad();
 	};
 
 	void EnsureVisible(UINT iItem, UINT iSubItem)
@@ -464,6 +483,9 @@ private:
 
 	void InvalidateNotepad(void)
 	{
+		/* select something in scintilla, it doesn't metter what your selected */
+		SciSubClassWrp::execute(SCI_SETSEL, 0, _pCurProp->isSel);
+
 		/* updates notepad icons and menus */
 		NMHDR	nm;
 		memset(&nm, 0, sizeof(NMHDR));
@@ -526,10 +548,9 @@ private:
 	NppData				_nppData;
 	HIMAGELIST			_hImageList;
 
-	CHAR				_iniFilePath[MAX_PATH];
+	LPCTSTR				_iniFilePath;
 
 	/* subclassing handle */
-	SciSubClassWrp		_SciWrp;
 	WNDPROC				_hDefaultListProc;
 
 	/* double buffer context */
@@ -554,6 +575,7 @@ private:
 	vector<tHexProp>	_hexProp;
 
 	/* for selection */
+	BOOL				_onChar;
 	BOOL				_isCurOn;
 	UINT				_fontSize;
 	UINT				_x;

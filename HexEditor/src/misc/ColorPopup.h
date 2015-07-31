@@ -60,9 +60,6 @@ private :
 
 	static BOOL CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 	BOOL CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
-
-
-
 };
 
 #endif //COLOR_POPUP_H

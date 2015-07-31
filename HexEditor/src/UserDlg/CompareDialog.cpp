@@ -81,7 +81,7 @@ BOOL CALLBACK CompareDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 			}
 
 			/* change language */
-			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, "CompDialog");
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("CompDialog"));
 			break;
 		}
 		case WM_COMMAND : 
@@ -118,25 +118,25 @@ BOOL CALLBACK CompareDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 					break;
 			}
 
-			const tHexProp* p_prop1 = _pHexEdit1->GetHexProp();
-			const tHexProp* p_prop2 = _pHexEdit2->GetHexProp();
+			tHexProp hexProp1 = _pHexEdit1->GetHexProp();
+			tHexProp hexProp2 = _pHexEdit2->GetHexProp();
 
 			/* set settings in on of the hex edit */
 			if (owEdit2 == TRUE)
 			{
-				tHexProp prop = *p_prop2;
-				prop.bits		= p_prop1->bits;
-				prop.columns	= p_prop1->columns;
-				prop.isBin		= p_prop1->isBin;
-				_pHexEdit2->SetHexProp(prop);
+				tHexProp hexProp = hexProp2;
+				hexProp.bits	= hexProp1.bits;
+				hexProp.columns	= hexProp1.columns;
+				hexProp.isBin	= hexProp1.isBin;
+				_pHexEdit2->SetHexProp(hexProp);
 			}
 			else
 			{
-				tHexProp prop = *p_prop1;
-				prop.bits		= p_prop2->bits;
-				prop.columns	= p_prop2->columns;
-				prop.isBin		= p_prop2->isBin;
-				_pHexEdit1->SetHexProp(prop);
+				tHexProp hexProp = hexProp1;
+				hexProp.bits	= hexProp2.bits;
+				hexProp.columns	= hexProp2.columns;
+				hexProp.isBin	= hexProp2.isBin;
+				_pHexEdit1->SetHexProp(hexProp);
 			}
             ::EndDialog(_hSelf, LOWORD(wParam));
 			break;

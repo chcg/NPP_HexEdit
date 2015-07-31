@@ -24,8 +24,6 @@
 #ifndef HEX_H
 #define HEX_H
 
-#define TITLETIP_CLASSNAME "MyToolTip"
-
 #include "Scintilla.h"
 #include "Notepad_plus_rc.h"
 #include "PluginInterface.h"
@@ -35,6 +33,9 @@
 #include <vector>
 
 using namespace std;
+
+
+#define TITLETIP_CLASSNAME _T("MyToolTip")
 
 
 const TCHAR dlgEditor[]		= _T("HEX-Editor");
@@ -58,16 +59,21 @@ const TCHAR rgbSelBk[]		= _T("RGB Selection Background");
 const TCHAR rgbDiffTxt[]	= _T("RGB Difference Text");
 const TCHAR rgbDiffBk[]		= _T("RGB Difference Background");
 const TCHAR rgbBkMk[]		= _T("RGB Bookmark");
-
+const TCHAR percent[]		= _T("Autostart Percent");
 
 const TCHAR HEXEDIT_INI[]	= _T("\\HexEditor.ini");
 const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
+
+#define AUTOSTART_MAX	1024000
+#define FIND_BLOCK		1024000
 
 
 #define HEX_BYTE		1
 #define HEX_WORD		2
 #define HEX_DWORD		4
 #define HEX_LONG		8
+
+#define MAX_PATH_UNICODE 780
 
 typedef enum 
 {
@@ -121,8 +127,8 @@ typedef enum
 
 typedef struct
 {
-	INT 			length;
-	TCHAR			text[COMBO_STR_MAX];
+	INT 				length;
+	CHAR				text[COMBO_STR_MAX];
 } tComboInfo;
 
 typedef struct
@@ -131,9 +137,19 @@ typedef struct
 	UINT				iItem;					// row of bookmark
 } tBkMk;
 
+typedef enum
+{
+	HEX_CODE_NPP_ASCI = 0,
+	HEX_CODE_NPP_UTF8,
+	HEX_CODE_NPP_UTF8_BOM,
+	HEX_CODE_NPP_USCBE,
+	HEX_CODE_NPP_USCLE
+} eNppCoding;
+
 typedef struct
 {	
-	char				pszFileName[MAX_PATH];	// identifier of struct
+	WCHAR				pszFileName[MAX_PATH];	// identifier of struct
+	eNppCoding			codePage;				// in Npp selected code page
 	BOOL				isModified;				// stores the modification state
 	BOOL				isVisible;				// is current file visible
 	BOOL				addWidth;				// width of address field
@@ -170,8 +186,14 @@ typedef struct
 
 typedef struct
 {
+	TCHAR				szExtensions[MAX_PATH];	// auto association to enable hex view
+	TCHAR				szPercent[4];			// autostart of Hex-Edit by % of NULL
+} tAutoStart;
+
+typedef struct
+{
 	BOOL				isCapital;				// hex view in capital letters
-	CHAR				szFontName[128];		// font name of view
+	TCHAR				szFontName[128];		// font name of view
 	UINT				iFontSizeElem;			// font size element (content is not size!!!)
 	BOOL				isBold;					// font is bold
 	BOOL				isItalic;				// font is italic
@@ -181,7 +203,7 @@ typedef struct
 typedef struct
 {	
 	tHexProp			hexProp;				// default hex property
-	CHAR				szExtensions[256];		// auto association to enable hex view
+	tAutoStart			autoProp;				// autostart settings
 	tColor				colorProp;				// color settings
 	tFont				fontProp;				// font settings
 } tProp;
@@ -196,21 +218,12 @@ typedef struct
 	UINT		items;
 } tClipboard;
 
-
-typedef enum
-{
-	HEX_CODE_NPP_ASCI = 0,
-	HEX_CODE_NPP_UTF8,
-	HEX_CODE_NPP_UTF8_BOM,
-	HEX_CODE_NPP_USCBE,
-	HEX_CODE_NPP_USCLE
-} eNppCoding;
-
 typedef enum
 {
 	E_OK		= 0,
 	E_START		= -1,
-	E_STRIDE	= -2
+	E_STRIDE	= -2,
+	E_MEMORY	= -3
 } eError;
 
 enum UniMode {
@@ -222,30 +235,37 @@ enum UniMode {
 	uniEnd
 };
 
+typedef struct tMenu {
+	UINT			uID;
+	UINT			uFlags;
+	TCHAR			szName[64];
+	vector<tMenu>	vSubMenu;
+} tMenu;
+
 #define G_FONTSIZE_MAX		10
 #define FONTSIZE_DEFAULT	6		// 16
 const UINT g_iFontSize[G_FONTSIZE_MAX] = {8, 9, 10, 11, 12, 14, 16, 18, 20, 22};
 
-#define LITTLE_REPLEACE_ERROR 																	\
-  if (NLMessageBox(_hInst, _hParent, "MsgBox ReplError", MB_ICONERROR | MB_OK) == FALSE)		\
-	::MessageBox(_hParent, "In Little-Endian-Mode the replacing values could only be column\n"	\
-						   "wise. For example in 16-bit mode the find length could be 2 and\n"	\
-						   "replace length 8 or other way round.",								\
-						   "Hex-Editor Error",														\
+#define LITTLE_REPLEACE_ERROR 																			\
+  if (NLMessageBox(_hInst, _hParent, _T("MsgBox ReplError"), MB_ICONERROR | MB_OK) == FALSE)			\
+	::MessageBox(_hParent, _T("In Little-Endian-Mode the replacing values could only be column\n")		\
+						   _T("wise. For example in 16-bit mode the find length could be 2 and\n")		\
+						   _T("replace length 8 or other way round."),									\
+						   _T("Hex-Editor Error"),														\
 						   MB_OK | MB_ICONERROR)
 
-#define LITTLE_DELETE_ERROR 																	\
-  if (NLMessageBox(_hInst, _hParent, "MsgBox DelError", MB_ICONERROR | MB_OK) == FALSE)			\
-	::MessageBox(_hParent, "In Little-Endian-Mode deleting of values could only be column wise.",\
-						   "Hex-Editor Error",														\
+#define LITTLE_DELETE_ERROR 																			\
+  if (NLMessageBox(_hInst, _hParent, _T("MsgBox DelError"), MB_ICONERROR | MB_OK) == FALSE)				\
+	::MessageBox(_hParent, _T("In Little-Endian-Mode deleting of values could only be column wise."),	\
+						   _T("Hex-Editor Error"),														\
 						   MB_OK | MB_ICONERROR)
 
 
 
 UINT ScintillaMsg(HWND hWnd, UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
-void ScintillaGetText(HWND hWnd, char* text, INT start, INT end);
+UINT ScintillaGetText(HWND hWnd, char* text, INT start, INT end);
 UINT ScintillaMsg(UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
-void ScintillaGetText(char* text, INT start, INT end);
+UINT ScintillaGetText(char* text, INT start, INT end);
 void CleanScintillaBuf(HWND hWnd);
 void UpdateCurrentHScintilla(void);
 HWND getCurrentHScintilla(void);
@@ -260,7 +280,7 @@ void initMenu(void);
 void checkMenu(BOOL state);
 tHexProp getProp(void);
 BOOL getCLM(void);
-LPCSTR getFontName(void);
+LPCTSTR getFontName(void);
 UINT getFontSize(void);
 UINT getFontSizeElem(void);
 void setFontSizeElem(UINT iElem);
@@ -285,15 +305,17 @@ void DialogUpdate(void);
 void DoCompare(void);
 
 /* Global Function of HexEdit */
-BOOL IsExtensionRegistered(LPCTSTR file);
+BOOL IsExtensionRegistered(LPCWSTR file);
+BOOL IsPercentReached(LPCWSTR file);
 void ChangeClipboardDataToHex(tClipboard *clipboard);
-void LittleEndianChange(HWND hTarget, HWND hSource);
-eError replaceLittleToBig(HWND hSource, INT startPos, INT lengthOld, INT lengthNew);
+BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length);
+eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt, INT lengthOld, INT lengthNew);
 
 /* Extended Window Funcions */
 eNppCoding GetNppEncoding(void);
 void ChangeNppMenu(BOOL toHexStyle, HWND hSci);
-void AppendNppMenu(HMENU hNppMenu, UINT idItem, HMENU & hMenu);
+void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
+void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
 void ClientToScreen(HWND hWnd, RECT* rect);
 void ScreenToClient(HWND hWnd, RECT* rect);
 

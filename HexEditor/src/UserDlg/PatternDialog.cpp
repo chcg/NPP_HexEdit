@@ -25,8 +25,8 @@ extern char	hexMask[256][3];
 
 void PatternDlg::patternReplace(HWND hHexEdit)
 {
-	if (NLGetText(_hInst, _hParent, "Pattern Replace", _txtCaption, sizeof(_txtCaption)) == 0) {
-		strcpy(_txtCaption, "Pattern Replace");
+	if (NLGetText(_hInst, _hParent, _T("Pattern Replace"), _txtCaption, sizeof(_txtCaption)) == 0) {
+		_tcscpy(_txtCaption, _T("Pattern Replace"));
 	}
 
 	doDialog(hHexEdit);
@@ -41,8 +41,8 @@ void PatternDlg::patternReplace(HWND hHexEdit)
 
 void PatternDlg::insertColumns(HWND hHexEdit)
 {
-	if (NLGetText(_hInst, _hParent, "Insert Columns", _txtCaption, sizeof(_txtCaption)) == 0) {
-		strcpy(_txtCaption, "Insert Columns");
+	if (NLGetText(_hInst, _hParent, _T("Insert Columns"), _txtCaption, sizeof(_txtCaption)) == 0) {
+		_tcscpy(_txtCaption, _T("Insert Columns"));
 	}
 
 	doDialog(hHexEdit);
@@ -80,7 +80,7 @@ BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 			_pCombo->setCodingType(HEX_CODE_HEX);
 
 			 /* change language */
-			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, "Pattern");
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("Pattern"));
 			::SetWindowText(_hSelf, _txtCaption);
 			break;
 		}
@@ -131,24 +131,26 @@ BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 
 BOOL PatternDlg::onInsert(void)
 {
+	BOOL	bRet	= FALSE;
+
 	_pCombo->getText(&_pattern);
 	if (_pattern.length == 0)
 	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox PatNotSet", MB_OK) == FALSE)
-			::MessageBox(_hParent, "Pattern is not set!", "Hex-Editor", MB_OK);
-		return FALSE;
+		if (NLMessageBox(_hInst, _hParent, _T("MsgBox PatNotSet"), MB_OK) == FALSE)
+			::MessageBox(_hParent, _T("Pattern is not set!"), _T("Hex-Editor"), MB_OK);
+		return bRet;
 	}
 
-	HWND		hSCI;
 	tHexProp	prop;
-	INT			count = 0;
-	INT			lines = 0;
-	INT			pos   = 0;
-	char		buffer[MAX_PATH];
+	HWND		hSciPat	= NULL;
+	HWND		hSciTgt	= getCurrentHScintilla();
+	INT			count	= 0;
+	INT			lines	= 0;
+	INT			pos		= 0;
+	TCHAR		buffer[17];
 
-	/* copy data into scintilla handle (encoded if necessary) */
-	hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
-	LittleEndianChange(hSCI, getCurrentHScintilla());
+	/* create pattern container */
+	hSciPat = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 
 	/* get params of Hex Edit */
 	::SendMessage(_hParentHandle, HEXM_GETSETTINGS, 0, (LPARAM)&prop);
@@ -156,34 +158,33 @@ BOOL PatternDlg::onInsert(void)
 
 	/* get count and test if params ok */
 	::GetDlgItemText(_hSelf, IDC_EDIT_COUNT, buffer, 16);
-	count = atoi(buffer);
+	count = _ttoi(buffer);
 	if ((count == 0) || ((count + prop.columns) > (128 / prop.bits)))
 	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox MaxColCnt", MB_OK|MB_ICONERROR) == FALSE)
-			::MessageBox(_hParent, "Maximum of 128 bytes can be shown in a row.", "Hex-Editor", MB_OK|MB_ICONERROR);
-		return FALSE;
+		if (NLMessageBox(_hInst, _hParent, _T("MsgBox MaxColCnt"), MB_OK|MB_ICONERROR) == FALSE)
+			::MessageBox(_hParent, _T("Maximum of 128 bytes can be shown in a row."), _T("Hex-Editor"), MB_OK|MB_ICONERROR);
+		return bRet;
 	}
 
 	/* get column position and test if exists */
 	::GetDlgItemText(_hSelf, IDC_EDIT_COL, buffer, 16);
-	pos = atoi(buffer);
+	pos = _ttoi(buffer);
 	if (pos > prop.columns)
 	{
-		CHAR	txtMsgBox[MAX_PATH];
+		TCHAR	txtMsgBox[MAX_PATH];
 
-		if (NLGetText(_hInst, _hParent, "Pos Between", buffer, sizeof(buffer)) == 0) {
-			sprintf(txtMsgBox, "Only column position between 0 and %d possible.", prop.columns);
+		if (NLGetText(_hInst, _hParent, _T("Pos Between"), buffer, sizeof(buffer)) == 0) {
+			_stprintf(txtMsgBox, _T("Only column position between 0 and %d possible."), prop.columns);
 		} else {
-			sprintf(txtMsgBox, buffer, prop.columns);
+			_stprintf(txtMsgBox, buffer, prop.columns);
 		}
-		::MessageBox(_hParent, txtMsgBox, "Hex-Editor", MB_OK|MB_ICONERROR);
-		return FALSE;
+		::MessageBox(_hParent, txtMsgBox, _T("Hex-Editor"), MB_OK|MB_ICONERROR);
+		return bRet;
 	}
 	else
 	{
 		pos *= prop.bits;
 	}
-
 
 	/* Values are ok -> create pattern */
 	INT	patSize = 0;
@@ -194,11 +195,9 @@ BOOL PatternDlg::onInsert(void)
 		cntPat++;
 	} while (patSize % (count * prop.bits));
 
-	/* fill data */
-	char*	pattern = new char[patSize+1];
-	for (INT i = 0; i < cntPat; i++)
-	{
-		memcpy(&pattern[i*_pattern.length], _pattern.text, _pattern.length);
+	/* fill data in pattern buffer */
+	for (INT i = 0; i < cntPat; i++) {
+		::SendMessage(hSciPat, SCI_ADDTEXT, _pattern.length, (LPARAM)_pattern.text);
 	}
 
 	/* extend column width of target */
@@ -208,45 +207,54 @@ BOOL PatternDlg::onInsert(void)
 	cntPat = 0;
 	for (i = 0; i < lines; i++)
 	{
-		ScintillaMsg(hSCI, SCI_SETCURRENTPOS, pos);
-		ScintillaMsg(hSCI, SCI_ADDTEXT, prop.bits * count, (LPARAM)&pattern[cntPat]);
-		::SendMessage(_hParentHandle, HEXM_UPDATEBKMK, pos, (LPARAM)prop.bits * count);
-		pos += (count + prop.columns) * prop.bits;
-		cntPat += prop.bits * count;
-		if (cntPat >= patSize)
-			cntPat = 0;
+		if (replaceLittleToBig(hSciTgt, hSciPat, cntPat, pos, 0, prop.bits * count) == E_OK)
+		{
+			::SendMessage(_hParentHandle, HEXM_UPDATEBKMK, pos, (LPARAM)prop.bits * count);
+			pos += (count + prop.columns) * prop.bits;
+			cntPat += prop.bits * count;
+			if (cntPat >= patSize)
+				cntPat = 0;
+		}
+		else
+		{
+			LITTLE_REPLEACE_ERROR;
+
+			/* free allocated space */
+			CleanScintillaBuf(hSciPat);
+			::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
+			return FALSE;
+		}
 	}
 
-	/* copy modified text back */
-	LittleEndianChange(getCurrentHScintilla(), hSCI);
-
 	/* free allocated space */
-	CleanScintillaBuf(hSCI);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
-	delete [] pattern;
+	CleanScintillaBuf(hSciPat);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
 
-	/* add text to combo ;) */
-	_pCombo->addText(_pattern);
-
+	if (bRet == TRUE) {
+		/* add text to combo ;) */
+		_pCombo->addText(_pattern);
+	}
 	return TRUE;
 }
 
 
 BOOL PatternDlg::onReplace(void)
 {
-	HWND		hSCI;
 	tHexProp	prop;
-	INT			count  = 0;
-	INT			lines  = 0;
-	INT			posBeg = 0;
-	INT			posEnd = 0;
+	BOOL		bRet	= TRUE;
+	HWND		hSciTgt	= getCurrentHScintilla();
+	HWND		hSciPat	= NULL;
+	INT			length	= 0;
+	INT			lines	= 0;
+	INT			posBeg	= 0;
+	INT			posEnd	= 0;
 
 	/* test if something is selected */
 	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
 	if (posBeg == posEnd)
 	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox SelectSomething", MB_OK) == FALSE)
-			::MessageBox(_hParent, "Select something in the text!", "Hex-Editor", MB_OK);
+		if (NLMessageBox(_hInst, _hParent, _T("MsgBox SelectSomething"), MB_OK) == FALSE)
+			::MessageBox(_hParent, _T("Select something in the text!"), _T("Hex-Editor"), MB_OK);
 		return FALSE;
 	}
 
@@ -254,132 +262,85 @@ BOOL PatternDlg::onReplace(void)
 	_pCombo->getText(&_pattern);
 	if (_pattern.length == 0)
 	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox PatNotSet", MB_OK) == FALSE)
-			::MessageBox(_hParent, "Pattern is not set!", "Hex-Editor", MB_OK);
+		if (NLMessageBox(_hInst, _hParent, _T("MsgBox PatNotSet"), MB_OK) == FALSE)
+			::MessageBox(_hParent, _T("Pattern is not set!"), _T("Hex-Editor"), MB_OK);
 		return FALSE;
 	}
 
-	/* copy data into scintilla handle (encoded if necessary) */
-	hSCI = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
-	LittleEndianChange(hSCI, getCurrentHScintilla());
+	/* create pattern container */
+	hSciPat = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 
 	/* get params of Hex Edit */
 	::SendMessage(_hParentHandle, HEXM_GETSETTINGS, 0, (LPARAM)&prop);
 	::SendMessage(_hParentHandle, HEXM_GETLINECNT, 0, (LPARAM)&lines);
 
-	if (prop.selection != HEX_SEL_BLOCK)
+	if (prop.selection == HEX_SEL_NORM)
 	{
-		UINT	tempPosBeg = posBeg;
-		UINT	tempPosEnd = posEnd;
+		length = abs(posEnd-posBeg);
 
-		count = abs(posEnd - posBeg);
-
-		if (posEnd < posBeg)
+		/* fill data in pattern buffer */
+		for (INT rest = length; rest > 0; rest -= _pattern.length)
 		{
-			tempPosBeg = posEnd;
-			tempPosEnd = posBeg;
-			posBeg = tempPosBeg;
-			posEnd = tempPosEnd;
+			if (rest >= _pattern.length) {
+				::SendMessage(hSciPat, SCI_ADDTEXT, _pattern.length, (LPARAM)_pattern.text);
+			} else {
+				::SendMessage(hSciPat, SCI_ADDTEXT, rest, (LPARAM)_pattern.text);
+			}
 		}
 
-		posEnd = posBeg + _pattern.length;
-
-		/* replace pattern in lines */
-		for (INT i = 0; i < count; i += _pattern.length)
-		{
-			ScintillaMsg(hSCI, SCI_SETSEL, posBeg, posEnd);
-			ScintillaMsg(hSCI, SCI_TARGETFROMSELECTION);
-			ScintillaMsg(hSCI, SCI_REPLACETARGET, _pattern.length, (LPARAM)_pattern.text);
-			posBeg += _pattern.length;
-			posEnd += _pattern.length;
-		}
-
-		UINT	rest = tempPosBeg + (i * _pattern.length) - tempPosEnd;
-
-		if (rest != 0)
-		{
-			ScintillaMsg(hSCI, SCI_SETSEL, tempPosEnd - rest, tempPosEnd);
-			ScintillaMsg(hSCI, SCI_TARGETFROMSELECTION);
-			ScintillaMsg(hSCI, SCI_REPLACETARGET, rest, (LPARAM)_pattern.text);
-		}
-
-		if (E_OK != replaceLittleToBig(hSCI, tempPosBeg, count, count))
+		if (E_OK != replaceLittleToBig(hSciTgt, hSciPat, 0, (posBeg < posEnd ? posBeg : posEnd), length, length))
 		{
 			LITTLE_REPLEACE_ERROR;
-
-			/* free allocated space */
-			CleanScintillaBuf(hSCI);
-			::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
-
-			return FALSE;
+			bRet = FALSE;
 		}
 	}
 	else
-	{		
+	{
 		/* get horizontal and vertical gap size */
-		count = abs(prop.anchorPos  - prop.cursorPos);
+		length = abs(prop.anchorPos - prop.cursorPos);
 		lines = abs(prop.anchorItem - prop.cursorItem);
 
 		/* create pattern */
 		INT	patSize = 0;
-		INT	cntPat	= 0;
-
 		do {
 			patSize += _pattern.length;
-			cntPat++;
-		} while (patSize % count);
+			::SendMessage(hSciPat, SCI_ADDTEXT, _pattern.length, (LPARAM)_pattern.text);
+		} while (patSize % length);
 
-		/* fill data */
-		char*	pattern = new char[patSize+1];
-		for (INT i = 0; i < cntPat; i++)
-		{
-			memcpy(&pattern[i*_pattern.length], _pattern.text, _pattern.length);
+		if (posBeg > posEnd) {
+			posBeg = posEnd;
 		}
 
-		/* get selection */
-		::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
-		if (posBeg > posEnd)
-			posBeg = posEnd;
-
-		posEnd = posBeg + count;
-
-		/* replace pattern in columns */
-		cntPat = 0;
-		for (i = 0; i <= lines; i++)
+		/* set pattern in columns */
+		for (INT i = 0; i <= lines; i++)
 		{
-			ScintillaMsg(hSCI, SCI_SETSEL, posBeg, posEnd);
-			ScintillaMsg(hSCI, SCI_TARGETFROMSELECTION);
-			ScintillaMsg(hSCI, SCI_REPLACETARGET, count, (LPARAM)&pattern[cntPat]);
-			if (E_OK != replaceLittleToBig(hSCI, posBeg, count, count))
+			if (replaceLittleToBig(hSciTgt, hSciPat, 0, posBeg, length, length) == E_OK)
+			{
+				posBeg += prop.bits * prop.columns;
+			}
+			else
 			{
 				LITTLE_REPLEACE_ERROR;
-				
-				/* free allocated space */
-				CleanScintillaBuf(hSCI);
-				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
-				delete [] pattern;
 
+				/* free allocated space */
+				CleanScintillaBuf(hSciPat);
+				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
 				return FALSE;
 			}
-
-			posBeg += prop.bits * prop.columns;
-			posEnd += prop.bits * prop.columns;
-			cntPat += count;
-			if (cntPat >= patSize)
-				cntPat = 0;
 		}
-		delete [] pattern;
+
+		/* set cursor position */
+		::SendMessage(_hParentHandle, HEXM_SETPOS, 0, posBeg - prop.bits * prop.columns + length);
 	}
-	/* set cursor position */
-	::SendMessage(_hParentHandle, HEXM_SETPOS, 0, posEnd - prop.bits * prop.columns);
-	
+
 	/* free allocated space */
-	CleanScintillaBuf(hSCI);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSCI);
+	CleanScintillaBuf(hSciPat);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
 
-	/* add text to combo ;) */
-	_pCombo->addText(_pattern);
-
-	return TRUE;
+	if (bRet == TRUE) {
+		/* add text to combo ;) */
+		_pCombo->addText(_pattern);
+	}
+	return bRet;
 }
 

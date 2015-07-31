@@ -63,7 +63,7 @@ BEGIN
     LTEXT           "eMail:",IDC_STATIC_EMAIL,12,41,21,9
     CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
                     IDC_STATIC_THX,7,67,216,25
-    CTEXT           "HEX-Editor Plugin for Notepad++ v4.2                         v0.9.0",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v5.1                         v0.9.1",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "http://sourceforge.net/projects/npp-plugins",
@@ -122,9 +122,12 @@ BEGIN
                     SS_NOTIFY,WS_EX_TRANSPARENT
     EDITTEXT        IDC_ADDWIDTH_EDIT,162,78,38,12,ES_CENTER | 
                     ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_EXTLIST,22,49,180,12,ES_AUTOHSCROLL
     LTEXT           "Extensions:                                              e.g.: .dat .exe",
-                    IDC_STATIC_EXAMPLE,22,40,180,8
+                    IDC_STATIC_EXAMPLE,22,35,180,8
+    EDITTEXT        IDC_EDIT_EXTLIST,22,44,180,12,ES_AUTOHSCROLL
+    LTEXT           "Control char count in %",IDC_STATIC_PERCENT,22,70,180,8
+    EDITTEXT        IDC_EDIT_PERCENT,160,68,42,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_NUMBER
     LTEXT           "Font Name:",IDC_STATIC_FONTNAME,17,30,65,10
     COMBOBOX        IDC_COMBO_FONTNAME,83,28,125,30,CBS_DROPDOWNLIST | 
                     CBS_SORT | WS_VSCROLL | WS_TABSTOP
@@ -375,13 +378,13 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,8,3,0
- PRODUCTVERSION 0,8,3,0
+ FILEVERSION 0,9,1,0
+ PRODUCTVERSION 0,9,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+ FILEFLAGS 0x21L
 #else
- FILEFLAGS 0x0L
+ FILEFLAGS 0x20L
 #endif
  FILEOS 0x40004L
  FILETYPE 0x2L
@@ -394,12 +397,13 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.8.3"
+            VALUE "FileVersion", "0.9.1"
             VALUE "InternalName", "HexEditor for npp.exe"
-            VALUE "LegalCopyright", "Copyright 2006-2007 by Jens Lorenz"
+            VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.8.3"
+            VALUE "ProductVersion", "0.9.1"
+            VALUE "SpecialBuild", "UNICODE"
         END
     END
     BLOCK "VarFileInfo"

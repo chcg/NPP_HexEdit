@@ -1,6 +1,6 @@
 /**
  * @author		Jens Lorenz		<jens.plugin.npp@gmx.de>
- * @version		1.1
+ * @version		1.2
  * @date		2007
  *
  * This program is free software; you can redistribute it and/or
@@ -32,8 +32,9 @@
 
 #include "PluginInterface.h"
 #include <shlwapi.h>
+#include <tchar.h>
 
-#define NATIVE_LANG_NAME "NativeLang.dll"
+CONST TCHAR NATIVE_LANG_NAME[] = _T("NativeLang.dll");
 
 typedef enum eNatLangMsg {
 	NPP_NATLANG_CHANGEDLG,			/*!< enum change complete dialog info			*/
@@ -41,8 +42,7 @@ typedef enum eNatLangMsg {
 	NPP_NATLANG_CHANGEMENU,			/*!< enum change another menu					*/
 	NPP_NATLANG_CHANGEHEADER,		/*!< enum change header elements				*/
 	NPP_NATLANG_CHANGECOMBO,		/*!< enum change combo elements					*/
-	NPP_NATLANG_GETTEXTA,			/*!< enum get text via key name					*/
-	NPP_NATLANG_GETTEXTW			/*!< enum get text via key name (wide char)		*/
+	NPP_NATLANG_GETTEXT,			/*!< enum get text via key name					*/
 } eNatLangMsg;
 
 /** This struct is only necessary for the comunication between this interface 
@@ -50,7 +50,7 @@ typedef enum eNatLangMsg {
  */
 typedef struct tNatLangInfo {
 	HANDLE		hCtrl;				/*!< HWND or HMENU								*/
-	LPCSTR		pszCtrl;			/*!< section name								*/
+	LPCTSTR		pszCtrl;			/*!< section name								*/
 	LRESULT		lRes;				/*!< result value								*/
 	WPARAM		wParam;				/*!< additional information						*/
 	LPARAM		lParam;				/*!< additional information						*/
@@ -59,10 +59,10 @@ typedef struct tNatLangInfo {
 
 
 /**
- * @fn			void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCSTR pszSection)
+ * @fn			void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection)
  * @brief		Changes the dialog language. Call function in e.g. WM_INITDIALOG.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	hWnd			The window handle of the dialog box.
  * @param[in]	pszSection		The section name in NativeLang.ini file.
@@ -76,27 +76,27 @@ typedef struct tNatLangInfo {
  *
  * @note		'&' sign for key selection supported, e.g. "&Cancel process"
  */
-static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCSTR pszSection)
+static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= hWnd;
 	nli.pszCtrl			= pszSection;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
+	ci.srcModuleName	= PathFindFileName(szPath);
 	ci.internalMsg		= NPP_NATLANG_CHANGEDLG;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
 
 /**
- * @fn			void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
+ * @fn			void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
  * @brief		Changes Notepad++ plugins menu. Call function on notification NPPN_TBMODIFICATION.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	pszPluginName	The name of plugin that was given to Notepad++ on by function getName().
  * @param[in]	funcItem		The funcItem struct that was given to Notepad++ by function getFuncsArray().
@@ -112,10 +112,10 @@ static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCSTR pszSect
  *
  * @note		'&' sign for key selection supported, e.g. "&Explorer..."
  */
-static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
+static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= NULL;
@@ -124,17 +124,17 @@ static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCSTR pszPluginName, Fu
 	nli.lParam			= (LPARAM)funcItem;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
+	ci.srcModuleName	= PathFindFileName(szPath);
 	ci.internalMsg		= NPP_NATLANG_CHANGENPPMENU;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
 
 /**
- * @fn			BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCSTR pszMenu, UINT mf_ByComPos)
+ * @fn			BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMenu, UINT mf_ByComPos)
  * @brief		Changes given plugin menu. Call function before ::TrackPopupMenu().
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	hMenu			The menu handle of the plugin menu.
  * @param[in]	pszMenu			The section name in NativeLang.ini file.
@@ -149,10 +149,10 @@ static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCSTR pszPluginName, Fu
  *
  * @note		'&' sign for key selection supported, e.g. "&Open.."
  */
-static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCSTR pszMenu, UINT mf_ByComPos)
+static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMenu, UINT mf_ByComPos)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= hMenu;
@@ -161,7 +161,7 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCSTR pszMenu
 	nli.wParam			= mf_ByComPos;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
+	ci.srcModuleName	= PathFindFileName(szPath);
 	ci.internalMsg		= NPP_NATLANG_CHANGEMENU;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
@@ -170,10 +170,10 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCSTR pszMenu
 }
 
 /**
- * @fn			void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCSTR pszSection)
+ * @fn			void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR pszSection)
  * @brief		Change automaticaly the header text. Call function in e.g. WM_INITDIALOG.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	hHeader			The handle of header.
  * @param[in]	pszSection		The section name in NativeLang.ini file.
@@ -185,27 +185,27 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCSTR pszMenu
  *				orig_name="new name"\n
  *				...\n
  */
-static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCSTR pszSection)
+static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR pszSection)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= hHeader;
 	nli.pszCtrl			= pszSection;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
+	ci.srcModuleName	= PathFindFileName(szPath);
 	ci.internalMsg		= NPP_NATLANG_CHANGEHEADER;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
 
 /**
- * @fn			void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCSTR pszSection, UINT count)
+ * @fn			void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSection, UINT count)
  * @brief		Change automaticaly the combo text. Call function in e.g. WM_INITDIALOG.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	hCombo			The handle of combo box.
  * @param[in]	pszSection		The section name in NativeLang.ini file.
@@ -218,10 +218,10 @@ static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCSTR pszS
  *				pos_in_combo="new name"\n
  *				...\n
  */
-static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCSTR pszSection, UINT count)
+static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSection, UINT count)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= hCombo;
@@ -229,26 +229,17 @@ static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCSTR pszSec
 	nli.wParam			= count;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
+	ci.srcModuleName	= PathFindFileName(szPath);
 	ci.internalMsg		= NPP_NATLANG_CHANGECOMBO;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
 
-/** Use NLGetText to get the correct function and text format.\n\n
- *	If precompiler flag _UNICODE is set NLGetTextW is used.
- */
-#ifdef _UNICODE
-#define NLGetText	NLGetTextW		
-#else
-#define NLGetText	NLGetTextA
-#endif
-
 /**
- * @fn			UINT NLGetTextA(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPSTR pszText, UINT length)
+ * @fn			UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText, UINT length)
  * @brief		ANSI version to get a language specific text by a key.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	pszKey			The key name in NativeLang.ini file.
  * @param[out]	pszText			The buffer to fill.
@@ -263,10 +254,10 @@ static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCSTR pszSec
  *
  * @note		Format tags are supported. Use % instead of \, e.g. %t %s %d %n
  */
-static UINT NLGetTextA(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPSTR pszText, UINT length)
+static UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText, UINT length)
 {
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
+	TCHAR		szPath[MAX_PATH];
+	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
 	tNatLangInfo		nli;
 	nli.hCtrl			= NULL;
@@ -276,48 +267,8 @@ static UINT NLGetTextA(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPSTR pszText,
 	nli.lParam			= (LPARAM)&pszText;
 
 	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
-	ci.internalMsg		= NPP_NATLANG_GETTEXTA;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-
-	return (UINT)nli.lRes;
-}
-
-/**
- * @fn			UINT NLGetTextW(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPWSTR pszText, UINT length)
- * @brief		UNICODE version to get a language specific text by a key.
- *
- * @param[in]	hInst			The instance handle of dialog.
- * @param[in]	hNpp			The window handle of Notepad++.
- * @param[in]	pszKey			The key name in NativeLang.ini file.
- * @param[out]	pszText			The buffer to fill.
- * @param[in]	length			The maximum length of text buffer.
- * @retval		UINT			The size of the copied chars into pszText.
- *
- * @details		Add in NativeLang.ini a section like the following:\n
- *				\n
- *				['plugin_file_name' Text]\n
- *				key_name="text"\n
- *				...\n
- *
- * @note		Format tags are supported. Use % instead of \, e.g. %t %s %d %n
- */
-static UINT NLGetTextW(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPWSTR pszText, UINT length)
-{
-	CHAR		szPath[MAX_PATH];
-	::GetModuleFileNameA((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= NULL;
-	nli.pszCtrl			= pszKey;
-	nli.wParam			= length;
-	nli.lRes			= 0;
-	nli.lParam			= (LPARAM)&pszText;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileNameA(szPath);
-	ci.internalMsg		= NPP_NATLANG_GETTEXTW;
+	ci.srcModuleName	= PathFindFileName(szPath);
+	ci.internalMsg		= NPP_NATLANG_GETTEXT;
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 
@@ -326,14 +277,15 @@ static UINT NLGetTextW(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPWSTR pszText
 
 
 /**
- * @fn			BOOL NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, UINT uType)
+ * @fn			BOOL NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, HWND hDlg = NULL		)
  * @brief		Show message box identified by a key.
  *
- * @param[in]	hInst			The instance handle of dialog.
+ * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
  * @param[in]	pszKey			The key name in NativeLang.ini file.
  * @param[in]	uType			The buffer to fill.
- * @retval		INT				The message box was shown.
+ * @param[in]	hDlg			The buffer to fill.
+ * @retval		INT				The parent associated handle.
  *
  * @details		Add in NativeLang.ini a section like the following:\n
  *				\n
@@ -341,19 +293,17 @@ static UINT NLGetTextW(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, LPWSTR pszText
  *				key_name="text%tcaption%t"\n
  *				...\n
  */
-static INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCSTR pszKey, UINT uType)
+static INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, HWND hDlg = NULL)
 {
+	if (hDlg == NULL)
+		hDlg = hNpp;
+
 	LPTSTR	wPtr = NULL;
 	TCHAR	text[MAX_PATH]	= {0};
 	if (NLGetText(hInst, hNpp, pszKey, text, MAX_PATH)) {
-#ifdef _UNICODE
-		wPtr = wcstok(text, _T("\t"));
-		wPtr = wcstok(NULL, _T("\t"));
-#else
-		wPtr = strtok(text, "\t");
-		wPtr = strtok(NULL, "\t");
-#endif
-		return ::MessageBox(hNpp, text, wPtr, uType);
+		wPtr = _tcstok(text, _T("\t"));
+		wPtr = _tcstok(NULL, _T("\t"));
+		return ::MessageBox(hDlg, text, wPtr, uType);
 	}
 	return FALSE;
 }

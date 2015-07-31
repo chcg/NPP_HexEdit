@@ -24,11 +24,11 @@
 typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
 
 
-static char*	szTabNames[32] = {
-	"Start Layout",
-	"File Associations",
-	"Colors",
-	"Font"
+static LPTSTR	szTabNames[32] = {
+	_T("Start Layout"),
+	_T("Startup"),
+	_T("Colors"),
+	_T("Font")
 };
 
 typedef enum {
@@ -39,19 +39,22 @@ typedef enum {
 	PROP_MAX
 } ePropStr;
 
-static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, int FontType, LPARAM lParam)
+static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD FontType, LPARAM lParam)
 {
 	vector<string> *pvStrFont = (vector<string> *)lParam;
     size_t vectSize = pvStrFont->size();
     if (vectSize == 0)
-		pvStrFont->push_back((char *)lpelfe->elfFullName);
+		pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
     else
     {
-        const char *lastFontName = pvStrFont->at(vectSize - 1).c_str();
-        if (strcmp(lastFontName, (const char *)lpelfe->elfFullName))
-			pvStrFont->push_back((char *)lpelfe->elfFullName);
+		if(lpelfe->elfLogFont.lfPitchAndFamily & FIXED_PITCH)
+		{
+			LPCTSTR lastFontName = pvStrFont->at(vectSize - 1).c_str();
+			if (_tcscmp(lastFontName, (LPCTSTR)lpelfe->elfFullName))
+				pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
+		}
     } 
-	return 1; // I want to get all fonts
+	return 1;
 };
 
 
@@ -69,7 +72,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 		case WM_INITDIALOG:
 		{
 			TCITEM		item;
-			CHAR		text[32];
+			TCHAR		text[32];
 
 			goToCenter();
 
@@ -83,9 +86,9 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			for (UINT i = 0; i < PROP_MAX; i++)
 			{
 				if (NLGetText(_hInst, _hParent, szTabNames[i], text, sizeof(text)) == FALSE)
-					strcpy(text, szTabNames[i]);
+					_tcscpy(text, szTabNames[i]);
 				item.pszText	= text;
-				item.cchTextMax	= (int)strlen(text);
+				item.cchTextMax	= (int)_tcslen(text);
 				::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_INSERTITEM, i, (LPARAM)&item);
 			}
 			TabUpdate();
@@ -101,11 +104,13 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 
 			/* init the font name combo */
 			LOGFONT lf;
+		    ZeroMemory(&lf, sizeof lf);
+
 			lf.lfCharSet = DEFAULT_CHARSET;
-			lf.lfFaceName[0]='\0';
+			lf.lfPitchAndFamily = FIXED_PITCH | FF_DONTCARE;
 
 			vector<string>	vFontList;
-			vFontList.push_back("");
+			vFontList.push_back(_T(""));
 			HDC hDC = ::GetDC(NULL);
 			::EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)EnumFontFamExProc, (LPARAM) &vFontList, 0);
 
@@ -115,14 +120,14 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 
 			/* init font size combos */
 			for (size_t i = 0 ; i < G_FONTSIZE_MAX; i++) {
-				sprintf(text, "%d", g_iFontSize[i]);
+				_stprintf(text, _T("%d"), g_iFontSize[i]);
 				::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTSIZE, CB_ADDSTRING, 0, (LPARAM)text);
 			}
 
 			SetParams();
 
 			/* change language */
-			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, "Options");
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("Options"));
 
 			break;
 		}
@@ -215,6 +220,8 @@ void OptionDlg::TabUpdate(void)
 	/* set tab visibility state of "Extension" */
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_EXAMPLE),		bExt);
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST),		bExt);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_PERCENT),		bExt);
+	::ShowWindow(::GetDlgItem(_hSelf, IDC_EDIT_PERCENT),		bExt);
 
 	/* set tab visibility state of "Color" */
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_TXT),			bColor);
@@ -251,11 +258,11 @@ void OptionDlg::TabUpdate(void)
 
 void OptionDlg::SetParams(void)
 {
-	char		text[16];
+	TCHAR		text[16];
 
 	/* set default format */
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), itoa(_pProp->hexProp.columns, text, 10));
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), itoa(_pProp->hexProp.addWidth, text, 10));
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_pProp->hexProp.columns, text, 10));
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), _itot(_pProp->hexProp.addWidth, text, 10));
 	switch (_pProp->hexProp.bits)
 	{
 		case HEX_BYTE:
@@ -284,8 +291,10 @@ void OptionDlg::SetParams(void)
 		::SendDlgItemMessage(_hSelf, IDC_RADIO_BIN, BM_SETCHECK, BST_CHECKED, 0); 
 	}
 
-	/* set extension list */
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->szExtensions);
+	/* set autostart information */
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->autoProp.szExtensions);
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_PERCENT), _pProp->autoProp.szPercent);
+	::SendDlgItemMessage(_hSelf, IDC_EDIT_PERCENT, EM_LIMITTEXT, 3, 0);
 
 	/* set font information */
 	UINT iPos = ::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTNAME, CB_FINDSTRINGEXACT, (WPARAM)-1, (LPARAM)_pProp->fontProp.szFontName);
@@ -320,7 +329,7 @@ void OptionDlg::SetParams(void)
 
 BOOL OptionDlg::GetParams(void)
 {
-	char		text[16];
+	TCHAR		text[16];
 	UINT		col		= 0;
 	UINT		add		= 0;
 	UINT		bits	= 0;
@@ -328,9 +337,9 @@ BOOL OptionDlg::GetParams(void)
 
 	/* get default layout */
 	::GetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), text, 16);
-	add = atoi(text);
+	add = _ttoi(text);
 	::GetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text, 16);
-	col = atoi(text);
+	col = _ttoi(text);
 
 	/* get bit alignment */
 	if (::SendDlgItemMessage(_hSelf, IDC_RADIO_8, BM_GETCHECK, 0, 0) == BST_CHECKED)
@@ -349,20 +358,23 @@ BOOL OptionDlg::GetParams(void)
 	}
 	else
 	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox MaxColCnt", MB_OK|MB_ICONERROR) == FALSE)
-			::MessageBox(_hParent, "Maximum of 128 bytes can be shown in a row.", "Hex-Editor: Column Count", MB_OK|MB_ICONERROR);
+		if (NLMessageBox(_hInst, _hParent, _T("MsgBox MaxColCnt"), MB_OK|MB_ICONERROR) == FALSE)
+			::MessageBox(_hParent, _T("Maximum of 128 bytes can be shown in a row."), _T("Hex-Editor: Column Count"), MB_OK|MB_ICONERROR);
 		bRet = FALSE;
 	}
 
-	if ((add >= 4) && (add <= 16))
+	if (bRet == TRUE)
 	{
-		bRet = TRUE;
-	}
-	else
-	{
-		if (NLMessageBox(_hInst, _hParent, "MsgBox MaxAddCnt", MB_OK|MB_ICONERROR) == FALSE)
-			::MessageBox(_hParent, "Only values between 4 and 16 possible.", "Hex-Editor: Address Width", MB_OK|MB_ICONERROR);
-		bRet = FALSE;
+		if ((add >= 4) && (add <= 16))
+		{
+			bRet = TRUE;
+		}
+		else
+		{
+			if (NLMessageBox(_hInst, _hParent, _T("MsgBox MaxAddCnt"), MB_OK|MB_ICONERROR) == FALSE)
+				::MessageBox(_hParent, _T("Only values between 4 and 16 possible."), _T("Hex-Editor: Address Width"), MB_OK|MB_ICONERROR);
+			bRet = FALSE;
+		}
 	}
 
 	if (bRet == TRUE) {
@@ -382,8 +394,9 @@ BOOL OptionDlg::GetParams(void)
 		else
 			_pProp->hexProp.isBin    = TRUE;
 
-		/* get extensions */
-		::GetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->szExtensions, sizeof(_pProp->szExtensions));
+		/* get autostart properties */
+		::GetWindowTextW(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->autoProp.szExtensions, sizeof(_pProp->autoProp.szExtensions));
+		::GetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_PERCENT), _pProp->autoProp.szPercent, sizeof(_pProp->autoProp.szPercent));
 
 		/* get font information */
 		::GetWindowText(::GetDlgItem(_hSelf, IDC_COMBO_FONTNAME), _pProp->fontProp.szFontName, sizeof(_pProp->fontProp.szFontName));

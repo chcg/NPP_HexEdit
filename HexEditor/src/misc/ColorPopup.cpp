@@ -38,7 +38,7 @@ void ColorPopup::create(int dialogID)
 	
 	if (!_hSelf)
 	{
-		systemMessage("ColorPopup");
+		systemMessage(_T("ColorPopup"));
 		throw int(696);
 	}
 	Window::getClientRect(_rc);
@@ -63,7 +63,7 @@ BOOL CALLBACK ColorPopup::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
 		{
 			ColorPopup *pColorPopup = (ColorPopup *)(lParam);
 			pColorPopup->_hSelf = hwnd;
-			::SetWindowLong(hwnd, GWL_USERDATA, (long)lParam);
+			::SetWindowLongPtr(hwnd, GWL_USERDATA, (long)lParam);
 			pColorPopup->run_dlgProc(message, wParam, lParam);
 			return TRUE;
 		}
@@ -92,7 +92,7 @@ BOOL CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam
 				::SendDlgItemMessage(_hSelf, IDC_COLOR_LIST, LB_SETITEMDATA , nColor, (LPARAM) colorItems[nColor]);
 			}
 
-			NLChangeDialog(_hInst, _hNpp, _hSelf, "ColorPopup");
+			NLChangeDialog(_hInst, _hNpp, _hSelf, _T("ColorPopup"));
 
 			return TRUE;
 		}

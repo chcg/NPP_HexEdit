@@ -30,7 +30,7 @@ class GotoDlg : public StaticDialog
 public:
 	GotoDlg() : StaticDialog(), _isOff(FALSE) {};
     
-    void init(HINSTANCE hInst, NppData nppData, char* iniFilePath)
+    void init(HINSTANCE hInst, NppData nppData, LPTSTR iniFilePath)
 	{
 		_nppData = nppData;
 		_iniFilePath = iniFilePath;
@@ -64,7 +64,7 @@ private:
 	HWND			_hLineEdit;
 	WNDPROC			_hDefaultEditProc;
 
-	char*			_iniFilePath;
+	LPTSTR			_iniFilePath;
 
 	BOOL			_isHex;
 	BOOL			_isOff;

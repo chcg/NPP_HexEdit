@@ -1,0 +1,1814 @@
+ HexEditor
+
+ Timestamp is 4921de4d (Mon Nov 17 22:12:45 2008)
+
+ Preferred load address is 10000000
+
+ Start         Length     Name                   Class
+ 0001:00000000 0002fcfdH .text                   CODE
+ 0001:0002fd00 000006f7H .text$x                 CODE
+ 0001:00030400 000001edH .text$yc                CODE
+ 0001:000305f0 000000c9H .text$yd                CODE
+ 0002:00000000 00000318H .idata$5                DATA
+ 0002:00000320 00003cb0H .rdata                  DATA
+ 0002:00003fd0 0000005dH .rdata$debug            DATA
+ 0002:00004030 000001b0H .rdata$r                DATA
+ 0002:000041e0 00000004H .rtc$IAA                DATA
+ 0002:000041e4 00000004H .rtc$IZZ                DATA
+ 0002:000041e8 00000004H .rtc$TAA                DATA
+ 0002:000041ec 00000004H .rtc$TZZ                DATA
+ 0002:000041f0 00000f40H .xdata$x                DATA
+ 0002:00005130 0000008cH .idata$2                DATA
+ 0002:000051bc 00000014H .idata$3                DATA
+ 0002:000051d0 00000318H .idata$4                DATA
+ 0002:000054e8 00000d02H .idata$6                DATA
+ 0002:000061f0 000000b1H .edata                  DATA
+ 0003:00000000 00000004H .CRT$XCA                DATA
+ 0003:00000004 00000004H .CRT$XCAA               DATA
+ 0003:00000008 00000034H .CRT$XCU                DATA
+ 0003:0000003c 00000004H .CRT$XCZ                DATA
+ 0003:00000040 00000004H .CRT$XIA                DATA
+ 0003:00000044 0000000cH .CRT$XIC                DATA
+ 0003:00000050 00000004H .CRT$XIY                DATA
+ 0003:00000054 00000004H .CRT$XIZ                DATA
+ 0003:00000058 00000004H .CRT$XPA                DATA
+ 0003:0000005c 00000004H .CRT$XPX                DATA
+ 0003:00000060 00000004H .CRT$XPZ                DATA
+ 0003:00000064 00000004H .CRT$XTA                DATA
+ 0003:00000068 00000004H .CRT$XTB                DATA
+ 0003:0000006c 00000004H .CRT$XTZ                DATA
+ 0003:00000070 000011e0H .data                   DATA
+ 0003:00001260 000044dcH .bss                    DATA
+ 0004:00000000 00000268H .rsrc$01                DATA
+ 0004:00000270 00002748H .rsrc$02                DATA
+
+  Address         Publics by Value              Rva+Base     Lib:Object
+
+ 0000:00000000       __except_list              00000000     <absolute>
+ 0001:00000000       ?init@ColorCombo@@UAEXPAUHINSTANCE__@@PAUHWND__@@1@Z 10001000 f   ColorCombo.obj
+ 0001:00000080       ?init@Window@@UAEXPAUHINSTANCE__@@PAUHWND__@@@Z 10001080 f i ColorCombo.obj
+ 0001:000000a0       ?wndDefaultProc@ColorCombo@@CGJPAUHWND__@@IIJ@Z 100010a0 f i ColorCombo.obj
+ 0001:000000d0       ?runProc@ColorCombo@@AAEJPAUHWND__@@IIJ@Z 100010d0 f   ColorCombo.obj
+ 0001:00000300       ??0ColorPopup@@QAE@XZ      10001300 f i ColorCombo.obj
+ 0001:00000330       ??0Window@@QAE@XZ          10001330 f i ColorCombo.obj
+ 0001:00000370       ?display@FindReplaceDlg@@QAEX_N@Z 10001370 f i FindReplaceDialog.obj
+ 0001:00000370       ?display@Window@@UBEX_N@Z  10001370 f i ColorCombo.obj
+ 0001:000003a0       ?reSizeTo@Window@@UAEXAAUtagRECT@@@Z 100013a0 f i ColorCombo.obj
+ 0001:000003f0       ?reSizeToWH@Window@@UAEXAAUtagRECT@@@Z 100013f0 f i ColorCombo.obj
+ 0001:00000440       ?redraw@Window@@UBEXXZ     10001440 f i ColorCombo.obj
+ 0001:00000470       ?getClientRect@Window@@UBEXAAUtagRECT@@@Z 10001470 f i ColorCombo.obj
+ 0001:00000490       ?getWindowRect@Window@@UBEXAAUtagRECT@@@Z 10001490 f i ColorCombo.obj
+ 0001:000004b0       ?getWidth@Window@@UBEHXZ   100014b0 f i ColorCombo.obj
+ 0001:000004e0       ?getHeight@Window@@UBEHXZ  100014e0 f i ColorCombo.obj
+ 0001:00000520       ?isVisible@Window@@UBE_NXZ 10001520 f i ColorCombo.obj
+ 0001:00000540       ??_GWindow@@UAEPAXI@Z      10001540 f i ColorCombo.obj
+ 0001:00000540       ??_EWindow@@UAEPAXI@Z      10001540 f i ColorCombo.obj
+ 0001:00000570       ??1Window@@UAE@XZ          10001570 f i ColorCombo.obj
+ 0001:00000590       ?init@ColorPopup@@QAEXPAUHINSTANCE__@@PAUHWND__@@1@Z 10001590 f i ColorCombo.obj
+ 0001:000005c0       ?doDialog@ColorPopup@@QAEXUtagPOINT@@@Z 100015c0 f i ColorCombo.obj
+ 0001:00000620       ??_EColorPopup@@UAEPAXI@Z  10001620 f i ColorCombo.obj
+ 0001:00000620       ??_GColorPopup@@UAEPAXI@Z  10001620 f i ColorCombo.obj
+ 0001:00000650       ??1ColorPopup@@UAE@XZ      10001650 f i ColorCombo.obj
+ 0001:00000670       ?setColor@ColorCombo@@QAEXK@Z 10001670 f i ColorCombo.obj
+ 0001:000006a0       ?DrawColor@ColorCombo@@AAEXPAUHDC__@@@Z 100016a0 f   ColorCombo.obj
+ 0001:00000770       ?create@ColorPopup@@QAEXH@Z 10001770 f   ColorPopup.obj
+ 0001:00000800       ?dlgProc@ColorPopup@@CGHPAUHWND__@@IIJ@Z 10001800 f   ColorPopup.obj
+ 0001:000008f0       ?run_dlgProc@ColorPopup@@AAGHIIJ@Z 100018f0 f   ColorPopup.obj
+ 0001:00000e60       ?doDialogColumn@ColumnDlg@@QAEII@Z 10001e60 f   ColumnDialog.obj
+ 0001:00000eb0       ?doDialogAddWidth@ColumnDlg@@QAEII@Z 10001eb0 f   ColumnDialog.obj
+ 0001:00000f00       ?run_dlgProc@ColumnDlg@@MAGHPAUHWND__@@IIJ@Z 10001f00 f   ColumnDialog.obj
+ 0001:00001140       ?doDialog@CompareDlg@@QAEIPAVHexEdit@@0I@Z 10002140 f   CompareDialog.obj
+ 0001:00001190       ?run_dlgProc@CompareDlg@@MAGHPAUHWND__@@IIJ@Z 10002190 f   CompareDialog.obj
+ 0001:00001710       ?SetHexProp@HexEdit@@QAEXUtHexProp@@@Z 10002710 f i CompareDialog.obj
+ 0001:00001800       ?GetHexProp@HexEdit@@QAE?AUtHexProp@@XZ 10002800 f i CompareDialog.obj
+ 0001:000018e0       ??1tHexProp@@QAE@XZ        100028e0 f i CompareDialog.obj
+ 0001:00001900       ??4tHexProp@@QAEAAU0@ABU0@@Z 10002900 f i CompareDialog.obj
+ 0001:00001ac0       ??0tHexProp@@QAE@ABU0@@Z   10002ac0 f i CompareDialog.obj
+ 0001:00001c60       ??0tHexProp@@QAE@XZ        10002c60 f i CompareDialog.obj
+ 0001:00001c80       ??0?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE@XZ 10002c80 f i CompareDialog.obj
+ 0001:00001cb0       ??0?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE@ABV01@@Z 10002cb0 f i CompareDialog.obj
+ 0001:00001d90       ??4?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAEAAV01@ABV01@@Z 10002d90 f i CompareDialog.obj
+ 0001:00001f50       ?capacity@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QBEIXZ 10002f50 f i CompareDialog.obj
+ 0001:00001f90       ?end@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10002f90 f i HEXDialog.obj
+ 0001:00001f90       ?end@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QBE?AV?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10002f90 f i CompareDialog.obj
+ 0001:00001f90       ?end@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QBE?AV?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10002f90 f i HEXDialog.obj
+ 0001:00001f90       ?end@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE?AV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10002f90 f i Hex.obj
+ 0001:00001f90       ?end@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAE?AV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10002f90 f i HEXDialog.obj
+ 0001:00001f90       ?end@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAE?AV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@2@XZ 10002f90 f i Hex.obj
+ 0001:00001f90       ?end@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QBE?AV?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10002f90 f i Hex.obj
+ 0001:00001f90       ?end@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAE?AV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@2@XZ 10002f90 f i MultiTypeCombo.obj
+ 0001:00001fb0       ?size@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QBEIXZ 10002fb0 f i CompareDialog.obj
+ 0001:00001ff0       ?clear@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAEXXZ 10002ff0 f i CompareDialog.obj
+ 0001:00001ff0       ??1?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE@XZ 10002ff0 f i CompareDialog.obj
+ 0001:00002010       ?_Buy@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAE_NI@Z 10003010 f i CompareDialog.obj
+ 0001:00002090       ?_Destroy@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEXPAUtBkMk@@0@Z 10003090 f i CompareDialog.obj
+ 0001:000020c0       ?_Tidy@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEXXZ 100030c0 f i CompareDialog.obj
+ 0001:00002130       ??0?$allocator@TtEncComboInfo@@@std@@QAE@ABV01@@Z 10003130 f i MultiTypeCombo.obj
+ 0001:00002130       ??0?$allocator@UtBkMk@@@std@@QAE@ABV01@@Z 10003130 f i CompareDialog.obj
+ 0001:00002130       ??0?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAE@ABV01@@Z 10003130 f i Hex.obj
+ 0001:00002130       ??0?$allocator@G@std@@QAE@ABV01@@Z 10003130 f i Hex.obj
+ 0001:00002130       ??0?$allocator@UtHexProp@@@std@@QAE@ABV01@@Z 10003130 f i HEXDialog.obj
+ 0001:00002130       ??0?$allocator@UtMenu@@@std@@QAE@ABV01@@Z 10003130 f i Hex.obj
+ 0001:00002130       ??0?$allocator@D@std@@QAE@ABV01@@Z 10003130 f i CompareDialog.obj
+ 0001:00002140       ??H?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10003140 f i HEXDialog.obj
+ 0001:00002140       ??H?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10003140 f i CompareDialog.obj
+ 0001:00002170       ?max_size@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QBEIXZ 10003170 f i CompareDialog.obj
+ 0001:00002190       ?_Xlen@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IBEXXZ 10003190 f i CompareDialog.obj
+ 0001:000021f0       ??0length_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z 100031f0 f i CompareDialog.obj
+ 0001:00002220       ??0logic_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z 10003220 f i CompareDialog.obj
+ 0001:00002280       ?what@logic_error@std@@UBEPBDXZ 10003280 f i CompareDialog.obj
+ 0001:000022a0       ??_Glogic_error@std@@UAEPAXI@Z 100032a0 f i CompareDialog.obj
+ 0001:000022a0       ??_Elogic_error@std@@UAEPAXI@Z 100032a0 f i CompareDialog.obj
+ 0001:000022d0       ??1logic_error@std@@UAE@XZ 100032d0 f i CompareDialog.obj
+ 0001:00002330       ??1length_error@std@@UAE@XZ 10003330 f i CompareDialog.obj
+ 0001:00002350       ??_Elength_error@std@@UAEPAXI@Z 10003350 f i CompareDialog.obj
+ 0001:00002350       ??_Glength_error@std@@UAEPAXI@Z 10003350 f i CompareDialog.obj
+ 0001:00002380       ??0length_error@std@@QAE@ABV01@@Z 10003380 f i CompareDialog.obj
+ 0001:000023b0       ??0logic_error@std@@QAE@ABV01@@Z 100033b0 f i CompareDialog.obj
+ 0001:00002420       ??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z 10003420 f i CompareDialog.obj
+ 0001:00002470       ??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z 10003470 f i CompareDialog.obj
+ 0001:000024b0       ??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ 100034b0 f i CompareDialog.obj
+ 0001:000024d0       ?c_str@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEPBDXZ 100034d0 f i CompareDialog.obj
+ 0001:000024f0       ?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@ABV12@II@Z 100034f0 f i CompareDialog.obj
+ 0001:000025b0       ?copy@?$char_traits@D@std@@SAPADPADPBDI@Z 100035b0 f i CompareDialog.obj
+ 0001:000025d0       ?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBD@Z 100035d0 f i CompareDialog.obj
+ 0001:00002600       ?length@?$char_traits@D@std@@SAIPBD@Z 10003600 f i CompareDialog.obj
+ 0001:00002620       ?_Myptr@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAEPADXZ 10003620 f i CompareDialog.obj
+ 0001:00002620       ?_Myptr@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABEPBDXZ 10003620 f i CompareDialog.obj
+ 0001:00002650       ?_Tidy@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAEX_N@Z 10003650 f i CompareDialog.obj
+ 0001:000026b0       ?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBDI@Z 100036b0 f i CompareDialog.obj
+ 0001:00002740       ?erase@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@II@Z 10003740 f i CompareDialog.obj
+ 0001:000027f0       ?move@?$char_traits@D@std@@SAPADPADPBDI@Z 100037f0 f i CompareDialog.obj
+ 0001:00002810       ?_Eos@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAEXI@Z 10003810 f i CompareDialog.obj
+ 0001:00002850       ?assign@?$char_traits@D@std@@SAXAADABD@Z 10003850 f i CompareDialog.obj
+ 0001:00002860       ?_Grow@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAE_NI_N@Z 10003860 f i CompareDialog.obj
+ 0001:00002900       ?allocate@?$allocator@UtBkMk@@@std@@QAEPAUtBkMk@@IPBX@Z 10003900 f i CompareDialog.obj
+ 0001:00002920       ?max_size@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIXZ 10003920 f i CompareDialog.obj
+ 0001:00002960       ?_Copy@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAEXII@Z 10003960 f i CompareDialog.obj
+ 0001:00002a70       ?_Inside@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAE_NPBD@Z 10003a70 f i CompareDialog.obj
+ 0001:00002ac0       ?max_size@?$allocator@UtBkMk@@@std@@QBEIXZ 10003ac0 f i CompareDialog.obj
+ 0001:00002af0       ?allocate@?$allocator@D@std@@QAEPADIPBX@Z 10003af0 f i CompareDialog.obj
+ 0001:00002b10       ?max_size@?$allocator@D@std@@QBEIXZ 10003b10 f i CompareDialog.obj
+ 0001:00002b40       ?_Ucopy@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@2@0PAU3@@Z 10003b40 f i CompareDialog.obj
+ 0001:00002b70       ?copy@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@@Z 10003b70 f i CompareDialog.obj
+ 0001:00002bb0       ?_Destroy_range@std@@YAXPAUtBkMk@@0AAV?$allocator@UtBkMk@@@1@@Z 10003bb0 f i CompareDialog.obj
+ 0001:00002bf0       ?_Allocate@std@@YAPAUtBkMk@@IPAU2@@Z 10003bf0 f i CompareDialog.obj
+ 0001:00002c10       ?_Allocate@std@@YAPADIPAD@Z 10003c10 f i CompareDialog.obj
+ 0001:00002c30       ?_Uninitialized_copy@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtBkMk@@@1@@Z 10003c30 f i CompareDialog.obj
+ 0001:00002c70       ?_Copy_opt@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@U_Nonscalar_ptr_iterator_tag@1@@Z 10003c70 f i CompareDialog.obj
+ 0001:00002cc0       ?_Destroy_range@std@@YAXPAUtBkMk@@0AAV?$allocator@UtBkMk@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10003cc0 f i CompareDialog.obj
+ 0001:00002cf0       ??E?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10003cf0 f i CompareDialog.obj
+ 0001:00002cf0       ??E?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10003cf0 f i HEXDialog.obj
+ 0001:00002d10       ??9?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i Hex.obj
+ 0001:00002d10       ??9?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i HEXDialog.obj
+ 0001:00002d10       ??9?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBE_NABV01@@Z 10003d10 f i MultiTypeCombo.obj
+ 0001:00002d10       ??9?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i HEXDialog.obj
+ 0001:00002d10       ??9?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i HEXDialog.obj
+ 0001:00002d10       ??9?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i Hex.obj
+ 0001:00002d10       ??9?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 10003d10 f i CompareDialog.obj
+ 0001:00002d10       ??9?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBE_NABV01@@Z 10003d10 f i Hex.obj
+ 0001:00002d40       ?_Uninit_copy@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtBkMk@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10003d40 f i CompareDialog.obj
+ 0001:00002e10       ?construct@?$allocator@UtBkMk@@@std@@QAEXPAUtBkMk@@ABU3@@Z 10003e10 f i CompareDialog.obj
+ 0001:00002e30       ?_Construct@std@@YAXPAUtBkMk@@ABU2@@Z 10003e30 f i CompareDialog.obj
+ 0001:00002e70       ??2@YAPAXIPAX@Z            10003e70 f i CompareDialog.obj
+ 0001:00002e80       ?doDialog@FindReplaceDlg@@QAEXPAUHWND__@@H@Z 10003e80 f   FindReplaceDialog.obj
+ 0001:00002f70       ?run_dlgProc@FindReplaceDlg@@MAGHPAUHWND__@@IIJ@Z 10003f70 f   FindReplaceDialog.obj
+ 0001:00003360       ?isChecked@FindReplaceDlg@@ABEHH@Z 10004360 f i FindReplaceDialog.obj
+ 0001:000033a0       ?setTrans@FindReplaceDlg@@AAEXXZ 100043a0 f i FindReplaceDialog.obj
+ 0001:00003490       ?initDialog@FindReplaceDlg@@AAEXXZ 10004490 f   FindReplaceDialog.obj
+ 0001:000039b0       ?updateDialog@FindReplaceDlg@@AAEXXZ 100049b0 f   FindReplaceDialog.obj
+ 0001:00003d40       ?onFind@FindReplaceDlg@@AAEXH@Z 10004d40 f   FindReplaceDialog.obj
+ 0001:00004330       ?onReplace@FindReplaceDlg@@AAEXXZ 10005330 f   FindReplaceDialog.obj
+ 0001:00004640       ?processAll@FindReplaceDlg@@AAEXI@Z 10005640 f   FindReplaceDialog.obj
+ 0001:00004c00       ?findNext@FindReplaceDlg@@QAEXPAUHWND__@@H@Z 10005c00 f   FindReplaceDialog.obj
+ 0001:00004c60       ?findPrev@FindReplaceDlg@@QAEXPAUHWND__@@H@Z 10005c60 f   FindReplaceDialog.obj
+ 0001:00004cc0       ?changeCoding@FindReplaceDlg@@AAEXXZ 10005cc0 f   FindReplaceDialog.obj
+ 0001:00004d80       ?getSelText@FindReplaceDlg@@AAEXPAUtComboInfo@@@Z 10005d80 f   FindReplaceDialog.obj
+ 0001:00004f20       ?doDialog@GotoDlg@@QAEXPAUHWND__@@@Z 10005f20 f   GotoDialog.obj
+ 0001:00004fb0       ?run_dlgProc@GotoDlg@@MAGHPAUHWND__@@IIJ@Z 10005fb0 f   GotoDialog.obj
+ 0001:000053b0       ?wndEditProc@GotoDlg@@KGJPAUHWND__@@IIJ@Z 100063b0 f i GotoDialog.obj
+ 0001:000053e0       ?ASCIIConvert@@YAHPAD@Z    100063e0 f i GotoDialog.obj
+ 0001:00005440       ?runProcEdit@GotoDlg@@IAEJPAUHWND__@@IIJ@Z 10006440 f   GotoDialog.obj
+ 0001:000054e0       ?calcAddress@GotoDlg@@IAEXXZ 100064e0 f   GotoDialog.obj
+ 0001:00005780       ?UpdateDialog@GotoDlg@@IAEXXZ 10006780 f   GotoDialog.obj
+ 0001:000059e0       ??0HexEdit@@QAE@XZ         100069e0 f   HEXDialog.obj
+ 0001:00005b60       ??0StaticDialog@@QAE@XZ    10006b60 f i HEXDialog.obj
+ 0001:00005b90       ??1StaticDialog@@UAE@XZ    10006b90 f i HEXDialog.obj
+ 0001:00005c00       ?isCreated@StaticDialog@@UBE_NXZ 10006c00 f i HEXDialog.obj
+ 0001:00005c00       ?isCreated@ColorPopup@@QBE_NXZ 10006c00 f i ColorCombo.obj
+ 0001:00005c20       ?destroy@StaticDialog@@UAEXXZ 10006c20 f i HEXDialog.obj
+ 0001:00005c60       ??_EStaticDialog@@UAEPAXI@Z 10006c60 f i HEXDialog.obj
+ 0001:00005c60       ??_GStaticDialog@@UAEPAXI@Z 10006c60 f i HEXDialog.obj
+ 0001:00005c90       ??0SciSubClassWrp@@QAE@XZ  10006c90 f i HEXDialog.obj
+ 0001:00005cd0       ?destroy@HexEdit@@UAEXXZ   10006cd0 f i HEXDialog.obj
+ 0001:00005d00       ?CleanUp@SciSubClassWrp@@QAEXXZ 10006d00 f i HEXDialog.obj
+ 0001:00005d60       ??_EHexEdit@@UAEPAXI@Z     10006d60 f i HEXDialog.obj
+ 0001:00005d60       ??_GHexEdit@@UAEPAXI@Z     10006d60 f i HEXDialog.obj
+ 0001:00005d90       ??1HexEdit@@UAE@XZ         10006d90 f   HEXDialog.obj
+ 0001:00005df0       ?init@HexEdit@@QAEXPAUHINSTANCE__@@UNppData@@PBG@Z 10006df0 f   HEXDialog.obj
+ 0001:00005e60       ?run_dlgProc@HexEdit@@MAGHPAUHWND__@@IIJ@Z 10006e60 f   HEXDialog.obj
+ 0001:000067e0       ?execute@SciSubClassWrp@@QBEJIIJ@Z 100077e0 f i HEXDialog.obj
+ 0001:00006810       ?SetCurrentLine@HexEdit@@QAEXI@Z 10007810 f i HEXDialog.obj
+ 0001:000068a0       ?GetCurrentLine@HexEdit@@QAEIXZ 100078a0 f i HEXDialog.obj
+ 0001:000068d0       ?GetItemCount@HexEdit@@QAEIXZ 100078d0 f i HEXDialog.obj
+ 0001:00006910       ?UpdateFont@HexEdit@@QAEXXZ 10007910 f i HEXDialog.obj
+ 0001:00006940       ?wndListProc@HexEdit@@CGJPAUHWND__@@IIJ@Z 10007940 f i HEXDialog.obj
+ 0001:00006970       ?SetFont@HexEdit@@AAEHXZ   10007970 f i HEXDialog.obj
+ 0001:00006a30       ?RestartCursor@HexEdit@@AAEXXZ 10007a30 f i HEXDialog.obj
+ 0001:00006aa0       ?DisableCursor@HexEdit@@AAEXXZ 10007aa0 f i HEXDialog.obj
+ 0001:00006b00       ?cursorFunc@HexEdit@@CGXPAUHWND__@@IIK@Z 10007b00 f i HEXDialog.obj
+ 0001:00006b30       ?runCursor@HexEdit@@AAEXPAUHWND__@@IIK@Z 10007b30 f i HEXDialog.obj
+ 0001:00006b90       ?EnsureVisible@HexEdit@@AAEXII@Z 10007b90 f i HEXDialog.obj
+ 0001:00006c80       ?runProcParent@HexEdit@@AAEJPAUHWND__@@IIJ@Z 10007c80 f   HEXDialog.obj
+ 0001:00006da0       ?CallScintillaWndProc@SciSubClassWrp@@QAGJPAUHWND__@@IIJ@Z 10007da0 f i HEXDialog.obj
+ 0001:00006dd0       ?TabMessage@HexEdit@@AAEHXZ 10007dd0 f i HEXDialog.obj
+ 0001:00006ee0       ?runProcList@HexEdit@@AAEJPAUHWND__@@IIJ@Z 10007ee0 f   HEXDialog.obj
+ 0001:00007e30       ?UpdateListChanges@HexEdit@@AAEXXZ 10008e30 f i HEXDialog.obj
+ 0001:000081a0       ?InvalidateNotepad@HexEdit@@AAEXXZ 100091a0 f i HEXDialog.obj
+ 0001:00008200       ?SetFocusNpp@HexEdit@@AAEXPAUHWND__@@@Z 10009200 f i HEXDialog.obj
+ 0001:00008220       ?UpdateDocs@HexEdit@@QAEXPAPBGIH@Z 10009220 f   HEXDialog.obj
+ 0001:00008620       ?doDialog@HexEdit@@QAEXH@Z 10009620 f   HEXDialog.obj
+ 0001:00009130       ?MoveView@HexEdit@@AAEXXZ  1000a130 f   HEXDialog.obj
+ 0001:00009310       ?UpdateHeader@HexEdit@@AAEXH@Z 1000a310 f   HEXDialog.obj
+ 0001:000096b0       ?Copy@HexEdit@@QAEXXZ      1000a6b0 f   HEXDialog.obj
+ 0001:00009c10       ?CalcStride@HexEdit@@AAEHHH@Z 1000ac10 f i HEXDialog.obj
+ 0001:00009c40       ?Cut@HexEdit@@QAEXXZ       1000ac40 f   HEXDialog.obj
+ 0001:0000a470       ?Paste@HexEdit@@QAEXXZ     1000b470 f   HEXDialog.obj
+ 0001:0000b450       ?SelectAll@HexEdit@@QAEXXZ 1000c450 f   HEXDialog.obj
+ 0001:0000b480       ?ZoomIn@HexEdit@@QAEXXZ    1000c480 f   HEXDialog.obj
+ 0001:0000b4d0       ?ZoomOut@HexEdit@@QAEXXZ   1000c4d0 f   HEXDialog.obj
+ 0001:0000b520       ?ZoomRestore@HexEdit@@QAEXXZ 1000c520 f   HEXDialog.obj
+ 0001:0000b560       ?ReadArrayToList@HexEdit@@AAEXPADHH@Z 1000c560 f   HEXDialog.obj
+ 0001:0000c010       ?AddressConvert@HexEdit@@AAEXPADH@Z 1000d010 f   HEXDialog.obj
+ 0001:0000c210       ?DumpConvert@HexEdit@@AAEXPADI@Z 1000d210 f   HEXDialog.obj
+ 0001:0000c440       ?BinHexConvert@HexEdit@@AAEXPADH@Z 1000d440 f   HEXDialog.obj
+ 0001:0000c610       ?TrackMenu@HexEdit@@AAEXUtagPOINT@@@Z 1000d610 f   HEXDialog.obj
+ 0001:0000d2b0       ??0ColumnDlg@@QAE@XZ       1000e2b0 f i HEXDialog.obj
+ 0001:0000d2d0       ?destroy@FindReplaceDlg@@UAEXXZ 1000e2d0 f i Hex.obj
+ 0001:0000d2d0       ?destroy@ColumnDlg@@UAEXXZ 1000e2d0 f i HEXDialog.obj
+ 0001:0000d2d0       ?destroy@GotoDlg@@UAEXXZ   1000e2d0 f i Hex.obj
+ 0001:0000d2d0       ?destroy@CompareDlg@@UAEXXZ 1000e2d0 f i Hex.obj
+ 0001:0000d2d0       ?destroy@OptionDlg@@UAEXXZ 1000e2d0 f i Hex.obj
+ 0001:0000d2e0       ?ShouldDeleteCompare@HexEdit@@AAEHXZ 1000e2e0 f   HEXDialog.obj
+ 0001:0000d370       ?SetCompareResult@HexEdit@@QAEXPAD@Z 1000e370 f i HEXDialog.obj
+ 0001:0000d3e0       ?Delete@HexEdit@@AAEXXZ    1000e3e0 f   HEXDialog.obj
+ 0001:0000d5c0       ?DrawAddressText@HexEdit@@AAEXPAUHDC__@@K@Z 1000e5c0 f   HEXDialog.obj
+ 0001:0000d800       ?SelectItem@HexEdit@@AAEXIIH@Z 1000e800 f   HEXDialog.obj
+ 0001:0000d9b0       ?InvalidateList@HexEdit@@AAEXXZ 1000e9b0 f i HEXDialog.obj
+ 0001:0000da30       ?OnMouseClickItem@HexEdit@@AAEXIJ@Z 1000ea30 f   HEXDialog.obj
+ 0001:0000dbd0       ?OnKeyDownItem@HexEdit@@AAEHIJ@Z 1000ebd0 f   HEXDialog.obj
+ 0001:0000e4d0       ?OnCharItem@HexEdit@@AAEHIJ@Z 1000f4d0 f   HEXDialog.obj
+ 0001:0000ec70       ?DrawItemText@HexEdit@@AAEXPAUHDC__@@KH@Z 1000fc70 f   HEXDialog.obj
+ 0001:00010840       ?DrawCursor@HexEdit@@AAEXPAUHDC__@@AAUtagRECT@@H@Z 10011840 f i HEXDialog.obj
+ 0001:000108a0       ?DrawPartOfItemText@HexEdit@@AAEXPAUHDC__@@UtagRECT@@1PAGIIW4eSelItem@@W4eSelType@@@Z 100118a0 f   HEXDialog.obj
+ 0001:00010ae0       ?SelectDump@HexEdit@@AAEXHH@Z 10011ae0 f   HEXDialog.obj
+ 0001:00010dc0       ?OnMouseClickDump@HexEdit@@AAEXIJ@Z 10011dc0 f   HEXDialog.obj
+ 0001:00010ed0       ?OnKeyDownDump@HexEdit@@AAEHIJ@Z 10011ed0 f   HEXDialog.obj
+ 0001:00011300       ?OnCharDump@HexEdit@@AAEHIJ@Z 10012300 f   HEXDialog.obj
+ 0001:00011620       ?DrawDumpText@HexEdit@@AAEXPAUHDC__@@KH@Z 10012620 f   HEXDialog.obj
+ 0001:00011fa0       ?DrawPartOfDumpText@HexEdit@@AAEXPAUHDC__@@UtagRECT@@PAGIIW4eSelType@@@Z 10012fa0 f   HEXDialog.obj
+ 0001:00012130       ?CalcCursorPos@HexEdit@@AAEHUtagLVHITTESTINFO@@@Z 10013130 f   HEXDialog.obj
+ 0001:000126d0       ?GlobalKeys@HexEdit@@AAEHIJ@Z 100136d0 f   HEXDialog.obj
+ 0001:00013070       ?SelectionKeys@HexEdit@@AAEXIJ@Z 10014070 f   HEXDialog.obj
+ 0001:00013740       ?SetPosition@HexEdit@@AAEXIH@Z 10014740 f   HEXDialog.obj
+ 0001:000139f0       ?GetCurrentPos@HexEdit@@AAEIXZ 100149f0 f   HEXDialog.obj
+ 0001:00013b60       ?GetAnchor@HexEdit@@AAEIXZ 10014b60 f   HEXDialog.obj
+ 0001:00013c70       ?GetSelection@HexEdit@@AAEXPAH0@Z 10014c70 f   HEXDialog.obj
+ 0001:00013ca0       ?SetSelection@HexEdit@@AAEXIIW4eSel@@H@Z 10014ca0 f   HEXDialog.obj
+ 0001:00013fb0       ?SetLineVis@HexEdit@@AAEXIW4eLineVis@@@Z 10014fb0 f   HEXDialog.obj
+ 0001:000140b0       ?GetLineVis@HexEdit@@AAEXXZ 100150b0 f   HEXDialog.obj
+ 0001:00014100       ?NextBookmark@HexEdit@@QAEXXZ 10015100 f   HEXDialog.obj
+ 0001:00014230       ?PrevBookmark@HexEdit@@QAEXXZ 10015230 f   HEXDialog.obj
+ 0001:00014380       ?ToggleBookmark@HexEdit@@QAEXXZ 10015380 f   HEXDialog.obj
+ 0001:000143b0       ?ToggleBookmark@HexEdit@@AAEXI@Z 100153b0 f   HEXDialog.obj
+ 0001:000145a0       ?QuickSortRecursive@HexEdit@@AAEXHH@Z 100155a0 f i HEXDialog.obj
+ 0001:00014750       ?UpdateBookmarks@HexEdit@@AAEXIH@Z 10015750 f   HEXDialog.obj
+ 0001:00014b00       ?ClearBookmarks@HexEdit@@QAEXXZ 10015b00 f   HEXDialog.obj
+ 0001:00014b50       ?CutBookmarkLines@HexEdit@@QAEXXZ 10015b50 f   HEXDialog.obj
+ 0001:00014ed0       ?CopyBookmarkLines@HexEdit@@QAEXXZ 10015ed0 f   HEXDialog.obj
+ 0001:000151b0       ?PasteBookmarkLines@HexEdit@@QAEXXZ 100161b0 f   HEXDialog.obj
+ 0001:00015470       ?DeleteBookmarkLines@HexEdit@@QAEXXZ 10016470 f   HEXDialog.obj
+ 0001:000155e0       ?SetStatusBar@HexEdit@@QAEXXZ 100165e0 f   HEXDialog.obj
+ 0001:00015800       ??A?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAEAAUtBkMk@@I@Z 10016800 f i HEXDialog.obj
+ 0001:00015840       ?push_back@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAEXABUtBkMk@@@Z 10016840 f i HEXDialog.obj
+ 0001:000158a0       ?erase@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@V32@@Z 100168a0 f i HEXDialog.obj
+ 0001:00015920       ??0?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAE@XZ 10016920 f i HEXDialog.obj
+ 0001:00015950       ??1?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAE@XZ 10016950 f i HEXDialog.obj
+ 0001:00015950       ?clear@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAEXXZ 10016950 f i HEXDialog.obj
+ 0001:00015970       ??4?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAEAAV01@ABV01@@Z 10016970 f i HEXDialog.obj
+ 0001:00015b30       ?size@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QBEIXZ 10016b30 f i HEXDialog.obj
+ 0001:00015b70       ??A?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAEAAUtHexProp@@I@Z 10016b70 f i HEXDialog.obj
+ 0001:00015bb0       ?push_back@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAEXABUtHexProp@@@Z 10016bb0 f i HEXDialog.obj
+ 0001:00015c10       ?insert@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@V32@ABUtBkMk@@@Z 10016c10 f i HEXDialog.obj
+ 0001:00015c90       ?_Ufill@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEPAUtBkMk@@PAU3@IABU3@@Z 10016c90 f i HEXDialog.obj
+ 0001:00015cc0       ?capacity@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QBEIXZ 10016cc0 f i HEXDialog.obj
+ 0001:00015d00       ?insert@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAE?AV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@2@V32@ABUtHexProp@@@Z 10016d00 f i HEXDialog.obj
+ 0001:00015d80       ?_Buy@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAE_NI@Z 10016d80 f i HEXDialog.obj
+ 0001:00015e10       ?_Destroy@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEXPAUtHexProp@@0@Z 10016e10 f i HEXDialog.obj
+ 0001:00015e40       ?_Tidy@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEXXZ 10016e40 f i HEXDialog.obj
+ 0001:00015eb0       ?_Ufill@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEPAUtHexProp@@PAU3@IABU3@@Z 10016eb0 f i HEXDialog.obj
+ 0001:00015ef0       ??0?$allocator@UtBkMk@@@std@@QAE@XZ 10016ef0 f i CompareDialog.obj
+ 0001:00015ef0       ??0?$allocator@D@std@@QAE@XZ 10016ef0 f i CompareDialog.obj
+ 0001:00015ef0       ??0?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAE@XZ 10016ef0 f i Hex.obj
+ 0001:00015ef0       ??0?$allocator@TtEncComboInfo@@@std@@QAE@XZ 10016ef0 f i MultiTypeCombo.obj
+ 0001:00015ef0       ??0?$allocator@G@std@@QAE@XZ 10016ef0 f i Hex.obj
+ 0001:00015ef0       ??0?$allocator@UtHexProp@@@std@@QAE@XZ 10016ef0 f i HEXDialog.obj
+ 0001:00015ef0       ??0?$allocator@UtMenu@@@std@@QAE@XZ 10016ef0 f i Hex.obj
+ 0001:00015f00       ?deallocate@?$allocator@UtHexProp@@@std@@QAEXPAUtHexProp@@I@Z 10016f00 f i HEXDialog.obj
+ 0001:00015f00       ?deallocate@?$allocator@D@std@@QAEXPADI@Z 10016f00 f i CompareDialog.obj
+ 0001:00015f00       ?deallocate@?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAEXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@I@Z 10016f00 f i Hex.obj
+ 0001:00015f00       ?deallocate@?$allocator@G@std@@QAEXPAGI@Z 10016f00 f i Hex.obj
+ 0001:00015f00       ?deallocate@?$allocator@UtBkMk@@@std@@QAEXPAUtBkMk@@I@Z 10016f00 f i CompareDialog.obj
+ 0001:00015f00       ?deallocate@?$allocator@TtEncComboInfo@@@std@@QAEXPATtEncComboInfo@@I@Z 10016f00 f i MultiTypeCombo.obj
+ 0001:00015f00       ?deallocate@?$allocator@UtMenu@@@std@@QAEXPAUtMenu@@I@Z 10016f00 f i Hex.obj
+ 0001:00015f20       ??D?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEAAUtMenu@@XZ 10016f20 f i Hex.obj
+ 0001:00015f20       ?base@?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEPAUtBkMk@@XZ 10016f20 f i HEXDialog.obj
+ 0001:00015f20       ?base@?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEPAUtHexProp@@XZ 10016f20 f i HEXDialog.obj
+ 0001:00015f20       ??D?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBEAAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@XZ 10016f20 f i Hex.obj
+ 0001:00015f20       ??D?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QBEABUtHexProp@@XZ 10016f20 f i HEXDialog.obj
+ 0001:00015f20       ??D?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QBEABUtBkMk@@XZ 10016f20 f i CompareDialog.obj
+ 0001:00015f20       ??D?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEAAUtBkMk@@XZ 10016f20 f i HEXDialog.obj
+ 0001:00015f20       ?base@?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEPAUtMenu@@XZ 10016f20 f i Hex.obj
+ 0001:00015f20       ??D?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBEAATtEncComboInfo@@XZ 10016f20 f i MultiTypeCombo.obj
+ 0001:00015f20       ?base@?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBEPATtEncComboInfo@@XZ 10016f20 f i MultiTypeCombo.obj
+ 0001:00015f20       ??D?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QBEABUtMenu@@XZ 10016f20 f i Hex.obj
+ 0001:00015f20       ??D?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEAAUtHexProp@@XZ 10016f20 f i HEXDialog.obj
+ 0001:00015f20       ?base@?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBEPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@XZ 10016f20 f i Hex.obj
+ 0001:00015f30       ??H?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10016f30 f i HEXDialog.obj
+ 0001:00015f30       ??H?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10016f30 f i HEXDialog.obj
+ 0001:00015f60       ?_Insert_n@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEXV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@IABUtBkMk@@@Z 10016f60 f i HEXDialog.obj
+ 0001:00016380       ??G?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEHABV01@@Z 10017380 f i HEXDialog.obj
+ 0001:000163a0       ?max_size@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QBEIXZ 100173a0 f i HEXDialog.obj
+ 0001:000163c0       ?_Insert_n@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEXV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@2@IABUtHexProp@@@Z 100173c0 f i HEXDialog.obj
+ 0001:00016960       ?_Xlen@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IBEXXZ 10017960 f i HEXDialog.obj
+ 0001:000169c0       ?allocate@?$allocator@UtHexProp@@@std@@QAEPAUtHexProp@@IPBX@Z 100179c0 f i HEXDialog.obj
+ 0001:000169e0       ??G?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEHABV01@@Z 100179e0 f i HEXDialog.obj
+ 0001:00016a00       ??0?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QAE@PBUtBkMk@@@Z 10017a00 f i CompareDialog.obj
+ 0001:00016a00       ??0?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QAE@PBUtHexProp@@@Z 10017a00 f i HEXDialog.obj
+ 0001:00016a00       ??0?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@PAUtMenu@@@Z 10017a00 f i Hex.obj
+ 0001:00016a00       ??0?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QAE@PATtEncComboInfo@@@Z 10017a00 f i MultiTypeCombo.obj
+ 0001:00016a00       ??0?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QAE@PAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@@Z 10017a00 f i Hex.obj
+ 0001:00016a00       ??0?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QAE@PBUtMenu@@@Z 10017a00 f i Hex.obj
+ 0001:00016a00       ??0?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@PAUtBkMk@@@Z 10017a00 f i HEXDialog.obj
+ 0001:00016a00       ??0?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@PAUtHexProp@@@Z 10017a00 f i HEXDialog.obj
+ 0001:00016a20       ??G?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10017a20 f i HEXDialog.obj
+ 0001:00016a50       ?max_size@?$allocator@UtHexProp@@@std@@QBEIXZ 10017a50 f i HEXDialog.obj
+ 0001:00016a80       ??G?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 10017a80 f i HEXDialog.obj
+ 0001:00016ab0       ?copy@std@@YA?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00@Z 10017ab0 f i HEXDialog.obj
+ 0001:00016b10       ?copy@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@@Z 10017b10 f i HEXDialog.obj
+ 0001:00016b50       ?_Ucopy@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@2@0PAU3@@Z 10017b50 f i HEXDialog.obj
+ 0001:00016b80       ?_Uninitialized_fill_n@std@@YAXPAUtBkMk@@IABU2@AAV?$allocator@UtBkMk@@@1@@Z 10017b80 f i HEXDialog.obj
+ 0001:00016bc0       ?_Destroy_range@std@@YAXPAUtHexProp@@0AAV?$allocator@UtHexProp@@@1@@Z 10017bc0 f i HEXDialog.obj
+ 0001:00016c00       ?_Uninitialized_fill_n@std@@YAXPAUtHexProp@@IABU2@AAV?$allocator@UtHexProp@@@1@@Z 10017c00 f i HEXDialog.obj
+ 0001:00016c40       ?_Ucopy@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAEPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@0PAU3@@Z 10017c40 f i HEXDialog.obj
+ 0001:00016c80       ?fill@std@@YAXV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@0ABUtBkMk@@@Z 10017c80 f i HEXDialog.obj
+ 0001:00016cc0       ?copy_backward@std@@YA?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00@Z 10017cc0 f i HEXDialog.obj
+ 0001:00016d20       ?_Ucopy@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAEPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@2@0PAU3@@Z 10017d20 f i HEXDialog.obj
+ 0001:00016d60       ?fill@std@@YAXV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@0ABUtHexProp@@@Z 10017d60 f i HEXDialog.obj
+ 0001:00016da0       ?copy_backward@std@@YA?AV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00@Z 10017da0 f i HEXDialog.obj
+ 0001:00016e00       ?_Allocate@std@@YAPAUtHexProp@@IPAU2@@Z 10017e00 f i HEXDialog.obj
+ 0001:00016e20       ??E?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10017e20 f i HEXDialog.obj
+ 0001:00016e20       ??E?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10017e20 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@AAPATtEncComboInfo@@@Z 10017e40 f i MultiTypeCombo.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@AAV31@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@AAPAUtHexProp@@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@1@AAPAUtBkMk@@@Z 10017e40 f i CompareDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABQAUtHexProp@@AAPAU3@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@1@AAPAUtHexProp@@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@AAV31@@Z 10017e40 f i MultiTypeCombo.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@AAV31@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABQAUtBkMk@@AAPAU3@@Z 10017e40 f i CompareDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@AAV31@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@AAPAUtMenu@@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@1@AAPAUtMenu@@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@AAV31@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@AAPAUtBkMk@@@Z 10017e40 f i HEXDialog.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@AAPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABQAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@AAPAV31@@Z 10017e40 f i Hex.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABQATtEncComboInfo@@AAPAT3@@Z 10017e40 f i MultiTypeCombo.obj
+ 0001:00016e40       ?_Ptr_cat@std@@YA?AU_Nonscalar_ptr_iterator_tag@1@ABQAUtMenu@@AAPAU3@@Z 10017e40 f i Hex.obj
+ 0001:00016e50       ?_Copy_opt@std@@YA?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 10017e50 f i HEXDialog.obj
+ 0001:00016eb0       ?_Copy_opt@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@U_Nonscalar_ptr_iterator_tag@1@@Z 10017eb0 f i HEXDialog.obj
+ 0001:00016f00       ?_Uninitialized_copy@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtHexProp@@@1@@Z 10017f00 f i HEXDialog.obj
+ 0001:00016f40       ?_Uninit_fill_n@std@@YAXPAUtBkMk@@IABU2@AAV?$allocator@UtBkMk@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10017f40 f i HEXDialog.obj
+ 0001:00016fe0       ?_Destroy_range@std@@YAXPAUtHexProp@@0AAV?$allocator@UtHexProp@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10017fe0 f i HEXDialog.obj
+ 0001:00017010       ?_Uninit_fill_n@std@@YAXPAUtHexProp@@IABU2@AAV?$allocator@UtHexProp@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10018010 f i HEXDialog.obj
+ 0001:000170c0       ?_Uninitialized_copy@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtBkMk@@@1@@Z 100180c0 f i HEXDialog.obj
+ 0001:00017110       ?_Copy_backward_opt@std@@YA?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 10018110 f i HEXDialog.obj
+ 0001:00017170       ?_Uninitialized_copy@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtHexProp@@@1@@Z 10018170 f i HEXDialog.obj
+ 0001:000171c0       ?_Copy_backward_opt@std@@YA?AV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 100181c0 f i HEXDialog.obj
+ 0001:00017220       ??F?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10018220 f i HEXDialog.obj
+ 0001:00017240       ?construct@?$allocator@UtHexProp@@@std@@QAEXPAUtHexProp@@ABU3@@Z 10018240 f i HEXDialog.obj
+ 0001:00017260       ?destroy@?$allocator@UtHexProp@@@std@@QAEXPAUtHexProp@@@Z 10018260 f i HEXDialog.obj
+ 0001:00017280       ??F?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10018280 f i HEXDialog.obj
+ 0001:000172a0       ?_Uninit_copy@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtHexProp@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 100182a0 f i HEXDialog.obj
+ 0001:000172a0       ?_Uninit_copy@std@@YAPAUtHexProp@@V?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtHexProp@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 100182a0 f i HEXDialog.obj
+ 0001:00017370       ?_Uninit_copy@std@@YAPAUtBkMk@@V?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtBkMk@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10018370 f i HEXDialog.obj
+ 0001:00017440       ?_Construct@std@@YAXPAUtHexProp@@ABU2@@Z 10018440 f i HEXDialog.obj
+ 0001:000174b0       ?_Destroy@std@@YAXPAUtHexProp@@@Z 100184b0 f i HEXDialog.obj
+ 0001:000174c0       ??_GtHexProp@@QAEPAXI@Z    100184c0 f i HEXDialog.obj
+ 0001:000174f0       ?doDialog@HelpDlg@@QAEXXZ  100184f0 f   HelpDialog.obj
+ 0001:00017530       ?run_dlgProc@HelpDlg@@MAGHPAUHWND__@@IIJ@Z 10018530 f   HelpDialog.obj
+ 0001:000176e0       ??0FindReplaceDlg@@QAE@XZ  100186e0 f i Hex.obj
+ 0001:00017750       ??0OptionDlg@@QAE@XZ       10018750 f i Hex.obj
+ 0001:00017820       ??0ColorCombo@@QAE@XZ      10018820 f i Hex.obj
+ 0001:00017870       ??1ColorCombo@@UAE@XZ      10018870 f i Hex.obj
+ 0001:00017890       ??_GColorCombo@@UAEPAXI@Z  10018890 f i Hex.obj
+ 0001:00017890       ??_EColorCombo@@UAEPAXI@Z  10018890 f i Hex.obj
+ 0001:000178c0       ??_GOptionDlg@@UAEPAXI@Z   100188c0 f i Hex.obj
+ 0001:000178c0       ??_EOptionDlg@@UAEPAXI@Z   100188c0 f i Hex.obj
+ 0001:000178f0       ??1OptionDlg@@UAE@XZ       100188f0 f i Hex.obj
+ 0001:000179b0       ??0GotoDlg@@QAE@XZ         100189b0 f i Hex.obj
+ 0001:000179e0       ??_GFindReplaceDlg@@UAEPAXI@Z 100189e0 f i Hex.obj
+ 0001:000179e0       ??_ECompareDlg@@UAEPAXI@Z  100189e0 f i Hex.obj
+ 0001:000179e0       ??_GCompareDlg@@UAEPAXI@Z  100189e0 f i Hex.obj
+ 0001:000179e0       ??_GPatternDlg@@UAEPAXI@Z  100189e0 f i Hex.obj
+ 0001:000179e0       ??_EGotoDlg@@UAEPAXI@Z     100189e0 f i Hex.obj
+ 0001:000179e0       ??_EColumnDlg@@UAEPAXI@Z   100189e0 f i HEXDialog.obj
+ 0001:000179e0       ??_GColumnDlg@@UAEPAXI@Z   100189e0 f i HEXDialog.obj
+ 0001:000179e0       ??_GGotoDlg@@UAEPAXI@Z     100189e0 f i Hex.obj
+ 0001:000179e0       ??_EFindReplaceDlg@@UAEPAXI@Z 100189e0 f i Hex.obj
+ 0001:000179e0       ??_EPatternDlg@@UAEPAXI@Z  100189e0 f i Hex.obj
+ 0001:00017a10       ??1FindReplaceDlg@@UAE@XZ  10018a10 f i Hex.obj
+ 0001:00017a10       ??1CompareDlg@@UAE@XZ      10018a10 f i Hex.obj
+ 0001:00017a10       ??1ColumnDlg@@UAE@XZ       10018a10 f i HEXDialog.obj
+ 0001:00017a10       ??1PatternDlg@@UAE@XZ      10018a10 f i Hex.obj
+ 0001:00017a10       ??1GotoDlg@@UAE@XZ         10018a10 f i Hex.obj
+ 0001:00017a30       ??0PatternDlg@@QAE@XZ      10018a30 f i Hex.obj
+ 0001:00017a50       ?destroy@PatternDlg@@UAEXXZ 10018a50 f i Hex.obj
+ 0001:00017a90       ??0HelpDlg@@QAE@XZ         10018a90 f i Hex.obj
+ 0001:00017b00       ??0URLCtrl@@QAE@XZ         10018b00 f i Hex.obj
+ 0001:00017b60       ?destroy@URLCtrl@@UAEXXZ   10018b60 f i Hex.obj
+ 0001:00017bb0       ??_GURLCtrl@@UAEPAXI@Z     10018bb0 f i Hex.obj
+ 0001:00017bb0       ??_EURLCtrl@@UAEPAXI@Z     10018bb0 f i Hex.obj
+ 0001:00017be0       ??1URLCtrl@@UAE@XZ         10018be0 f i Hex.obj
+ 0001:00017c00       ?destroy@HelpDlg@@UAEXXZ   10018c00 f i Hex.obj
+ 0001:00017c30       ??_EHelpDlg@@UAEPAXI@Z     10018c30 f i Hex.obj
+ 0001:00017c30       ??_GHelpDlg@@UAEPAXI@Z     10018c30 f i Hex.obj
+ 0001:00017c60       ??1HelpDlg@@UAE@XZ         10018c60 f i Hex.obj
+ 0001:00017cc0       ??0tProp@@QAE@XZ           10018cc0 f i Hex.obj
+ 0001:00017ce0       ??1tProp@@QAE@XZ           10018ce0 f i Hex.obj
+ 0001:00017d00       _DllMain@12                10018d00 f   Hex.obj
+ 0001:00017f60       _setInfo                   10018f60 f   Hex.obj
+ 0001:00018130       ?SetParentNppHandle@HexEdit@@QAEXPAUHWND__@@I@Z 10019130 f i Hex.obj
+ 0001:00018190       ?Init@SciSubClassWrp@@QAEXPAUHWND__@@P6GJ0IIJ@Z@Z 10019190 f i Hex.obj
+ 0001:000181f0       ?SubclassScintillaWndProc@SciSubClassWrp@@AAEXP6GJPAUHWND__@@IIJ@Z@Z 100191f0 f i Hex.obj
+ 0001:00018260       ?wndParentProc0@HexEdit@@CGJPAUHWND__@@IIJ@Z 10019260 f i Hex.obj
+ 0001:00018290       ?wndParentProc1@HexEdit@@CGJPAUHWND__@@IIJ@Z 10019290 f i Hex.obj
+ 0001:000182c0       ?init@FindReplaceDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 100192c0 f i Hex.obj
+ 0001:00018300       ?init@GotoDlg@@QAEXPAUHINSTANCE__@@UNppData@@PAG@Z 10019300 f i Hex.obj
+ 0001:00018340       ?init@CompareDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 10019340 f i Hex.obj
+ 0001:00018340       ?init@HelpDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 10019340 f i Hex.obj
+ 0001:00018340       ?init@ColumnDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 10019340 f i HEXDialog.obj
+ 0001:00018340       ?init@PatternDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 10019340 f i Hex.obj
+ 0001:00018340       ?init@OptionDlg@@QAEXPAUHINSTANCE__@@UNppData@@@Z 10019340 f i Hex.obj
+ 0001:00018380       _getName                   10019380 f   Hex.obj
+ 0001:00018390       _getFuncsArray             10019390 f   Hex.obj
+ 0001:000183b0       _beNotified                100193b0 f   Hex.obj
+ 0001:000186f0       ?RedoUndo@HexEdit@@QAEXIHI@Z 100196f0 f i Hex.obj
+ 0001:00018930       ?TestLineLength@HexEdit@@QAEXXZ 10019930 f i Hex.obj
+ 0001:00018a60       _messageProc               10019a60 f   Hex.obj
+ 0001:00018a80       _isUnicode                 10019a80 f   Hex.obj
+ 0001:00018a90       ?loadSettings@@YAXXZ       10019a90 f   Hex.obj
+ 0001:00018e80       ?saveSettings@@YAXXZ       10019e80 f   Hex.obj
+ 0001:00019200       ?setHexMask@@YAXXZ         1001a200 f   Hex.obj
+ 0001:00019240       ?setMenu@@YAXXZ            1001a240 f   Hex.obj
+ 0001:000193c0       ?checkMenu@@YAXH@Z         1001a3c0 f   Hex.obj
+ 0001:000193f0       ?getProp@@YA?AUtHexProp@@XZ 1001a3f0 f   Hex.obj
+ 0001:00019420       ?getCLM@@YAHXZ             1001a420 f   Hex.obj
+ 0001:00019430       ?getFontName@@YAPBGXZ      1001a430 f   Hex.obj
+ 0001:00019440       ?getFontSizeElem@@YAIXZ    1001a440 f   Hex.obj
+ 0001:00019450       ?isFontBold@@YAHXZ         1001a450 f   Hex.obj
+ 0001:00019460       ?isFontItalic@@YAHXZ       1001a460 f   Hex.obj
+ 0001:00019470       ?isFontUnderline@@YAHXZ    1001a470 f   Hex.obj
+ 0001:00019480       ?getColor@@YAKW4eColorType@@@Z 1001a480 f   Hex.obj
+ 0001:000194f0       ?ScintillaMsg@@YAIIIJ@Z    1001a4f0 f   Hex.obj
+ 0001:00019510       ?ScintillaMsg@@YAIPAUHWND__@@IIJ@Z 1001a510 f   Hex.obj
+ 0001:00019540       ?CleanScintillaBuf@@YAXPAUHWND__@@@Z 1001a540 f   Hex.obj
+ 0001:00019580       ?ScintillaGetText@@YAIPAUHWND__@@PADHH@Z 1001a580 f   Hex.obj
+ 0001:000195c0       ?UpdateCurrentHScintilla@@YAXXZ 1001a5c0 f   Hex.obj
+ 0001:00019620       ?getCurrentHScintilla@@YAPAUHWND__@@XZ 1001a620 f   Hex.obj
+ 0001:00019630       ?toggleHexEdit@@YAXXZ      1001a630 f   Hex.obj
+ 0001:00019650       ?compareHex@@YAXXZ         1001a650 f   Hex.obj
+ 0001:00019670       ?clearCompare@@YAXXZ       1001a670 f   Hex.obj
+ 0001:000196e0       ?insertColumnsDlg@@YAXXZ   1001a6e0 f   Hex.obj
+ 0001:00019700       ?getHSelf@Window@@QBEPAUHWND__@@XZ 1001a700 f i Hex.obj
+ 0001:00019700       ?getNewBuf@Utf8_16_Write@@QAEPADXZ 1001a700 f i MultiTypeCombo.obj
+ 0001:00019720       ?replacePatternDlg@@YAXXZ  1001a720 f   Hex.obj
+ 0001:00019740       ?openPropDlg@@YAXXZ        1001a740 f   Hex.obj
+ 0001:00019780       ?openHelpDlg@@YAXXZ        1001a780 f   Hex.obj
+ 0001:00019790       ?SubWndProcNotepad@@YGJPAUHWND__@@IIJ@Z 1001a790 f   Hex.obj
+ 0001:0001a360       ?FileNameChanged@HexEdit@@QAEXPAG@Z 1001b360 f i Hex.obj
+ 0001:0001a3a0       ?ResetModificationState@HexEdit@@QAEXXZ 1001b3a0 f i Hex.obj
+ 0001:0001a3d0       ?GetModificationState@HexEdit@@QAEHXZ 1001b3d0 f i Hex.obj
+ 0001:0001a400       ?SystemUpdate@@YAXXZ       1001b400 f   Hex.obj
+ 0001:0001a860       ?ActivateWindow@@YAXXZ     1001b860 f   Hex.obj
+ 0001:0001a8d0       ?DialogUpdate@@YAXXZ       1001b8d0 f   Hex.obj
+ 0001:0001aa30       ?isFindReplace@FindReplaceDlg@@QAEHXZ 1001ba30 f i Hex.obj
+ 0001:0001aa50       ?IsExtensionRegistered@@YAHPBG@Z 1001ba50 f   Hex.obj
+ 0001:0001ab20       ?IsPercentReached@@YAHPBG@Z 1001bb20 f   Hex.obj
+ 0001:0001ad10       ?ChangeClipboardDataToHex@@YAXPAUtClipboard@@@Z 1001bd10 f   Hex.obj
+ 0001:0001ade0       ?LittleEndianChange@@YAHPAUHWND__@@0PAH1@Z 1001bde0 f   Hex.obj
+ 0001:0001b1b0       ?replaceLittleToBig@@YA?AW4eError@@PAUHWND__@@0HHHH@Z 1001c1b0 f   Hex.obj
+ 0001:0001b6a0       ?DoCompare@@YAXXZ          1001c6a0 f   Hex.obj
+ 0001:0001bca0       ??0CompareDlg@@QAE@XZ      1001cca0 f i Hex.obj
+ 0001:0001bcc0       ?GetNppEncoding@@YA?AW4eNppCoding@@XZ 1001ccc0 f   Hex.obj
+ 0001:0001bd70       ?ChangeNppMenu@@YAXHPAUHWND__@@@Z 1001cd70 f   Hex.obj
+ 0001:0001cba0       ??0tMenu@@QAE@ABU0@@Z      1001dba0 f i Hex.obj
+ 0001:0001cc00       ??1tMenu@@QAE@XZ           1001dc00 f i Hex.obj
+ 0001:0001cc20       ?StoreNppMenuInfo@@YAXPAUHMENU__@@AAV?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@@Z 1001dc20 f   Hex.obj
+ 0001:0001cd80       ??0tMenu@@QAE@XZ           1001dd80 f i Hex.obj
+ 0001:0001cda0       ?UpdateNppMenuInfo@@YAXPAUHMENU__@@AAV?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@@Z 1001dda0 f   Hex.obj
+ 0001:0001ce70       ?ScreenToClient@@YAXPAUHWND__@@PAUtagRECT@@@Z 1001de70 f   Hex.obj
+ 0001:0001cee0       ??0?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE@XZ 1001dee0 f i Hex.obj
+ 0001:0001cf10       ??0?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE@ABV01@@Z 1001df10 f i Hex.obj
+ 0001:0001cff0       ?size@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QBEIXZ 1001dff0 f i Hex.obj
+ 0001:0001d030       ??A?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAEAAUtMenu@@I@Z 1001e030 f i Hex.obj
+ 0001:0001d070       ?push_back@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAEXABUtMenu@@@Z 1001e070 f i Hex.obj
+ 0001:0001d0d0       ??1?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE@XZ 1001e0d0 f i Hex.obj
+ 0001:0001d0d0       ?clear@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAEXXZ 1001e0d0 f i Hex.obj
+ 0001:0001d0f0       ??0?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@PBG@Z 1001e0f0 f i Hex.obj
+ 0001:0001d130       ??1?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@XZ 1001e130 f i Hex.obj
+ 0001:0001d150       ?c_str@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QBEPBGXZ 1001e150 f i Hex.obj
+ 0001:0001d170       ??0?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAE@XZ 1001e170 f i Hex.obj
+ 0001:0001d1a0       ??1?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAE@XZ 1001e1a0 f i Hex.obj
+ 0001:0001d1c0       ?size@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QBEIXZ 1001e1c0 f i Hex.obj
+ 0001:0001d200       ??A?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAEAAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@I@Z 1001e200 f i Hex.obj
+ 0001:0001d240       ?push_back@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAEXABV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@@Z 1001e240 f i Hex.obj
+ 0001:0001d2a0       ?capacity@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QBEIXZ 1001e2a0 f i Hex.obj
+ 0001:0001d2e0       ?insert@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE?AV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@2@V32@ABUtMenu@@@Z 1001e2e0 f i Hex.obj
+ 0001:0001d360       ?_Buy@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAE_NI@Z 1001e360 f i Hex.obj
+ 0001:0001d3f0       ?_Tidy@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEXXZ 1001e3f0 f i Hex.obj
+ 0001:0001d460       ?_Ufill@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEPAUtMenu@@PAU3@IABU3@@Z 1001e460 f i Hex.obj
+ 0001:0001d4a0       ??H?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 1001e4a0 f i Hex.obj
+ 0001:0001d4a0       ??H?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 1001e4a0 f i Hex.obj
+ 0001:0001d4d0       ?assign@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV12@PBG@Z 1001e4d0 f i Hex.obj
+ 0001:0001d500       ?length@?$char_traits@G@std@@SAIPBG@Z 1001e500 f i Hex.obj
+ 0001:0001d520       ?_Myptr@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@ABEPBGXZ 1001e520 f i Hex.obj
+ 0001:0001d520       ?_Myptr@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAEPAGXZ 1001e520 f i Hex.obj
+ 0001:0001d550       ?_Tidy@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAEX_N@Z 1001e550 f i Hex.obj
+ 0001:0001d5b0       ?capacity@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QBEIXZ 1001e5b0 f i Hex.obj
+ 0001:0001d5f0       ?insert@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAE?AV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@2@V32@ABV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@@Z 1001e5f0 f i Hex.obj
+ 0001:0001d670       ?_Buy@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAE_NI@Z 1001e670 f i Hex.obj
+ 0001:0001d6f0       ?_Tidy@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAEXXZ 1001e6f0 f i Hex.obj
+ 0001:0001d760       ?_Ufill@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAEPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@PAV32@IABV32@@Z 1001e760 f i Hex.obj
+ 0001:0001d790       ??0?$_String_val@DV?$allocator@D@std@@@std@@IAE@V?$allocator@D@1@@Z 1001e790 f i CompareDialog.obj
+ 0001:0001d790       ??0?$_String_val@GV?$allocator@G@std@@@std@@IAE@V?$allocator@G@1@@Z 1001e790 f i Hex.obj
+ 0001:0001d790       ??0?$_Vector_val@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAE@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@@Z 1001e790 f i Hex.obj
+ 0001:0001d790       ??0?$_Vector_val@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@IAE@V?$allocator@UtBkMk@@@1@@Z 1001e790 f i CompareDialog.obj
+ 0001:0001d790       ??0?$_Vector_val@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@IAE@V?$allocator@UtHexProp@@@1@@Z 1001e790 f i HEXDialog.obj
+ 0001:0001d790       ??0?$_Vector_val@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAE@V?$allocator@UtMenu@@@1@@Z 1001e790 f i Hex.obj
+ 0001:0001d790       ??0?$_Vector_val@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAE@V?$allocator@TtEncComboInfo@@@1@@Z 1001e790 f i MultiTypeCombo.obj
+ 0001:0001d7b0       ??H?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBE?AV01@H@Z 1001e7b0 f i Hex.obj
+ 0001:0001d7e0       ?max_size@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QBEIXZ 1001e7e0 f i Hex.obj
+ 0001:0001d800       ?_Destroy@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEXPAUtMenu@@0@Z 1001e800 f i Hex.obj
+ 0001:0001d830       ?_Insert_n@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEXV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@2@IABUtMenu@@@Z 1001e830 f i Hex.obj
+ 0001:0001ddd0       ?allocate@?$allocator@UtMenu@@@std@@QAEPAUtMenu@@IPBX@Z 1001edd0 f i Hex.obj
+ 0001:0001ddf0       ??0?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@ABV01@@Z 1001edf0 f i Hex.obj
+ 0001:0001ddf0       ??0?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@ABV01@@Z 1001edf0 f i HEXDialog.obj
+ 0001:0001ddf0       ??0?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QAE@ABV01@@Z 1001edf0 f i Hex.obj
+ 0001:0001ddf0       ??0?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QAE@ABV01@@Z 1001edf0 f i HEXDialog.obj
+ 0001:0001ddf0       ??0?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QAE@ABV01@@Z 1001edf0 f i MultiTypeCombo.obj
+ 0001:0001de10       ??G?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBEHABV01@@Z 1001ee10 f i Hex.obj
+ 0001:0001de30       ?assign@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV12@PBGI@Z 1001ee30 f i Hex.obj
+ 0001:0001dec0       ?copy@?$char_traits@G@std@@SAPAGPAGPBGI@Z 1001eec0 f i Hex.obj
+ 0001:0001dee0       _wmemcpy                   1001eee0 f i Hex.obj
+ 0001:0001df00       ?_Eos@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAEXI@Z 1001ef00 f i Hex.obj
+ 0001:0001df40       ?assign@?$char_traits@G@std@@SAXAAGABG@Z 1001ef40 f i Hex.obj
+ 0001:0001df60       ?max_size@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QBEIXZ 1001ef60 f i Hex.obj
+ 0001:0001df80       ?_Destroy@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAEXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@0@Z 1001ef80 f i Hex.obj
+ 0001:0001dfb0       ?_Insert_n@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAEXV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@2@IABV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@@Z 1001efb0 f i Hex.obj
+ 0001:0001e4a0       ?_Xlen@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IBEXXZ 1001f4a0 f i Hex.obj
+ 0001:0001e4a0       ?_Xlen@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IBEXXZ 1001f4a0 f i Hex.obj
+ 0001:0001e500       ?allocate@?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAEPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@IPBX@Z 1001f500 f i Hex.obj
+ 0001:0001e520       ??G?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBEHABV01@@Z 1001f520 f i Hex.obj
+ 0001:0001e540       ?max_size@?$allocator@UtMenu@@@std@@QBEIXZ 1001f540 f i Hex.obj
+ 0001:0001e570       ??G?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE?AV01@H@Z 1001f570 f i Hex.obj
+ 0001:0001e5a0       ??0?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@ABV01@@Z 1001f5a0 f i Hex.obj
+ 0001:0001e5f0       ?assign@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV12@ABV12@II@Z 1001f5f0 f i Hex.obj
+ 0001:0001e6b0       ?_Grow@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAE_NI_N@Z 1001f6b0 f i Hex.obj
+ 0001:0001e750       ?_Inside@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAE_NPBG@Z 1001f750 f i Hex.obj
+ 0001:0001e7a0       ?max_size@?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QBEIXZ 1001f7a0 f i Hex.obj
+ 0001:0001e7d0       ??G?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBE?AV01@H@Z 1001f7d0 f i Hex.obj
+ 0001:0001e800       ?erase@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV12@II@Z 1001f800 f i Hex.obj
+ 0001:0001e8b0       ?move@?$char_traits@G@std@@SAPAGPAGPBGI@Z 1001f8b0 f i Hex.obj
+ 0001:0001e8d0       _wmemmove                  1001f8d0 f i Hex.obj
+ 0001:0001e8f0       ?size@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIXZ 1001f8f0 f i CompareDialog.obj
+ 0001:0001e8f0       ?size@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QBEIXZ 1001f8f0 f i Hex.obj
+ 0001:0001e910       ?max_size@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QBEIXZ 1001f910 f i Hex.obj
+ 0001:0001e950       ?_Copy@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@AAEXII@Z 1001f950 f i Hex.obj
+ 0001:0001ea60       ?allocate@?$allocator@G@std@@QAEPAGIPBX@Z 1001fa60 f i Hex.obj
+ 0001:0001ea80       ?max_size@?$allocator@G@std@@QBEIXZ 1001fa80 f i Hex.obj
+ 0001:0001eab0       ?_Ucopy@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEPAUtMenu@@V?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@2@0PAU3@@Z 1001fab0 f i Hex.obj
+ 0001:0001eae0       ?_Uninitialized_fill_n@std@@YAXPAUtMenu@@IABU2@AAV?$allocator@UtMenu@@@1@@Z 1001fae0 f i Hex.obj
+ 0001:0001eb20       ?_Uninitialized_fill_n@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@IABV21@AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@@Z 1001fb20 f i Hex.obj
+ 0001:0001eb60       ?_Destroy_range@std@@YAXPAUtMenu@@0AAV?$allocator@UtMenu@@@1@@Z 1001fb60 f i Hex.obj
+ 0001:0001eba0       ?_Ucopy@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@IAEPAUtMenu@@V?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@2@0PAU3@@Z 1001fba0 f i Hex.obj
+ 0001:0001ebe0       ?fill@std@@YAXV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@0ABUtMenu@@@Z 1001fbe0 f i Hex.obj
+ 0001:0001ec20       ?copy_backward@std@@YA?AV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00@Z 1001fc20 f i Hex.obj
+ 0001:0001ec80       ?_Allocate@std@@YAPAUtMenu@@IPAU2@@Z 1001fc80 f i Hex.obj
+ 0001:0001eca0       ?_Destroy_range@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@0AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@@Z 1001fca0 f i Hex.obj
+ 0001:0001ece0       ?_Ucopy@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IAEPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@V?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@2@0PAV32@@Z 1001fce0 f i Hex.obj
+ 0001:0001ed20       ?fill@std@@YAXV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@0ABV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@@Z 1001fd20 f i Hex.obj
+ 0001:0001ed60       ?copy_backward@std@@YA?AV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@V21@00@Z 1001fd60 f i Hex.obj
+ 0001:0001edc0       ?_Allocate@std@@YAPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@IPAV21@@Z 1001fdc0 f i Hex.obj
+ 0001:0001ede0       ?_Allocate@std@@YAPAGIPAG@Z 1001fde0 f i Hex.obj
+ 0001:0001ee00       ??4tMenu@@QAEAAU0@ABU0@@Z  1001fe00 f i Hex.obj
+ 0001:0001ee80       ??4?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAEAAV01@ABV01@@Z 1001fe80 f i Hex.obj
+ 0001:0001f040       ??E?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10020040 f i Hex.obj
+ 0001:0001f040       ??E?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QAEAAV01@XZ 10020040 f i Hex.obj
+ 0001:0001f060       ??4?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV01@ABV01@@Z 10020060 f i Hex.obj
+ 0001:0001f080       ??E?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QAEAAV01@XZ 10020080 f i Hex.obj
+ 0001:0001f0a0       ?assign@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEAAV12@ABV12@@Z 100200a0 f i Hex.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i HEXDialog.obj
+ 0001:0001f0c0       ??8?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QBE_NABV01@@Z 100200c0 f i Hex.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i Hex.obj
+ 0001:0001f0c0       ??8?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBE_NABV01@@Z 100200c0 f i MultiTypeCombo.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i Hex.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i CompareDialog.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i HEXDialog.obj
+ 0001:0001f0c0       ??8?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@std@@QBE_NABV01@@Z 100200c0 f i HEXDialog.obj
+ 0001:0001f0e0       ?_Uninitialized_copy@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtMenu@@@1@@Z 100200e0 f i Hex.obj
+ 0001:0001f120       ?_Uninit_fill_n@std@@YAXPAUtMenu@@IABU2@AAV?$allocator@UtMenu@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020120 f i Hex.obj
+ 0001:0001f1d0       ?_Uninit_fill_n@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@IABV21@AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 100201d0 f i Hex.obj
+ 0001:0001f270       ?_Destroy_range@std@@YAXPAUtMenu@@0AAV?$allocator@UtMenu@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020270 f i Hex.obj
+ 0001:0001f2a0       ?_Uninitialized_copy@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtMenu@@@1@@Z 100202a0 f i Hex.obj
+ 0001:0001f2f0       ?_Copy_backward_opt@std@@YA?AV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 100202f0 f i Hex.obj
+ 0001:0001f350       ?_Destroy_range@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@0AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020350 f i Hex.obj
+ 0001:0001f380       ?_Uninitialized_copy@std@@YAPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@V?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@0PAV21@AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@@Z 10020380 f i Hex.obj
+ 0001:0001f3d0       ?_Copy_backward_opt@std@@YA?AV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 100203d0 f i Hex.obj
+ 0001:0001f430       ?copy@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@@Z 10020430 f i Hex.obj
+ 0001:0001f470       ?construct@?$allocator@UtMenu@@@std@@QAEXPAUtMenu@@ABU3@@Z 10020470 f i Hex.obj
+ 0001:0001f490       ?destroy@?$allocator@UtMenu@@@std@@QAEXPAUtMenu@@@Z 10020490 f i Hex.obj
+ 0001:0001f4b0       ??F?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@std@@QAEAAV01@XZ 100204b0 f i Hex.obj
+ 0001:0001f4d0       ?construct@?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAEXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@ABV32@@Z 100204d0 f i Hex.obj
+ 0001:0001f4f0       ?destroy@?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@std@@QAEXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@@Z 100204f0 f i Hex.obj
+ 0001:0001f510       ??F?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@std@@QAEAAV01@XZ 10020510 f i Hex.obj
+ 0001:0001f530       ?_Uninit_copy@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtMenu@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020530 f i Hex.obj
+ 0001:0001f530       ?_Uninit_copy@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@1@0PAU2@AAV?$allocator@UtMenu@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020530 f i Hex.obj
+ 0001:0001f600       ?_Uninit_copy@std@@YAPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@V?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@1@0PAV21@AAV?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10020600 f i Hex.obj
+ 0001:0001f6d0       ?_Copy_opt@std@@YAPAUtMenu@@V?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@1@0PAU2@U_Nonscalar_ptr_iterator_tag@1@@Z 100206d0 f i Hex.obj
+ 0001:0001f720       ?_Construct@std@@YAXPAUtMenu@@ABU2@@Z 10020720 f i Hex.obj
+ 0001:0001f790       ?_Destroy@std@@YAXPAUtMenu@@@Z 10020790 f i Hex.obj
+ 0001:0001f7a0       ?_Construct@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@ABV21@@Z 100207a0 f i Hex.obj
+ 0001:0001f810       ?_Destroy@std@@YAXPAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@1@@Z 10020810 f i Hex.obj
+ 0001:0001f820       ??_GtMenu@@QAEPAXI@Z       10020820 f i Hex.obj
+ 0001:0001f850       ??_G?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAEPAXI@Z 10020850 f i Hex.obj
+ 0001:0001f880       ??0MultiTypeCombo@@QAE@XZ  10020880 f   MultiTypeCombo.obj
+ 0001:0001f910       ?destroy@ColorCombo@@UAEXXZ 10020910 f i Hex.obj
+ 0001:0001f910       ?destroy@MultiTypeCombo@@UAEXXZ 10020910 f i MultiTypeCombo.obj
+ 0001:0001f910       ?destroy@ColorPopup@@UAEXXZ 10020910 f i ColorCombo.obj
+ 0001:0001f930       ??_GMultiTypeCombo@@UAEPAXI@Z 10020930 f i MultiTypeCombo.obj
+ 0001:0001f930       ??_EMultiTypeCombo@@UAEPAXI@Z 10020930 f i MultiTypeCombo.obj
+ 0001:0001f960       ??1MultiTypeCombo@@UAE@XZ  10020960 f i MultiTypeCombo.obj
+ 0001:0001f9c0       ?init@MultiTypeCombo@@UAEXPAUHWND__@@0@Z 100209c0 f   MultiTypeCombo.obj
+ 0001:0001fa50       ?wndDefaultProc@MultiTypeCombo@@CGJPAUHWND__@@IIJ@Z 10020a50 f i MultiTypeCombo.obj
+ 0001:0001fa80       ?runProc@MultiTypeCombo@@AAEJPAUHWND__@@IIJ@Z 10020a80 f   MultiTypeCombo.obj
+ 0001:0001fc30       ?addText@MultiTypeCombo@@QAEXUtComboInfo@@@Z 10020c30 f   MultiTypeCombo.obj
+ 0001:0001fd90       ?setText@MultiTypeCombo@@QAEXUtComboInfo@@@Z 10020d90 f   MultiTypeCombo.obj
+ 0001:0001fdc0       ?getText@MultiTypeCombo@@QAEXPAUtComboInfo@@@Z 10020dc0 f   MultiTypeCombo.obj
+ 0001:0001fe00       ?setCodingType@MultiTypeCombo@@QAE?AW4eCodingType@@W42@@Z 10020e00 f   MultiTypeCombo.obj
+ 0001:0001ff70       ?setDocCodePage@MultiTypeCombo@@QAEXW4eNppCoding@@@Z 10020f70 f   MultiTypeCombo.obj
+ 0001:0001ff90       ?setComboText@MultiTypeCombo@@AAEHUtComboInfo@@I@Z 10020f90 f   MultiTypeCombo.obj
+ 0001:0001fff0       ?setComboText@MultiTypeCombo@@AAEHTtEncComboInfo@@I@Z 10020ff0 f   MultiTypeCombo.obj
+ 0001:00020090       ?getComboText@MultiTypeCombo@@AAEXPAD@Z 10021090 f   MultiTypeCombo.obj
+ 0001:000200e0       ?selectComboText@MultiTypeCombo@@AAEXTtEncComboInfo@@@Z 100210e0 f   MultiTypeCombo.obj
+ 0001:00020170       ?decode@MultiTypeCombo@@AAEXPAUtComboInfo@@W4eCodingType@@@Z 10021170 f   MultiTypeCombo.obj
+ 0001:000207b0       ?disableBOM@Utf8_16_Write@@QAEXXZ 100217b0 f i MultiTypeCombo.obj
+ 0001:000207d0       ?encode@MultiTypeCombo@@AAEXPAUtComboInfo@@W4eCodingType@@@Z 100217d0 f   MultiTypeCombo.obj
+ 0001:00020830       ?encode@MultiTypeCombo@@AAEXPATtEncComboInfo@@W4eCodingType@@@Z 10021830 f   MultiTypeCombo.obj
+ 0001:00020b40       ?getNewBuf@Utf8_16_Read@@QAEPADXZ 10021b40 f i MultiTypeCombo.obj
+ 0001:00020b60       ?noBOM@Utf8_16_Read@@QAEXXZ 10021b60 f i MultiTypeCombo.obj
+ 0001:00020b80       ??0?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAE@XZ 10021b80 f i MultiTypeCombo.obj
+ 0001:00020bb0       ?clear@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAEXXZ 10021bb0 f i MultiTypeCombo.obj
+ 0001:00020bb0       ??1?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAE@XZ 10021bb0 f i MultiTypeCombo.obj
+ 0001:00020bd0       ?size@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QBEIXZ 10021bd0 f i MultiTypeCombo.obj
+ 0001:00020c10       ??A?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAEAATtEncComboInfo@@I@Z 10021c10 f i MultiTypeCombo.obj
+ 0001:00020c50       ?push_back@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAEXABTtEncComboInfo@@@Z 10021c50 f i MultiTypeCombo.obj
+ 0001:00020cb0       ?capacity@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QBEIXZ 10021cb0 f i MultiTypeCombo.obj
+ 0001:00020cf0       ?begin@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QBE?AV?$_Ptrit@UtHexProp@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10021cf0 f i HEXDialog.obj
+ 0001:00020cf0       ?begin@?$vector@UtHexProp@@V?$allocator@UtHexProp@@@std@@@std@@QAE?AV?$_Ptrit@UtHexProp@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10021cf0 f i HEXDialog.obj
+ 0001:00020cf0       ?begin@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QBE?AV?$_Ptrit@UtBkMk@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10021cf0 f i CompareDialog.obj
+ 0001:00020cf0       ?begin@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QBE?AV?$_Ptrit@UtMenu@@HPBU1@ABU1@PAU1@AAU1@@2@XZ 10021cf0 f i Hex.obj
+ 0001:00020cf0       ?begin@?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@QAE?AV?$_Ptrit@UtMenu@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10021cf0 f i Hex.obj
+ 0001:00020cf0       ?begin@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAE?AV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@2@XZ 10021cf0 f i MultiTypeCombo.obj
+ 0001:00020cf0       ?begin@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAE?AV?$_Ptrit@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@HPAV12@AAV12@PAV12@AAV12@@2@XZ 10021cf0 f i Hex.obj
+ 0001:00020cf0       ?begin@?$vector@UtBkMk@@V?$allocator@UtBkMk@@@std@@@std@@QAE?AV?$_Ptrit@UtBkMk@@HPAU1@AAU1@PAU1@AAU1@@2@XZ 10021cf0 f i HEXDialog.obj
+ 0001:00020d10       ?insert@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QAE?AV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@2@V32@ABTtEncComboInfo@@@Z 10021d10 f i MultiTypeCombo.obj
+ 0001:00020d90       ?_Buy@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAE_NI@Z 10021d90 f i MultiTypeCombo.obj
+ 0001:00020e20       ?_Tidy@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAEXXZ 10021e20 f i MultiTypeCombo.obj
+ 0001:00020e90       ?_Ufill@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAEPATtEncComboInfo@@PAT3@IABT3@@Z 10021e90 f i MultiTypeCombo.obj
+ 0001:00020ed0       ??H?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBE?AV01@H@Z 10021ed0 f i MultiTypeCombo.obj
+ 0001:00020f00       ?max_size@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@QBEIXZ 10021f00 f i MultiTypeCombo.obj
+ 0001:00020f20       ?_Destroy@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAEXPATtEncComboInfo@@0@Z 10021f20 f i MultiTypeCombo.obj
+ 0001:00020f50       ?_Insert_n@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAEXV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@2@IABTtEncComboInfo@@@Z 10021f50 f i MultiTypeCombo.obj
+ 0001:000214d0       ?_Xlen@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IBEXXZ 100224d0 f i MultiTypeCombo.obj
+ 0001:00021530       ?allocate@?$allocator@TtEncComboInfo@@@std@@QAEPATtEncComboInfo@@IPBX@Z 10022530 f i MultiTypeCombo.obj
+ 0001:00021550       ??G?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBEHABV01@@Z 10022550 f i MultiTypeCombo.obj
+ 0001:00021570       ?max_size@?$allocator@TtEncComboInfo@@@std@@QBEIXZ 10022570 f i MultiTypeCombo.obj
+ 0001:000215a0       ??G?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QBE?AV01@H@Z 100225a0 f i MultiTypeCombo.obj
+ 0001:000215d0       ?_Uninitialized_fill_n@std@@YAXPATtEncComboInfo@@IABT2@AAV?$allocator@TtEncComboInfo@@@1@@Z 100225d0 f i MultiTypeCombo.obj
+ 0001:00021610       ?_Destroy_range@std@@YAXPATtEncComboInfo@@0AAV?$allocator@TtEncComboInfo@@@1@@Z 10022610 f i MultiTypeCombo.obj
+ 0001:00021650       ?_Ucopy@?$vector@TtEncComboInfo@@V?$allocator@TtEncComboInfo@@@std@@@std@@IAEPATtEncComboInfo@@V?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@2@0PAT3@@Z 10022650 f i MultiTypeCombo.obj
+ 0001:00021690       ?fill@std@@YAXV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@0ABTtEncComboInfo@@@Z 10022690 f i MultiTypeCombo.obj
+ 0001:000216d0       ?copy_backward@std@@YA?AV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@V21@00@Z 100226d0 f i MultiTypeCombo.obj
+ 0001:00021730       ?_Allocate@std@@YAPATtEncComboInfo@@IPAT2@@Z 10022730 f i MultiTypeCombo.obj
+ 0001:00021750       ??E?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QAEAAV01@XZ 10022750 f i MultiTypeCombo.obj
+ 0001:00021770       ?_Uninit_fill_n@std@@YAXPATtEncComboInfo@@IABT2@AAV?$allocator@TtEncComboInfo@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10022770 f i MultiTypeCombo.obj
+ 0001:00021820       ?_Destroy_range@std@@YAXPATtEncComboInfo@@0AAV?$allocator@TtEncComboInfo@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10022820 f i MultiTypeCombo.obj
+ 0001:00021850       ?_Uninitialized_copy@std@@YAPATtEncComboInfo@@V?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@0PAT2@AAV?$allocator@TtEncComboInfo@@@1@@Z 10022850 f i MultiTypeCombo.obj
+ 0001:000218a0       ?_Copy_backward_opt@std@@YA?AV?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@V21@00U_Nonscalar_ptr_iterator_tag@1@@Z 100228a0 f i MultiTypeCombo.obj
+ 0001:00021900       ?construct@?$allocator@TtEncComboInfo@@@std@@QAEXPATtEncComboInfo@@ABT3@@Z 10022900 f i MultiTypeCombo.obj
+ 0001:00021920       ?destroy@?$allocator@UtBkMk@@@std@@QAEXPAUtBkMk@@@Z 10022920 f i CompareDialog.obj
+ 0001:00021920       ?destroy@?$allocator@TtEncComboInfo@@@std@@QAEXPATtEncComboInfo@@@Z 10022920 f i MultiTypeCombo.obj
+ 0001:00021940       ??F?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@std@@QAEAAV01@XZ 10022940 f i MultiTypeCombo.obj
+ 0001:00021960       ?_Uninit_copy@std@@YAPATtEncComboInfo@@V?$_Ptrit@TtEncComboInfo@@HPAT1@AAT1@PAT1@AAT1@@1@0PAT2@AAV?$allocator@TtEncComboInfo@@@1@U_Nonscalar_ptr_iterator_tag@1@@Z 10022960 f i MultiTypeCombo.obj
+ 0001:00021a30       ?_Construct@std@@YAXPATtEncComboInfo@@ABT2@@Z 10022a30 f i MultiTypeCombo.obj
+ 0001:00021a80       ?_Destroy@std@@YAXPATtEncComboInfo@@@Z 10022a80 f i MultiTypeCombo.obj
+ 0001:00021a80       ?_Destroy@std@@YAXPAUtBkMk@@@Z 10022a80 f i CompareDialog.obj
+ 0001:00021a80       ??3@YAXPAX0@Z              10022a80 f i HEXDialog.obj
+ 0001:00021a90       ?doDialog@OptionDlg@@QAEIPAUtProp@@@Z 10022a90 f   OptionDialog.obj
+ 0001:00021ad0       ?run_dlgProc@OptionDlg@@MAGHPAUHWND__@@IIJ@Z 10022ad0 f   OptionDialog.obj
+ 0001:00022260       ?onSelect@ColorCombo@@QAEXXZ 10023260 f i OptionDialog.obj
+ 0001:00022370       ?TabUpdate@OptionDlg@@IAEXXZ 10023370 f   OptionDialog.obj
+ 0001:00022850       ?SetParams@OptionDlg@@IAEXXZ 10023850 f   OptionDialog.obj
+ 0001:00022cb0       ?GetParams@OptionDlg@@IAEHXZ 10023cb0 f   OptionDialog.obj
+ 0001:000232a0       ?getColor@ColorCombo@@QAEXPAK@Z 100242a0 f i OptionDialog.obj
+ 0001:000232c0       ?at@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@QAEAAV?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@2@I@Z 100242c0 f i OptionDialog.obj
+ 0001:00023310       ?_Xran@?$vector@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@V?$allocator@V?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@@2@@std@@IBEXXZ 10024310 f i OptionDialog.obj
+ 0001:00023370       ??0out_of_range@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z 10024370 f i OptionDialog.obj
+ 0001:000233a0       ??1out_of_range@std@@UAE@XZ 100243a0 f i OptionDialog.obj
+ 0001:000233c0       ??_Gout_of_range@std@@UAEPAXI@Z 100243c0 f i OptionDialog.obj
+ 0001:000233c0       ??_Eout_of_range@std@@UAEPAXI@Z 100243c0 f i OptionDialog.obj
+ 0001:000233f0       ??0out_of_range@std@@QAE@ABV01@@Z 100243f0 f i OptionDialog.obj
+ 0001:00023420       ?patternReplace@PatternDlg@@QAEXPAUHWND__@@@Z 10024420 f   PatternDialog.obj
+ 0001:000235d0       ?insertColumns@PatternDlg@@QAEXPAUHWND__@@@Z 100245d0 f   PatternDialog.obj
+ 0001:000236c0       ?doDialog@PatternDlg@@IAEXPAUHWND__@@@Z 100246c0 f   PatternDialog.obj
+ 0001:00023740       ?run_dlgProc@PatternDlg@@MAGHPAUHWND__@@IIJ@Z 10024740 f   PatternDialog.obj
+ 0001:00023990       ?onInsert@PatternDlg@@IAEHXZ 10024990 f   PatternDialog.obj
+ 0001:00023ff0       ?onReplace@PatternDlg@@IAEHXZ 10024ff0 f   PatternDialog.obj
+ 0001:00024550       ?create@URLCtrl@@QAEXPAUHWND__@@PAGK@Z 10025550 f   URLCtrl.obj
+ 0001:000245e0       ?URLCtrlProc@URLCtrl@@CGJPAUHWND__@@IIJ@Z 100255e0 f i URLCtrl.obj
+ 0001:00024610       ?runProc@URLCtrl@@AAEJPAUHWND__@@IIJ@Z 10025610 f   URLCtrl.obj
+ 0001:000249c0       ??0Utf8_16_Read@@QAE@XZ    100259c0 f   Utf8_16.obj
+ 0001:00024a00       ??1Utf8_16_Read@@QAE@XZ    10025a00 f   Utf8_16.obj
+ 0001:00024a40       ?forceEncoding@Utf8_16_Read@@QAEXW4encodingType@Utf8_16@@@Z 10025a40 f   Utf8_16.obj
+ 0001:00024a40       ?setEncoding@Utf8_16_Write@@QAEXW4encodingType@Utf8_16@@@Z 10025a40 f   Utf8_16.obj
+ 0001:00024a60       ?isUTF8_16@Utf8_16_Read@@IAEHXZ 10025a60 f   Utf8_16.obj
+ 0001:00024bf0       ?convert@Utf8_16_Read@@QAEIPADI@Z 10025bf0 f   Utf8_16.obj
+ 0001:00024dc0       ?get@Utf16_Iter@@QBEEXZ    10025dc0 f i Utf8_16.obj
+ 0001:00024de0       ??BUtf16_Iter@@QAE_NXZ     10025de0 f i Utf8_16.obj
+ 0001:00024de0       ??BUtf8_Iter@@QAE_NXZ      10025de0 f i Utf8_16.obj
+ 0001:00024e00       ?determineEncoding@Utf8_16_Read@@IAEXXZ 10025e00 f   Utf8_16.obj
+ 0001:00024f40       ??0Utf8_16_Write@@QAE@XZ   10025f40 f   Utf8_16.obj
+ 0001:00024f90       ??1Utf8_16_Write@@QAE@XZ   10025f90 f   Utf8_16.obj
+ 0001:00024fb0       ?get@Utf8_Iter@@QBEGXZ     10025fb0 f i Utf8_16.obj
+ 0001:00024fd0       ?canGet@Utf8_Iter@@QBE_NXZ 10025fd0 f i Utf8_16.obj
+ 0001:00024ff0       ?convert@Utf8_16_Write@@QAEIPADI@Z 10025ff0 f   Utf8_16.obj
+ 0001:00025230       ?fclose@Utf8_16_Write@@QAEXXZ 10026230 f   Utf8_16.obj
+ 0001:00025280       ??0Utf8_Iter@@QAE@XZ       10026280 f   Utf8_16.obj
+ 0001:000252a0       ?reset@Utf8_Iter@@QAEXXZ   100262a0 f   Utf8_16.obj
+ 0001:000252f0       ?set@Utf8_Iter@@QAEXPBEIW4encodingType@Utf8_16@@@Z 100262f0 f   Utf8_16.obj
+ 0001:00025330       ??EUtf8_Iter@@QAEXXZ       10026330 f   Utf8_16.obj
+ 0001:00025460       ?toStart@Utf8_Iter@@IAEXXZ 10026460 f   Utf8_16.obj
+ 0001:00025490       ?swap@Utf8_Iter@@IAEXXZ    10026490 f   Utf8_16.obj
+ 0001:000254d0       ??0Utf16_Iter@@QAE@XZ      100264d0 f   Utf8_16.obj
+ 0001:000254f0       ?reset@Utf16_Iter@@QAEXXZ  100264f0 f   Utf8_16.obj
+ 0001:00025540       ?set@Utf16_Iter@@QAEXPBEIW4encodingType@Utf8_16@@@Z 10026540 f   Utf8_16.obj
+ 0001:00025590       ??EUtf16_Iter@@QAEXXZ      10026590 f   Utf8_16.obj
+ 0001:00025730       ?goToCenter@StaticDialog@@QAEXXZ 10026730 f   StaticDialog1.obj
+ 0001:000257f0       ?display@StaticDialog@@UBEX_N@Z 100267f0 f   StaticDialog1.obj
+ 0001:00025910       ?makeRTLResource@StaticDialog@@IAEPAXHPAPAUDLGTEMPLATE@@@Z 10026910 f   StaticDialog1.obj
+ 0001:000259f0       ?create@StaticDialog@@UAEXH_N0@Z 100269f0 f   StaticDialog1.obj
+ 0001:00025ae0       ?dlgProc@StaticDialog@@KGHPAUHWND__@@IIJ@Z 10026ae0 f   StaticDialog1.obj
+ 0001:00025b90       ??0WcharMbcsConvertor@@IAE@XZ 10026b90 f i SysMsg1.obj
+ 0001:00025bd0       ?systemMessage@@YAXPBG@Z   10026bd0 f   SysMsg1.obj
+ 0001:00025c15       ??2@YAPAXI@Z               10026c15 f   libcpmt:newop.obj
+ 0001:00025c39       ?_Xran@_String_base@std@@QBEXXZ 10026c39 f   libcpmt:string.obj
+ 0001:00025c79       ?_Xlen@_String_base@std@@QBEXXZ 10026c79 f   libcpmt:string.obj
+ 0001:00025cb9       ??_U@YAPAXI@Z              10026cb9 f   libcpmt:newaop.obj
+ 0001:00025cbe       ??1bad_alloc@std@@UAE@XZ   10026cbe f i libcpmt:nomemory.obj
+ 0001:00025cc9       ??_Gbad_alloc@std@@UAEPAXI@Z 10026cc9 f i libcpmt:nomemory.obj
+ 0001:00025cc9       ??_Ebad_alloc@std@@UAEPAXI@Z 10026cc9 f i libcpmt:nomemory.obj
+ 0001:00025ce5       ??0bad_alloc@std@@QAE@ABV01@@Z 10026ce5 f i libcpmt:nomemory.obj
+ 0001:00025cfd       ?_Nomemory@std@@YAXXZ      10026cfd f   libcpmt:nomemory.obj
+ 0001:00025d5e       ??3@YAXPAX@Z               10026d5e f   LIBCMT:delete.obj
+ 0001:00025d63       ?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z 10026d63 f   LIBCMT:trnsctrl.obj
+ 0001:00025d93       ?_CallMemberFunction0@@YGXPAX0@Z 10026d93 f   LIBCMT:trnsctrl.obj
+ 0001:00025d93       ?_CallMemberFunction2@@YGXPAX00H@Z 10026d93 f   LIBCMT:trnsctrl.obj
+ 0001:00025d93       ?_CallMemberFunction1@@YGXPAX00@Z 10026d93 f   LIBCMT:trnsctrl.obj
+ 0001:00025d9a       ?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z 10026d9a f   LIBCMT:trnsctrl.obj
+ 0001:00025dec       ___CxxFrameHandler         10026dec f   LIBCMT:trnsctrl.obj
+ 0001:00025eb7       ?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z 10026eb7 f   LIBCMT:trnsctrl.obj
+ 0001:00025f31       ?_CreateFrameInfo@@YAPAUFrameInfo@@PAU1@PAX@Z 10026f31 f   LIBCMT:trnsctrl.obj
+ 0001:00025f59       ?IsExceptionObjectToBeDestroyed@@YAHPAX@Z 10026f59 f   LIBCMT:trnsctrl.obj
+ 0001:00025f7a       ?_FindAndUnlinkFrame@@YAXPAUFrameInfo@@@Z 10026f7a f   LIBCMT:trnsctrl.obj
+ 0001:00025fc6       ?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z 10026fc6 f   LIBCMT:trnsctrl.obj
+ 0001:00026017       ?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z 10027017 f   LIBCMT:trnsctrl.obj
+ 0001:000260c8       __global_unwind2           100270c8 f   LIBCMT:exsup.obj
+ 0001:0002610a       __local_unwind2            1002710a f   LIBCMT:exsup.obj
+ 0001:00026162       __NLG_Return2              10027162     LIBCMT:exsup.obj
+ 0001:00026172       __abnormal_termination     10027172 f   LIBCMT:exsup.obj
+ 0001:00026195       __NLG_Notify1              10027195 f   LIBCMT:exsup.obj
+ 0001:0002619e       __NLG_Notify               1002719e f   LIBCMT:exsup.obj
+ 0001:000261b1       __NLG_Dispatch             100271b1     LIBCMT:exsup.obj
+ 0001:000261b6       __purecall                 100271b6 f   LIBCMT:purevirt.obj
+ 0001:000261bf       ??1type_info@@UAE@XZ       100271bf f   LIBCMT:typinfo.obj
+ 0001:000261e8       ??_Gtype_info@@UAEPAXI@Z   100271e8 f i LIBCMT:typinfo.obj
+ 0001:000261e8       ??_Etype_info@@UAEPAXI@Z   100271e8 f i LIBCMT:typinfo.obj
+ 0001:00026204       __CxxThrowException@8      10027204 f   LIBCMT:throw.obj
+ 0001:00026240       _memset                    10027240 f   LIBCMT:memset.obj
+ 0001:000262d1       @__security_check_cookie@4 100272d1 f   LIBCMT:seccook.obj
+ 0001:000262df       __wtol                     100272df f   LIBCMT:wtox.obj
+ 0001:0002633e       __wtoi                     1002733e f   LIBCMT:wtox.obj
+ 0001:00026343       __itow                     10027343 f   LIBCMT:xtow.obj
+ 0001:00026384       ??0exception@@QAE@XZ       10027384 f   LIBCMT:stdexcpt.obj
+ 0001:00026395       ??0exception@@QAE@ABQBD@Z  10027395 f   LIBCMT:stdexcpt.obj
+ 0001:000263d2       ??0exception@@QAE@ABV0@@Z  100273d2 f   LIBCMT:stdexcpt.obj
+ 0001:0002641c       ??1exception@@UAE@XZ       1002741c f   LIBCMT:stdexcpt.obj
+ 0001:00026432       ?what@exception@@UBEPBDXZ  10027432 f   LIBCMT:stdexcpt.obj
+ 0001:0002643f       ??_Eexception@@UAEPAXI@Z   1002743f f i LIBCMT:stdexcpt.obj
+ 0001:0002643f       ??_Gexception@@UAEPAXI@Z   1002743f f i LIBCMT:stdexcpt.obj
+ 0001:00026460       _memcpy                    10027460 f   LIBCMT:memcpy.obj
+ 0001:000267a0       _strlen                    100277a0 f   LIBCMT:strlen.obj
+ 0001:00026830       _memmove                   10027830 f   LIBCMT:memmove.obj
+ 0001:00026b6d       _wcslen                    10027b6d f   LIBCMT:wcslen.obj
+ 0001:00026b83       _wcscat                    10027b83 f   LIBCMT:wcscat.obj
+ 0001:00026bad       _wcscpy                    10027bad f   LIBCMT:wcscat.obj
+ 0001:00026bc9       _wcstok                    10027bc9 f   LIBCMT:wcstok.obj
+ 0001:00026c6e       ??_V@YAXPAX@Z              10027c6e f   LIBCMT:delete2.obj
+ 0001:00026c80       _memcmp                    10027c80 f   LIBCMT:memcmp.obj
+ 0001:00026d40       _strcpy                    10027d40 f   LIBCMT:strcat.obj
+ 0001:00026d50       _strcat                    10027d50 f   LIBCMT:strcat.obj
+ 0001:00026e38       _abs                       10027e38 f   LIBCMT:abs.obj
+ 0001:00026e43       _atol                      10027e43 f   LIBCMT:atox.obj
+ 0001:00026ecb       _atoi                      10027ecb f   LIBCMT:atox.obj
+ 0001:00026ed0       _sprintf                   10027ed0 f   LIBCMT:sprintf.obj
+ 0001:00026f28       _swprintf                  10027f28 f   LIBCMT:swprintf.obj
+ 0001:00026f97       __fpclear                  10027f97 f   LIBCMT:fpinit.obj
+ 0001:00026f98       __cfltcvt_init             10027f98 f   LIBCMT:fpinit.obj
+ 0001:00026fd0       __fpmath                   10027fd0 f   LIBCMT:fpinit.obj
+ 0001:00026fe8       __ftol2                    10027fe8 f   LIBCMT:ftol2.obj
+ 0001:000270dd       ___onexitinit              100280dd f   LIBCMT:onexit.obj
+ 0001:00027105       __onexit                   10028105 f   LIBCMT:onexit.obj
+ 0001:0002713d       _atexit                    1002813d f   LIBCMT:onexit.obj
+ 0001:0002714f       _wcscmp                    1002814f f   LIBCMT:wcscmp.obj
+ 0001:00027181       _strtok                    10028181 f   LIBCMT:strtok.obj
+ 0001:0002723c       __fclose_lk                1002823c f   LIBCMT:fclose.obj
+ 0001:00027288       _fclose                    10028288 f   LIBCMT:fclose.obj
+ 0001:000272d9       __flush                    100282d9 f   LIBCMT:fflush.obj
+ 0001:00027336       __fflush_lk                10028336 f   LIBCMT:fflush.obj
+ 0001:00027439       __flushall                 10028439 f   LIBCMT:fflush.obj
+ 0001:00027442       __CRT_INIT@12              10028442 f   LIBCMT:dllcrt0.obj
+ 0001:000275c0       __DllMainCRTStartup@12     100285c0 f   LIBCMT:dllcrt0.obj
+ 0001:0002765d       __amsg_exit                1002865d f   LIBCMT:dllcrt0.obj
+ 0001:00027690       __heap_alloc               10028690 f   LIBCMT:malloc.obj
+ 0001:0002770b       __nh_malloc                1002870b f   LIBCMT:malloc.obj
+ 0001:00027737       _malloc                    10028737 f   LIBCMT:malloc.obj
+ 0001:00027749       __callnewh                 10028749 f   LIBCMT:handler.obj
+ 0001:00027764       __EH_prolog                10028764 f   LIBCMT:ehprolog.obj
+ 0001:00027783       _free                      10028783 f   LIBCMT:free.obj
+ 0001:00027861       ___FrameUnwindToState      10028861 f   LIBCMT:frame.obj
+ 0001:0002792f       ___DestructExceptionObject 1002892f f   LIBCMT:frame.obj
+ 0001:00027fbd       ___InternalCxxFrameHandler 10028fbd f   LIBCMT:frame.obj
+ 0001:0002805f       ?terminate@@YAXXZ          1002905f f   LIBCMT:hooks.obj
+ 0001:00028094       ?_inconsistency@@YAXXZ     10029094 f   LIBCMT:hooks.obj
+ 0001:000280c1       __mtterm                   100290c1 f   LIBCMT:tidtable.obj
+ 0001:000280df       __initptd                  100290df f   LIBCMT:tidtable.obj
+ 0001:000280f2       __getptd                   100290f2 f   LIBCMT:tidtable.obj
+ 0001:00028163       __freeptd                  10029163 f   LIBCMT:tidtable.obj
+ 0001:000282ce       __mtinit                   100292ce f   LIBCMT:tidtable.obj
+ 0001:00028340       __CallSettingFrame@12      10029340 f   LIBCMT:lowhelpr.obj
+ 0001:00028367       __NLG_Return               10029367     LIBCMT:lowhelpr.obj
+ 0001:0002838c       __mtinitlocks              1002938c f   LIBCMT:mlock.obj
+ 0001:000283d5       __mtdeletelocks            100293d5 f   LIBCMT:mlock.obj
+ 0001:0002842a       __unlock                   1002942a f   LIBCMT:mlock.obj
+ 0001:0002843f       __mtinitlocknum            1002943f f   LIBCMT:mlock.obj
+ 0001:000284be       __lock                     100294be f   LIBCMT:mlock.obj
+ 0001:000284f0       _strcmp                    100294f0 f   LIBCMT:strcmp.obj
+ 0001:00028578       ?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z 10029578 f   LIBCMT:unhandld.obj
+ 0001:000285be       ?__CxxSetUnhandledExceptionFilter@@YAHXZ 100295be f   LIBCMT:unhandld.obj
+ 0001:000285d1       ?__CxxRestoreUnhandledExceptionFilter@@YAXXZ 100295d1 f   LIBCMT:unhandld.obj
+ 0001:000285de       ___security_init_cookie    100295de f   LIBCMT:seccinit.obj
+ 0001:00028634       ___security_error_handler  10029634 f   LIBCMT:secfail.obj
+ 0001:00028780       __SEH_prolog               10029780 f   LIBCMT:sehprolg.obj
+ 0001:000287bb       __SEH_epilog               100297bb f   LIBCMT:sehprolg.obj
+ 0001:000287cc       __wchartodigit             100297cc f   LIBCMT:wchtodig.obj
+ 0001:00028942       ___iswctype_mt             10029942 f   LIBCMT:iswctype.obj
+ 0001:00028999       _iswctype                  10029999 f   LIBCMT:iswctype.obj
+ 0001:000289f0       __allmul                   100299f0 f   LIBCMT:llmul.obj
+ 0001:00028a24       ___mbstowcs_mt             10029a24 f   LIBCMT:mbstowcs.obj
+ 0001:00028b1a       _mbstowcs                  10029b1a f   LIBCMT:mbstowcs.obj
+ 0001:00028b83       __itoa                     10029b83 f   LIBCMT:xtoa.obj
+ 0001:00028b83       _itoa                      10029b83 f   LIBCMT:xtoa.obj
+ 0001:00028bad       ___isctype_mt              10029bad f   LIBCMT:isctype.obj
+ 0001:00028c24       ___freetlocinfo            10029c24 f   LIBCMT:setlocal.obj
+ 0001:00028db0       ___updatetlocinfo          10029db0 f   LIBCMT:setlocal.obj
+ 0001:00028deb       __flsbuf                   10029deb f   LIBCMT:_flsbuf.obj
+ 0001:00028f92       __output                   10029f92 f   LIBCMT:output.obj
+ 0001:000297ae       __woutput                  1002a7ae f   LIBCMT:woutput.obj
+ 0001:00029f7e       __forcdecpt                1002af7e f   LIBCMT:cvt.obj
+ 0001:00029fba       __cropzeros                1002afba f   LIBCMT:cvt.obj
+ 0001:0002a005       __positive                 1002b005 f   LIBCMT:cvt.obj
+ 0001:0002a01f       __fassign                  1002b01f f   LIBCMT:cvt.obj
+ 0001:0002a128       __cftoe                    1002b128 f   LIBCMT:cvt.obj
+ 0001:0002a238       __cftof                    1002b238 f   LIBCMT:cvt.obj
+ 0001:0002a2a0       __cftog                    1002b2a0 f   LIBCMT:cvt.obj
+ 0001:0002a340       __cfltcvt                  1002b340 f   LIBCMT:cvt.obj
+ 0001:0002a391       __setdefaultprecision      1002b391 f   LIBCMT:fp8.obj
+ 0001:0002a3a3       __ms_p5_test_fdiv          1002b3a3 f   LIBCMT:testfdiv.obj
+ 0001:0002a3e3       __ms_p5_mp_test_fdiv       1002b3e3 f   LIBCMT:testfdiv.obj
+ 0001:0002a40c       _realloc                   1002b40c f   LIBCMT:realloc.obj
+ 0001:0002a5b9       ___crtExitProcess          1002b5b9 f   LIBCMT:crt0dat.obj
+ 0001:0002a5e9       __lockexit                 1002b5e9 f   LIBCMT:crt0dat.obj
+ 0001:0002a5f2       __unlockexit               1002b5f2 f   LIBCMT:crt0dat.obj
+ 0001:0002a5fb       __cinit                    1002b5fb f   LIBCMT:crt0dat.obj
+ 0001:0002a733       __exit                     1002b733 f   LIBCMT:crt0dat.obj
+ 0001:0002a744       __cexit                    1002b744 f   LIBCMT:crt0dat.obj
+ 0001:0002a753       __msize                    1002b753 f   LIBCMT:msize.obj
+ 0001:0002a7c9       ___initstdio               1002b7c9 f   LIBCMT:_file.obj
+ 0001:0002a872       ___endstdio                1002b872 f   LIBCMT:_file.obj
+ 0001:0002a886       __lock_file                1002b886 f   LIBCMT:_file.obj
+ 0001:0002a8b5       __lock_file2               1002b8b5 f   LIBCMT:_file.obj
+ 0001:0002a8d8       __unlock_file              1002b8d8 f   LIBCMT:_file.obj
+ 0001:0002a907       __unlock_file2             1002b907 f   LIBCMT:_file.obj
+ 0001:0002a92a       __errno                    1002b92a f   LIBCMT:dosmap.obj
+ 0001:0002a933       ___doserrno                1002b933 f   LIBCMT:dosmap.obj
+ 0001:0002a93c       __dosmaperr                1002b93c f   LIBCMT:dosmap.obj
+ 0001:0002a9af       __write_lk                 1002b9af f   LIBCMT:write.obj
+ 0001:0002ab54       __write                    1002bb54 f   LIBCMT:write.obj
+ 0001:0002abff       __close_lk                 1002bbff f   LIBCMT:close.obj
+ 0001:0002ac82       __close                    1002bc82 f   LIBCMT:close.obj
+ 0001:0002ad1d       __freebuf                  1002bd1d f   LIBCMT:_freebuf.obj
+ 0001:0002ad48       __commit                   1002bd48 f   LIBCMT:commit.obj
+ 0001:0002ae04       _calloc                    1002be04 f   LIBCMT:calloc.obj
+ 0001:0002aebf       __ioinit                   1002bebf f   LIBCMT:ioinit.obj
+ 0001:0002b0bd       __ioterm                   1002c0bd f   LIBCMT:ioinit.obj
+ 0001:0002b109       __setenvp                  1002c109 f   LIBCMT:stdenvp.obj
+ 0001:0002b33c       __setargv                  1002c33c f   LIBCMT:stdargv.obj
+ 0001:0002b3de       ___crtGetEnvironmentStringsA 1002c3de f   LIBCMT:a_env.obj
+ 0001:0002b500       __RTC_Initialize           1002c500 f   LIBCMT:initsect.obj
+ 0001:0002b544       __RTC_Terminate            1002c544 f   LIBCMT:initsect.obj
+ 0001:0002b588       ___heap_select             1002c588 f   LIBCMT:heapinit.obj
+ 0001:0002b5a2       __heap_init                1002c5a2 f   LIBCMT:heapinit.obj
+ 0001:0002b5f3       __heap_term                1002c5f3 f   LIBCMT:heapinit.obj
+ 0001:0002b680       __chkstk                   1002c680 f   LIBCMT:chkstk.obj
+ 0001:0002b680       __alloca_probe             1002c680     LIBCMT:chkstk.obj
+ 0001:0002b6bd       __NMSG_WRITE               1002c6bd f   LIBCMT:crt0msg.obj
+ 0001:0002b834       __FF_MSGBANNER             1002c834 f   LIBCMT:crt0msg.obj
+ 0001:0002b86d       ___sbh_heap_init           1002c86d f   LIBCMT:sbheap.obj
+ 0001:0002b8b5       ___sbh_find_block          1002c8b5 f   LIBCMT:sbheap.obj
+ 0001:0002b8e0       ___sbh_free_block          1002c8e0 f   LIBCMT:sbheap.obj
+ 0001:0002bbf8       ___sbh_alloc_new_region    1002cbf8 f   LIBCMT:sbheap.obj
+ 0001:0002bcaf       ___sbh_alloc_new_group     1002ccaf f   LIBCMT:sbheap.obj
+ 0001:0002bdb5       ___sbh_resize_block        1002cdb5 f   LIBCMT:sbheap.obj
+ 0001:0002c094       ___sbh_alloc_block         1002d094 f   LIBCMT:sbheap.obj
+ 0001:0002c390       ?_ValidateRead@@YAHPBXI@Z  1002d390 f   LIBCMT:validate.obj
+ 0001:0002c3ac       ?_ValidateWrite@@YAHPAXI@Z 1002d3ac f   LIBCMT:validate.obj
+ 0001:0002c3c8       ?_ValidateExecute@@YAHP6GHXZ@Z 1002d3c8 f   LIBCMT:validate.obj
+ 0001:0002c3e0       _abort                     1002d3e0 f   LIBCMT:abort.obj
+ 0001:0002c778       __setmbcp                  1002d778 f   LIBCMT:mbctype.obj
+ 0001:0002c8c8       ___initmbctable            1002d8c8 f   LIBCMT:mbctype.obj
+ 0001:0002c8f6       ___crtInitCritSecAndSpinCount 1002d8f6 f   LIBCMT:initcrit.obj
+ 0001:0002c981       ___crtMessageBoxA          1002d981 f   LIBCMT:crtmbox.obj
+ 0001:0002ca80       _strncpy                   1002da80 f   LIBCMT:strncpy.obj
+ 0001:0002cbac       __except_handler3          1002dbac f   LIBCMT:exsup3.obj
+ 0001:0002cc69       __seh_longjmp_unwind@4     1002dc69 f   LIBCMT:exsup3.obj
+ 0001:0002cc84       ___crtGetStringTypeW       1002dc84 f   LIBCMT:w_str.obj
+ 0001:0002ceb0       __aulldvrm                 1002deb0 f   LIBCMT:ulldvrm.obj
+ 0001:0002cf45       ___crtGetStringTypeA       1002df45 f   LIBCMT:a_str.obj
+ 0001:0002d0ff       ___free_lc_time            1002e0ff f   LIBCMT:inittime.obj
+ 0001:0002d28f       ___free_lconv_num          1002e28f f   LIBCMT:initnum.obj
+ 0001:0002d2ee       ___free_lconv_mon          1002e2ee f   LIBCMT:initmon.obj
+ 0001:0002d3d0       _strcspn                   1002e3d0 f   LIBCMT:strcspn.obj
+ 0001:0002d420       _strncmp                   1002e420 f   LIBCMT:strncmp.obj
+ 0001:0002d460       _strpbrk                   1002e460 f   LIBCMT:strpbrk.obj
+ 0001:0002d4a0       __lseek_lk                 1002e4a0 f   LIBCMT:lseek.obj
+ 0001:0002d514       __lseek                    1002e514 f   LIBCMT:lseek.obj
+ 0001:0002d5bf       __getbuf                   1002e5bf f   LIBCMT:_getbuf.obj
+ 0001:0002d603       __isatty                   1002e603 f   LIBCMT:isatty.obj
+ 0001:0002d62d       ___wctomb_mt               1002e62d f   LIBCMT:wctomb.obj
+ 0001:0002d68d       _wctomb                    1002e68d f   LIBCMT:wctomb.obj
+ 0001:0002d6b4       __putwc_lk                 1002e6b4 f   LIBCMT:fputwc.obj
+ 0001:0002d790       ___mbtowc_mt               1002e790 f   LIBCMT:mbtowc.obj
+ 0001:0002d850       _mbtowc                    1002e850 f   LIBCMT:mbtowc.obj
+ 0001:0002d87b       _isdigit                   1002e87b f   LIBCMT:_ctype.obj
+ 0001:0002d8b5       ___tolower_mt              1002e8b5 f   LIBCMT:tolower.obj
+ 0001:0002d97d       _tolower                   1002e97d f   LIBCMT:tolower.obj
+ 0001:0002d99f       __ZeroTail                 1002e99f f   LIBCMT:intrncvt.obj
+ 0001:0002d9d1       __IncMan                   1002e9d1 f   LIBCMT:intrncvt.obj
+ 0001:0002da1e       __RoundMan                 1002ea1e f   LIBCMT:intrncvt.obj
+ 0001:0002da90       __CopyMan                  1002ea90 f   LIBCMT:intrncvt.obj
+ 0001:0002daab       __IsZeroMan                1002eaab f   LIBCMT:intrncvt.obj
+ 0001:0002dac4       __ShrMan                   1002eac4 f   LIBCMT:intrncvt.obj
+ 0001:0002db3f       __ld12cvt                  1002eb3f f   LIBCMT:intrncvt.obj
+ 0001:0002dc97       __ld12tod                  1002ec97 f   LIBCMT:intrncvt.obj
+ 0001:0002dcad       __ld12tof                  1002ecad f   LIBCMT:intrncvt.obj
+ 0001:0002dcc3       __atodbl                   1002ecc3 f   LIBCMT:intrncvt.obj
+ 0001:0002dd06       __atoflt                   1002ed06 f   LIBCMT:intrncvt.obj
+ 0001:0002dd49       __fptostr                  1002ed49 f   LIBCMT:_fptostr.obj
+ 0001:0002ddc0       ___dtold                   1002edc0 f   LIBCMT:cfout.obj
+ 0001:0002de7a       __fltout2                  1002ee7a f   LIBCMT:cfout.obj
+ 0001:0002deec       __fptrap                   1002eeec f   LIBCMT:crt0fp.obj
+ 0001:0002e015       __control87                1002f015 f   LIBCMT:ieee87.obj
+ 0001:0002e047       __controlfp                1002f047 f   LIBCMT:ieee87.obj
+ 0001:0002e05d       __fcloseall                1002f05d f   LIBCMT:closeall.obj
+ 0001:0002e0f8       __lseeki64_lk              1002f0f8 f   LIBCMT:lseeki64.obj
+ 0001:0002e17b       __free_osfhnd              1002f17b f   LIBCMT:osfinfo.obj
+ 0001:0002e1fa       __get_osfhandle            1002f1fa f   LIBCMT:osfinfo.obj
+ 0001:0002e23b       __lock_fhandle             1002f23b f   LIBCMT:osfinfo.obj
+ 0001:0002e2ae       __unlock_fhandle           1002f2ae f   LIBCMT:osfinfo.obj
+ 0001:0002e2fe       _raise                     1002f2fe f   LIBCMT:winsig.obj
+ 0001:0002e477       ___crtLCMapStringA         1002f477 f   LIBCMT:a_map.obj
+ 0001:0002e833       __resetstkoflw             1002f833 f   LIBCMT:resetstk.obj
+ 0001:0002e904       ___ansicp                  1002f904 f   LIBCMT:convrtcp.obj
+ 0001:0002e94d       ___convertcp               1002f94d f   LIBCMT:convrtcp.obj
+ 0001:0002eb20       ___ascii_stricmp           1002fb20 f   LIBCMT:_stricmp.obj
+ 0001:0002eb6e       _stricmp                   1002fb6e f   LIBCMT:stricmp.obj
+ 0001:0002eb6e       __stricmp                  1002fb6e f   LIBCMT:stricmp.obj
+ 0001:0002ebd7       __flswbuf                  1002fbd7 f   LIBCMT:_flswbuf.obj
+ 0001:0002ecff       ___addl                    1002fcff f   LIBCMT:mantold.obj
+ 0001:0002ed20       ___add_12                  1002fd20 f   LIBCMT:mantold.obj
+ 0001:0002ed7e       ___shl_12                  1002fd7e f   LIBCMT:mantold.obj
+ 0001:0002edac       ___shr_12                  1002fdac f   LIBCMT:mantold.obj
+ 0001:0002edd9       ___mtold12                 1002fdd9 f   LIBCMT:mantold.obj
+ 0001:0002eebd       ___strgtold12              1002febd f   LIBCMT:strgtold.obj
+ 0001:0002f2f7       _$I10_OUTPUT               100302f7 f   LIBCMT:x10fout.obj
+ 0001:0002f590       ___ascii_strnicmp          10030590 f   LIBCMT:_strnicm.obj
+ 0001:0002f5f1       ___ld12mul                 100305f1 f   LIBCMT:tenpow.obj
+ 0001:0002f829       ___multtenpow12            10030829 f   LIBCMT:tenpow.obj
+ 0001:0002f8d0       _strchr                    100308d0 f   LIBCMT:strchr.obj
+ 0001:0002f8d6       ___from_strstr_to_strchr   100308d6     LIBCMT:strchr.obj
+ 0001:0002f990       _RtlUnwind@16              10030990 f   kernel32:KERNEL32.dll
+ 0001:0002f996       _wcsicmp                   10030996 f   LIBCMT:wcsicmp.obj
+ 0001:0002f996       __wcsicmp                  10030996 f   LIBCMT:wcsicmp.obj
+ 0001:0002fa43       ___towlower_mt             10030a43 f   LIBCMT:towlower.obj
+ 0001:0002faa4       ___crtLCMapStringW         10030aa4 f   LIBCMT:w_map.obj
+ 0002:00000000       __imp__IsTextUnicode@12    10032000     advapi32:ADVAPI32.dll
+ 0002:00000004       \177ADVAPI32_NULL_THUNK_DATA 10032004     advapi32:ADVAPI32.dll
+ 0002:00000008       __imp__GetObjectW@12       10032008     gdi32:GDI32.dll
+ 0002:0000000c       __imp__CreateFontIndirectW@4 1003200c     gdi32:GDI32.dll
+ 0002:00000010       __imp__GetTextExtentPoint32W@16 10032010     gdi32:GDI32.dll
+ 0002:00000014       __imp__CreateFontW@56      10032014     gdi32:GDI32.dll
+ 0002:00000018       __imp__CreateCompatibleDC@4 10032018     gdi32:GDI32.dll
+ 0002:0000001c       __imp__CreateCompatibleBitmap@12 1003201c     gdi32:GDI32.dll
+ 0002:00000020       __imp__BitBlt@36           10032020     gdi32:GDI32.dll
+ 0002:00000024       __imp__SetBkColor@8        10032024     gdi32:GDI32.dll
+ 0002:00000028       __imp__SetBkMode@8         10032028     gdi32:GDI32.dll
+ 0002:0000002c       __imp__GetStockObject@4    1003202c     gdi32:GDI32.dll
+ 0002:00000030       __imp__CreatePen@12        10032030     gdi32:GDI32.dll
+ 0002:00000034       __imp__SelectObject@8      10032034     gdi32:GDI32.dll
+ 0002:00000038       __imp__MoveToEx@16         10032038     gdi32:GDI32.dll
+ 0002:0000003c       __imp__LineTo@12           1003203c     gdi32:GDI32.dll
+ 0002:00000040       __imp__CreateSolidBrush@4  10032040     gdi32:GDI32.dll
+ 0002:00000044       __imp__DeleteObject@4      10032044     gdi32:GDI32.dll
+ 0002:00000048       __imp__DeleteDC@4          10032048     gdi32:GDI32.dll
+ 0002:0000004c       __imp__GetTextExtentPointW@16 1003204c     gdi32:GDI32.dll
+ 0002:00000050       __imp__SetTextColor@8      10032050     gdi32:GDI32.dll
+ 0002:00000054       __imp__PatBlt@24           10032054     gdi32:GDI32.dll
+ 0002:00000058       __imp__EnumFontFamiliesExW@20 10032058     gdi32:GDI32.dll
+ 0002:0000005c       __imp__Ellipse@20          1003205c     gdi32:GDI32.dll
+ 0002:00000060       \177GDI32_NULL_THUNK_DATA  10032060     gdi32:GDI32.dll
+ 0002:00000064       __imp__LocalFree@4         10032064     kernel32:KERNEL32.dll
+ 0002:00000068       __imp__FormatMessageW@28   10032068     kernel32:KERNEL32.dll
+ 0002:0000006c       __imp__GetLastError@0      1003206c     kernel32:KERNEL32.dll
+ 0002:00000070       __imp__VirtualQuery@12     10032070     kernel32:KERNEL32.dll
+ 0002:00000074       __imp__GetSystemInfo@4     10032074     kernel32:KERNEL32.dll
+ 0002:00000078       __imp__VirtualProtect@16   10032078     kernel32:KERNEL32.dll
+ 0002:0000007c       __imp__LCMapStringW@24     1003207c     kernel32:KERNEL32.dll
+ 0002:00000080       __imp__LCMapStringA@24     10032080     kernel32:KERNEL32.dll
+ 0002:00000084       __imp__SetStdHandle@8      10032084     kernel32:KERNEL32.dll
+ 0002:00000088       __imp__SetFilePointer@16   10032088     kernel32:KERNEL32.dll
+ 0002:0000008c       __imp__GetLocaleInfoA@16   1003208c     kernel32:KERNEL32.dll
+ 0002:00000090       __imp__GetStringTypeW@16   10032090     kernel32:KERNEL32.dll
+ 0002:00000094       __imp__GetStringTypeA@20   10032094     kernel32:KERNEL32.dll
+ 0002:00000098       __imp__LoadLibraryA@4      10032098     kernel32:KERNEL32.dll
+ 0002:0000009c       __imp__InitializeCriticalSection@4 1003209c     kernel32:KERNEL32.dll
+ 0002:000000a0       __imp__GetCPInfo@8         100320a0     kernel32:KERNEL32.dll
+ 0002:000000a4       __imp__GetOEMCP@0          100320a4     kernel32:KERNEL32.dll
+ 0002:000000a8       __imp__GetACP@0            100320a8     kernel32:KERNEL32.dll
+ 0002:000000ac       __imp__IsBadCodePtr@4      100320ac     kernel32:KERNEL32.dll
+ 0002:000000b0       __imp__IsBadReadPtr@8      100320b0     kernel32:KERNEL32.dll
+ 0002:000000b4       __imp__IsBadWritePtr@8     100320b4     kernel32:KERNEL32.dll
+ 0002:000000b8       __imp__GlobalFree@4        100320b8     kernel32:KERNEL32.dll
+ 0002:000000bc       __imp__VirtualFree@12      100320bc     kernel32:KERNEL32.dll
+ 0002:000000c0       __imp__HeapCreate@12       100320c0     kernel32:KERNEL32.dll
+ 0002:000000c4       __imp__HeapDestroy@4       100320c4     kernel32:KERNEL32.dll
+ 0002:000000c8       __imp__GetEnvironmentStringsW@0 100320c8     kernel32:KERNEL32.dll
+ 0002:000000cc       __imp__FreeEnvironmentStringsW@4 100320cc     kernel32:KERNEL32.dll
+ 0002:000000d0       __imp__GetEnvironmentStrings@0 100320d0     kernel32:KERNEL32.dll
+ 0002:000000d4       __imp__FreeEnvironmentStringsA@4 100320d4     kernel32:KERNEL32.dll
+ 0002:000000d8       __imp__GetStartupInfoA@4   100320d8     kernel32:KERNEL32.dll
+ 0002:000000dc       __imp__GetFileType@4       100320dc     kernel32:KERNEL32.dll
+ 0002:000000e0       __imp__GetStdHandle@4      100320e0     kernel32:KERNEL32.dll
+ 0002:000000e4       __imp__SetHandleCount@4    100320e4     kernel32:KERNEL32.dll
+ 0002:000000e8       __imp__FlushFileBuffers@4  100320e8     kernel32:KERNEL32.dll
+ 0002:000000ec       __imp__HeapSize@12         100320ec     kernel32:KERNEL32.dll
+ 0002:000000f0       __imp__GetCurrentProcess@0 100320f0     kernel32:KERNEL32.dll
+ 0002:000000f4       __imp__TerminateProcess@8  100320f4     kernel32:KERNEL32.dll
+ 0002:000000f8       __imp__HeapReAlloc@16      100320f8     kernel32:KERNEL32.dll
+ 0002:000000fc       __imp__GetModuleHandleA@4  100320fc     kernel32:KERNEL32.dll
+ 0002:00000100       __imp__GetModuleFileNameA@12 10032100     kernel32:KERNEL32.dll
+ 0002:00000104       __imp__GetSystemTimeAsFileTime@4 10032104     kernel32:KERNEL32.dll
+ 0002:00000108       __imp__GetCurrentProcessId@0 10032108     kernel32:KERNEL32.dll
+ 0002:0000010c       __imp__GetTickCount@0      1003210c     kernel32:KERNEL32.dll
+ 0002:00000110       __imp__QueryPerformanceCounter@4 10032110     kernel32:KERNEL32.dll
+ 0002:00000114       __imp__SetUnhandledExceptionFilter@4 10032114     kernel32:KERNEL32.dll
+ 0002:00000118       __imp__EnterCriticalSection@4 10032118     kernel32:KERNEL32.dll
+ 0002:0000011c       __imp__LeaveCriticalSection@4 1003211c     kernel32:KERNEL32.dll
+ 0002:00000120       __imp__DeleteCriticalSection@4 10032120     kernel32:KERNEL32.dll
+ 0002:00000124       __imp__TlsAlloc@0          10032124     kernel32:KERNEL32.dll
+ 0002:00000128       __imp__TlsGetValue@4       10032128     kernel32:KERNEL32.dll
+ 0002:0000012c       __imp__SetLastError@4      1003212c     kernel32:KERNEL32.dll
+ 0002:00000130       __imp__TlsFree@4           10032130     kernel32:KERNEL32.dll
+ 0002:00000134       __imp__HeapFree@12         10032134     kernel32:KERNEL32.dll
+ 0002:00000138       __imp__HeapAlloc@12        10032138     kernel32:KERNEL32.dll
+ 0002:0000013c       __imp__GetVersionExA@4     1003213c     kernel32:KERNEL32.dll
+ 0002:00000140       __imp__GetCommandLineA@0   10032140     kernel32:KERNEL32.dll
+ 0002:00000144       __imp__TlsSetValue@8       10032144     kernel32:KERNEL32.dll
+ 0002:00000148       __imp__GetCurrentThreadId@0 10032148     kernel32:KERNEL32.dll
+ 0002:0000014c       __imp__ExitProcess@4       1003214c     kernel32:KERNEL32.dll
+ 0002:00000150       __imp__RaiseException@16   10032150     kernel32:KERNEL32.dll
+ 0002:00000154       __imp__RtlUnwind@16        10032154     kernel32:KERNEL32.dll
+ 0002:00000158       __imp__FindResourceW@12    10032158     kernel32:KERNEL32.dll
+ 0002:0000015c       __imp__LoadResource@8      1003215c     kernel32:KERNEL32.dll
+ 0002:00000160       __imp__LockResource@4      10032160     kernel32:KERNEL32.dll
+ 0002:00000164       __imp__SizeofResource@8    10032164     kernel32:KERNEL32.dll
+ 0002:00000168       __imp__GlobalAlloc@8       10032168     kernel32:KERNEL32.dll
+ 0002:0000016c       __imp__ReadFile@20         1003216c     kernel32:KERNEL32.dll
+ 0002:00000170       __imp__CreateDirectoryW@8  10032170     kernel32:KERNEL32.dll
+ 0002:00000174       __imp__CreateFileW@28      10032174     kernel32:KERNEL32.dll
+ 0002:00000178       __imp__WriteFile@20        10032178     kernel32:KERNEL32.dll
+ 0002:0000017c       __imp__CloseHandle@4       1003217c     kernel32:KERNEL32.dll
+ 0002:00000180       __imp__GetPrivateProfileStringW@24 10032180     kernel32:KERNEL32.dll
+ 0002:00000184       __imp__OutputDebugStringW@4 10032184     kernel32:KERNEL32.dll
+ 0002:00000188       __imp__GlobalLock@4        10032188     kernel32:KERNEL32.dll
+ 0002:0000018c       __imp__WideCharToMultiByte@32 1003218c     kernel32:KERNEL32.dll
+ 0002:00000190       __imp__GlobalUnlock@4      10032190     kernel32:KERNEL32.dll
+ 0002:00000194       __imp__GetPrivateProfileIntW@16 10032194     kernel32:KERNEL32.dll
+ 0002:00000198       __imp__WritePrivateProfileStringW@16 10032198     kernel32:KERNEL32.dll
+ 0002:0000019c       __imp__MultiByteToWideChar@24 1003219c     kernel32:KERNEL32.dll
+ 0002:000001a0       __imp__GetModuleHandleW@4  100321a0     kernel32:KERNEL32.dll
+ 0002:000001a4       __imp__GetProcAddress@8    100321a4     kernel32:KERNEL32.dll
+ 0002:000001a8       __imp__GetModuleFileNameW@12 100321a8     kernel32:KERNEL32.dll
+ 0002:000001ac       __imp__VirtualAlloc@16     100321ac     kernel32:KERNEL32.dll
+ 0002:000001b0       \177KERNEL32_NULL_THUNK_DATA 100321b0     kernel32:KERNEL32.dll
+ 0002:000001b4       __imp__DragFinish@4        100321b4     shell32:SHELL32.dll
+ 0002:000001b8       __imp__DragQueryFileW@16   100321b8     shell32:SHELL32.dll
+ 0002:000001bc       __imp__ShellExecuteW@24    100321bc     shell32:SHELL32.dll
+ 0002:000001c0       \177SHELL32_NULL_THUNK_DATA 100321c0     shell32:SHELL32.dll
+ 0002:000001c4       __imp__PathFileExistsW@4   100321c4     shlwapi:SHLWAPI.dll
+ 0002:000001c8       __imp__PathRemoveFileSpecW@4 100321c8     shlwapi:SHLWAPI.dll
+ 0002:000001cc       __imp__PathFindFileNameW@4 100321cc     shlwapi:SHLWAPI.dll
+ 0002:000001d0       \177SHLWAPI_NULL_THUNK_DATA 100321d0     shlwapi:SHLWAPI.dll
+ 0002:000001d4       __imp__IsIconic@4          100321d4     user32:USER32.dll
+ 0002:000001d8       __imp__SetWindowLongW@12   100321d8     user32:USER32.dll
+ 0002:000001dc       __imp__SystemParametersInfoW@16 100321dc     user32:USER32.dll
+ 0002:000001e0       __imp__BeginPaint@8        100321e0     user32:USER32.dll
+ 0002:000001e4       __imp__EndPaint@8          100321e4     user32:USER32.dll
+ 0002:000001e8       __imp__CreateCursor@28     100321e8     user32:USER32.dll
+ 0002:000001ec       __imp__SetCursor@4         100321ec     user32:USER32.dll
+ 0002:000001f0       __imp__GetSystemMetrics@4  100321f0     user32:USER32.dll
+ 0002:000001f4       __imp__GetDlgItemTextW@16  100321f4     user32:USER32.dll
+ 0002:000001f8       __imp__SendMessageA@16     100321f8     user32:USER32.dll
+ 0002:000001fc       __imp__GetMenuItemCount@4  100321fc     user32:USER32.dll
+ 0002:00000200       __imp__GetMenuItemID@8     10032200     user32:USER32.dll
+ 0002:00000204       __imp__GetSubMenu@8        10032204     user32:USER32.dll
+ 0002:00000208       __imp__GetMenuStringW@20   10032208     user32:USER32.dll
+ 0002:0000020c       __imp__ModifyMenuW@20      1003220c     user32:USER32.dll
+ 0002:00000210       __imp__DrawMenuBar@4       10032210     user32:USER32.dll
+ 0002:00000214       __imp__GetMenuState@12     10032214     user32:USER32.dll
+ 0002:00000218       __imp__GetActiveWindow@0   10032218     user32:USER32.dll
+ 0002:0000021c       __imp__GetMenu@4           1003221c     user32:USER32.dll
+ 0002:00000220       __imp__EnableMenuItem@12   10032220     user32:USER32.dll
+ 0002:00000224       __imp__LoadImageW@24       10032224     user32:USER32.dll
+ 0002:00000228       __imp__CallWindowProcA@20  10032228     user32:USER32.dll
+ 0002:0000022c       __imp__DestroyIcon@4       1003222c     user32:USER32.dll
+ 0002:00000230       __imp__DestroyCursor@4     10032230     user32:USER32.dll
+ 0002:00000234       __imp__DrawTextW@20        10032234     user32:USER32.dll
+ 0002:00000238       __imp__CreatePopupMenu@0   10032238     user32:USER32.dll
+ 0002:0000023c       __imp__AppendMenuW@16      1003223c     user32:USER32.dll
+ 0002:00000240       __imp__TrackPopupMenu@28   10032240     user32:USER32.dll
+ 0002:00000244       __imp__DestroyMenu@4       10032244     user32:USER32.dll
+ 0002:00000248       __imp__IsClipboardFormatAvailable@4 10032248     user32:USER32.dll
+ 0002:0000024c       __imp__OpenClipboard@4     1003224c     user32:USER32.dll
+ 0002:00000250       __imp__GetClipboardData@4  10032250     user32:USER32.dll
+ 0002:00000254       __imp__CloseClipboard@0    10032254     user32:USER32.dll
+ 0002:00000258       __imp__GetDC@4             10032258     user32:USER32.dll
+ 0002:0000025c       __imp__GetKeyState@4       1003225c     user32:USER32.dll
+ 0002:00000260       __imp__ClientToScreen@8    10032260     user32:USER32.dll
+ 0002:00000264       __imp__GetCursorPos@4      10032264     user32:USER32.dll
+ 0002:00000268       __imp__ScreenToClient@8    10032268     user32:USER32.dll
+ 0002:0000026c       __imp__CreateDialogIndirectParamW@20 1003226c     user32:USER32.dll
+ 0002:00000270       __imp__SetForegroundWindow@4 10032270     user32:USER32.dll
+ 0002:00000274       __imp__KillTimer@8         10032274     user32:USER32.dll
+ 0002:00000278       __imp__SetTimer@16         10032278     user32:USER32.dll
+ 0002:0000027c       __imp__IsWindowUnicode@4   1003227c     user32:USER32.dll
+ 0002:00000280       __imp__SetWindowLongA@12   10032280     user32:USER32.dll
+ 0002:00000284       __imp__SetDlgItemTextA@12  10032284     user32:USER32.dll
+ 0002:00000288       __imp__SetWindowTextA@8    10032288     user32:USER32.dll
+ 0002:0000028c       __imp__GetWindowTextA@12   1003228c     user32:USER32.dll
+ 0002:00000290       __imp__MessageBoxW@16      10032290     user32:USER32.dll
+ 0002:00000294       __imp__EnableWindow@8      10032294     user32:USER32.dll
+ 0002:00000298       __imp__SetFocus@4          10032298     user32:USER32.dll
+ 0002:0000029c       __imp__SetWindowTextW@8    1003229c     user32:USER32.dll
+ 0002:000002a0       __imp__EndDialog@8         100322a0     user32:USER32.dll
+ 0002:000002a4       __imp__GetWindowTextW@12   100322a4     user32:USER32.dll
+ 0002:000002a8       __imp__DialogBoxParamW@20  100322a8     user32:USER32.dll
+ 0002:000002ac       __imp__SendDlgItemMessageW@20 100322ac     user32:USER32.dll
+ 0002:000002b0       __imp__GetSysColor@4       100322b0     user32:USER32.dll
+ 0002:000002b4       __imp__FrameRect@12        100322b4     user32:USER32.dll
+ 0002:000002b8       __imp__GetDlgItem@8        100322b8     user32:USER32.dll
+ 0002:000002bc       __imp__CreateDialogParamW@20 100322bc     user32:USER32.dll
+ 0002:000002c0       __imp__GetWindowDC@4       100322c0     user32:USER32.dll
+ 0002:000002c4       __imp__FillRect@12         100322c4     user32:USER32.dll
+ 0002:000002c8       __imp__GetFocus@0          100322c8     user32:USER32.dll
+ 0002:000002cc       __imp__InflateRect@12      100322cc     user32:USER32.dll
+ 0002:000002d0       __imp__DrawFocusRect@8     100322d0     user32:USER32.dll
+ 0002:000002d4       __imp__ReleaseDC@8         100322d4     user32:USER32.dll
+ 0002:000002d8       __imp__RedrawWindow@16     100322d8     user32:USER32.dll
+ 0002:000002dc       __imp__DestroyWindow@4     100322dc     user32:USER32.dll
+ 0002:000002e0       __imp__SetWindowPos@28     100322e0     user32:USER32.dll
+ 0002:000002e4       __imp__IsWindowVisible@4   100322e4     user32:USER32.dll
+ 0002:000002e8       __imp__GetClientRect@8     100322e8     user32:USER32.dll
+ 0002:000002ec       __imp__InvalidateRect@12   100322ec     user32:USER32.dll
+ 0002:000002f0       __imp__UpdateWindow@4      100322f0     user32:USER32.dll
+ 0002:000002f4       __imp__MoveWindow@24       100322f4     user32:USER32.dll
+ 0002:000002f8       __imp__ShowWindow@8        100322f8     user32:USER32.dll
+ 0002:000002fc       __imp__GetWindowRect@8     100322fc     user32:USER32.dll
+ 0002:00000300       __imp__CallWindowProcW@20  10032300     user32:USER32.dll
+ 0002:00000304       __imp__GetWindowLongW@8    10032304     user32:USER32.dll
+ 0002:00000308       __imp__SendMessageW@16     10032308     user32:USER32.dll
+ 0002:0000030c       \177USER32_NULL_THUNK_DATA 1003230c     user32:USER32.dll
+ 0002:00000310       __imp__ChooseColorW@4      10032310     comdlg32:comdlg32.dll
+ 0002:00000314       \177comdlg32_NULL_THUNK_DATA 10032314     comdlg32:comdlg32.dll
+ 0002:000003c0       ??_7ColorPopup@@6B@        100323c0     ColorCombo.obj
+ 0002:000003f0       ??_7Window@@6B@            100323f0     ColorCombo.obj
+ 0002:00000440       ??_C@_1BG@DAPEMECE@?$AAC?$AAo?$AAl?$AAo?$AAr?$AAP?$AAo?$AAp?$AAu?$AAp?$AA?$AA@ 10032440     ColorPopup.obj
+ 0002:00000456       ??_C@_00CNPNBAHC@?$AA@     10032456     ColorPopup.obj
+ 0002:00000478       ??_C@_1BK@OFKEIPNI@?$AAA?$AAd?$AAd?$AAr?$AAe?$AAs?$AAs?$AAW?$AAi?$AAd?$AAt?$AAh?$AA?$AA@ 10032478     ColumnDialog.obj
+ 0002:00000494       ??_C@_1BM@EFJPGPAK@?$AAA?$AAd?$AAd?$AAr?$AAe?$AAs?$AAs?$AA?5?$AAW?$AAi?$AAd?$AAt?$AAh?$AA?$AA@ 10032494     ColumnDialog.obj
+ 0002:000004b0       ??_C@_1BI@EPFIBOMA@?$AAC?$AAo?$AAl?$AAu?$AAm?$AAn?$AAC?$AAo?$AAu?$AAn?$AAt?$AA?$AA@ 100324b0     ColumnDialog.obj
+ 0002:00000590       ??_C@_1BG@DHKBHCPK@?$AAC?$AAo?$AAm?$AAp?$AAD?$AAi?$AAa?$AAl?$AAo?$AAg?$AA?$AA@ 10032590     CompareDialog.obj
+ 0002:000005a8       ??_C@_0BD@OLBABOEK@vector?$DMT?$DO?5too?5long?$AA@ 100325a8     CompareDialog.obj
+ 0002:000005bc       ?npos@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@2IB 100325bc     CompareDialog.obj
+ 0002:000005bc       ?npos@?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@2IB 100325bc     Hex.obj
+ 0002:000006c0       ??_C@_1BI@MKDFHJHL@?$AAF?$AAi?$AAn?$AAd?$AAR?$AAe?$AAp?$AAl?$AAa?$AAc?$AAe?$AA?$AA@ 100326c0     FindReplaceDialog.obj
+ 0002:000006d8       ??_C@_0BL@DALDAJFK@SetLayeredWindowAttributes?$AA@ 100326d8     FindReplaceDialog.obj
+ 0002:000006f4       ??_C@_1O@NPEPGMDM@?$AAU?$AAs?$AAe?$AAr?$AA3?$AA2?$AA?$AA@ 100326f4     FindReplaceDialog.obj
+ 0002:00000704       ??_C@_1BA@CFILAHAD@?$AAR?$AAe?$AAp?$AAl?$AAa?$AAc?$AAe?$AA?$AA@ 10032704     FindReplaceDialog.obj
+ 0002:00000714       ??_C@_19MGMPFFIA@?$AAF?$AAi?$AAn?$AAd?$AA?$AA@ 10032714     FindReplaceDialog.obj
+ 0002:00000720       ??_C@_1BG@IELGHEGN@?$AAC?$AAa?$AAn?$AA?8?$AAt?$AA?5?$AAf?$AAi?$AAn?$AAd?$AA?$AA@ 10032720     FindReplaceDialog.obj
+ 0002:00000738       ??_C@_1DM@BIDHDFMJ@?$AAS?$AAe?$AAl?$AAe?$AAc?$AAt?$AA?5?$AAs?$AAo?$AAm?$AAe?$AAt?$AAh?$AAi?$AAn?$AAg?$AA?5?$AAi?$AAn?$AA?5@ 10032738     FindReplaceDialog.obj
+ 0002:00000774       ??_C@_1BG@DDCLMDBJ@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?$AA@ 10032774     FindReplaceDialog.obj
+ 0002:0000078c       ??_C@_1CO@CBKJPPDJ@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAS?$AAe?$AAl?$AAe?$AAc?$AAt?$AAS?$AAo?$AAm?$AAe?$AAt?$AAh?$AAi@ 1003278c     FindReplaceDialog.obj
+ 0002:000007bc       ??_C@_13KDLDGPGJ@?$AA?7?$AA?$AA@ 100327bc     FindReplaceDialog.obj
+ 0002:000007c0       ??_C@_1BEK@LBDDIJAB@?$AAI?$AAn?$AA?5?$AAL?$AAi?$AAt?$AAt?$AAl?$AAe?$AA?9?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?9?$AAM?$AAo?$AAd@ 100327c0     FindReplaceDialog.obj
+ 0002:0000090c       ??_C@_1CC@EIACDHME@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?5?$AAE?$AAr?$AAr?$AAo?$AAr?$AA?$AA@ 1003290c     FindReplaceDialog.obj
+ 0002:00000930       ??_C@_1CC@KAEAOML@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAR?$AAe?$AAp?$AAl?$AAE?$AAr?$AAr?$AAo?$AAr?$AA?$AA@ 10032930     FindReplaceDialog.obj
+ 0002:00000954       ??_C@_0DC@IHGFAOKJ@?5tokens?5are?5skipped?0?5because?5of?5@ 10032954     FindReplaceDialog.obj
+ 0002:00000988       ??_C@_0BH@BCMDDIAM@?5tokens?5are?5replaced?4?6?$AA@ 10032988     FindReplaceDialog.obj
+ 0002:000009a0       ??_C@_0BD@NAMNALH@?5tokens?5are?5found?4?$AA@ 100329a0     FindReplaceDialog.obj
+ 0002:00000a88       ??_C@_13COJANIEC@?$AA0?$AA?$AA@ 10032a88     GotoDialog.obj
+ 0002:00000a8c       ??_C@_13JGCMLPCH@?$AA1?$AA?$AA@ 10032a8c     GotoDialog.obj
+ 0002:00000a90       ??_C@_19JKCOJBMF@?$AAG?$AAo?$AAt?$AAo?$AA?$AA@ 10032a90     GotoDialog.obj
+ 0002:00000a9c       ??_C@_02DPKJAMEF@?$CFd?$AA@ 10032a9c     GotoDialog.obj
+ 0002:00000aa0       ??_C@_02NJNOFBBI@?$CFx?$AA@ 10032aa0     GotoDialog.obj
+ 0002:00000aa4       ??_C@_04JIMNDDED@?$CF08X?$AA@ 10032aa4     GotoDialog.obj
+ 0002:00001578       ??_7HexEdit@@6B@           10033578     HEXDialog.obj
+ 0002:000015b4       ??_7StaticDialog@@6B@      100335b4     HEXDialog.obj
+ 0002:000015f0       ??_C@_19LAMBBDLP@?$AAD?$AAu?$AAm?$AAp?$AA?$AA@ 100335f0     HEXDialog.obj
+ 0002:000015fc       ??_C@_15LHNHECKK@?$AA?$CF?$AAx?$AA?$AA@ 100335fc     HEXDialog.obj
+ 0002:00001604       ??_C@_15BHOFONJE@?$AA?$CF?$AAX?$AA?$AA@ 10033604     HEXDialog.obj
+ 0002:0000160c       ??_C@_17FIMLMPPN@?$AAA?$AAd?$AAd?$AA?$AA@ 1003360c     HEXDialog.obj
+ 0002:00001614       ??_C@_1BA@LDPMAPOD@?$AAA?$AAd?$AAd?$AAr?$AAe?$AAs?$AAs?$AA?$AA@ 10033614     HEXDialog.obj
+ 0002:00001624       __real@40200000            10033624     HEXDialog.obj
+ 0002:00001628       ??_C@_1DA@EEKEDJNL@?$AAC?$AAo?$AAu?$AAl?$AAd?$AAn?$AA?8?$AAt?$AA?5?$AAc?$AAr?$AAe?$AAa?$AAt?$AAe?$AA?5?$AAm?$AAe?$AAm?$AAo@ 10033628     HEXDialog.obj
+ 0002:00001658       ??_C@_1BC@PKEHKAEB@?$AAE?$AAx?$AAp?$AAl?$AAo?$AAr?$AAe?$AAr?$AA?$AA@ 10033658     HEXDialog.obj
+ 0002:00001670       ??_C@_1II@GPNDDCNC@?$AAI?$AAn?$AA?5?$AAL?$AAi?$AAt?$AAt?$AAl?$AAe?$AA?9?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?9?$AAM?$AAo?$AAd@ 10033670     HEXDialog.obj
+ 0002:000016f8       ??_C@_1CA@BINHCLAB@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAD?$AAe?$AAl?$AAE?$AAr?$AAr?$AAo?$AAr?$AA?$AA@ 100336f8     HEXDialog.obj
+ 0002:00001718       ??_C@_1EO@BGHLNEHC@?$AAC?$AAl?$AAi?$AAp?$AAb?$AAo?$AAa?$AAr?$AAd?$AA?5?$AAi?$AAn?$AAf?$AAo?$AA?5?$AAh?$AAa?$AAs?$AA?5?$AAn@ 10033718     HEXDialog.obj
+ 0002:00001768       ??_C@_1CC@PGPMBFHP@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAS?$AAa?$AAm?$AAe?$AAW?$AAi?$AAd?$AAt?$AAh?$AA?$AA@ 10033768     HEXDialog.obj
+ 0002:0000178c       ??_C@_1O@DGEEABED@?$AA?$CF?$AAs?$AA?5?$AA?$CF?$AAd?$AA?6?$AA?$AA@ 1003378c     HEXDialog.obj
+ 0002:0000179c       ??_C@_0P@LMCMIOBJ@?$FO?$FL0?99a?9fA?9F?$FN?$CL?5?$AA@ 1003379c     HEXDialog.obj
+ 0002:000017ac       ??_C@_1CO@GELOCKGC@?$AAC?$AAo?$AAu?$AAl?$AAd?$AA?5?$AAn?$AAo?$AAt?$AA?5?$AAc?$AAh?$AAa?$AAn?$AAg?$AAe?$AA?5?$AAf?$AAo?$AAn@ 100337ac     HEXDialog.obj
+ 0002:000017dc       ??_C@_05DHOKIHEH@?$CF016x?$AA@ 100337dc     HEXDialog.obj
+ 0002:000017e4       ??_C@_05DFKMDJBO@?$CF015x?$AA@ 100337e4     HEXDialog.obj
+ 0002:000017ec       ??_C@_05DEGOFDCJ@?$CF014x?$AA@ 100337ec     HEXDialog.obj
+ 0002:000017f4       ??_C@_05DBCBEFKM@?$CF013x?$AA@ 100337f4     HEXDialog.obj
+ 0002:000017fc       ??_C@_05DAODCPJL@?$CF012x?$AA@ 100337fc     HEXDialog.obj
+ 0002:00001804       ??_C@_05DCKFJBMC@?$CF011x?$AA@ 10033804     HEXDialog.obj
+ 0002:0000180c       ??_C@_05DDGHPLPF@?$CF010x?$AA@ 1003380c     HEXDialog.obj
+ 0002:00001814       ??_C@_04MILHNNG@?$CF09x?$AA@ 10033814     HEXDialog.obj
+ 0002:0000181c       ??_C@_04NEJBHOB@?$CF08x?$AA@ 1003381c     HEXDialog.obj
+ 0002:00001824       ??_C@_04GBFFANM@?$CF07x?$AA@ 10033824     HEXDialog.obj
+ 0002:0000182c       ??_C@_04HNHDKOL@?$CF06x?$AA@ 1003382c     HEXDialog.obj
+ 0002:00001834       ??_C@_04FJBIELC@?$CF05x?$AA@ 10033834     HEXDialog.obj
+ 0002:0000183c       ??_C@_04EFDOOIF@?$CF04x?$AA@ 1003383c     HEXDialog.obj
+ 0002:00001844       ??_C@_05KCGOKDOF@?$CF016X?$AA@ 10033844     HEXDialog.obj
+ 0002:0000184c       ??_C@_05KACIBNLM@?$CF015X?$AA@ 1003384c     HEXDialog.obj
+ 0002:00001854       ??_C@_05KBOKHHIL@?$CF014X?$AA@ 10033854     HEXDialog.obj
+ 0002:0000185c       ??_C@_05KEKFGBAO@?$CF013X?$AA@ 1003385c     HEXDialog.obj
+ 0002:00001864       ??_C@_05KFGHALDJ@?$CF012X?$AA@ 10033864     HEXDialog.obj
+ 0002:0000186c       ??_C@_05KHCBLFGA@?$CF011X?$AA@ 1003386c     HEXDialog.obj
+ 0002:00001874       ??_C@_05KGODNPFH@?$CF010X?$AA@ 10033874     HEXDialog.obj
+ 0002:0000187c       ??_C@_04JJAPFJHE@?$CF09X?$AA@ 1003387c     HEXDialog.obj
+ 0002:00001884       ??_C@_04JDJBHEHO@?$CF07X?$AA@ 10033884     HEXDialog.obj
+ 0002:0000188c       ??_C@_04JCFDBOEJ@?$CF06X?$AA@ 1003388c     HEXDialog.obj
+ 0002:00001894       ??_C@_04JABFKABA@?$CF05X?$AA@ 10033894     HEXDialog.obj
+ 0002:0000189c       ??_C@_04JBNHMKCH@?$CF04X?$AA@ 1003389c     HEXDialog.obj
+ 0002:000018a8       ??_C@_1FI@KMFFIBGC@?$AAM?$AAa?$AAx?$AAi?$AAm?$AAu?$AAm?$AA?5?$AAo?$AAf?$AA?5?$AA1?$AA2?$AA8?$AA?5?$AAb?$AAy?$AAt?$AAe?$AAs@ 100338a8     HEXDialog.obj
+ 0002:00001900       ??_C@_1CC@BJCHAMPA@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAM?$AAa?$AAx?$AAC?$AAo?$AAl?$AAC?$AAn?$AAt?$AA?$AA@ 10033900     HEXDialog.obj
+ 0002:00001928       ??_C@_1EO@FMCBPENO@?$AAO?$AAn?$AAl?$AAy?$AA?5?$AAv?$AAa?$AAl?$AAu?$AAe?$AAs?$AA?5?$AAb?$AAe?$AAt?$AAw?$AAe?$AAe?$AAn?$AA?5@ 10033928     HEXDialog.obj
+ 0002:00001978       ??_C@_1CC@JKAMCMKH@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAM?$AAa?$AAx?$AAA?$AAd?$AAd?$AAC?$AAn?$AAt?$AA?$AA@ 10033978     HEXDialog.obj
+ 0002:0000199c       ??_C@_1BK@OLNCHGMK@?$AAS?$AAe?$AAt?$AAt?$AAi?$AAn?$AAg?$AAs?$AAM?$AAe?$AAn?$AAu?$AA?$AA@ 1003399c     HEXDialog.obj
+ 0002:000019b8       ??_C@_1BG@NPPLCNCB@?$AAC?$AAo?$AAl?$AAu?$AAm?$AAn?$AAs?$AA?4?$AA?4?$AA?4?$AA?$AA@ 100339b8     HEXDialog.obj
+ 0002:000019d0       ??_C@_1CC@LIDMLBAM@?$AAA?$AAd?$AAd?$AAr?$AAe?$AAs?$AAs?$AA?5?$AAW?$AAi?$AAd?$AAt?$AAh?$AA?4?$AA?4?$AA?4?$AA?$AA@ 100339d0     HEXDialog.obj
+ 0002:000019f4       ??_C@_1BA@DBHFMEO@?$AAV?$AAi?$AAe?$AAw?$AA?5?$AAi?$AAn?$AA?$AA@ 100339f4     HEXDialog.obj
+ 0002:00001a04       ??_C@_1O@JDLOHAN@?$AAD?$AAe?$AAl?$AAe?$AAt?$AAe?$AA?$AA@ 10033a04     HEXDialog.obj
+ 0002:00001a14       ??_C@_1M@DIOANCEH@?$AAP?$AAa?$AAs?$AAt?$AAe?$AA?$AA@ 10033a14     HEXDialog.obj
+ 0002:00001a20       ??_C@_19HNCGHLOK@?$AAC?$AAo?$AAp?$AAy?$AA?$AA@ 10033a20     HEXDialog.obj
+ 0002:00001a2c       ??_C@_17ICHNEOCB@?$AAC?$AAu?$AAt?$AA?$AA@ 10033a2c     HEXDialog.obj
+ 0002:00001a34       ??_C@_1CA@DCEEPPBE@?$AAt?$AAo?$AA?5?$AAL?$AAi?$AAt?$AAt?$AAl?$AAe?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?$AA@ 10033a34     HEXDialog.obj
+ 0002:00001a54       ??_C@_1BK@HJMNADG@?$AAt?$AAo?$AA?5?$AAB?$AAi?$AAg?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?$AA@ 10033a54     HEXDialog.obj
+ 0002:00001a70       ??_C@_1BE@OBBAHBKJ@?$AAt?$AAo?$AA?5?$AAB?$AAi?$AAn?$AAa?$AAr?$AAy?$AA?$AA@ 10033a70     HEXDialog.obj
+ 0002:00001a84       ??_C@_1O@MENGIFAN@?$AAt?$AAo?$AA?5?$AAH?$AAe?$AAx?$AA?$AA@ 10033a84     HEXDialog.obj
+ 0002:00001a94       ??_C@_1CE@FKCACFHH@?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?9?$AA?$AA@ 10033a94     HEXDialog.obj
+ 0002:00001ab8       ??_C@_1O@HAMCKAOI@?$AA6?$AA4?$AA?9?$AAB?$AAi?$AAt?$AA?$AA@ 10033ab8     HEXDialog.obj
+ 0002:00001ac8       ??_C@_1O@BLFMGLGF@?$AA3?$AA2?$AA?9?$AAB?$AAi?$AAt?$AA?$AA@ 10033ac8     HEXDialog.obj
+ 0002:00001ad8       ??_C@_1O@PJDEJELH@?$AA1?$AA6?$AA?9?$AAB?$AAi?$AAt?$AA?$AA@ 10033ad8     HEXDialog.obj
+ 0002:00001ae8       ??_C@_1M@IMLCFNMD@?$AA8?$AA?9?$AAB?$AAi?$AAt?$AA?$AA@ 10033ae8     HEXDialog.obj
+ 0002:00001af4       ??_7ColumnDlg@@6B@         10033af4     HEXDialog.obj
+ 0002:00001b30       ??_C@_1FG@JEGDAGEF@?$AAC?$AAo?$AAm?$AAp?$AAa?$AAr?$AAe?$AA?5?$AAr?$AAe?$AAs?$AAu?$AAl?$AAt?$AAs?$AA?5?$AAw?$AAi?$AAl?$AAl@ 10033b30     HEXDialog.obj
+ 0002:00001b88       ??_C@_1CG@OMDBGM@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?5?$AAC?$AAo?$AAm?$AAp?$AAa?$AAr?$AAe?$AA?$AA@ 10033b88     HEXDialog.obj
+ 0002:00001bb0       ??_C@_1CE@CNPIHFCG@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAC?$AAo?$AAm?$AAp?$AAD?$AAe?$AAl?$AAe?$AAt?$AAe?$AA?$AA@ 10033bb0     HEXDialog.obj
+ 0002:00001bd4       ??_C@_1BM@MMNLFHNL@?$AAM?$AAo?$AAd?$AAe?$AA?5?$AAU?$AAn?$AAk?$AAn?$AAo?$AAw?$AAn?$AA?6?$AA?$AA@ 10033bd4     HEXDialog.obj
+ 0002:00001bf0       ??_C@_1BK@OFFEJMOK@?$AAL?$AAi?$AAt?$AAt?$AAl?$AAe?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?$AA@ 10033bf0     HEXDialog.obj
+ 0002:00001c0c       ??_C@_1BE@NPOMHCHI@?$AAB?$AAi?$AAg?$AAE?$AAn?$AAd?$AAi?$AAa?$AAn?$AA?$AA@ 10033c0c     HEXDialog.obj
+ 0002:00001c20       ??_C@_1O@LINKDEMH@?$AAB?$AAi?$AAn?$AAa?$AAr?$AAy?$AA?$AA@ 10033c20     HEXDialog.obj
+ 0002:00001c30       ??_C@_17JGBHOPFE@?$AAH?$AAe?$AAx?$AA?$AA@ 10033c30     HEXDialog.obj
+ 0002:00001c38       ??_C@_1EA@LDFCDCPI@?$AAL?$AAn?$AA?5?$AA?3?$AA?5?$AA?$CF?$AAd?$AA?5?$AA?5?$AA?5?$AA?5?$AAC?$AAo?$AAl?$AA?5?$AA?3?$AA?5?$AA?$CF?$AAd?$AA?5@ 10033c38     HEXDialog.obj
+ 0002:00001c78       ??_C@_1BK@GJOJNDKK@?$AAn?$AAb?$AA?5?$AAc?$AAh?$AAa?$AAr?$AA?5?$AA?3?$AA?5?$AA?$CF?$AAd?$AA?$AA@ 10033c78     HEXDialog.obj
+ 0002:00001c94       ??_C@_1BM@EMIMFFBJ@?$AAH?$AAe?$AAx?$AA?5?$AAE?$AAd?$AAi?$AAt?$AA?5?$AAV?$AAi?$AAe?$AAw?$AA?$AA@ 10033c94     HEXDialog.obj
+ 0002:00001cd0       ??_C@_19BNBKBBLP@?$AAH?$AAe?$AAl?$AAp?$AA?$AA@ 10033cd0     HelpDialog.obj
+ 0002:00001ce0       ??_C@_1FK@BCMPJPKN@?$AAh?$AAt?$AAt?$AAp?$AA?3?$AA?1?$AA?1?$AAs?$AAo?$AAu?$AAr?$AAc?$AAe?$AAf?$AAo?$AAr?$AAg?$AAe?$AA?4?$AAn@ 10033ce0     HelpDialog.obj
+ 0002:00001d3c       ??_C@_1DM@DBCHAGKE@?$AAm?$AAa?$AAi?$AAl?$AAt?$AAo?$AA?3?$AAj?$AAe?$AAn?$AAs?$AA?4?$AAp?$AAl?$AAu?$AAg?$AAi?$AAn?$AA?4?$AAn@ 10033d3c     HelpDialog.obj
+ 0002:000026b8       ??_7FindReplaceDlg@@6B@    100346b8     Hex.obj
+ 0002:000026f4       ??_7OptionDlg@@6B@         100346f4     Hex.obj
+ 0002:00002730       ??_7ColorCombo@@6B@        10034730     Hex.obj
+ 0002:00002764       ??_7GotoDlg@@6B@           10034764     Hex.obj
+ 0002:000027a0       ??_7PatternDlg@@6B@        100347a0     Hex.obj
+ 0002:000027dc       ??_7HelpDlg@@6B@           100347dc     Hex.obj
+ 0002:00002818       ??_7URLCtrl@@6B@           10034818     Hex.obj
+ 0002:00002848       ??_C@_1BC@NEGLNEMI@?$AA?$CG?$AAH?$AAe?$AAl?$AAp?$AA?4?$AA?4?$AA?4?$AA?$AA@ 10034848     Hex.obj
+ 0002:0000285c       ??_C@_1BI@HKNKEPCA@?$AA?$CG?$AAO?$AAp?$AAt?$AAi?$AAo?$AAn?$AAs?$AA?4?$AA?4?$AA?4?$AA?$AA@ 1003485c     Hex.obj
+ 0002:00002874       ??_C@_1CI@NHHPHBFG@?$AA?$CG?$AAP?$AAa?$AAt?$AAt?$AAe?$AAr?$AAn?$AA?5?$AAR?$AAe?$AAp?$AAl?$AAa?$AAc?$AAe?$AA?4?$AA?4?$AA?4?$AA?$AA@ 10034874     Hex.obj
+ 0002:0000289c       ??_C@_1CG@DCICPBOA@?$AA?$CG?$AAI?$AAn?$AAs?$AAe?$AAr?$AAt?$AA?5?$AAC?$AAo?$AAl?$AAu?$AAm?$AAn?$AAs?$AA?4?$AA?4?$AA?4?$AA?$AA@ 1003489c     Hex.obj
+ 0002:000028c4       ??_C@_1CM@DAFIJDAH@?$AAC?$AAl?$AAe?$AAa?$AAr?$AA?5?$AAC?$AAo?$AAm?$AAp?$AAa?$AAr?$AAe?$AA?5?$AA?$CG?$AAR?$AAe?$AAs?$AAu?$AAl@ 100348c4     Hex.obj
+ 0002:000028f0       ??_C@_1BK@JIHMKCBA@?$AA?$CG?$AAC?$AAo?$AAm?$AAp?$AAa?$AAr?$AAe?$AA?5?$AAH?$AAE?$AAX?$AA?$AA@ 100348f0     Hex.obj
+ 0002:0000290c       ??_C@_1BK@KCKFGKHL@?$AAV?$AAi?$AAe?$AAw?$AA?5?$AAi?$AAn?$AA?5?$AA?$CG?$AAH?$AAE?$AAX?$AA?$AA@ 1003490c     Hex.obj
+ 0002:00002928       ??_C@_1BI@GNONBDFP@?$AAC?$AAo?$AAu?$AAr?$AAi?$AAe?$AAr?$AA?5?$AAN?$AAe?$AAw?$AA?$AA@ 10034928     Hex.obj
+ 0002:00002940       ??_C@_01LOCGONAA@?$AA?$AA@ 10034940     HEXDialog.obj
+ 0002:00002940       ??_C@_11LOCGONAA@?$AA?$AA@ 10034940     Hex.obj
+ 0002:00002944       ??_C@_13HOIJIPNN@?$AA?5?$AA?$AA@ 10034944     Hex.obj
+ 0002:00002948       ??_C@_01CLKCMJKC@?5?$AA@   10034948     Hex.obj
+ 0002:0000294c       ??_C@_1BK@PHGBMABF@?$AAF?$AAi?$AAl?$AAe?$AAs?$AA?5?$AAM?$AAa?$AAt?$AAc?$AAh?$AA?4?$AA?$AA@ 1003494c     Hex.obj
+ 0002:00002968       ??_C@_1CC@HKJGLILD@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAC?$AAo?$AAm?$AAp?$AAM?$AAa?$AAt?$AAc?$AAh?$AA?$AA@ 10034968     Hex.obj
+ 0002:00002990       ??_C@_1FI@EMDIGHJF@?$AAC?$AAu?$AAr?$AAr?$AAe?$AAn?$AAt?$AAl?$AAy?$AA?5?$AAo?$AAn?$AAl?$AAy?$AA?5?$AAf?$AAi?$AAl?$AAe?$AAs@ 10034990     Hex.obj
+ 0002:000029e8       ??_C@_1DC@KIJLPGEC@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?5?$AAC?$AAo?$AAm?$AAp?$AAa?$AAr?$AAe?$AA?5?$AAE@ 100349e8     Hex.obj
+ 0002:00002a1c       ??_7CompareDlg@@6B@        10034a1c     Hex.obj
+ 0002:00002af8       ??_7MultiTypeCombo@@6B@    10034af8     MultiTypeCombo.obj
+ 0002:00002b2c       ??_C@_1CC@ONBFLBJM@?$AAD?$AAe?$AAc?$AAo?$AAd?$AAe?$AA?5?$AAE?$AAr?$AAr?$AAo?$AAr?$AA?$CB?$AA?$CB?$AA?$CB?$AA?6?$AA?$AA@ 10034b2c     MultiTypeCombo.obj
+ 0002:00002b50       ??_C@_1GE@HBHMFKCL@?$AAT?$AAh?$AAe?$AAr?$AAe?$AA?5?$AAa?$AAr?$AAe?$AA?5?$AAo?$AAd?$AAd?$AA?5?$AAd?$AAi?$AAg?$AAi?$AAt?$AAs@ 10034b50     MultiTypeCombo.obj
+ 0002:00002bb4       ??_C@_1CC@FDCKGFMA@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAO?$AAd?$AAd?$AAD?$AAi?$AAg?$AAi?$AAt?$AAs?$AA?$AA@ 10034bb4     MultiTypeCombo.obj
+ 0002:00002bd8       ??_C@_19FALJALJI@?$AAF?$AAo?$AAn?$AAt?$AA?$AA@ 10034bd8     OptionDialog.obj
+ 0002:00002be4       ??_C@_1O@LECKFCDK@?$AAC?$AAo?$AAl?$AAo?$AAr?$AAs?$AA?$AA@ 10034be4     OptionDialog.obj
+ 0002:00002bf4       ??_C@_1BA@FIJHCCCE@?$AAS?$AAt?$AAa?$AAr?$AAt?$AAu?$AAp?$AA?$AA@ 10034bf4     OptionDialog.obj
+ 0002:00002c04       ??_C@_1BK@ODDPEEMH@?$AAS?$AAt?$AAa?$AAr?$AAt?$AA?5?$AAL?$AAa?$AAy?$AAo?$AAu?$AAt?$AA?$AA@ 10034c04     OptionDialog.obj
+ 0002:00002c68       ??_C@_1BA@BBLONAFB@?$AAO?$AAp?$AAt?$AAi?$AAo?$AAn?$AAs?$AA?$AA@ 10034c68     OptionDialog.obj
+ 0002:00002c78       ??_C@_15KNBIKKIN@?$AA?$CF?$AAd?$AA?$AA@ 10034c78     OptionDialog.obj
+ 0002:00002c80       ??_C@_1DE@FBEGACP@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?3?$AA?5?$AAA?$AAd?$AAd?$AAr?$AAe?$AAs?$AAs?$AA?5@ 10034c80     OptionDialog.obj
+ 0002:00002cb4       ??_C@_1DC@FBCLHAGC@?$AAH?$AAe?$AAx?$AA?9?$AAE?$AAd?$AAi?$AAt?$AAo?$AAr?$AA?3?$AA?5?$AAC?$AAo?$AAl?$AAu?$AAm?$AAn?$AA?5?$AAC@ 10034cb4     OptionDialog.obj
+ 0002:00002ce8       ??_C@_0BM@NMJKDPPO@invalid?5vector?$DMT?$DO?5subscript?$AA@ 10034ce8     OptionDialog.obj
+ 0002:00002da8       ??_C@_1CA@GOBLLELL@?$AAP?$AAa?$AAt?$AAt?$AAe?$AAr?$AAn?$AA?5?$AAR?$AAe?$AAp?$AAl?$AAa?$AAc?$AAe?$AA?$AA@ 10034da8     PatternDialog.obj
+ 0002:00002dc8       ??_C@_1BO@GKJOKOMN@?$AAI?$AAn?$AAs?$AAe?$AAr?$AAt?$AA?5?$AAC?$AAo?$AAl?$AAu?$AAm?$AAn?$AAs?$AA?$AA@ 10034dc8     PatternDialog.obj
+ 0002:00002de8       ??_C@_1BA@BHDJAPNN@?$AAP?$AAa?$AAt?$AAt?$AAe?$AAr?$AAn?$AA?$AA@ 10034de8     PatternDialog.obj
+ 0002:00002df8       ??_C@_1GA@HHIFLFGO@?$AAO?$AAn?$AAl?$AAy?$AA?5?$AAc?$AAo?$AAl?$AAu?$AAm?$AAn?$AA?5?$AAp?$AAo?$AAs?$AAi?$AAt?$AAi?$AAo?$AAn@ 10034df8     PatternDialog.obj
+ 0002:00002e58       ??_C@_1BI@CPFNBBGA@?$AAP?$AAo?$AAs?$AA?5?$AAB?$AAe?$AAt?$AAw?$AAe?$AAe?$AAn?$AA?$AA@ 10034e58     PatternDialog.obj
+ 0002:00002e70       ??_C@_1CI@JGICEJLJ@?$AAP?$AAa?$AAt?$AAt?$AAe?$AAr?$AAn?$AA?5?$AAi?$AAs?$AA?5?$AAn?$AAo?$AAt?$AA?5?$AAs?$AAe?$AAt?$AA?$CB?$AA?$AA@ 10034e70     PatternDialog.obj
+ 0002:00002e98       ??_C@_1CC@HNGNACBP@?$AAM?$AAs?$AAg?$AAB?$AAo?$AAx?$AA?5?$AAP?$AAa?$AAt?$AAN?$AAo?$AAt?$AAS?$AAe?$AAt?$AA?$AA@ 10034e98     PatternDialog.obj
+ 0002:00002edc       ??_C@_19BDAJEHDN@?$AAo?$AAp?$AAe?$AAn?$AA?$AA@ 10034edc     URLCtrl.obj
+ 0002:00002ee8       ?k_Boms@Utf8_16@@2QAY02$$CBEA 10034ee8     Utf8_16.obj
+ 0002:00002ef8       ??_C@_1BK@NCOAHPFC@?$AAS?$AAt?$AAa?$AAt?$AAi?$AAc?$AAD?$AAi?$AAa?$AAl?$AAo?$AAg?$AA?$AA@ 10034ef8     StaticDialog1.obj
+ 0002:00002f18       ??_7logic_error@std@@6B@   10034f18     libcpmt:string.obj
+ 0002:00002f24       ??_7length_error@std@@6B@  10034f24     libcpmt:string.obj
+ 0002:00002f30       ??_7out_of_range@std@@6B@  10034f30     libcpmt:string.obj
+ 0002:00002f38       ??_C@_0BI@CFPLBAOH@invalid?5string?5position?$AA@ 10034f38     libcpmt:string.obj
+ 0002:00002f50       ??_C@_0BA@JFNIOLAK@string?5too?5long?$AA@ 10034f50     libcpmt:string.obj
+ 0002:00002f64       ??_7bad_alloc@std@@6B@     10034f64     libcpmt:nomemory.obj
+ 0002:00002f6c       ??_C@_0P@GHFPNOJB@bad?5allocation?$AA@ 10034f6c     libcpmt:nomemory.obj
+ 0002:00002f80       ??_7type_info@@6B@         10034f80     LIBCMT:typinfo.obj
+ 0002:00002fb8       ??_7exception@@6B@         10034fb8     LIBCMT:stdexcpt.obj
+ 0002:00002fc0       ??_C@_0BC@EOODALEL@Unknown?5exception?$AA@ 10034fc0     LIBCMT:stdexcpt.obj
+ 0002:000030b8       ??_C@_0CF@GOGNBNAK@Microsoft?5Visual?5C?$CL?$CL?5Runtime?5Lib@ 100350b8     LIBCMT:secfail.obj
+ 0002:000030e0       ??_C@_09KLGCKDOD@Program?3?5?$AA@ 100350e0     LIBCMT:secfail.obj
+ 0002:000030ec       ??_C@_02PHMGELLB@?6?6?$AA@ 100350ec     LIBCMT:secfail.obj
+ 0002:000030f0       ??_C@_03KHICJKCI@?4?4?4?$AA@ 100350f0     LIBCMT:secfail.obj
+ 0002:000030f4       ??_C@_0BH@DNAGHKFM@?$DMprogram?5name?5unknown?$DO?$AA@ 100350f4     LIBCMT:secfail.obj
+ 0002:00003110       ??_C@_0KA@JEHFIFGP@A?5buffer?5overrun?5has?5been?5detect@ 10035110     LIBCMT:secfail.obj
+ 0002:000031b0       ??_C@_0BJ@MDEKIEOJ@Buffer?5overrun?5detected?$CB?$AA@ 100351b0     LIBCMT:secfail.obj
+ 0002:000031d0       ??_C@_0LB@BPLHHLFD@A?5security?5error?5of?5unknown?5caus@ 100351d0     LIBCMT:secfail.obj
+ 0002:00003284       ??_C@_0CD@GMKACBEK@Unknown?5security?5failure?5detecte@ 10035284     LIBCMT:secfail.obj
+ 0002:00003448       ___lookuptable             10035448     LIBCMT:output.obj
+ 0002:000034a4       ??_C@_1O@CEDCILHN@?$AA?$CI?$AAn?$AAu?$AAl?$AAl?$AA?$CJ?$AA?$AA@ 100354a4     LIBCMT:output.obj
+ 0002:000034b4       ??_C@_06OJHGLDPL@?$CInull?$CJ?$AA@ 100354b4     LIBCMT:output.obj
+ 0002:000034c0       __real@0000000000000000    100354c0     LIBCMT:cvt.obj
+ 0002:000034c8       ??_C@_05KLBDPFGC@e?$CL000?$AA@ 100354c8     LIBCMT:cvt.obj
+ 0002:000034d0       __real@3ff0000000000000    100354d0     LIBCMT:testfdiv.obj
+ 0002:000034d8       __real@4150017ec0000000    100354d8     LIBCMT:testfdiv.obj
+ 0002:000034e0       __real@4147ffff80000000    100354e0     LIBCMT:testfdiv.obj
+ 0002:000034e8       ??_C@_0BK@NHEOCAHP@IsProcessorFeaturePresent?$AA@ 100354e8     LIBCMT:testfdiv.obj
+ 0002:00003504       ??_C@_08CPNIBGIE@KERNEL32?$AA@ 10035504     LIBCMT:testfdiv.obj
+ 0002:0000351c       ??_C@_0P@MIGLKIOC@CorExitProcess?$AA@ 1003551c     LIBCMT:crt0dat.obj
+ 0002:0000352c       ??_C@_0M@MBOPBNBK@mscoree?4dll?$AA@ 1003552c     LIBCMT:crt0dat.obj
+ 0002:000035a4       ??_C@_0P@GGKDKEEG@runtime?5error?5?$AA@ 100355a4     LIBCMT:crt0msg.obj
+ 0002:000035b4       ??_C@_02PCIJFNDE@?$AN?6?$AA@ 100355b4     LIBCMT:crt0msg.obj
+ 0002:000035b8       ??_C@_0O@MJNIPGOH@TLOSS?5error?$AN?6?$AA@ 100355b8     LIBCMT:crt0msg.obj
+ 0002:000035c8       ??_C@_0N@BONNPDHF@SING?5error?$AN?6?$AA@ 100355c8     LIBCMT:crt0msg.obj
+ 0002:000035d8       ??_C@_0P@MBDAJNE@DOMAIN?5error?$AN?6?$AA@ 100355d8     LIBCMT:crt0msg.obj
+ 0002:000035e8       ??_C@_0CF@KJDAIALP@R6028?$AN?6?9?5unable?5to?5initialize?5he@ 100355e8     LIBCMT:crt0msg.obj
+ 0002:00003610       ??_C@_0DF@GAKBPDFP@R6027?$AN?6?9?5not?5enough?5space?5for?5lo@ 10035610     LIBCMT:crt0msg.obj
+ 0002:00003648       ??_C@_0DF@IBLNNAIG@R6026?$AN?6?9?5not?5enough?5space?5for?5st@ 10035648     LIBCMT:crt0msg.obj
+ 0002:00003680       ??_C@_0CG@IOHKGFNJ@R6025?$AN?6?9?5pure?5virtual?5function?5c@ 10035680     LIBCMT:crt0msg.obj
+ 0002:000036a8       ??_C@_0DF@JIJJFJDC@R6024?$AN?6?9?5not?5enough?5space?5for?5_o@ 100356a8     LIBCMT:crt0msg.obj
+ 0002:000036e0       ??_C@_0CJ@EGEJHFME@R6019?$AN?6?9?5unable?5to?5open?5console?5@ 100356e0     LIBCMT:crt0msg.obj
+ 0002:0000370c       ??_C@_0CB@GNHNIELH@R6018?$AN?6?9?5unexpected?5heap?5error?$AN?6@ 1003570c     LIBCMT:crt0msg.obj
+ 0002:00003730       ??_C@_0CN@FOLDKNG@R6017?$AN?6?9?5unexpected?5multithread?5@ 10035730     LIBCMT:crt0msg.obj
+ 0002:00003760       ??_C@_0CM@FAHFJNHO@R6016?$AN?6?9?5not?5enough?5space?5for?5th@ 10035760     LIBCMT:crt0msg.obj
+ 0002:00003790       ??_C@_0JG@LBKMGKLD@?$AN?6This?5application?5has?5requested@ 10035790     LIBCMT:crt0msg.obj
+ 0002:00003828       ??_C@_0CM@FLCNIPKK@R6009?$AN?6?9?5not?5enough?5space?5for?5en@ 10035828     LIBCMT:crt0msg.obj
+ 0002:00003854       ??_C@_0CK@KMMJOAPP@R6008?$AN?6?9?5not?5enough?5space?5for?5ar@ 10035854     LIBCMT:crt0msg.obj
+ 0002:00003880       ??_C@_0CF@HOHMHDEK@R6002?$AN?6?9?5floating?5point?5not?5load@ 10035880     LIBCMT:crt0msg.obj
+ 0002:000038a8       ??_C@_0BK@OFGJDLJJ@Runtime?5Error?$CB?6?6Program?3?5?$AA@ 100358a8     LIBCMT:crt0msg.obj
+ 0002:000038d4       ??_C@_0CG@PKBDLMEO@InitializeCriticalSectionAndSpin@ 100358d4     LIBCMT:initcrit.obj
+ 0002:000038fc       ??_C@_0N@MDJJJHMB@kernel32?4dll?$AA@ 100358fc     LIBCMT:initcrit.obj
+ 0002:0000391c       ??_C@_0BI@DFKBFLJE@GetProcessWindowStation?$AA@ 1003591c     LIBCMT:crtmbox.obj
+ 0002:00003934       ??_C@_0BK@CIDNPOGP@GetUserObjectInformationA?$AA@ 10035934     LIBCMT:crtmbox.obj
+ 0002:00003950       ??_C@_0BD@HHGDFDBJ@GetLastActivePopup?$AA@ 10035950     LIBCMT:crtmbox.obj
+ 0002:00003964       ??_C@_0BA@HNOPNCHB@GetActiveWindow?$AA@ 10035964     LIBCMT:crtmbox.obj
+ 0002:00003974       ??_C@_0M@CHKKJDAI@MessageBoxA?$AA@ 10035974     LIBCMT:crtmbox.obj
+ 0002:00003980       ??_C@_0L@GMPLCCII@user32?4dll?$AA@ 10035980     LIBCMT:crtmbox.obj
+ 0002:0000398c       ??_C@_13NOLLCAOD@?$AA?$AA?$AA?$AA@ 1003598c     LIBCMT:w_str.obj
+ 0002:000039a8       __ctype                    100359a8     LIBCMT:ctype.obj
+ 0002:00003bb0       __wctype                   10035bb0     LIBCMT:ctype.obj
+ 0002:00003dc4       ??_C@_08JCCMCCIL@HH?3mm?3ss?$AA@ 10035dc4     LIBCMT:strftime.obj
+ 0002:00003dd0       ??_C@_0BE@CKGJFCPC@dddd?0?5MMMM?5dd?0?5yyyy?$AA@ 10035dd0     LIBCMT:strftime.obj
+ 0002:00003de4       ??_C@_08BPBNCDIB@MM?1dd?1yy?$AA@ 10035de4     LIBCMT:strftime.obj
+ 0002:00003df0       ??_C@_02CJNFDJBF@PM?$AA@   10035df0     LIBCMT:strftime.obj
+ 0002:00003df4       ??_C@_02DEDBPAFC@AM?$AA@   10035df4     LIBCMT:strftime.obj
+ 0002:00003df8       ??_C@_08EDHMEBNP@December?$AA@ 10035df8     LIBCMT:strftime.obj
+ 0002:00003e04       ??_C@_08HCHEGEOA@November?$AA@ 10035e04     LIBCMT:strftime.obj
+ 0002:00003e10       ??_C@_07JJNFCEND@October?$AA@ 10035e10     LIBCMT:strftime.obj
+ 0002:00003e18       ??_C@_09BHHEALKD@September?$AA@ 10035e18     LIBCMT:strftime.obj
+ 0002:00003e24       ??_C@_06LBBHFDDG@August?$AA@ 10035e24     LIBCMT:strftime.obj
+ 0002:00003e2c       ??_C@_04MIEPOIFP@July?$AA@ 10035e2c     LIBCMT:strftime.obj
+ 0002:00003e34       ??_C@_04CNLMGBGM@June?$AA@ 10035e34     LIBCMT:strftime.obj
+ 0002:00003e3c       ??_C@_05DMJDNLEJ@April?$AA@ 10035e3c     LIBCMT:strftime.obj
+ 0002:00003e44       ??_C@_05HPCKOFNC@March?$AA@ 10035e44     LIBCMT:strftime.obj
+ 0002:00003e4c       ??_C@_08GNJGEPFN@February?$AA@ 10035e4c     LIBCMT:strftime.obj
+ 0002:00003e58       ??_C@_07CGJPFGJA@January?$AA@ 10035e58     LIBCMT:strftime.obj
+ 0002:00003e60       ??_C@_03MKABNOCG@Dec?$AA@  10035e60     LIBCMT:strftime.obj
+ 0002:00003e64       ??_C@_03JPJOFNIA@Nov?$AA@  10035e64     LIBCMT:strftime.obj
+ 0002:00003e68       ??_C@_03BMAOKBAD@Oct?$AA@  10035e68     LIBCMT:strftime.obj
+ 0002:00003e6c       ??_C@_03GGCAPAJC@Sep?$AA@  10035e6c     LIBCMT:strftime.obj
+ 0002:00003e70       ??_C@_03IFJFEIGA@Aug?$AA@  10035e70     LIBCMT:strftime.obj
+ 0002:00003e74       ??_C@_03LBGABGKK@Jul?$AA@  10035e74     LIBCMT:strftime.obj
+ 0002:00003e78       ??_C@_03IDFGHECI@Jun?$AA@  10035e78     LIBCMT:strftime.obj
+ 0002:00003e7c       ??_C@_03CNMDKL@May?$AA@    10035e7c     LIBCMT:strftime.obj
+ 0002:00003e80       ??_C@_03LEOLGMJP@Apr?$AA@  10035e80     LIBCMT:strftime.obj
+ 0002:00003e84       ??_C@_03ODNJBKGA@Mar?$AA@  10035e84     LIBCMT:strftime.obj
+ 0002:00003e88       ??_C@_03HJBDCHOM@Feb?$AA@  10035e88     LIBCMT:strftime.obj
+ 0002:00003e8c       ??_C@_03JIHJHPIE@Jan?$AA@  10035e8c     LIBCMT:strftime.obj
+ 0002:00003e90       ??_C@_08INBOOONO@Saturday?$AA@ 10035e90     LIBCMT:strftime.obj
+ 0002:00003e9c       ??_C@_06JECMNKMI@Friday?$AA@ 10035e9c     LIBCMT:strftime.obj
+ 0002:00003ea4       ??_C@_08HACCIKIA@Thursday?$AA@ 10035ea4     LIBCMT:strftime.obj
+ 0002:00003eb0       ??_C@_09DLIGFAKA@Wednesday?$AA@ 10035eb0     LIBCMT:strftime.obj
+ 0002:00003ebc       ??_C@_07BAAGCFCM@Tuesday?$AA@ 10035ebc     LIBCMT:strftime.obj
+ 0002:00003ec4       ??_C@_06JLEDEDGH@Monday?$AA@ 10035ec4     LIBCMT:strftime.obj
+ 0002:00003ecc       ??_C@_06OOPIFAJ@Sunday?$AA@ 10035ecc     LIBCMT:strftime.obj
+ 0002:00003ed4       ??_C@_03FEFJNEK@Sat?$AA@   10035ed4     LIBCMT:strftime.obj
+ 0002:00003ed8       ??_C@_03IDIOELNC@Fri?$AA@  10035ed8     LIBCMT:strftime.obj
+ 0002:00003edc       ??_C@_03IOFIKPDN@Thu?$AA@  10035edc     LIBCMT:strftime.obj
+ 0002:00003ee0       ??_C@_03MHOMLAJA@Wed?$AA@  10035ee0     LIBCMT:strftime.obj
+ 0002:00003ee4       ??_C@_03NAGEINEP@Tue?$AA@  10035ee4     LIBCMT:strftime.obj
+ 0002:00003ee8       ??_C@_03PDAGKDH@Mon?$AA@   10035ee8     LIBCMT:strftime.obj
+ 0002:00003eec       ??_C@_03KOEHGMDN@Sun?$AA@  10035eec     LIBCMT:strftime.obj
+ 0002:00003f54       ___dnames                  10035f54     LIBCMT:timeset.obj
+ 0002:00003f6c       ___mnames                  10035f6c     LIBCMT:timeset.obj
+ 0002:00003f94       ??_C@_06IMKFLFPG@1?$CDQNAN?$AA@ 10035f94     LIBCMT:x10fout.obj
+ 0002:00003f9c       ??_C@_05DNEBIAHO@1?$CDINF?$AA@ 10035f9c     LIBCMT:x10fout.obj
+ 0002:00003fa4       ??_C@_05PHHOCPM@1?$CDIND?$AA@ 10035fa4     LIBCMT:x10fout.obj
+ 0002:00003fac       ??_C@_06PGGFOGJG@1?$CDSNAN?$AA@ 10035fac     LIBCMT:x10fout.obj
+ 0002:00004030       ??_R1A@?0A@A@exception@@8  10036030     libcpmt:string.obj
+ 0002:00004048       ??_R1A@?0A@A@logic_error@std@@8 10036048     libcpmt:string.obj
+ 0002:00004060       ??_R2logic_error@std@@8    10036060     libcpmt:string.obj
+ 0002:0000406c       ??_R3logic_error@std@@8    1003606c     libcpmt:string.obj
+ 0002:0000407c       ??_R4logic_error@std@@6B@  1003607c     libcpmt:string.obj
+ 0002:00004090       ??_R1A@?0A@A@length_error@std@@8 10036090     libcpmt:string.obj
+ 0002:000040a8       ??_R2length_error@std@@8   100360a8     libcpmt:string.obj
+ 0002:000040b8       ??_R3length_error@std@@8   100360b8     libcpmt:string.obj
+ 0002:000040c8       ??_R4length_error@std@@6B@ 100360c8     libcpmt:string.obj
+ 0002:000040dc       ??_R1A@?0A@A@out_of_range@std@@8 100360dc     libcpmt:string.obj
+ 0002:000040f4       ??_R2out_of_range@std@@8   100360f4     libcpmt:string.obj
+ 0002:00004104       ??_R3out_of_range@std@@8   10036104     libcpmt:string.obj
+ 0002:00004114       ??_R4out_of_range@std@@6B@ 10036114     libcpmt:string.obj
+ 0002:00004128       ??_R1A@?0A@A@bad_alloc@std@@8 10036128     libcpmt:nomemory.obj
+ 0002:00004140       ??_R2bad_alloc@std@@8      10036140     libcpmt:nomemory.obj
+ 0002:0000414c       ??_R3bad_alloc@std@@8      1003614c     libcpmt:nomemory.obj
+ 0002:0000415c       ??_R4bad_alloc@std@@6B@    1003615c     libcpmt:nomemory.obj
+ 0002:00004170       ??_R1A@?0A@A@type_info@@8  10036170     LIBCMT:typinfo.obj
+ 0002:00004188       ??_R2type_info@@8          10036188     LIBCMT:typinfo.obj
+ 0002:00004190       ??_R3type_info@@8          10036190     LIBCMT:typinfo.obj
+ 0002:000041a0       ??_R4type_info@@6B@        100361a0     LIBCMT:typinfo.obj
+ 0002:000041b4       ??_R2exception@@8          100361b4     LIBCMT:stdexcpt.obj
+ 0002:000041bc       ??_R3exception@@8          100361bc     LIBCMT:stdexcpt.obj
+ 0002:000041cc       ??_R4exception@@6B@        100361cc     LIBCMT:stdexcpt.obj
+ 0002:000041e0       ___rtc_iaa                 100361e0     LIBCMT:initsect.obj
+ 0002:000041e4       ___rtc_izz                 100361e4     LIBCMT:initsect.obj
+ 0002:000041e8       ___rtc_taa                 100361e8     LIBCMT:initsect.obj
+ 0002:000041ec       ___rtc_tzz                 100361ec     LIBCMT:initsect.obj
+ 0002:00004214       __CT??_R0H@84              10036214     ColorPopup.obj
+ 0002:00004230       __CTA1H                    10036230     ColorPopup.obj
+ 0002:00004238       __TI1H                     10036238     ColorPopup.obj
+ 0002:00004324       __CT??_R0?AVexception@@@8??0exception@@QAE@ABV0@@Z12 10036324     CompareDialog.obj
+ 0002:00004340       __CT??_R0?AVlogic_error@std@@@8??0logic_error@std@@QAE@ABV01@@Z40 10036340     CompareDialog.obj
+ 0002:0000435c       __CT??_R0?AVlength_error@std@@@8??0length_error@std@@QAE@ABV01@@Z40 1003635c     CompareDialog.obj
+ 0002:00004378       __CTA3?AVlength_error@std@@ 10036378     CompareDialog.obj
+ 0002:00004388       __TI3?AVlength_error@std@@ 10036388     CompareDialog.obj
+ 0002:00004fe4       __CT??_R0?AVout_of_range@std@@@8??0out_of_range@std@@QAE@ABV01@@Z40 10036fe4     OptionDialog.obj
+ 0002:00005000       __CTA3?AVout_of_range@std@@ 10037000     OptionDialog.obj
+ 0002:00005010       __TI3?AVout_of_range@std@@ 10037010     OptionDialog.obj
+ 0002:000050f8       __CT??_R0?AVbad_alloc@std@@@8??0bad_alloc@std@@QAE@ABV01@@Z12 100370f8     libcpmt:nomemory.obj
+ 0002:00005114       __CTA2?AVbad_alloc@std@@   10037114     libcpmt:nomemory.obj
+ 0002:00005120       __TI2?AVbad_alloc@std@@    10037120     libcpmt:nomemory.obj
+ 0002:00005130       __IMPORT_DESCRIPTOR_SHLWAPI 10037130     shlwapi:SHLWAPI.dll
+ 0002:00005144       __IMPORT_DESCRIPTOR_KERNEL32 10037144     kernel32:KERNEL32.dll
+ 0002:00005158       __IMPORT_DESCRIPTOR_USER32 10037158     user32:USER32.dll
+ 0002:0000516c       __IMPORT_DESCRIPTOR_GDI32  1003716c     gdi32:GDI32.dll
+ 0002:00005180       __IMPORT_DESCRIPTOR_comdlg32 10037180     comdlg32:comdlg32.dll
+ 0002:00005194       __IMPORT_DESCRIPTOR_ADVAPI32 10037194     advapi32:ADVAPI32.dll
+ 0002:000051a8       __IMPORT_DESCRIPTOR_SHELL32 100371a8     shell32:SHELL32.dll
+ 0002:000051bc       __NULL_IMPORT_DESCRIPTOR   100371bc     shlwapi:SHLWAPI.dll
+ 0003:00000000       ___xc_a                    10039000     LIBCMT:crt0init.obj
+ 0003:0000003c       ___xc_z                    1003903c     LIBCMT:crt0init.obj
+ 0003:00000040       ___xi_a                    10039040     LIBCMT:crt0init.obj
+ 0003:00000054       ___xi_z                    10039054     LIBCMT:crt0init.obj
+ 0003:00000058       ___xp_a                    10039058     LIBCMT:crt0init.obj
+ 0003:00000060       ___xp_z                    10039060     LIBCMT:crt0init.obj
+ 0003:00000064       ___xt_a                    10039064     LIBCMT:crt0init.obj
+ 0003:0000006c       ___xt_z                    1003906c     LIBCMT:crt0init.obj
+ 0003:00000070       ?colorItems@@3PAKA         10039070     ColorPopup.obj
+ 0003:00000130       ??_R0H@8                   10039130     ColorPopup.obj
+ 0003:00000180       ??_R0?AVexception@@@8      10039180     CompareDialog.obj
+ 0003:00000198       ??_R0?AVlogic_error@std@@@8 10039198     CompareDialog.obj
+ 0003:000001b8       ??_R0?AVlength_error@std@@@8 100391b8     CompareDialog.obj
+ 0003:000001d8       ?openDoc1@@3HA             100391d8     Hex.obj
+ 0003:000001dc       ?openDoc2@@3HA             100391dc     Hex.obj
+ 0003:00000260       ??_R0?AVout_of_range@std@@@8 10039260     OptionDialog.obj
+ 0003:00000380       ??_R0?AVbad_alloc@std@@@8  10039380     libcpmt:nomemory.obj
+ 0003:0000039c       __NLG_Destination          1003939c     LIBCMT:exsup.obj
+ 0003:000003ac       ??_R0?AVtype_info@@@8      100393ac     LIBCMT:typinfo.obj
+ 0003:000003c4       ?__pMyUnhandledExceptionFilter@@3PAXA 100393c4     LIBCMT:throw.obj
+ 0003:000003d0       ___security_cookie         100393d0     LIBCMT:seccook.obj
+ 0003:000003e0       __fltused                  100393e0     LIBCMT:fpinit.obj
+ 0003:000003e4       __ldused                   100393e4     LIBCMT:fpinit.obj
+ 0003:000003e8       __FPinit                   100393e8     LIBCMT:fpinit.obj
+ 0003:000003ec       __FPmtinit                 100393ec     LIBCMT:fpinit.obj
+ 0003:000003f0       __FPmtterm                 100393f0     LIBCMT:fpinit.obj
+ 0003:000003f4       __aexit_rtn                100393f4     LIBCMT:dllcrt0.obj
+ 0003:000003fc       ?__pInconsistency@@3P6AXXZA 100393fc     LIBCMT:hooks.obj
+ 0003:00000400       ___tlsindex                10039400     LIBCMT:tidtable.obj
+ 0003:00000538       ___initiallocinfo          10039538     LIBCMT:setlocal.obj
+ 0003:0000058c       ___ptlocinfo               1003958c     LIBCMT:setlocal.obj
+ 0003:000006c4       ___nullstring              100396c4     LIBCMT:output.obj
+ 0003:000006c8       ___wnullstring             100396c8     LIBCMT:output.obj
+ 0003:000006cc       __cfltcvt_tab              100396cc     LIBCMT:cmiscdat.obj
+ 0003:000006e8       __iob                      100396e8     LIBCMT:_file.obj
+ 0003:00000ad0       ___badioinfo               10039ad0     LIBCMT:ioinit.obj
+ 0003:00000af4       __amblksiz                 10039af4     LIBCMT:heapinit.obj
+ 0003:00000b90       __XcptActTab               10039b90     LIBCMT:winxfltr.obj
+ 0003:00000c08       __First_FPE_Indx           10039c08     LIBCMT:winxfltr.obj
+ 0003:00000c0c       __Num_FPE                  10039c0c     LIBCMT:winxfltr.obj
+ 0003:00000c10       __XcptActTabSize           10039c10     LIBCMT:winxfltr.obj
+ 0003:00000c14       __XcptActTabCount          10039c14     LIBCMT:winxfltr.obj
+ 0003:00000d10       __pctype                   10039d10     LIBCMT:ctype.obj
+ 0003:00000d14       __pwctype                  10039d14     LIBCMT:ctype.obj
+ 0003:00000d20       ___lc_time_curr            10039d20     LIBCMT:strftime.obj
+ 0003:00000d28       ___lc_time_c               10039d28     LIBCMT:strftime.obj
+ 0003:00000de0       ___lconv_static_decimal    10039de0     LIBCMT:lconv.obj
+ 0003:00000de4       ___lconv_c                 10039de4     LIBCMT:lconv.obj
+ 0003:00000e14       ___lconv                   10039e14     LIBCMT:lconv.obj
+ 0003:00000e20       ___lc_clike                10039e20     LIBCMT:nlsdata2.obj
+ 0003:00000e30       ___mb_cur_max              10039e30     LIBCMT:nlsdata1.obj
+ 0003:00000e34       ___decimal_point           10039e34     LIBCMT:nlsdata1.obj
+ 0003:00000e38       ___decimal_point_length    10039e38     LIBCMT:nlsdata1.obj
+ 0003:00000e70       __timezone                 10039e70     LIBCMT:timeset.obj
+ 0003:00000e74       __daylight                 10039e74     LIBCMT:timeset.obj
+ 0003:00000e78       __dstbias                  10039e78     LIBCMT:timeset.obj
+ 0003:00000f00       __tzname                   10039f00     LIBCMT:timeset.obj
+ 0003:00000f20       __lpdays                   10039f20     LIBCMT:days.obj
+ 0003:00000f54       __days                     10039f54     LIBCMT:days.obj
+ 0003:00000f90       __pow10pos                 10039f90     LIBCMT:constpow.obj
+ 0003:000010f0       __pow10neg                 1003a0f0     LIBCMT:constpow.obj
+ 0003:000013f0       ?currentPath@@3PAGA        1003a3f0     Hex.obj
+ 0003:000015f8       ?nppData@@3UNppData@@A     1003a5f8     Hex.obj
+ 0003:00001604       ?g_TBHex@@3UtoolbarIcons@@A 1003a604     Hex.obj
+ 0003:0000160c       ?g_clipboard@@3UtClipboard@@A 1003a60c     Hex.obj
+ 0003:00001620       ?configPath@@3PAGA         1003a620     Hex.obj
+ 0003:00001828       ?g_hModule@@3PAXA          1003a828     Hex.obj
+ 0003:00001830       ?iniFilePath@@3PAGA        1003a830     Hex.obj
+ 0003:00001a38       ?funcItem@@3PAUFuncItem@@A 1003aa38     Hex.obj
+ 0003:00001f48       ?g_HSource@@3PAUHWND__@@A  1003af48     Hex.obj
+ 0003:00001f50       ?hexMask@@3PAY02DA         1003af50     Hex.obj
+ 0003:00002250       ?g_hFindRepDlg@@3PAUHWND__@@A 1003b250     Hex.obj
+ 0003:00002254       ?wndProcNotepad@@3P6GJPAUHWND__@@IIJ@ZA 1003b254     Hex.obj
+ 0003:00002258       ?currentSC@@3IA            1003b258     Hex.obj
+ 0003:0000225c       ?pCurHexEdit@@3PAVHexEdit@@A 1003b25c     Hex.obj
+ 0003:00002260       ?isNotepadCreated@@3HA     1003b260     Hex.obj
+ 0003:00002264       ?isMenuHex@@3HA            1003b264     Hex.obj
+ 0003:00002268       ?vMenuInfoEdit@@3V?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@A 1003b268     Hex.obj
+ 0003:00002278       ?helpDlg@@3VHelpDlg@@A     1003b278     Hex.obj
+ 0003:0000270c       ?vMenuInfoSearch@@3V?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@A 1003b70c     Hex.obj
+ 0003:0000271c       ?vMenuInfoView@@3V?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@A 1003b71c     Hex.obj
+ 0003:00002730       ?prop@@3UtProp@@A          1003b730     Hex.obj
+ 0003:00002cd0       ?propDlg@@3VOptionDlg@@A   1003bcd0     Hex.obj
+ 0003:00002f58       ?findRepDlg@@3VFindReplaceDlg@@A 1003bf58     Hex.obj
+ 0003:000037c8       ?patDlg@@3VPatternDlg@@A   1003c7c8     Hex.obj
+ 0003:00003c90       ?hexEdit1@@3VHexEdit@@A    1003cc90     Hex.obj
+ 0003:00003d90       ?hexEdit2@@3VHexEdit@@A    1003cd90     Hex.obj
+ 0003:00003e8c       ?vMenuInfoFile@@3V?$vector@UtMenu@@V?$allocator@UtMenu@@@std@@@std@@A 1003ce8c     Hex.obj
+ 0003:00003ea0       ?gotoDlg@@3VGotoDlg@@A     1003cea0     Hex.obj
+ 0003:00003ef0       ?_pSelf@WcharMbcsConvertor@@1PAV1@A 1003cef0     SysMsg1.obj
+ 0003:00003f04       ___fastflag                1003cf04     LIBCMT:fpinit.obj
+ 0003:00003f08       __adjust_fdiv              1003cf08     LIBCMT:fpinit.obj
+ 0003:00003f10       __aenvptr                  1003cf10     LIBCMT:dllcrt0.obj
+ 0003:00003f14       __wenvptr                  1003cf14     LIBCMT:dllcrt0.obj
+ 0003:00003f18       ___error_mode              1003cf18     LIBCMT:dllcrt0.obj
+ 0003:00003f1c       ___app_type                1003cf1c     LIBCMT:dllcrt0.obj
+ 0003:00003f20       ?_pnhHeap@@3P6AHI@ZA       1003cf20     LIBCMT:handler.obj
+ 0003:0000408c       __umaskval                 1003d08c     LIBCMT:crt0dat.obj
+ 0003:00004090       __osplatform               1003d090     LIBCMT:crt0dat.obj
+ 0003:00004094       __osver                    1003d094     LIBCMT:crt0dat.obj
+ 0003:00004098       __winver                   1003d098     LIBCMT:crt0dat.obj
+ 0003:0000409c       __winmajor                 1003d09c     LIBCMT:crt0dat.obj
+ 0003:000040a0       __winminor                 1003d0a0     LIBCMT:crt0dat.obj
+ 0003:000040a4       ___argc                    1003d0a4     LIBCMT:crt0dat.obj
+ 0003:000040a8       ___argv                    1003d0a8     LIBCMT:crt0dat.obj
+ 0003:000040ac       ___wargv                   1003d0ac     LIBCMT:crt0dat.obj
+ 0003:000040b0       __environ                  1003d0b0     LIBCMT:crt0dat.obj
+ 0003:000040b4       ___initenv                 1003d0b4     LIBCMT:crt0dat.obj
+ 0003:000040b8       __wenviron                 1003d0b8     LIBCMT:crt0dat.obj
+ 0003:000040bc       ___winitenv                1003d0bc     LIBCMT:crt0dat.obj
+ 0003:000040c0       __pgmptr                   1003d0c0     LIBCMT:crt0dat.obj
+ 0003:000040c4       __wpgmptr                  1003d0c4     LIBCMT:crt0dat.obj
+ 0003:000040c8       __exitflag                 1003d0c8     LIBCMT:crt0dat.obj
+ 0003:000040cc       __C_Termination_Done       1003d0cc     LIBCMT:crt0dat.obj
+ 0003:000040d0       __C_Exit_Done              1003d0d0     LIBCMT:crt0dat.obj
+ 0003:000040d4       __cflush                   1003d0d4     LIBCMT:_file.obj
+ 0003:000041e4       __adbgmsg                  1003d1e4     LIBCMT:crt0msg.obj
+ 0003:000041e8       __newmode                  1003d1e8     LIBCMT:_newmode.obj
+ 0003:00004210       ___lconv_static_null       1003d210     LIBCMT:lconv.obj
+ 0003:00004214       ___lc_time_intl            1003d214     LIBCMT:inittime.obj
+ 0003:00004218       ___lconv_intl              1003d218     LIBCMT:initmon.obj
+ 0003:00004240       ___lc_handle               1003d240     LIBCMT:nlsdata2.obj
+ 0003:00004258       ___lc_codepage             1003d258     LIBCMT:nlsdata2.obj
+ 0003:0000425c       ___lc_collate_cp           1003d25c     LIBCMT:nlsdata2.obj
+ 0003:00004260       ___lc_id                   1003d260     LIBCMT:nlsdata3.obj
+ 0003:00004284       __commode                  1003d284     LIBCMT:ncommode.obj
+ 0003:00004360       __fmode                    1003d360     LIBCMT:txtmode.obj
+ 0003:00004374       ___ctype1_refcount         1003d374     <common>
+ 0003:00004378       ___lconv_mon_refcount      1003d378     <common>
+ 0003:0000437c       ___lconv_num_refcount      1003d37c     <common>
+ 0003:00004380       ___mblcid                  1003d380     <common>
+ 0003:00004384       ___ptmbcinfo               1003d384     <common>
+ 0003:00004388       ___ismbcodepage            1003d388     <common>
+ 0003:000043a0       __mbctype                  1003d3a0     <common>
+ 0003:000044a4       ___mbcodepage              1003d4a4     <common>
+ 0003:000044b0       ___mbulinfo                1003d4b0     <common>
+ 0003:000044c0       __mbcasemap                1003d4c0     <common>
+ 0003:000045c0       ___sbh_pHeaderDefer        1003d5c0     <common>
+ 0003:000045c4       ___sbh_cntHeaderList       1003d5c4     <common>
+ 0003:000045c8       ___sbh_pHeaderList         1003d5c8     <common>
+ 0003:000045cc       ___sbh_threshold           1003d5cc     <common>
+ 0003:000045d0       ___sbh_pHeaderScan         1003d5d0     <common>
+ 0003:000045d4       ___sbh_sizeHeaderList      1003d5d4     <common>
+ 0003:000045d8       ___sbh_indGroupDefer       1003d5d8     <common>
+ 0003:000045dc       __crtheap                  1003d5dc     <common>
+ 0003:000045e0       ___active_heap             1003d5e0     <common>
+ 0003:000045e4       __nhandle                  1003d5e4     <common>
+ 0003:00004600       ___pioinfo                 1003d600     <common>
+ 0003:00004700       ___piob                    1003d700     <common>
+ 0003:00004720       __bufin                    1003d720     <common>
+ 0003:00005720       __nstream                  1003e720     <common>
+ 0003:00005724       ___env_initialized         1003e724     <common>
+ 0003:00005728       ___onexitend               1003e728     <common>
+ 0003:0000572c       ___onexitbegin             1003e72c     <common>
+ 0003:00005730       ___mbctype_initialized     1003e730     <common>
+ 0003:00005734       __acmdln                   1003e734     <common>
+ 0003:00005738       __pRawDllMain              1003e738     <common>
+
+ entry point at        0001:000275c0
+
+ Static symbols
+
+ 0001:00030580       _$E1                       10031580 f   SysMsg1.obj
+ 0001:00023510       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 10024510 f   PatternDialog.obj
+ 0001:00023900       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10024900 f   PatternDialog.obj
+ 0001:00023f20       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 10024f20 f   PatternDialog.obj
+ 0001:00022110       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10023110 f   OptionDialog.obj
+ 0001:000221a0       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 100231a0 f   OptionDialog.obj
+ 0001:00022280       ?EnumFontFamExProc@@YGHPAUtagENUMLOGFONTEXW@@PAUtagNEWTEXTMETRICEXW@@KJ@Z 10023280 f   OptionDialog.obj
+ 0001:000231d0       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 100241d0 f   OptionDialog.obj
+ 0001:00020620       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 10021620 f   MultiTypeCombo.obj
+ 0001:000206f0       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 100216f0 f   MultiTypeCombo.obj
+ 0001:00030400       _$E2                       10031400 f   Hex.obj
+ 0001:000305f0       _$E3                       100315f0 f   Hex.obj
+ 0001:00030420       _$E5                       10031420 f   Hex.obj
+ 0001:00030600       _$E6                       10031600 f   Hex.obj
+ 0001:00030440       _$E8                       10031440 f   Hex.obj
+ 0001:00030610       _$E9                       10031610 f   Hex.obj
+ 0001:00030460       _$E11                      10031460 f   Hex.obj
+ 0001:00030620       _$E12                      10031620 f   Hex.obj
+ 0001:00030480       _$E14                      10031480 f   Hex.obj
+ 0001:00030630       _$E15                      10031630 f   Hex.obj
+ 0001:000304a0       _$E17                      100314a0 f   Hex.obj
+ 0001:00030640       _$E18                      10031640 f   Hex.obj
+ 0001:000304c0       _$E20                      100314c0 f   Hex.obj
+ 0001:00030650       _$E21                      10031650 f   Hex.obj
+ 0001:000304e0       _$E23                      100314e0 f   Hex.obj
+ 0001:00030660       _$E24                      10031660 f   Hex.obj
+ 0001:00030500       _$E26                      10031500 f   Hex.obj
+ 0001:00030670       _$E27                      10031670 f   Hex.obj
+ 0001:00030520       _$E29                      10031520 f   Hex.obj
+ 0001:00030680       _$E30                      10031680 f   Hex.obj
+ 0001:00030540       _$E32                      10031540 f   Hex.obj
+ 0001:00030690       _$E33                      10031690 f   Hex.obj
+ 0001:00030560       _$E35                      10031560 f   Hex.obj
+ 0001:000306a0       _$E36                      100316a0 f   Hex.obj
+ 0001:00018640       ?NLChangeNppMenu@@YAXPAUHINSTANCE__@@PAUHWND__@@PBGPAUFuncItem@@I@Z 10019640 f   Hex.obj
+ 0001:0001bb10       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 1001cb10 f   Hex.obj
+ 0001:0001bbe0       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 1001cbe0 f   Hex.obj
+ 0001:00017650       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10018650 f   HelpDialog.obj
+ 0001:0000a2e0       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 1000b2e0 f   HEXDialog.obj
+ 0001:0000a3b0       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 1000b3b0 f   HEXDialog.obj
+ 0001:0000d200       ?NLChangeMenu@@YAHPAUHINSTANCE__@@PAUHWND__@@PAUHMENU__@@PBGI@Z 1000e200 f   HEXDialog.obj
+ 0001:00005320       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10006320 f   GotoDialog.obj
+ 0001:000032d0       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 100042d0 f   FindReplaceDialog.obj
+ 0001:000038f0       ?NLGetText@@YAIPAUHINSTANCE__@@PAUHWND__@@PBGPAGI@Z 100048f0 f   FindReplaceDialog.obj
+ 0001:00004260       ?NLMessageBox@@YAHPAUHINSTANCE__@@PAUHWND__@@PBGI1@Z 10005260 f   FindReplaceDialog.obj
+ 0001:00001680       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10002680 f   CompareDialog.obj
+ 0001:000010b0       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 100020b0 f   ColumnDialog.obj
+ 0001:00000dd0       ?NLChangeDialog@@YAXPAUHINSTANCE__@@PAUHWND__@@1PBG@Z 10001dd0 f   ColorPopup.obj
+ 0001:000306af       _$E2                       100316af f   libcpmt:nomemory.obj
+ 0001:0002def5       __abstract_cw              1002eef5 f   LIBCMT:ieee87.obj
+ 0001:0002df87       __hw_cw                    1002ef87 f   LIBCMT:ieee87.obj
+ 0001:0002a05d       __shift                    1002b05d f   LIBCMT:cvt.obj
+ 0001:0002a07a       __cftoe2                   1002b07a f   LIBCMT:cvt.obj
+ 0001:0002a19c       __cftof2                   1002b19c f   LIBCMT:cvt.obj
+ 0001:0002f8c0       _$$$00001                  100308c0 f   LIBCMT:strchr.obj
+ 0001:00029727       _write_char                1002a727 f   LIBCMT:woutput.obj
+ 0001:0002974c       _write_multi_char          1002a74c f   LIBCMT:woutput.obj
+ 0001:00029771       _write_string              1002a771 f   LIBCMT:woutput.obj
+ 0001:00028f04       _write_char                10029f04 f   LIBCMT:output.obj
+ 0001:00028f37       _write_multi_char          10029f37 f   LIBCMT:output.obj
+ 0001:00028f5b       _write_string              10029f5b f   LIBCMT:output.obj
+ 0001:00027364       _flsall                    10028364 f   LIBCMT:fflush.obj
+ 0001:0002b1d0       _parse_cmdline             1002c1d0 f   LIBCMT:stdargv.obj
+ 0001:0002a660       _doexit                    1002b660 f   LIBCMT:crt0dat.obj
+ 0001:0002e2d0       _siglookup                 1002f2d0 f   LIBCMT:winsig.obj
+ 0001:00028cee       ___updatetlocinfo_lk       10029cee f   LIBCMT:setlocal.obj
+ 0001:0002705d       __onexit_lk                1002805d f   LIBCMT:onexit.obj
+ 0001:0002c8e6       ___crtInitCritSecNoSpinCount@8 1002d8e6 f   LIBCMT:initcrit.obj
+ 0001:000262a0       _report_failure            100272a0 f   LIBCMT:seccook.obj
+ 0001:0002cc84       $$$00003                   1002dc84 f   LIBCMT:exsup3.obj
+ 0001:000260c8       $$$00001                   100270c8 f   LIBCMT:exsup.obj
+ 0001:000260e8       $$$00003                   100270e8 f   LIBCMT:exsup.obj
+ 0001:000260e8       __unwind_handler           100270e8 f   LIBCMT:exsup.obj
+ 0001:0002610a       $$$00005                   1002710a f   LIBCMT:exsup.obj
+ 0001:00026172       $$$00007                   10027172 f   LIBCMT:exsup.obj
+ 0001:000261b6       $$$00011                   100271b6 f   LIBCMT:exsup.obj
+ 0001:0002c3f8       _CPtoLCID                  1002d3f8 f   LIBCMT:mbctype.obj
+ 0001:0002c427       _setSBCS                   1002d427 f   LIBCMT:mbctype.obj
+ 0001:0002c450       _setSBUpLow                1002d450 f   LIBCMT:mbctype.obj
+ 0001:0002c5e2       __setmbcp_lk               1002d5e2 f   LIBCMT:mbctype.obj
+ 0001:00025e22       ?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z 10026e22 f   LIBCMT:trnsctrl.obj
+ 0001:00025e46       ?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z 10026e46 f   LIBCMT:trnsctrl.obj
+ 0001:000277f4       ?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z 100287f4 f   LIBCMT:frame.obj
+ 0001:00027843       ?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z 10028843 f   LIBCMT:frame.obj
+ 0001:00027974       ?AdjustPointer@@YAPAXPAXABUPMD@@@Z 10028974 f   LIBCMT:frame.obj
+ 0001:00027991       ?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z 10028991 f   LIBCMT:frame.obj
+ 0001:00027b38       ?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAXPBU_s_HandlerType@@PBU_s_CatchableType@@@Z 10028b38 f   LIBCMT:frame.obj
+ 0001:00027cb4       ?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z 10028cb4 f   LIBCMT:frame.obj
+ 0001:00027d1b       ?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z 10028d1b f   LIBCMT:frame.obj
+ 0001:00027ddb       ?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z 10028ddb f   LIBCMT:frame.obj
+ 0001:00028b45       _xtoa                      10029b45 f   LIBCMT:xtoa.obj

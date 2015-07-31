@@ -19,7 +19,7 @@
 #define HELP_DEFINE_H
 
 #include "StaticDialog.h"
-#include "PluginInterface.h"
+#include "Hex.h"
 #include "URLCtrl.h"
 
 #include "HexResource.h"

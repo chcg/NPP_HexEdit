@@ -92,14 +92,14 @@ static BYTE ANDMask[128] =
 };
 
 
-void URLCtrl::create(HWND itemHandle, char * link, COLORREF linkColor)
+void URLCtrl::create(HWND itemHandle, LPTSTR link, COLORREF linkColor)
 {
 	// turn on notify style
-    ::SetWindowLong(itemHandle, GWL_STYLE, ::GetWindowLong(itemHandle, GWL_STYLE) | SS_NOTIFY);
+    ::SetWindowLongPtr(itemHandle, GWL_STYLE, ::GetWindowLong(itemHandle, GWL_STYLE) | SS_NOTIFY);
 
 	// set the URL text (not the display text)
 	if (link)
-		strcpy(_URL, link);
+		_tcscpy(_URL, link);
 
 	// set the hyperlink colour
     _linkColor = linkColor;
@@ -108,10 +108,10 @@ void URLCtrl::create(HWND itemHandle, char * link, COLORREF linkColor)
 	_visitedColor = RGB(128,0,128);
 
 	// subclass the static control
-    _oldproc = (WNDPROC)::SetWindowLong(itemHandle, GWL_WNDPROC, (LONG)URLCtrlProc);
+    _oldproc = (WNDPROC)::SetWindowLongPtr(itemHandle, GWL_WNDPROC, (LONG)URLCtrlProc);
 
 	// associate the URL structure with the static control
-    ::SetWindowLong(itemHandle, GWL_USERDATA, (LONG)this);
+    ::SetWindowLongPtr(itemHandle, GWL_USERDATA, (LONG)this);
 }
 
 LRESULT URLCtrl::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
@@ -162,7 +162,7 @@ LRESULT URLCtrl::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		    HANDLE hOld = SelectObject(hdc, _hfUnderlined);
 
 		    // Draw the text!
-            char szWinText[_MAX_PATH];
+            TCHAR szWinText[_MAX_PATH];
             ::GetWindowText(hwnd, szWinText, sizeof szWinText);
             ::DrawText(hdc, szWinText, -1, &rect, dwDTStyle);
     		
@@ -206,13 +206,13 @@ LRESULT URLCtrl::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			    // Open a browser
 			    if(_URL[0])
 			    {
-                    ::ShellExecute(NULL, "open", _URL, NULL, NULL, SW_SHOWNORMAL);
+                    ::ShellExecute(NULL, _T("open"), _URL, NULL, NULL, SW_SHOWNORMAL);
 			    }
 			    else
 			    {
-                    char szWinText[_MAX_PATH];
+                    TCHAR szWinText[_MAX_PATH];
                     ::GetWindowText(hwnd, szWinText, sizeof szWinText);
-                    ::ShellExecute(NULL, "open", szWinText, NULL, NULL, SW_SHOWNORMAL);
+                    ::ShellExecute(NULL, _T("open"), szWinText, NULL, NULL, SW_SHOWNORMAL);
 			    }
 		    }
 

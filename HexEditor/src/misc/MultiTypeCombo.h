@@ -34,11 +34,11 @@ typedef enum
 	HEX_CODE_MAX
 } eCodingType;
 
-const char strCode[HEX_CODE_MAX][16] =
+const TCHAR strCode[HEX_CODE_MAX][16] =
 {
-	"Hexadecimal",
-	"ANSI String",
-	"Unicode String"
+	_T("Hexadecimal"),
+	_T("ANSI String"),
+	_T("Unicode String")
 };
 
 #if(WINVER <= 0x0400)
@@ -92,6 +92,7 @@ public :
 	void setText(tComboInfo info);
 	void getText(tComboInfo* info);
 	eCodingType setCodingType(eCodingType code);
+	void setDocCodePage(eNppCoding codepage);
 	void convertBaseCoding(void);
 
 private:
@@ -113,7 +114,7 @@ private :
 	vector<tEncComboInfo>	_comboItems;
 	eCodingType				_currDataType;
 
-	eNppCoding				_baseCoding;
+	eNppCoding				_docCodePage;
 
 	/* Subclassing combo boxes */
 	LRESULT runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);

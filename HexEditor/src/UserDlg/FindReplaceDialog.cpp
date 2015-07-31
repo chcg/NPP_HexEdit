@@ -33,17 +33,20 @@ extern char	hexMask[256][3];
 
 void FindReplaceDlg::doDialog(HWND hParent, BOOL findReplace)
 {
+	if (_hSCI == NULL)
+	{
+		/* create new scintilla handle */
+		_hSCI = (HWND)::SendMessage(_nppData._nppHandle, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+	}
+
     if (!isCreated())
 	{
         create(IDD_FINDREPLACE_DLG);
 		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 
-		/* create new scintilla handle */
-		_hSCI = (HWND)::SendMessage(_nppData._nppHandle, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
-
-			ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
-			if (EnableDlgTheme != NULL)
-				EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
+		ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
+		if (EnableDlgTheme != NULL)
+			EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
 	}
 
 	/* set kind of dialog */
@@ -81,6 +84,10 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 
 			::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
 			::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), ((posBeg == posEnd)?FALSE:TRUE));
+
+			/* change language */
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("FindReplace"));
+
             break;
         }
 		case WM_COMMAND : 
@@ -89,7 +96,7 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 			{
 				case IDOK :
                 {
-					onFind();
+					onFind(FALSE);
 					return TRUE;
                 }
 				case IDC_REPLACE:
@@ -104,9 +111,10 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
                 }
 				case IDC_REPLACEALL :
                 {
-					ScintillaMsg(SCI_BEGINUNDOACTION);
+					HWND	hSci = getCurrentHScintilla();
+					ScintillaMsg(hSci, SCI_BEGINUNDOACTION);
 					processAll(REPLACE_ALL);
-					ScintillaMsg(SCI_ENDUNDOACTION);
+					ScintillaMsg(hSci, SCI_ENDUNDOACTION);
 					return TRUE;
                 }
 				case IDC_COMBO_DATATYPE:
@@ -158,7 +166,7 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 
 			if ((nmhdr.idFrom == IDC_SWITCH) && (nmhdr.code == TCN_SELCHANGE))
 			{
-        _findReplace = TabCtrl_GetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH));
+				_findReplace = TabCtrl_GetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH));
 				updateDialog();
 			}
 			break;
@@ -179,21 +187,26 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 void FindReplaceDlg::initDialog(void)
 {
 	TCITEM		item;
+	TCHAR		txtTab[32];
 
 	item.mask		= TCIF_TEXT;
-	item.pszText	= "Find";
-	item.cchTextMax	= (int)strlen(item.pszText);
+	if (NLGetText(_hInst, _hParent, _T("Find"), txtTab, sizeof(txtTab) / sizeof(TCHAR)) == FALSE)
+		_tcscpy(txtTab, _T("Find"));
+	item.pszText	= txtTab;
+	item.cchTextMax	= (int)_tcslen(txtTab);
 	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 0, (LPARAM)&item);
-	item.pszText	= "Replace";
-	item.cchTextMax	= (int)strlen(item.pszText);
+	if (NLGetText(_hInst, _hParent, _T("Replace"), txtTab, sizeof(txtTab) / sizeof(TCHAR)) == FALSE)
+		_tcscpy(txtTab, _T("Replace"));
+	item.pszText	= txtTab;
+	item.cchTextMax	= (int)_tcslen(txtTab);
 	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 1, (LPARAM)&item);
 
 	/* init comboboxes */
 	_pFindCombo			= new MultiTypeCombo;
 	_pReplaceCombo		= new MultiTypeCombo;
 
-	_pFindCombo->init(::GetDlgItem(_hSelf, IDC_COMBO_FIND));
-	_pReplaceCombo->init(::GetDlgItem(_hSelf, IDC_COMBO_REPLACE));
+	_pFindCombo->init(_hParent, ::GetDlgItem(_hSelf, IDC_COMBO_FIND));
+	_pReplaceCombo->init(_hParent, ::GetDlgItem(_hSelf, IDC_COMBO_REPLACE));
 
 	/* set default coding */
 	_currDataType = HEX_CODE_HEX;
@@ -216,7 +229,7 @@ void FindReplaceDlg::initDialog(void)
 	::SendDlgItemMessage(_hSelf, IDC_CHECK_WRAP, BM_SETCHECK, BST_CHECKED, 0);
 
 	/* is transparent mode available? */
-	HMODULE hUser32 = ::GetModuleHandle("User32");
+	HMODULE hUser32 = ::GetModuleHandle(_T("User32"));
 
 	if (hUser32)
 	{
@@ -237,9 +250,13 @@ void FindReplaceDlg::initDialog(void)
 
 void FindReplaceDlg::updateDialog(void)
 {
+	TCHAR	txtCaption[32];
+
 	if (_findReplace == TRUE)
 	{
-		::SetWindowText(_hSelf, "Replace");
+		if (NLGetText(_hInst, _hParent, _T("Replace"), txtCaption, sizeof(txtCaption) / sizeof(TCHAR)) == FALSE)
+			_tcscpy(txtCaption, _T("Replace"));
+		::SetWindowText(_hSelf, txtCaption);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_COUNT), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_REPLACE), SW_SHOW);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_REPLACE), SW_SHOW);
@@ -250,245 +267,358 @@ void FindReplaceDlg::updateDialog(void)
 	}
 	else
 	{
-		::SetWindowText(_hSelf, "Find");
+		if (NLGetText(_hInst, _hParent, _T("Find"), txtCaption, sizeof(txtCaption) / sizeof(TCHAR)) == FALSE)
+			_tcscpy(txtCaption, _T("Find"));
+		::SetWindowText(_hSelf, txtCaption);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_COUNT), SW_SHOW);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_REPLACE), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_REPLACE), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_COMBO_REPLACE), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_REPLACEALL), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), SW_HIDE);
-		::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_REPALL), SW_HIDE);	
+		::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_REPALL), SW_HIDE);
 	}
-  TabCtrl_SetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH), _findReplace);
+	TabCtrl_SetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH), _findReplace);
 
-	/* get selection and set find text */
-	UINT		posBeg	= 0;
-	UINT		posEnd	= 0;
-	tComboInfo	info	= {0};
+	/* set codepages of combo boxes */
+	eNppCoding codepage = HEX_CODE_NPP_ASCI;
+	::SendMessage(_hParentHandle, HEXM_GETDOCCP, 0, (LPARAM)&codepage);
+	_pFindCombo->setDocCodePage(codepage);
+	_pReplaceCombo->setDocCodePage(codepage);
 
 	/* get selected length */
-	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
+	tComboInfo	info	= {0};
+
+	getSelText(&info);
+	if (info.length != 0) {
+		_pFindCombo->setText(info);
+	}
 
 	/* enable box setting for replace all */
-	::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), ((posBeg == posEnd)?FALSE:TRUE));
-
-	info.length = abs(posEnd-posBeg);
-
-	if (info.length != 0)
-	{
-		char	*text	= (char*)new char[info.length+1];
-
-		/* convert and select and get the text */
-		LittleEndianChange(_hSCI, getCurrentHScintilla());
-		ScintillaMsg(_hSCI, SCI_SETSELECTIONSTART, posBeg, 0);
-		ScintillaMsg(_hSCI, SCI_SETSELECTIONEND, posEnd, 0);
-		ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION, 0, 0);
-		ScintillaMsg(_hSCI, SCI_GETSELTEXT, 0, (LPARAM)text);
-
-		/* encode the text in dependency of selected data type */
-		memcpy(info.text, text, info.length);
-		_pFindCombo->setText(info);
-
-		delete [] text;
-	}
+	::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), (info.length == 0)?FALSE:TRUE);
 }
 
 
-void FindReplaceDlg::onFind(void)
+void FindReplaceDlg::onFind(BOOL isVolatile)
 {
-	UINT		length  = ScintillaMsg(SCI_GETLENGTH);
-	UINT		posBeg  = 0;
-	UINT		posEnd  = 0;
+	/* get current scintilla */
+	HWND		hSciSrc		= getCurrentHScintilla();
+	INT			lenSrc		= ScintillaMsg(hSciSrc, SCI_GETLENGTH);
+	INT			offset		= 0;
+	INT			length		= 0;
+	INT			posBeg		= 0;
+	INT			posEnd		= 0;
+	INT			wrapPos		= 0;
+	BOOL		loopEnd		= FALSE;
+	BOOL		wrapDone	= FALSE;
+	tComboInfo	info		= {0};
 
-	_pFindCombo->getText(&_find);
-
-	/* copy data into scintilla handle (encoded if necessary) */
-	LittleEndianChange(_hSCI, getCurrentHScintilla());
-
-	/* set start and end position */
-	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
-
-	if (_whichDirection == DIR_UP)
+	if (_hSCI == NULL)
 	{
-		ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg);
-		ScintillaMsg(_hSCI, SCI_SETTARGETEND, 0);
+		/* create new scintilla handle */
+		_hSCI = (HWND)::SendMessage(_nppData._nppHandle, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+	}
+
+	/* in dependency of find type get search information from combo or directly from source */
+	if (isVolatile == FALSE)
+	{
+		_pFindCombo->getText(&_find);
+		info = _find;
+		if (info.length == 0)
+			return;
 	}
 	else
 	{
-		ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posEnd);
-		ScintillaMsg(_hSCI, SCI_SETTARGETEND, length);
+		getSelText(&info);
+		if (info.length == 0) {
+			if (NLMessageBox(_hInst, _hParent, _T("MsgBox SelectSomething"), MB_OK) == FALSE)
+				::MessageBox(_hParent, _T("Select something in the text!"), _T("Hex-Editor"), MB_OK);
+			return;
+		}
 	}
 
+	/* set match case */
 	ScintillaMsg(_hSCI, SCI_SETSEARCHFLAGS, _isMatchCase ? SCFIND_MATCHCASE : 0, 0);
 
-	/* find string */
-	UINT posFind = ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, _find.length, (LPARAM)_find.text);
-	if (posFind != -1)
-	{
-		/* found */
-		::SendMessage(_hParentHandle, HEXM_SETSEL, posFind, posFind + _find.length);
-		::SendMessage(_hParentHandle, HEXM_ENSURE_VISIBLE, 
-					  posFind + (HEX_LINE_FIRST == getDisplayPos()?0:_find.length), getDisplayPos());
-		_pFindCombo->addText(_find);
+	/* get selection and correct anchor and cursor position */
+	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
+	if (posEnd < posBeg) {
+		UINT posTmp = posBeg;
+		posBeg = posEnd;
+		posEnd = posTmp;
 	}
-	else if (_isWrap == FALSE)
-	{
-		/* not found and wrapping mode is off */
-		::MessageBox(_hSelf, "Can't find",(_findReplace == TRUE)?"Replace":"Find", MB_OK);
-	}
-	else
-	{
-		/* wrapping mode on -> find it again */
-		if (_whichDirection == DIR_UP)
+	wrapPos = posBeg;
+
+	do {
+		BOOL	isConverted = FALSE;
+
+		/* copy data into scintilla handle (encoded if necessary) and select string */
+
+		length = FIND_BLOCK;
+
+		if (_whichDirection == DIR_DOWN)
 		{
-			ScintillaMsg(_hSCI, SCI_SETTARGETSTART, length);
+			offset = posBeg;
+			if (LittleEndianChange(_hSCI, hSciSrc, &offset, &length) == TRUE)
+			{
+				ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posEnd - offset);
+				ScintillaMsg(_hSCI, SCI_SETTARGETEND, length);
+				isConverted = TRUE;
+			}
 		}
 		else
 		{
-			ScintillaMsg(_hSCI, SCI_SETTARGETSTART, 0);
+			offset = posEnd - FIND_BLOCK;
+			if (LittleEndianChange(_hSCI, hSciSrc, &offset, &length) == TRUE)
+			{
+				ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg - offset);
+				ScintillaMsg(_hSCI, SCI_SETTARGETEND, posBeg - length);
+				isConverted = TRUE;
+			}
 		}
 
-		posFind = ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, _find.length, (LPARAM)_find.text);
-		if (posFind != -1)
+		if (isConverted == TRUE)
 		{
-			::SendMessage(_hParentHandle, HEXM_SETSEL, posFind, posFind + _find.length);
-			::SendMessage(_hParentHandle, HEXM_ENSURE_VISIBLE, 
-						  posFind + (HEX_LINE_FIRST == getDisplayPos()?0:_find.length), getDisplayPos());
-			_pFindCombo->addText(_find);
+			/* find string */
+			UINT posFind = ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, info.length, (LPARAM)info.text);
+			if (posFind != -1)
+			{
+				/* found */
+				posFind += offset;
+				::SendMessage(_hParentHandle, HEXM_SETSEL, posFind, posFind + info.length);
+				if (isVolatile == FALSE) {
+					_pFindCombo->addText(info);
+				}
+				loopEnd = TRUE;
+			}
+			else
+			{
+				/* calculate new start find position */
+				if (_whichDirection == DIR_DOWN) {
+					posBeg = offset + length;
+				} else {
+					posBeg = offset;
+				}
+
+				/* test if out of bounding */
+				if ((posBeg >= lenSrc) || (posBeg <= 0))
+				{
+					if (_isWrap == FALSE)
+					{
+						/* not found and wrapping mode is off */
+						::MessageBox(_hSelf, _T("Can't find"),(_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
+						loopEnd = TRUE;
+					}
+					else
+					{
+						/* wrap around */
+						if (_whichDirection == DIR_DOWN) {
+							posBeg = 0;
+						} else {
+							posBeg = lenSrc;
+						}
+					}
+					/* notify wrap is done */
+					wrapDone = TRUE;
+				}
+				else
+				{
+					/* calculate new start find position */
+					if (_whichDirection == DIR_DOWN) {
+						posBeg -= (info.length + 1);
+					} else {
+						posBeg += (info.length - 1);
+					}
+				}
+				posEnd = posBeg;
+
+				/* if wrap was done and posBeg is jump over the wrapPos (start pos on function call)... */
+				if ((wrapDone == TRUE) &&
+					(((_whichDirection == DIR_DOWN) && (posBeg > wrapPos)) ||
+					 ((_whichDirection == DIR_UP  ) && (posBeg < wrapPos))))
+				{
+					/* ... leave the function */
+					::MessageBox(_hSelf, _T("Can't find"),(_findReplace == TRUE)?_T("Replace"):_T("Find"), MB_OK);
+					loopEnd = TRUE;
+				}
+			}
+			CleanScintillaBuf(_hSCI);
 		}
 		else
 		{
-			::MessageBox(_hSelf, "Can't find",(_findReplace == TRUE)?"Replace":"Find", MB_OK);
+			loopEnd = TRUE;
 		}
-	}
+	} while (loopEnd == FALSE);
 }
 
 
 void FindReplaceDlg::onReplace(void)
 {
-	UINT	posBeg  = 0;
-	UINT	posEnd  = 0;
+	HWND	hSciSrc	= getCurrentHScintilla();
+	INT		lenSrc  = ScintillaMsg(hSciSrc, SCI_GETLENGTH);
+	INT		lenStr	= 0;
+	INT		offset	= 0;
+	INT		length  = 0;
+	INT		posBeg  = 0;
+	INT		posEnd  = 0;
 	eError	isRep	= E_OK;
 
 	_pFindCombo->getText(&_find);
 	_pReplaceCombo->getText(&_replace);
 
-	/* copy data into scintilla handle (encoded if necessary) */
-	LittleEndianChange(_hSCI, getCurrentHScintilla());
-
-	/* get selection */
+	/* get selection and correct anchor and cursor position */
 	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
-	ScintillaMsg(_hSCI, SCI_SETSELECTIONSTART, posBeg, 0);
-	ScintillaMsg(_hSCI, SCI_SETSELECTIONEND, posEnd, 0);
+	if (posEnd < posBeg) {
+		UINT posTmp = posBeg;
+		posBeg = posEnd;
+		posEnd = posTmp;
+	}
 
-	UINT	length  = abs(posEnd-posBeg);
-	char*	text	= (char*)new char[length+1];
-
-	ScintillaMsg(_hSCI, SCI_GETSELTEXT, 0, (LPARAM)text);
-
-	if (memcmp(text, _find.text, length) == 0)
+	/* copy data into scintilla handle (encoded if necessary) and select string */
+	offset = posBeg;
+	length = posEnd - posBeg;
+	lenStr = length;
+	if (LittleEndianChange(_hSCI, hSciSrc, &offset, &length) == TRUE)
 	{
-		ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION);
-		ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
-		isRep = replaceLittleToBig(_hSCI, posBeg, length, _replace.length);
-		if (isRep == E_OK)
+		LPSTR	text	= (LPSTR)new CHAR[lenStr+1];
+
+		if (text != NULL)
 		{
-			::SendMessage(_hParentHandle, HEXM_SETPOS, 0, posBeg + _replace.length);
-			_pFindCombo->addText(_find);
-			_pReplaceCombo->addText(_replace);
+			/* get selection and compare if it is equal to expected text */
+			ScintillaMsg(_hSCI, SCI_SETSELECTIONSTART, posBeg - offset, 0);
+			ScintillaMsg(_hSCI, SCI_SETSELECTIONEND, posEnd - offset, 0);
+    		ScintillaMsg(_hSCI, SCI_GETSELTEXT, 0, (LPARAM)text);
+
+			/* make difference between match case modes */
+    		if (((_isMatchCase == TRUE) && (memcmp(text, _find.text, lenStr) == 0)) ||
+				((_isMatchCase == FALSE) && (stricmp(text, _find.text) == 0)))
+    		{
+    			ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION);
+    			ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
+    			isRep = replaceLittleToBig(hSciSrc, _hSCI, posBeg - offset, posBeg, lenStr, _replace.length);
+    			if (isRep == E_OK)
+    			{
+    				::SendMessage(_hParentHandle, HEXM_SETPOS, 0, posBeg + _replace.length);
+    				_pFindCombo->addText(_find);
+    				_pReplaceCombo->addText(_replace);
+    			}
+    		}
+
+    		if (isRep == E_OK) {
+    			onFind(FALSE);
+    		} else {
+    			LITTLE_REPLEACE_ERROR;
+    		}
+
+    		delete [] text;
 		}
+   		CleanScintillaBuf(_hSCI);
 	}
-
-	if (isRep == E_OK)
-	{
-		onFind();
-	}
-	else
-	{
-		LITTLE_REPLEACE_ERROR;
-	}
-
-	delete [] text;
 }
+
 
 
 void FindReplaceDlg::processAll(UINT process)
 {
-	UINT	cnt			= 0;
-	UINT	cntError	= 0;
-	UINT	posBeg		= 0;
-	UINT	posEnd		= ScintillaMsg(SCI_GETLENGTH);
+	HWND	hSciSrc		= getCurrentHScintilla();
+	INT		lenSrc		= ScintillaMsg(hSciSrc, SCI_GETLENGTH);
+	INT		cnt			= 0;
+	INT		cntError	= 0;
+	INT		offset		= 0;
+	INT		length		= 0;
+	INT		posBeg		= 0;
+	INT		posEnd		= 0;
+	BOOL	loopEnd		= FALSE;
 	eError	isRep		= E_OK;
-
-	/* copy data into scintilla handle (encoded if necessary) */
-	LittleEndianChange(_hSCI, getCurrentHScintilla());
-
-	if (_isInSel == FALSE)
-	{
-		ScintillaMsg(_hSCI, SCI_SETTARGETSTART, 0);
-		ScintillaMsg(_hSCI, SCI_SETTARGETEND, posEnd);
-	}
-	else
-	{
-		/* set start and end position */
-		::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
-
-		ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg);
-		ScintillaMsg(_hSCI, SCI_SETTARGETEND, posEnd);
-	}
 
 	/* get strings */
 	_pFindCombo->getText(&_find);
 	_pReplaceCombo->getText(&_replace);
 
-	/* settings */
-	ScintillaMsg(_hSCI, SCI_SETSEARCHFLAGS, _isMatchCase ? SCFIND_MATCHCASE : 0, 0);
-
-	/* search */
-	while (ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, _find.length, (LPARAM)&_find.text) != -1)
+	if (_find.length != 0)
 	{
-		switch (process)
+		/* selection dependent start position */
+		if ((_isInSel == TRUE) && (process == REPLACE_ALL))
 		{
-			case COUNT:
-				cnt++;
-				break;
-			
-			case REPLACE_ALL:
-				ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
-				isRep = replaceLittleToBig(	_hSCI, 
-											ScintillaMsg(_hSCI, SCI_GETTARGETSTART, 0, 0), 
-											_find.length, 
-											_replace.length );
-				if (isRep == E_STRIDE)
-				{
-					LITTLE_REPLEACE_ERROR;
-					return;
-				}
-				else if (isRep == E_OK)
-				{
-					cnt++;
-				}
-				else if (isRep == E_START)
-				{
-					cntError++;
-				}
-				break;
-
-			default:
-				break;
+			::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&lenSrc);
 		}
-		ScintillaMsg(_hSCI, SCI_SETTARGETSTART, ScintillaMsg(_hSCI, SCI_GETTARGETEND), 0);
-		ScintillaMsg(_hSCI, SCI_SETTARGETEND, posEnd, 0);
+
+		/* settings */
+		ScintillaMsg(_hSCI, SCI_SETSEARCHFLAGS, _isMatchCase ? SCFIND_MATCHCASE : 0, 0);
+
+		/* keep sure that end and begin at the same position */
+		posEnd = posBeg;
+
+		do {
+			/* copy data into scintilla handle (encoded if necessary) and select string */
+			offset = posBeg;
+			length = FIND_BLOCK;
+			if (LittleEndianChange(_hSCI, hSciSrc, &offset, &length) == TRUE)
+			{
+				ScintillaMsg(_hSCI, SCI_SETTARGETSTART, posBeg - offset);
+				ScintillaMsg(_hSCI, SCI_SETTARGETEND, length);
+
+				/* search */
+				while (ScintillaMsg(_hSCI, SCI_SEARCHINTARGET, _find.length, (LPARAM)&_find.text) != -1)
+				{
+					switch (process)
+					{
+						case COUNT:
+							cnt++;
+							break;
+						
+						case REPLACE_ALL:
+							ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
+							isRep = replaceLittleToBig(	hSciSrc, _hSCI, 
+														ScintillaMsg(_hSCI, SCI_GETTARGETSTART, 0, 0),
+														ScintillaMsg(_hSCI, SCI_GETTARGETSTART, 0, 0) + offset,
+														_find.length, 
+														_replace.length );
+							if (isRep == E_STRIDE)
+							{
+								LITTLE_REPLEACE_ERROR;
+								CleanScintillaBuf(_hSCI);
+								return;
+							}
+							else if (isRep == E_OK)
+							{
+								cnt++;
+							}
+							else if (isRep == E_START)
+							{
+								cntError++;
+							}
+
+							/* calc offset */
+							lenSrc += (_replace.length - _find.length);
+							break;
+
+						default:
+							break;
+					}
+					ScintillaMsg(_hSCI, SCI_SETTARGETSTART, ScintillaMsg(_hSCI, SCI_GETTARGETEND));
+					ScintillaMsg(_hSCI, SCI_SETTARGETEND, length);
+				}
+
+				/* calculate offset or end loop */
+				posBeg = offset + length;
+				if (posBeg < lenSrc) {
+					posBeg -= (_find.length - 1);
+				} else {
+					loopEnd = TRUE;
+				}
+			}
+		} while (loopEnd == FALSE);
 	}
 
 	/* display result */
 	if (cnt == 0)
 	{
-		::MessageBox(_hSelf, "Can't find", "Find", MB_OK);
+		::MessageBox(_hSelf, _T("Can't find"), _T("Find"), MB_OK);
 	}
 	else
 	{
-		char	text[128];
+		CHAR	text[128];
 
 		itoa(cnt, text, 10);
 		switch (process)
@@ -508,7 +638,7 @@ void FindReplaceDlg::processAll(UINT process)
 				strcat(text, " tokens are replaced.\n");
 				if (cntError != 0)
 				{
-					char	temp[16];
+					CHAR	temp[16];
 					strcat(text, itoa(cntError, temp, 10));
 					strcat(text, " tokens are skipped, because of alignment error.\n");
 				}
@@ -519,31 +649,43 @@ void FindReplaceDlg::processAll(UINT process)
 			default:
 				break;
 		}
+#ifdef UNICODE
+		TCHAR	wText[128];
+		::MultiByteToWideChar(CP_ACP, 0, text, -1, wText, 128);
+		::MessageBox(_hSelf, wText, _T("Find"), MB_OK);
+#else
 		::MessageBox(_hSelf, text, "Find", MB_OK);
+#endif
 		_pFindCombo->addText(_find);
 	}
 }
 
 
-void FindReplaceDlg::findNext(HWND hParent)
+void FindReplaceDlg::findNext(HWND hParent, BOOL isVolatile)
 {
-	BOOL storeDir = _whichDirection;
+	if (isCreated() || (isVolatile == TRUE))
+	{
+		BOOL storeDir = _whichDirection;
 
-	_hParentHandle	= hParent;
-	_whichDirection = DIR_DOWN;
-	onFind();
-	_whichDirection = storeDir;
+		_hParentHandle	= hParent;
+		_whichDirection = DIR_DOWN;
+		onFind(isVolatile);
+		_whichDirection = storeDir;
+	}
 }
 
 
-void FindReplaceDlg::findPrev(HWND hParent)
+void FindReplaceDlg::findPrev(HWND hParent, BOOL isVolatile)
 {
-	BOOL storeDir = _whichDirection;
+	if (isCreated() || (isVolatile == TRUE))
+	{
+		BOOL storeDir = _whichDirection;
 
-	_hParentHandle	= hParent;
-	_whichDirection = DIR_UP;
-	onFind();
-	_whichDirection = storeDir;
+		_hParentHandle	= hParent;
+		_whichDirection = DIR_UP;
+		onFind(isVolatile);
+		_whichDirection = storeDir;
+	}
 }
 
 
@@ -565,8 +707,45 @@ void FindReplaceDlg::changeCoding(void)
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_MATCHCASE), SW_SHOW);
 		_isMatchCase = isChecked(IDC_CHECK_MATCHCASE);
 	}
-
 }
 
+
+void FindReplaceDlg::getSelText(tComboInfo* info)
+{
+	if (info == NULL)
+		return;
+
+	UINT	posBeg	= 0;
+	UINT	posEnd	= 0;
+
+	/* get selection and set find text */
+	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
+
+	INT	offset	= (INT)(posBeg < posEnd ? posBeg : posEnd);
+	INT	length	= (abs(posEnd-posBeg) > COMBO_STR_MAX ? COMBO_STR_MAX : abs(posEnd-posBeg));
+	info->length = length;
+
+	if (info->length != 0)
+	{
+		CHAR	*text	= (CHAR*)new CHAR[info->length+1];
+		if (text != NULL)
+		{
+			/* convert and select and get the text */
+			if (LittleEndianChange(_hSCI, getCurrentHScintilla(), &offset, &length) == TRUE)
+			{
+				ScintillaMsg(_hSCI, SCI_SETSELECTIONSTART, posBeg - offset, 0);
+				ScintillaMsg(_hSCI, SCI_SETSELECTIONEND, posEnd - offset, 0);
+				ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION, 0, 0);
+				ScintillaMsg(_hSCI, SCI_GETSELTEXT, 0, (LPARAM)text);
+
+				/* encode the text in dependency of selected data type */
+				memcpy(info->text, text, info->length);
+
+				CleanScintillaBuf(_hSCI);
+			}
+			delete [] text;
+		}
+	}
+}
 
 

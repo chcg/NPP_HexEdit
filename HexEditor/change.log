@@ -2,6 +2,21 @@
 Change-log for HexEditor.dll
 
 ------------------------------------------------------------------------------------
+08/11/15  v0.9.1 :
+------------------------------------------------------------------------------------
+    New: UNICODE support for Notepad++ 5.1
+    Fix: Changed convert behaviour for Big-Endian/Little Endian solved
+         Win32 Exception when using Find [NPP-P-B-2016651]
+    Fix: Insufficent memory detection for dynamic memory creation
+    Fix: Buffer overrun removed layout is set to 64-Bit/Binary [NPP-P-B-2017962]
+    New: In Hex-Editor the menu of Notepad++ will be restricted
+    New: Automatic Hex-Edit-Mode: If the plugin detects in file within the first 
+         1MB a user defined count of zeros - specified in percent - the Hex-Editor 
+         will be lunched automatically.
+    Restriction: Simple Compare only possible with file sizes less 40 MB.
+    Restriction: Only fonts with fix pitch size supported
+
+------------------------------------------------------------------------------------
 08/07/01  v0.9.0 :
 ------------------------------------------------------------------------------------
     Fix: When using the "Replace All" while the replace-string is greater than the 
