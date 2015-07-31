@@ -48,9 +48,6 @@ const TCHAR extensions[]	= _T("Extensions");
 
 const TCHAR HEXEDIT_INI[]	= _T("\\HexEditor.ini");
 const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
-const TCHAR NPP[]			= _T("\\Notepad++");
-const TCHAR NPP_LOCAL_XML[]	= _T("\\doLocalConf.xml");
-
 
 
 
@@ -78,100 +75,84 @@ const TCHAR NPP_LOCAL_XML[]	= _T("\\doLocalConf.xml");
 
 
 #define NPPMSG   (WM_USER + 1000)
-	#define NPPM_GETCURRENTSCINTILLA		(NPPMSG + 4)
-	#define NPPM_GETCURRENTLANGTYPE			(NPPMSG + 5)
-	#define NPPM_SETCURRENTLANGTYPE			(NPPMSG + 6)
+	#define NPPM_GETCURRENTSCINTILLA			(NPPMSG + 4)
+	#define NPPM_GETCURRENTLANGTYPE				(NPPMSG + 5)
+	#define NPPM_SETCURRENTLANGTYPE				(NPPMSG + 6)
+	#define NPPM_NBOPENFILES					(NPPMSG + 7)
+		#define ALL_OPEN_FILES					0
+		#define PRIMARY_VIEW					1
+		#define SECOND_VIEW						2
 
-	#define NPPM_NBOPENFILES				(NPPMSG + 7)
-		#define ALL_OPEN_FILES				0
-		#define PRIMARY_VIEW				1
-		#define SECOND_VIEW					2
+	#define NPPM_GETOPENFILENAMES				(NPPMSG + 8)
+	#define NPPM_CANCEL_SCINTILLAKEY			(NPPMSG + 9)
+	#define NPPM_BIND_SCINTILLAKEY				(NPPMSG + 10)
+	#define NPPM_SCINTILLAKEY_MODIFIED			(NPPMSG + 11)
+	#define NPPM_MODELESSDIALOG					(NPPMSG + 12)
+		#define MODELESSDIALOGADD				0
+		#define MODELESSDIALOGREMOVE			1
 
-	#define NPPM_GETOPENFILENAMES			(NPPMSG + 8)
-	#define NPPM_CANCEL_SCINTILLAKEY		(NPPMSG + 9)
-	#define NPPM_BIND_SCINTILLAKEY			(NPPMSG + 10)
-	#define NPPM_SCINTILLAKEY_MODIFIED		(NPPMSG + 11)
+	#define NPPM_NBSESSIONFILES					(NPPMSG + 13)
+	#define NPPM_GETSESSIONFILES				(NPPMSG + 14)
+	#define NPPM_SAVESESSION					(NPPMSG + 15)
+	#define NPPM_SAVECURRENTSESSION				(NPPMSG + 16)
 
-	#define NPPM_MODELESSDIALOG				(NPPMSG + 12)
-		#define MODELESSDIALOGADD			0
-		#define MODELESSDIALOGREMOVE		1
+	struct sessionInfo {
+		char* filePathName;
+		int sessionFile;
+		char** sessionFileArray;
+	};
 
-	#define NPPM_NBSESSIONFILES				(NPPMSG + 13)
-	#define NPPM_GETSESSIONFILES			(NPPMSG + 14)
-	#define NPPM_SAVESESSION				(NPPMSG + 15)
-	#define NPPM_SAVECURRENTSESSION			(NPPMSG + 16)
+	#define NPPM_GETOPENFILENAMES_PRIMARY		(NPPMSG + 17)
+	#define NPPM_GETOPENFILENAMES_SECOND		(NPPMSG + 18)
+	#define NPPM_GETPARENTOF					(NPPMSG + 19)
+	#define NPPM_CREATESCINTILLAHANDLE			(NPPMSG + 20)
+	#define NPPM_DESTROYSCINTILLAHANDLE			(NPPMSG + 21)
+	#define NPPM_GETNBUSERLANG					(NPPMSG + 22)
+	#define NPPM_GETCURRENTDOCINDEX				(NPPMSG + 23)
+	#define NPPM_SETSTATUSBAR					(NPPMSG + 24)
+		#define STATUSBAR_DOC_TYPE				0
+		#define STATUSBAR_DOC_SIZE				1
+		#define STATUSBAR_CUR_POS				2
+		#define STATUSBAR_EOF_FORMAT			3
+		#define STATUSBAR_UNICODE_TYPE			4
+		#define STATUSBAR_TYPING_MODE			5
 
-		struct sessionInfo {
-			char* sessionFilePathName;
-			int nbFile;
-			char** files;
-		};
+	#define NPPM_ENCODE_SCI						(NPPMSG + 26)
+	#define NPPM_DECODE_SCI						(NPPMSG + 27)
 
-	#define NPPM_GETOPENFILENAMES_PRIMARY	(NPPMSG + 17)
-	#define NPPM_GETOPENFILENAMES_SECOND	(NPPMSG + 18)
-	#define NPPM_GETPARENTOF				(NPPMSG + 19)
-	#define NPPM_CREATESCINTILLAHANDLE		(NPPMSG + 20)
-	#define NPPM_DESTROYSCINTILLAHANDLE		(NPPMSG + 21)
-	#define NPPM_GETNBUSERLANG				(NPPMSG + 22)
+	#define NPPM_ACTIVATE_DOC					(NPPMSG + 28)
+	// NPPM_ACTIVATE_DOC(int index2Activate, int view)
 
-	#define NPPM_GETCURRENTDOCINDEX			(NPPMSG + 23)
-		#define MAIN_VIEW 0
-		#define SUB_VIEW 1
+	#define NPPM_LAUNCH_FINDINFILESDLG			(NPPMSG + 29)
+	// NPPM_LAUNCH_FINDINFILESDLG(char * dir2Search, char * filtre)
 
-	#define NPPM_SETSTATUSBAR				(NPPMSG + 24)
-		#define STATUSBAR_DOC_TYPE 0
-		#define STATUSBAR_DOC_SIZE 1
-		#define STATUSBAR_CUR_POS 2
-		#define STATUSBAR_EOF_FORMAT 3
-		#define STATUSBAR_UNICODE_TYPE 4
-		#define STATUSBAR_TYPING_MODE 5
-
-	#define NPPM_GETMENUHANDLE				(NPPMSG + 25)
-		#define NPPPLUGINMENU 0
-
-	#define NPPM_ENCODE_SCI					(NPPMSG + 26)
-	//ascii file to unicode
-	//int NPPM_ENCODE_SCI(MAIN_VIEW/SUB_VIEW, 0)
-	//return new unicodeMode
-
-	#define NPPM_DECODE_SCI					(NPPMSG + 27)
-	//unicode file to ascii
-	//int NPPM_DECODE_SCI(MAIN_VIEW/SUB_VIEW, 0)
-	//return old unicodeMode
-
-	#define NPPM_ACTIVATE_DOC				(NPPMSG + 28)
-	//void NPPM_ACTIVATE_DOC(int index2Activate, int view)
-
-	#define NPPM_LAUNCH_FINDINFILESDLG		(NPPMSG + 29)
-	//void NPPM_LAUNCH_FINDINFILESDLG(char * dir2Search, char * filtre)
-
-	#define NPPM_DMM_SHOW					(NPPMSG + 30)
-	#define NPPM_DMM_HIDE					(NPPMSG + 31)
-	#define NPPM_DMM_UPDATEDISPINFO			(NPPMSG + 32)
+	#define NPPM_DMM_SHOW						(NPPMSG + 30)
+	#define NPPM_DMM_HIDE						(NPPMSG + 31)
+	#define NPPM_DMM_UPDATEDISPINFO				(NPPMSG + 32)
 	//void NPPM_DMM_xxx(0, tTbData->hClient)
 
-	#define NPPM_DMM_REGASDCKDLG			(NPPMSG + 33)
+	#define NPPM_DMM_REGASDCKDLG				(NPPMSG + 33)
 	//void NPPM_DMM_REGASDCKDLG(0, &tTbData)
 
-	#define NPPM_LOADSESSION				(NPPMSG + 34)
+	#define NPPM_LOADSESSION					(NPPMSG + 34)
 	//void NPPM_LOADSESSION(0, const char* file name)
 
-	#define NPPM_DMM_VIEWOTHERTAB			(NPPMSG + 35)
+	#define NPPM_DMM_VIEWOTHERTAB				(NPPMSG + 35)
 	//void NPPM_DMM_VIEWOTHERTAB(0, tTbData->hClient)
 
-	#define NPPM_RELOADFILE					(NPPMSG + 36)
+	#define NPPM_RELOADFILE						(NPPMSG + 36)
 	//BOOL NPPM_RELOADFILE(BOOL withAlert, char *filePathName2Reload)
 
-	#define NPPM_SWITCHTOFILE				(NPPMSG + 37)
+	#define NPPM_SWITCHTOFILE					(NPPMSG + 37)
 	//BOOL NPPM_SWITCHTOFILE(0, char *filePathName2switch)
 
-	#define NPPM_SAVECURRENTFILE			(NPPMSG + 38)
-	//BOOL NPPM_SWITCHCURRENTFILE(0, 0)
+	#define NPPM_SAVECURRENTFILE				(NPPMSG + 38)
+	//BOOL WM_SWITCHCURRENTFILE(0, 0)
 
-	#define NPPM_SAVEALLFILES				(NPPMSG + 39)
+	#define NPPM_SAVEALLFILES					(NPPMSG + 39)
 	//BOOL NPPM_SAVEALLFILES(0, 0)
 
-	#define NPPM_PIMENU_CHECK				(NPPMSG + 40)
+	#define NPPM_PIMENU_CHECK					(NPPMSG + 40)
 	//void NPPM_PIMENU_CHECK(UINT	funcItem[X]._cmdID, TRUE/FALSE)
 
 	#define NPPM_ADDTOOLBARICON				(NPPMSG + 41)
@@ -181,37 +162,40 @@ const TCHAR NPP_LOCAL_XML[]	= _T("\\doLocalConf.xml");
 			HICON	hToolbarIcon;
 		};
 
-	#define NPPM_GETWINDOWSVERSION			(NPPMSG + 42)
+	#define NPPM_GETWINDOWSVERSION				(NPPMSG + 42)
 	//winVer NPPM_GETWINDOWSVERSION(0, 0)
 
-	#define NPPM_DMMGETPLUGINHWNDBYNAME		(NPPMSG + 43)
+	#define NPPM_DMMGETPLUGINHWNDBYNAME			(NPPMSG + 43)
 	//HWND NPPM_DMM_GETPLUGINHWNDBYNAME(const char *windowName, const char *moduleName)
 	// if moduleName is NULL, then return value is NULL
 	// if windowName is NULL, then the first found window handle which matches with the moduleName will be returned
 	
-	#define NPPM_MAKECURRENTBUFFERDIRTY		(NPPMSG + 44)
+	#define NPPM_MAKECURRENTBUFFERDIRTY			(NPPMSG + 44)
 	//BOOL NPPM_MAKECURRENTBUFFERDIRTY(0, 0)
 
-	#define NPPM_GETENABLETHEMETEXTUREFUNC	(NPPMSG + 45)
+	#define NPPM_GETENABLETHEMETEXTUREFUNC		(NPPMSG + 45)
 	//BOOL NPPM_GETENABLETHEMETEXTUREFUNC(0, 0)
+
+	#define NPPM_GETPLUGINSCONFIGDIR			(NPPMSG + 46)
+	//void NPPM_GETPLUGINSCONFIGDIR(int strLen, char *str)
 
 
 // Notification code
-#define NPPN_FIRST		1000
+#define NPPN_FIRST			1000
 	// To notify plugins that all the procedures of launchment of notepad++ are done.
-	#define NPPN_READY						(NPPN_FIRST + 1)
+	#define NPPN_READY							(NPPN_FIRST + 1)
 	//scnNotification->nmhdr.code = NPPN_READY;
 	//scnNotification->nmhdr.hwndFrom = hwndNpp;
 	//scnNotification->nmhdr.idFrom = 0;
 
 	// To notify plugins that toolbar icons can be registered
-	#define NPPN_TB_MODIFICATION			(NPPN_FIRST + 2)
+	#define NPPN_TB_MODIFICATION				(NPPN_FIRST + 2)
 	//scnNotification->nmhdr.code = NPPN_TB_MODIFICATION;
 	//scnNotification->nmhdr.hwndFrom = hwndNpp;
 	//scnNotification->nmhdr.idFrom = 0;
 
 	// To notify plugins that the current file is about to be closed
-	#define NPPN_FILEBEFORECLOSE			(NPPN_FIRST + 3)
+	#define NPPN_FILEBEFORECLOSE				(NPPN_FIRST + 3)
 	//scnNotification->nmhdr.code = NPPN_FILEBEFORECLOSE;
 	//scnNotification->nmhdr.hwndFrom = hwndNpp;
 	//scnNotification->nmhdr.idFrom = 0;
@@ -234,6 +218,10 @@ const TCHAR NPP_LOCAL_XML[]	= _T("\\doLocalConf.xml");
 		#define EXT_PART 5
 		#define CURRENT_WORD 6
 		#define NPP_DIRECTORY 7
+
+
+#define	SC_MAINHANDLE	0
+#define SC_SECHANDLE	1
 
 
 #define WM_DOOPEN						(SCINTILLA_USER   + 8)
@@ -423,8 +411,13 @@ void ScintillaGetText(char* text, INT start, INT end);
 void UpdateCurrentHScintilla(void);
 HWND getCurrentHScintilla(void);
 
+
+
+void loadSettings(void);
+void saveSettings(void);
 void setHexMask(void);
 void initMenu(void);
+
 void checkMenu(BOOL state);
 tHexProp getProp(void);
 BOOL getCLM(void);

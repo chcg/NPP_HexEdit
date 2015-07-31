@@ -317,10 +317,6 @@ LRESULT HexEdit::runProcParent(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lP
 		switch (Message)
 		{
 			case WM_SIZE:
-			case WM_SIZING:
-			case WM_MOVING:
-			case WM_ENTERSIZEMOVE:
-			case WM_EXITSIZEMOVE:
 			{
 				MoveView();
 				break;

@@ -64,7 +64,7 @@ BEGIN
                     IDC_STATIC,7,67,216,25
     LTEXT           "Swaps between Hex and ANSI view.\nGives the possibility to add columns\nfilled with a pattern.\nReplace a box selection with pattern.\nChange standard properties of Hex- \nEditor here.\nShows this help dialog.",
                     IDC_STATIC,97,112,123,59
-    CTEXT           "HEX-Editor Plugin for Notepad++ v4.0.2                        v0.8.3",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v4.2                        v0.8.4",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "View in HEX\nInsert Columns...\n\nPattern Repleace...\nOptions...\n\nHelp...",

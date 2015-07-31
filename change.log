@@ -2,6 +2,12 @@
 Change-log for HexEditor.dll
 
 ------------------------------------------------------------------------------------
+07/07/25  v0.8.4 :
+------------------------------------------------------------------------------------
+    Fix: Problems with new Notepad++ version 4.2 (Column Editor).
+    Change: Now using NPPM_GETPLUGINSCONFIGDIR to get ini file location.
+    
+------------------------------------------------------------------------------------
 07/05/28  v0.8.3 :
 ------------------------------------------------------------------------------------
     Fix: Every crash is now prevent while switching between files.

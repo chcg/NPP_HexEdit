@@ -40,6 +40,14 @@ using namespace std;
 
 extern tClipboard	g_clipboard;
 
+/* create depenency view for handle/hexEdit pointer */
+typedef struct _tActiveView {
+	HWND			hWnd;
+	class HexEdit*	hexEdit;
+} tActiveView;
+
+static tActiveView	gActiveHandle[2] = {0};
+
 class HexEdit : public StaticDialog //Window
 {
 public:
@@ -74,7 +82,7 @@ public:
 		strcpy(_hexProp[_openDoc].pszFileName, newPath);
 	};
 
-	void SetParentNppHandle(HWND hWnd)
+	void SetParentNppHandle(HWND hWnd, UINT cont)
 	{
 		if (_hDefaultParentProc != NULL)
 		{
@@ -82,11 +90,15 @@ public:
 			::SetWindowLong(_hParentHandle, GWL_WNDPROC, (LONG)_hDefaultParentProc);
 		}
 
+		/* store given parent handle */
 		_hParentHandle = hWnd;
 
+		/* create avtive view list */
+		gActiveHandle[cont].hWnd = hWnd;
+		gActiveHandle[cont].hexEdit = this;
+
 		/* intial subclassing */
-		::SetWindowLong(_hParentHandle, GWL_USERDATA, reinterpret_cast<LONG>(this));
-		_hDefaultParentProc = reinterpret_cast<WNDPROC>(::SetWindowLong(_hParentHandle, GWL_WNDPROC, reinterpret_cast<LONG>(wndParentProc)));
+		_hDefaultParentProc = (WNDPROC)(::SetWindowLong(_hParentHandle, GWL_WNDPROC, reinterpret_cast<LONG>(wndParentProc)));
 	};
 
 	void SetHexProp(tHexProp prop)
@@ -260,7 +272,10 @@ private:
 	/* Subclassing parent */
 	LRESULT runProcParent(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK wndParentProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-		return (((HexEdit *)(::GetWindowLong(hwnd, GWL_USERDATA)))->runProcParent(hwnd, Message, wParam, lParam));
+		if (gActiveHandle[SC_MAINHANDLE].hWnd == hwnd)
+			return (gActiveHandle[SC_MAINHANDLE].hexEdit->runProcParent(hwnd, Message, wParam, lParam));
+		else
+			return (gActiveHandle[	].hexEdit->runProcParent(hwnd, Message, wParam, lParam));
 	};
 
 	/* Subclassing list */

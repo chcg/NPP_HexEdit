@@ -48,7 +48,7 @@ const char  PLUGIN_NAME[] = "HEX-Editor";
 TCHAR		currentPath[MAX_PATH];
 TCHAR		configPath[MAX_PATH];
 TCHAR		iniFilePath[MAX_PATH];
-UINT		currentSC	= MAIN_VIEW;
+UINT		currentSC	= SC_MAINHANDLE;
 
 
 /* global values */
@@ -104,47 +104,6 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     {
 		case DLL_PROCESS_ATTACH:
 		{
-			TCHAR	nppPath[MAX_PATH];
-
-			GetModuleFileName((HMODULE)hModule, nppPath, sizeof(nppPath));
-            // remove the module name : get plugins directory path
-			PathRemoveFileSpec(nppPath);
- 
-			// cd .. : get npp executable path
-			PathRemoveFileSpec(nppPath);
- 
-			// Make localConf.xml path
-			TCHAR	localConfPath[MAX_PATH];
-			_tcscpy(localConfPath, nppPath);
-			PathAppend(localConfPath, NPP_LOCAL_XML);
- 
-			// Test if localConf.xml exist
-			if (PathFileExists(localConfPath) == TRUE)
-			{
-				/* make ini file path if not exist */
-				_tcscpy(configPath, nppPath);
-				_tcscat(configPath, CONFIG_PATH);
-				if (PathFileExists(configPath) == FALSE)
-				{
-					::CreateDirectory(configPath, NULL);
-				}
-			}
-			else
-			{
-				ITEMIDLIST *pidl;
-				SHGetSpecialFolderLocation(NULL, CSIDL_APPDATA, &pidl);
-				SHGetPathFromIDList(pidl, configPath);
- 
-				PathAppend(configPath, NPP);
-			}
-
-			_tcscpy(iniFilePath, configPath);
-			_tcscat(iniFilePath, HEXEDIT_INI);
-			if (PathFileExists(iniFilePath) == FALSE)
-			{
-				::CloseHandle(::CreateFile(iniFilePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL));
-			}
-
 			/* Set function pointers */
 			funcItem[0]._pFunc = toggleHexEdit;
 			funcItem[1]._pFunc = toggleHexEdit;			/* ------- */
@@ -176,27 +135,13 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			funcItem[5]._pShKey				= NULL;
 			funcItem[6]._pShKey				= NULL;
 
-			prop.hex.columns  = ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
-			prop.hex.bits	  = ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
-			prop.hex.isBin	  = ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
-			prop.hex.isLittle = ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
-			prop.isCapital	  = ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
-			::GetPrivateProfileString(dlgEditor, extensions, "", pszExtensions, 256, iniFilePath);
-
 			g_hFindRepDlg     = NULL;
-			memset(&g_clipboard, 0, sizeof(tClipboard));
-			break;
+			memset(&g_clipboard, 0, sizeof(tClipboard));			break;
 		}	
 		case DLL_PROCESS_DETACH:
 		{
-			char	temp[64];
-
-			::WritePrivateProfileString(dlgEditor, columns, itoa(prop.hex.columns, temp, 10), iniFilePath);
-			::WritePrivateProfileString(dlgEditor, bits, itoa(prop.hex.bits, temp, 10), iniFilePath);
-			::WritePrivateProfileString(dlgEditor, bin, itoa(prop.hex.isBin, temp, 10), iniFilePath);
-			::WritePrivateProfileString(dlgEditor, little, itoa(prop.hex.isLittle, temp, 10), iniFilePath);
-			::WritePrivateProfileString(dlgEditor, capital, itoa(prop.isCapital, temp, 10), iniFilePath);
-			::WritePrivateProfileString(dlgEditor, extensions, pszExtensions, iniFilePath);
+			/* save settings */
+			saveSettings();
 
 			hexEdit1.destroy();
 			hexEdit2.destroy();
@@ -227,11 +172,14 @@ extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
 	/* stores notepad data */
 	nppData = notpadPlusData;
 
+	/* load data */
+	loadSettings();
+
 	/* initial dialogs */
 	hexEdit1.init((HINSTANCE)g_hModule, nppData, iniFilePath);
 	hexEdit2.init((HINSTANCE)g_hModule, nppData, iniFilePath);
-	hexEdit1.SetParentNppHandle(nppData._scintillaMainHandle);
-	hexEdit2.SetParentNppHandle(nppData._scintillaSecondHandle);
+	hexEdit1.SetParentNppHandle(nppData._scintillaMainHandle, SC_MAINHANDLE);
+	hexEdit2.SetParentNppHandle(nppData._scintillaSecondHandle, SC_SECHANDLE);
 	findRepDlg.init((HINSTANCE)g_hModule, nppData);
 	propDlg.init((HINSTANCE)g_hModule, nppData);
 	gotoDlg.init((HINSTANCE)g_hModule, nppData, iniFilePath);
@@ -346,6 +294,54 @@ extern "C" __declspec(dllexport) void messageProc(UINT Message, WPARAM wParam, L
 }
 
 /***
+ *	loadSettings()
+ *
+ *	Load the parameters for plugin
+ */
+void loadSettings(void)
+{
+	/* initialize the config directory */
+	::SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)configPath);
+
+	/* Test if config path exist */
+	if (PathFileExists(configPath) == FALSE)
+	{
+		::CreateDirectory(configPath, NULL);
+	}
+
+	strcpy(iniFilePath, configPath);
+	strcat(iniFilePath, HEXEDIT_INI);
+	if (PathFileExists(iniFilePath) == FALSE)
+	{
+		::CloseHandle(::CreateFile(iniFilePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL));
+	}
+
+	prop.hex.columns  = ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
+	prop.hex.bits	  = ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
+	prop.hex.isBin	  = ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
+	prop.hex.isLittle = ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
+	prop.isCapital	  = ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
+	::GetPrivateProfileString(dlgEditor, extensions, "", pszExtensions, 256, iniFilePath);
+}
+
+/***
+ *	saveSettings()
+ *
+ *	Saves the parameters for plugin
+ */
+void saveSettings(void)
+{
+	char	temp[64];
+
+	::WritePrivateProfileString(dlgEditor, columns, itoa(prop.hex.columns, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, bits, itoa(prop.hex.bits, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, bin, itoa(prop.hex.isBin, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, little, itoa(prop.hex.isLittle, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, capital, itoa(prop.isCapital, temp, 10), iniFilePath);
+	::WritePrivateProfileString(dlgEditor, extensions, pszExtensions, iniFilePath);
+}
+
+/***
  *	setHexMask()
  *
  *	Set correct hexMask table
@@ -443,10 +439,10 @@ void ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
  */
 void UpdateCurrentHScintilla(void)
 {
-	UINT		newSC		= MAIN_VIEW;
+	UINT		newSC		= SC_MAINHANDLE;
 
 	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&newSC);
-	g_HSource = (newSC == MAIN_VIEW)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	g_HSource = (newSC == SC_MAINHANDLE)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
 	currentSC = newSC;
 }
 
@@ -511,7 +507,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		case WM_ACTIVATE:
 		{
 			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-			if (currentSC == MAIN_VIEW)
+			if (currentSC == SC_MAINHANDLE)
 			{
 				::SendMessage(hexEdit1.getHSelf(), message, wParam, lParam);
 				::SendMessage(hexEdit2.getHSelf(), message, ~wParam, lParam);
@@ -757,15 +753,15 @@ void SystemUpdate(void)
 
 		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_PRIMARY, (WPARAM)fileNames1, (LPARAM)docCnt1))
 		{
-			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, MAIN_VIEW);
-//      assert(!((currentSC == MAIN_VIEW) && (openDoc1 == -1)));
+			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, SC_MAINHANDLE);
+//      assert(!((currentSC == SC_MAINHANDLE) && (openDoc1 == -1)));
 			hexEdit1.UpdateDocs(fileNames1, docCnt1, openDoc1);
 		}
 
 		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_SECOND, (WPARAM)fileNames2, (LPARAM)docCnt2))
 		{
-			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, SUB_VIEW);
-//      assert(!((currentSC == SUB_VIEW) && (openDoc2 == -1)));
+			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, SC_SECHANDLE);
+//      assert(!((currentSC == SC_SECHANDLE) && (openDoc2 == -1)));
 			hexEdit2.UpdateDocs(fileNames2, docCnt2, openDoc2);
 		}
 
@@ -777,7 +773,7 @@ void SystemUpdate(void)
 		delete [] fileNames2;
 
 		/* update edit */
-		if (currentSC == MAIN_VIEW)
+		if (currentSC == SC_MAINHANDLE)
 			_curHexEdit = &hexEdit1;
 		else
 			_curHexEdit = &hexEdit2;
@@ -791,7 +787,7 @@ void SystemUpdate(void)
 void ActivateWindow(void)
 {
 	/* activate correct window */
-	if (currentSC == MAIN_VIEW)
+	if (currentSC == SC_MAINHANDLE)
 	{
 		::SendMessage(hexEdit1.getHSelf(), WM_ACTIVATE, TRUE, 0);
 		::SendMessage(hexEdit2.getHSelf(), WM_ACTIVATE, FALSE, 0);
@@ -947,7 +943,7 @@ eError replaceLittleToBig(HWND hSource, INT startPos, INT lengthOld, INT lengthN
 	tHexProp	prop	= {0};
 
 	UpdateCurrentHScintilla();
-	if (currentSC == MAIN_VIEW)
+	if (currentSC == SC_MAINHANDLE)
 		prop = hexEdit1.GetHexProp();
 	else
 		prop = hexEdit2.GetHexProp();
