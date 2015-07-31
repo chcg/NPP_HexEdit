@@ -238,7 +238,7 @@ enum UniMode {
 typedef struct tMenu {
 	UINT			uID;
 	UINT			uFlags;
-	TCHAR			szName[64];
+	TCHAR			szName[128];
 	vector<tMenu>	vSubMenu;
 } tMenu;
 

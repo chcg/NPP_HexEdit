@@ -63,7 +63,7 @@ BEGIN
     LTEXT           "eMail:",IDC_STATIC_EMAIL,12,41,21,9
     CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
                     IDC_STATIC_THX,7,67,216,25
-    CTEXT           "HEX-Editor Plugin for Notepad++ v5.1                         v0.9.1",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v5.1                         v0.9.2",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "http://sourceforge.net/projects/npp-plugins",
@@ -78,7 +78,7 @@ BEGIN
                     IDC_STATIC_HELP_2,15,133,200,8
     LTEXT           "Insert Columns...\tGives the possibility to add columns\n\t\t\tfilled with a pattern.",
                     IDC_STATIC_HELP_4,15,141,200,17
-    LTEXT           "Pattern Repleace...\tReplace a box selection with pattern.",
+    LTEXT           "Pattern Repleace...\tRepleace a box selection with pattern.",
                     IDC_STATIC_HELP_5,15,157,200,8
     LTEXT           "Options...\t\tChange here the properties of\n\t\t\tHex-Editor.",
                     IDC_STATIC_HELP_7,15,165,200,17
@@ -378,8 +378,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,1,0
- PRODUCTVERSION 0,9,1,0
+ FILEVERSION 0,9,2,0
+ PRODUCTVERSION 0,9,2,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -397,12 +397,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.9.1"
+            VALUE "FileVersion", "0.9.2"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.9.1"
+            VALUE "ProductVersion", "0.9.2"
             VALUE "SpecialBuild", "UNICODE"
         END
     END

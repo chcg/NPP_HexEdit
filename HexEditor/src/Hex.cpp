@@ -1791,7 +1791,7 @@ void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 		menuItem.uID = ::GetMenuItemID(hMenuItem, nPos);
 		menuItem.uFlags	= ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);
 
-		::GetMenuString(hMenuItem, nPos, menuItem.szName, sizeof(menuItem.szName), MF_BYPOSITION);
+		::GetMenuString(hMenuItem, nPos, menuItem.szName, sizeof(menuItem.szName) / sizeof(TCHAR), MF_BYPOSITION);
 		if ((menuItem.uID == 0) || (menuItem.uID == -1))
 		{
 			HMENU	hSubMenu = ::GetSubMenu(hMenuItem, nPos);
@@ -1808,7 +1808,7 @@ void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 	UINT	nPos	= 0;
 	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
 
-	for (INT i = 0; (vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0); i++)
+	for (INT i = 0; i < vMenuInfo.size() && ((vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0)); i++)
 	{
 		if (vMenuInfo[i].uID == ::GetMenuItemID(hMenuItem, nPos)) {
 			vMenuInfo[i].uFlags = ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);
