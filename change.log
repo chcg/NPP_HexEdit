@@ -2,13 +2,18 @@
 Change-log for HexEditor.dll
 
 ------------------------------------------------------------------------------------
+07/05/04  v0.8.2 :
+    Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version.
+------------------------------------------------------------------------------------
+    Fix: When user started Notepad "clean", it crashed by hitting a key
+    
+------------------------------------------------------------------------------------
 07/05/02  v0.8.1 :
     Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version.
 ------------------------------------------------------------------------------------
     Fix: After deleting a selected block, the selection wasn't cleared
     Fix: HEX Address column was incorrect
     Fix: Coping of HEX code crashed Notepad
-    Fix: Notepad crashed when no document was opened and the user hits a key
     
 ------------------------------------------------------------------------------------
 07/03/13  v0.7 :

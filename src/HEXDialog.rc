@@ -64,7 +64,7 @@ BEGIN
                     IDC_STATIC,7,67,216,25
     LTEXT           "Swaps between Hex and ANSI view.\nGives the possibility to add columns\nfilled with a pattern.\nReplace a box selection with pattern.\nChange standard properties of Hex- \nEditor here.\nShows this help dialog.",
                     IDC_STATIC,97,112,123,59
-    CTEXT           "HEX-Editor Plugin for Notepad++ v4.0.2                        v0.8.1",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v4.0.2                        v0.8.2",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "View in HEX\nInsert Columns...\n\nPattern Repleace...\nOptions...\n\nHelp...",
@@ -294,8 +294,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,8,1,0
- PRODUCTVERSION 0,8,1,0
+ FILEVERSION 0,8,2,0
+ PRODUCTVERSION 0,8,2,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -313,12 +313,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.8.1"
+            VALUE "FileVersion", "0.8.2"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2007 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.8.1"
+            VALUE "ProductVersion", "0.8.2"
         END
     END
     BLOCK "VarFileInfo"
