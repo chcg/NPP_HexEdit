@@ -239,10 +239,6 @@ const TCHAR NPP_LOCAL_XML[]	= _T("\\doLocalConf.xml");
 #define WM_DOOPEN						(SCINTILLA_USER   + 8)
 
 
-#define	SC_MAINHANDLE	0
-#define SC_SECHANDLE	1
-
-
 enum LangType {	
 	L_TXT,
 	L_PHP, 

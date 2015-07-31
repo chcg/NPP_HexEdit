@@ -158,7 +158,7 @@ BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam
 
 			if ((nmhdr.idFrom == IDC_SWITCH) && (nmhdr.code == TCN_SELCHANGE))
 			{
-				_findReplace ^= TRUE;
+        _findReplace = TabCtrl_GetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH));
 				updateDialog();
 			}
 			break;
@@ -259,6 +259,7 @@ void FindReplaceDlg::updateDialog(void)
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_REPALL), SW_HIDE);	
 	}
+  TabCtrl_SetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH), _findReplace);
 
 	/* get selection and set find text */
 	UINT		posBeg	= 0;

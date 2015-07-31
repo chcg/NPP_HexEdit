@@ -771,10 +771,10 @@ void HexEdit::UpdateDocs(const char** pFiles, UINT numFiles, INT openDoc)
 			_pCurProp = NULL;
 		}
 	}
-	else if (tmpList.size() != 0)
+	else if ((tmpList.size() != 0) && (openDoc != -1))
 	{
 		/* set the current file attributes */
-		_pCurProp = &_hexProp[openDoc];
+	  _pCurProp = &_hexProp[openDoc];
 	}
 	else
 	{

@@ -121,7 +121,7 @@ public:
 	void ZoomRestore(void);
 	void RedoUndo(UINT position)
 	{
-		if ((_pCurProp == NULL) || (_pCurProp->isVisible == FALSE))
+		if (_pCurProp == NULL)
 			return;
 
 		_posRedoUndo = position;
@@ -130,7 +130,7 @@ public:
 
 	void TestLineLength()
 	{
-		if ((_pCurProp == NULL) || (_pCurProp->isVisible == FALSE))
+		if (_pCurProp == NULL)
 			return;
 
 		/* correct length of file */

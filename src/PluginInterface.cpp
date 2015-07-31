@@ -32,6 +32,7 @@
 
 #include <shlwapi.h>
 #include <shlobj.h>
+#include <assert.h>
 
 
 const INT	nbFunc	= 7;
@@ -47,7 +48,7 @@ const char  PLUGIN_NAME[] = "HEX-Editor";
 TCHAR		currentPath[MAX_PATH];
 TCHAR		configPath[MAX_PATH];
 TCHAR		iniFilePath[MAX_PATH];
-UINT		currentSC	= SC_MAINHANDLE;
+UINT		currentSC	= MAIN_VIEW;
 
 
 /* global values */
@@ -262,8 +263,10 @@ extern "C" __declspec(dllexport) FuncItem * getFuncsArray(INT *nbF)
  */
 extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 {
-	if ((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
-		(notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle))
+	/* test for friday */
+	if ((isNotepadCreated == TRUE) &&
+		((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
+		 (notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)))
 	{
 		SystemUpdate();
 
@@ -440,10 +443,10 @@ void ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
  */
 void UpdateCurrentHScintilla(void)
 {
-	UINT		newSC		= SC_MAINHANDLE;
+	UINT		newSC		= MAIN_VIEW;
 
 	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&newSC);
-	g_HSource = (newSC == SC_MAINHANDLE)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	g_HSource = (newSC == MAIN_VIEW)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
 	currentSC = newSC;
 }
 
@@ -508,7 +511,7 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		case WM_ACTIVATE:
 		{
 			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-			if (currentSC == SC_MAINHANDLE)
+			if (currentSC == MAIN_VIEW)
 			{
 				::SendMessage(hexEdit1.getHSelf(), message, wParam, lParam);
 				::SendMessage(hexEdit2.getHSelf(), message, ~wParam, lParam);
@@ -754,13 +757,15 @@ void SystemUpdate(void)
 
 		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_PRIMARY, (WPARAM)fileNames1, (LPARAM)docCnt1))
 		{
-			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, 0);
+			INT openDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, MAIN_VIEW);
+//      assert(!((currentSC == MAIN_VIEW) && (openDoc1 == -1)));
 			hexEdit1.UpdateDocs(fileNames1, docCnt1, openDoc1);
 		}
 
 		if (::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMES_SECOND, (WPARAM)fileNames2, (LPARAM)docCnt2))
 		{
-			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, 1);
+			INT openDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, SUB_VIEW);
+//      assert(!((currentSC == SUB_VIEW) && (openDoc2 == -1)));
 			hexEdit2.UpdateDocs(fileNames2, docCnt2, openDoc2);
 		}
 
@@ -772,7 +777,7 @@ void SystemUpdate(void)
 		delete [] fileNames2;
 
 		/* update edit */
-		if (currentSC == SC_MAINHANDLE)
+		if (currentSC == MAIN_VIEW)
 			_curHexEdit = &hexEdit1;
 		else
 			_curHexEdit = &hexEdit2;
@@ -786,7 +791,7 @@ void SystemUpdate(void)
 void ActivateWindow(void)
 {
 	/* activate correct window */
-	if (currentSC == SC_MAINHANDLE)
+	if (currentSC == MAIN_VIEW)
 	{
 		::SendMessage(hexEdit1.getHSelf(), WM_ACTIVATE, TRUE, 0);
 		::SendMessage(hexEdit2.getHSelf(), WM_ACTIVATE, FALSE, 0);
@@ -942,7 +947,7 @@ eError replaceLittleToBig(HWND hSource, INT startPos, INT lengthOld, INT lengthN
 	tHexProp	prop	= {0};
 
 	UpdateCurrentHScintilla();
-	if (currentSC == SC_MAINHANDLE)
+	if (currentSC == MAIN_VIEW)
 		prop = hexEdit1.GetHexProp();
 	else
 		prop = hexEdit2.GetHexProp();
