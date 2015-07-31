@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+<h1>Erstellungsprotokoll</h1>
+<h3>
+--------------------Konfiguration: HexEditor - Win32 Release--------------------
+</h3>
+<h3>Befehlszeilen</h3>
+Erstellen der temporären Datei  "C:\DOKUME~1\Jens\LOKALE~1\Temp\RSP239.tmp" mit Inhalten
+[
+/nologo /MT /W3 /GX /O2 /I "../../src" /I "../../src/HelpDlg" /I "../../src/MISC" /I "../../src/OptionDlg" /I "../../src/UserDlg" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HEXEDITOR_EXPORTS" /Fp"Release/HexEditor.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\OptionDlg\ColumnDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\UserDlg\FindReplaceDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\UserDlg\GotoDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\HelpDlg\HelpDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\HEXDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\misc\MultiTypeCombo.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\OptionDlg\OptionDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\UserDlg\PatternDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\PluginInterface.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\StaticDialog.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\HelpDlg\ToolTip.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\HelpDlg\URLCtrl.cpp"
+"D:\VISUAL STUDIO PROJECTS\NPPPLUGINS\HexEditor\src\Utf8_16.cpp"
+]
+Creating command line "cl.exe @C:\DOKUME~1\Jens\LOKALE~1\Temp\RSP239.tmp" 
+Erstellen der temporären Datei  "C:\DOKUME~1\Jens\LOKALE~1\Temp\RSP23A.tmp" mit Inhalten
+[
+shlwapi.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/HexEditor.pdb" /machine:I386 /out:"C:/Programme/Notepad++/Plugins/HexEditor.dll" /implib:"Release/HexEditor.lib" 
+".\Release\ColumnDialog.obj"
+".\Release\FindReplaceDialog.obj"
+".\Release\GotoDialog.obj"
+".\Release\HelpDialog.obj"
+".\Release\HEXDialog.obj"
+".\Release\MultiTypeCombo.obj"
+".\Release\OptionDialog.obj"
+".\Release\PatternDialog.obj"
+".\Release\PluginInterface.obj"
+".\Release\StaticDialog.obj"
+".\Release\stdafx.obj"
+".\Release\SysMsg.obj"
+".\Release\ToolTip.obj"
+".\Release\URLCtrl.obj"
+".\Release\Utf8_16.obj"
+".\Release\HEXDialog.res"
+]
+Erstellen der Befehlzeile "link.exe @C:\DOKUME~1\Jens\LOKALE~1\Temp\RSP23A.tmp"
+<h3>Ausgabefenster</h3>
+Kompilierung läuft...
+ColumnDialog.cpp
+FindReplaceDialog.cpp
+GotoDialog.cpp
+HelpDialog.cpp
+HEXDialog.cpp
+MultiTypeCombo.cpp
+OptionDialog.cpp
+PatternDialog.cpp
+PluginInterface.cpp
+StaticDialog.cpp
+ToolTip.cpp
+URLCtrl.cpp
+Utf8_16.cpp
+Linker-Vorgang läuft...
+   Bibliothek Release/HexEditor.lib und Objekt Release/HexEditor.exp wird erstellt
+
+
+
+<h3>Ergebnisse</h3>
+HexEditor.dll - 0 Fehler, 0 Warnung(en)
+</pre>
+</body>
+</html>
