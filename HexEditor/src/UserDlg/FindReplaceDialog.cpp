@@ -531,7 +531,7 @@ void FindReplaceDlg::onReplace(void)
     		if (isRep == E_OK) {
     			onFind(FALSE);
     		} else {
-    			LITTLE_REPLEACE_ERROR;
+    			LITTLE_REPLACE_ERROR;
     		}
 
     		delete [] text;
@@ -600,7 +600,7 @@ void FindReplaceDlg::processAll(UINT process)
 														_replace.length );
 							if (isRep == E_STRIDE)
 							{
-								LITTLE_REPLEACE_ERROR;
+								LITTLE_REPLACE_ERROR;
 								CleanScintillaBuf(_hSCI);
 								return;
 							}

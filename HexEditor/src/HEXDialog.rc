@@ -78,7 +78,7 @@ BEGIN
                     IDC_STATIC_HELP_2,15,133,200,8
     LTEXT           "Insert Columns...\tGives the possibility to add columns\n\t\t\tfilled with a pattern.",
                     IDC_STATIC_HELP_4,15,141,200,17
-    LTEXT           "Pattern Repleace...\tRepleace a box selection with pattern.",
+    LTEXT           "Pattern Replace...\tReplace a box selection with pattern.",
                     IDC_STATIC_HELP_5,15,157,200,8
     LTEXT           "Options...\t\tChange here the properties of\n\t\t\tHex-Editor.",
                     IDC_STATIC_HELP_7,15,165,200,17
@@ -164,7 +164,7 @@ BEGIN
     COMBOBOX        IDC_COMBO_DIFF_BK,170,66,40,30,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Bookmark:",IDC_STATIC_BKMK,17,84,100,10
-    COMBOBOX        IDC_COMBO_BKMK,125,82,40,30,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_COMBO_BKMK,170,82,40,30,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Current Line:",IDC_STATIC_CURLINE,17,100,100,10
     COMBOBOX        IDC_COMBO_CURLINE,170,98,40,30,CBS_DROPDOWNLIST | 
@@ -384,8 +384,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,3,0
- PRODUCTVERSION 0,9,3,0
+ FILEVERSION 0,9,4,0
+ PRODUCTVERSION 0,9,4,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -403,12 +403,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.9.3"
+            VALUE "FileVersion", "0.9.4"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.9.3"
+            VALUE "ProductVersion", "0.9.4"
             VALUE "SpecialBuild", "UNICODE"
         END
     END

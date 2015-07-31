@@ -16,11 +16,6 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-/**	Version Management for Notepad++ **/
-#define		_OutputDebugString_
-/** End **/
-
-
 #ifndef HEX_H
 #define HEX_H
 
@@ -64,10 +59,13 @@ const TCHAR percent[]		= _T("Autostart Percent");
 const TCHAR focusRect[]		= _T("Focus Rect");
 
 const TCHAR HEXEDIT_INI[]	= _T("\\HexEditor.ini");
-const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
+const TCHAR COMPARE_PATH[]	= _T("\\Compare");
 
-#define AUTOSTART_MAX	1024000
-#define FIND_BLOCK		1024000
+#define AUTOSTART_MAX	(1024000)
+#define FIND_BLOCK		(1024000)
+#define CACHE_SIZE		(16384)
+#define CACHE_FILL		(CACHE_SIZE / 4)
+#define COMP_BLOCK		(1024000)
 
 
 #define HEX_BYTE		1
@@ -77,13 +75,13 @@ const TCHAR CONFIG_PATH[]	= _T("\\plugins\\Config");
 
 #define MAX_PATH_UNICODE 780
 
-typedef enum 
+typedef enum eEdit
 {
 	HEX_EDIT_HEX,
 	HEX_EDIT_ASCII
 } eEdit;
 
-typedef enum 
+typedef enum eSel
 {
 	HEX_SEL_NORM,
 	HEX_SEL_VERTICAL,
@@ -91,14 +89,14 @@ typedef enum
 	HEX_SEL_BLOCK
 } eSel;
 
-typedef enum
+typedef enum eLineVis
 {
 	HEX_LINE_FIRST,
 	HEX_LINE_MIDDLE,
 	HEX_LINE_LAST
 } eLineVis;
 
-typedef enum
+typedef enum eColorType
 {
 	HEX_COLOR_REG_TXT,
 	HEX_COLOR_REG_BK,
@@ -110,14 +108,14 @@ typedef enum
 	HEX_COLOR_CUR_LINE
 } eColorType;
 
-typedef enum
+typedef enum eSelType
 {
 	HEX_COLOR_REG,
 	HEX_COLOR_SEL,
 	HEX_COLOR_DIFF
 } eSelType;
 
-typedef enum
+typedef enum eSelItem
 {
 	HEX_ITEM_FIRST,
 	HEX_ITEM_MIDDLE,
@@ -128,19 +126,19 @@ typedef enum
 
 #define		COMBO_STR_MAX	1024
 
-typedef struct
+typedef struct tComboInfo
 {
 	INT 				length;
 	CHAR				text[COMBO_STR_MAX];
 } tComboInfo;
 
-typedef struct
+typedef struct tBkMk
 {
 	LONG				lAddress;				// bookmark address
 	UINT				iItem;					// row of bookmark
 } tBkMk;
 
-typedef enum
+typedef enum eNppCoding
 {
 	HEX_CODE_NPP_ASCI = 0,
 	HEX_CODE_NPP_UTF8,
@@ -149,13 +147,24 @@ typedef enum
 	HEX_CODE_NPP_USCLE
 } eNppCoding;
 
-typedef struct
+typedef struct tCmpResult
+{
+	LPBYTE				pOpenCnt;				// file open count
+	TCHAR				szFileName[MAX_PATH];	// file name to compare data
+	HANDLE				hFile;					// file handle to compare results
+	CHAR				cmpCache[CACHE_SIZE];	// display cache
+	INT					offCmpCache;			// display cache offset
+	INT					lenCmpCache;			// display cache length
+} tCmpResult;
+
+typedef struct tHexProp
 {	
-	WCHAR				pszFileName[MAX_PATH];	// identifier of struct
+	TCHAR				szFileName[MAX_PATH];	// identifier of struct
 	eNppCoding			codePage;				// in Npp selected code page
 	BOOL				isModified;				// stores the modification state
 	BOOL				isVisible;				// is current file visible
-	BOOL				addWidth;				// width of address field
+	INT					fontZoom;				// view zoom factor
+	UINT				addWidth;				// char width of address field
 	SHORT				columns;				// number of columns
 	SHORT				bits;					// number of bits used
 	BOOL				isBin;					// shows in binary
@@ -173,10 +182,10 @@ typedef struct
 	UINT				anchorSubItem;			// selection start sub item
 	UINT				anchorPos;				// start position edit position
 
-	LPSTR				pCompareData;			// pointer to highlight different data
+	tCmpResult*			pCmpResult;				// compare results
 } tHexProp;
 
-typedef struct
+typedef struct tColor
 {
 	COLORREF			rgbRegTxt;				// regular text color
 	COLORREF			rgbRegBk;				// regular background color
@@ -188,13 +197,13 @@ typedef struct
 	COLORREF			rgbCurLine;				// current line backgound color
 } tColor;
 
-typedef struct
+typedef struct tAutoStart
 {
 	TCHAR				szExtensions[MAX_PATH];	// auto association to enable hex view
 	TCHAR				szPercent[4];			// autostart of Hex-Edit by % of NULL
 } tAutoStart;
 
-typedef struct
+typedef struct tFont
 {
 	BOOL				isCapital;				// hex view in capital letters
 	TCHAR				szFontName[128];		// font name of view
@@ -205,7 +214,7 @@ typedef struct
 	BOOL				isFocusRect;			// marker in dump is a focus rect
 } tFont;
 
-typedef struct
+typedef struct tProp
 {	
 	tHexProp			hexProp;				// default hex property
 	tAutoStart			autoProp;				// autostart settings
@@ -214,7 +223,7 @@ typedef struct
 } tProp;
 
 
-typedef struct
+typedef struct tClipboard
 {
 	char*		text;
 	UINT		length;
@@ -223,7 +232,7 @@ typedef struct
 	UINT		items;
 } tClipboard;
 
-typedef enum
+typedef enum eError
 {
 	E_OK		= 0,
 	E_START		= -1,
@@ -231,14 +240,14 @@ typedef enum
 	E_MEMORY	= -3
 } eError;
 
-enum UniMode {
+typedef enum UniMode {
 	uni8Bit, 
 	uniUTF8,
 	uni16BE,
 	uni16LE,
 	uniCookie,
 	uniEnd
-};
+} UniMode ;
 
 typedef struct tMenu {
 	UINT			uID;
@@ -251,7 +260,7 @@ typedef struct tMenu {
 #define FONTSIZE_DEFAULT	6		// 16
 const UINT g_iFontSize[G_FONTSIZE_MAX] = {8, 9, 10, 11, 12, 14, 16, 18, 20, 22};
 
-#define LITTLE_REPLEACE_ERROR 																			\
+#define LITTLE_REPLACE_ERROR 																			\
   if (NLMessageBox(_hInst, _hParent, _T("MsgBox ReplError"), MB_ICONERROR | MB_OK) == FALSE)			\
 	::MessageBox(_hParent, _T("In Little-Endian-Mode the replacing values could only be column\n")		\
 						   _T("wise. For example in 16-bit mode the find length could be 2 and\n")		\
@@ -311,8 +320,8 @@ void DialogUpdate(void);
 void DoCompare(void);
 
 /* Global Function of HexEdit */
-BOOL IsExtensionRegistered(LPCWSTR file);
-BOOL IsPercentReached(LPCWSTR file);
+BOOL IsExtensionRegistered(LPCTSTR file);
+BOOL IsPercentReached(LPCTSTR file);
 void ChangeClipboardDataToHex(tClipboard *clipboard);
 BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length);
 eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt, INT lengthOld, INT lengthNew);

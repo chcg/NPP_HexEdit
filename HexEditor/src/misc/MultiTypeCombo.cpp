@@ -171,7 +171,7 @@ eCodingType MultiTypeCombo::setCodingType(eCodingType code)
 	_currDataType = code;
 
 	INT		i		= 0;
-	INT		count	= _comboItems.size() - 1;
+	INT		count	= (INT)_comboItems.size() - 1;
 	INT		currSel = (INT)::SendMessage(_hCombo, CB_GETCURSEL, 0, 0);
 
 	::SendMessage(_hCombo, CB_RESETCONTENT, 0, 0);
@@ -334,7 +334,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 				}
 
 				/* if sting is odd -> return */
-				length = strlen(temp);
+				length = (INT)strlen(temp);
 				if (length & 0x1)
 				{
 					HWND hWnd = ::GetActiveWindow();

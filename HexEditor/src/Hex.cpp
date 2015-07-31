@@ -49,6 +49,7 @@ CONST TCHAR  PLUGIN_NAME[] = _T("HEX-Editor");
 TCHAR			currentPath[MAX_PATH];
 TCHAR			configPath[MAX_PATH];
 TCHAR			iniFilePath[MAX_PATH];
+TCHAR			cmparePath[MAX_PATH];
 UINT			currentSC	= MAIN_VIEW;
 INT				openDoc1	= -1;
 INT				openDoc2	= -1;
@@ -136,7 +137,8 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			funcItem[8]._pShKey				= NULL;
 
 			g_hFindRepDlg     = NULL;
-			memset(&g_clipboard, 0, sizeof(tClipboard));			break;
+			memset(&g_clipboard, 0, sizeof(tClipboard));
+			break;
 		}	
 		case DLL_PROCESS_DETACH:
 		{
@@ -166,6 +168,8 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			break;
 			
 		case DLL_THREAD_DETACH:
+			hexEdit1.ClearAllCompareResults();
+			hexEdit2.ClearAllCompareResults();
 			break;
     }
 
@@ -232,8 +236,8 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 					tHexProp	hexProp2	= hexEdit2.GetHexProp();
 					INT			length		= notifyCode->length;
 
-					if ((hexProp1.pszFileName != NULL) && (hexProp2.pszFileName != NULL) &&
-						(wcscmp(hexProp1.pszFileName, hexProp2.pszFileName) == 0))
+					if ((hexProp1.szFileName != NULL) && (hexProp2.szFileName != NULL) &&
+						(_tcscmp(hexProp1.szFileName, hexProp2.szFileName) == 0))
 					{
 						/* test for line lengths */
 						hexEdit1.TestLineLength();
@@ -287,7 +291,6 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			case NPPN_FILEOPENED:
 			case NPPN_FILECLOSED:
 			{
-				OutputDebugString(_T("NPPN_FILEOPENED\n"));
 				SystemUpdate();
 				pCurHexEdit->doDialog();
 				break;
@@ -334,23 +337,36 @@ void loadSettings(void)
 {
 	/* initialize the config directory */
 	::SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)configPath);
+	::PathRemoveBackslash(configPath);
 
 	/* Test if config path exist, if not create */
 	if (::PathFileExists(configPath) == FALSE)
 	{
-		vector<string>    vPaths;
+		vector<string>  vPaths;
+
+		*_tcsrchr(configPath, '\\') = NULL;
 		do {
 			vPaths.push_back(configPath);
-			::PathRemoveFileSpec(configPath);
+			*_tcsrchr(configPath, NULL) = NULL;
 		} while (::PathFileExists(configPath) == FALSE);
 
-		for (INT i = vPaths.size()-1; i >= 0; i--)
+		for (size_t i = vPaths.size()-1; i >= 0; i--)
 		{
 			_tcscpy(configPath, vPaths[i].c_str());
 			::CreateDirectory(configPath, NULL);
 		}
 	}
 
+	/* init compare file path */
+	_tcscpy(cmparePath, configPath);
+	*_tcsrchr(cmparePath, '\\') = NULL;
+	::PathAppend(cmparePath, COMPARE_PATH);
+	if (::PathFileExists(cmparePath) == FALSE)
+	{
+		::CreateDirectory(cmparePath, NULL);
+	}
+
+	/* init INI file path */
 	_tcscpy(iniFilePath, configPath);
 	_tcscat(iniFilePath, HEXEDIT_INI);
 	if (PathFileExists(iniFilePath) == FALSE)
@@ -459,13 +475,13 @@ void setMenu(void)
 	tHexProp hexProp1	= hexEdit1.GetHexProp();
 	tHexProp hexProp2	= hexEdit2.GetHexProp();
 	if ((hexProp1.isVisible == TRUE) && (hexProp2.isVisible == TRUE) &&
-		(wcsicmp(hexProp1.pszFileName, hexProp2.pszFileName) != 0)) {
+		(_tcsicmp(hexProp1.szFileName, hexProp2.szFileName) != 0)) {
 		::EnableMenuItem(hMenu, funcItem[1]._cmdID, MF_BYCOMMAND);
 	} else {
 		::EnableMenuItem(hMenu, funcItem[1]._cmdID, MF_BYCOMMAND | MF_GRAYED);
 	}
 
-	if (hexProp.pCompareData != NULL) {
+	if (hexProp.pCmpResult != NULL) {
 		::EnableMenuItem(hMenu, funcItem[2]._cmdID, MF_BYCOMMAND);
 	} else {
 		::EnableMenuItem(hMenu, funcItem[2]._cmdID, MF_BYCOMMAND | MF_GRAYED);
@@ -556,6 +572,7 @@ COLORREF getColor(eColorType type)
 		case HEX_COLOR_CUR_LINE:
 			return prop.colorProp.rgbCurLine;
 	}
+	return 0;
 }
 
 /***
@@ -650,7 +667,7 @@ void compareHex(void)
 
 void clearCompare(void)
 {
-	if (pCurHexEdit->GetHexProp().pCompareData != NULL) {
+	if (pCurHexEdit->GetHexProp().pCmpResult->hFile != NULL) {
 		pCurHexEdit->SetCompareResult(NULL);
 		setMenu();
 	}
@@ -809,12 +826,14 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 			switch (LOWORD(wParam))
 			{
+#if 0
 				case IDM_FILE_RELOAD:
 				{
 					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
 					pCurHexEdit->SetCompareResult(NULL);
 					break;
 				}
+#endif
 				case IDM_SEARCH_FIND:
 				case IDM_SEARCH_REPLACE:
 				{
@@ -834,8 +853,8 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 				case IDM_FILE_SAVEAS:
 				case IDM_FILE_RENAME:
 				{
-					WCHAR oldPath[MAX_PATH];
-					WCHAR newPath[MAX_PATH];
+					TCHAR oldPath[MAX_PATH];
+					TCHAR newPath[MAX_PATH];
 
 					/* stop updating of active documents (workaround to keep possible HEX view open) */
 					isNotepadCreated = FALSE;
@@ -1012,12 +1031,12 @@ void SystemUpdate(void)
 		if ((fileNames1 != NULL) && (fileNames2 != NULL))
 		{
 			for (i = 0; (i < docCnt1) && (isAllocOk == TRUE); i++) {
-				fileNames1[i] = (LPWSTR)new TCHAR[MAX_PATH];
+				fileNames1[i] = (LPTSTR)new TCHAR[MAX_PATH];
 				if (fileNames1[i] == NULL)
 					isAllocOk = FALSE;
 			}
 			for (i = 0; (i < docCnt2) && (isAllocOk == TRUE); i++) {
-				fileNames2[i] = (LPWSTR)new TCHAR[MAX_PATH];
+				fileNames2[i] = (LPTSTR)new TCHAR[MAX_PATH];
 				if (fileNames2[i] == NULL)
 					isAllocOk = FALSE;
 			}
@@ -1108,26 +1127,26 @@ void DialogUpdate(void)
 /**************************************************************************
  *	Global Hex-Edit-Functions
  */
-BOOL IsExtensionRegistered(LPCWSTR file)
+BOOL IsExtensionRegistered(LPCTSTR file)
 {
 	BOOL	bRet	= FALSE;
 
-	LPWSTR	TEMP	= (LPWSTR) new WCHAR[MAX_PATH];
-	LPWSTR	ptr		= NULL;
+	LPTSTR	TEMP	= (LPTSTR) new TCHAR[MAX_PATH];
+	LPTSTR	ptr		= NULL;
 
 	if (TEMP != NULL)
 	{
-		wcscpy(TEMP, prop.autoProp.szExtensions);
+		_tcscpy(TEMP, prop.autoProp.szExtensions);
 
-		ptr = wcstok(TEMP, L" ");
+		ptr = _tcstok(TEMP, _T(" "));
 		while (ptr != NULL)
 		{
-			if (wcsicmp(&file[wcslen(file) - wcslen(ptr)], ptr) == 0)
+			if (_tcsicmp(&file[_tcslen(file) - _tcslen(ptr)], ptr) == 0)
 			{
 				bRet = TRUE;
 				break;
 			}
-			ptr = wcstok(NULL, L" ");
+			ptr = _tcstok(NULL, _T(" "));
 		}
 
 		delete [] TEMP;
@@ -1136,7 +1155,7 @@ BOOL IsExtensionRegistered(LPCWSTR file)
 	return bRet;
 }
 
-BOOL IsPercentReached(LPCWSTR file)
+BOOL IsPercentReached(LPCTSTR file)
 {
 	BOOL	bRet		= FALSE;
 	DWORD	dwPercent	= (DWORD)_ttoi(prop.autoProp.szPercent);
@@ -1146,7 +1165,7 @@ BOOL IsPercentReached(LPCWSTR file)
 		return bRet;
 
 	/* open file if exists */
-	HANDLE	hFile	= ::CreateFileW(file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE	hFile	= ::CreateFile(file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (hFile == INVALID_HANDLE_VALUE)
 		return bRet;
@@ -1235,7 +1254,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 	if (posEnd % hexProp.bits) {
 		posEnd += hexProp.bits - (posEnd % hexProp.bits);
 	}
-	if (posEnd > lenSrc) {
+	if (posEnd > (INT)lenSrc) {
 		posEnd = lenSrc;
 	}
 
@@ -1399,13 +1418,13 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 
 void DoCompare(void)
 {
+	TCHAR		szFile[MAX_PATH];
 	BOOL		doMatch		= TRUE;
-	UINT		posSrc		= 0;
-	UINT		posTgt		= 0;
 	LPSTR		compare1	= NULL;
 	LPSTR		compare2	= NULL;
 	tHexProp	hexProp1	= hexEdit1.GetHexProp();
 	tHexProp	hexProp2	= hexEdit2.GetHexProp();
+	tCmpResult	cmpResult	= {0};
 
 	if ((hexProp1.bits != hexProp2.bits) || (hexProp1.columns != hexProp2.columns) || (hexProp1.isBin != hexProp2.isBin))
 	{
@@ -1417,59 +1436,89 @@ void DoCompare(void)
 		}
 	}
 
-	/* get texts to comapre */
-	INT		length1 = ScintillaMsg(nppData._scintillaMainHandle, SCI_GETTEXTLENGTH) + 1;
-	INT		length2 = ScintillaMsg(nppData._scintillaSecondHandle, SCI_GETTEXTLENGTH) + 1;
-	if ((length1 >= 1024000 * 40) || (length2 >= 1024000 * 40)) {
-		::MessageBox(nppData._nppHandle, _T("Currently only files up to 40 MB supported."), _T("Hex-Editor Compare Error"), MB_OK|MB_ICONERROR);
-		return;
-	}
-
-	LPSTR	buffer1 = (LPSTR)new CHAR[length1];
-	LPSTR	buffer2 = (LPSTR)new CHAR[length2];
-	::SendMessage(nppData._scintillaMainHandle, SCI_GETTEXT, length1, (LPARAM)buffer1);
-	::SendMessage(nppData._scintillaSecondHandle, SCI_GETTEXT, length2, (LPARAM)buffer2);
-
-	/* create memory to store comopare results */
-	compare1 = (LPSTR)new CHAR[length1 / hexProp1.bits + hexProp1.columns];
-	::ZeroMemory(compare1, length1 / hexProp1.bits + hexProp1.columns);
-	compare2 = (LPSTR)new CHAR[length2 / hexProp2.bits + hexProp1.columns];
-	::ZeroMemory(compare2, length2 / hexProp2.bits + hexProp1.columns);
-
-	while ((posSrc < length1) && (posSrc < length2))
+	/* create file for compare results */
+	_tcscpy(cmpResult.szFileName, cmparePath);
+	_tcscpy(szFile, ::PathFindFileName(hexEdit1.GetHexProp().szFileName));
+	::PathRemoveExtension(szFile);
+	::PathAppend(cmpResult.szFileName, szFile);
+	_tcscat(cmpResult.szFileName, _T("_"));
+	_tcscpy(szFile, ::PathFindFileName(hexEdit2.GetHexProp().szFileName));
+	::PathRemoveExtension(szFile);
+	_tcscat(cmpResult.szFileName, szFile);
+	_tcscat(cmpResult.szFileName, _T(".cmp"));
+	cmpResult.hFile = ::CreateFile(cmpResult.szFileName, 
+		GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 
+		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		
+	if (cmpResult.hFile != INVALID_HANDLE_VALUE)
 	{
-		if (buffer1[posSrc] != buffer2[posSrc])
+		LPSTR	buffer1 = (LPSTR)new CHAR[COMP_BLOCK+1];
+		LPSTR	buffer2 = (LPSTR)new CHAR[COMP_BLOCK+1];
+
+		/* get text size to comapre */
+		INT		length1 = ScintillaMsg(nppData._scintillaMainHandle, SCI_GETTEXTLENGTH) + 1;
+		INT		length2 = ScintillaMsg(nppData._scintillaSecondHandle, SCI_GETTEXTLENGTH) + 1;
+
+		/* get max length */
+		INT		curPos		= 0;
+		INT		maxLength	= length1;
+		if (length2 > length1)
+			maxLength = length2;
+
+		while (curPos < maxLength)
 		{
-			doMatch			 = FALSE;
-			compare1[posTgt] = TRUE;
-			compare2[posTgt] = TRUE;
+			UINT	posSrc	= 0;
+			UINT	length	= ((maxLength - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength % COMP_BLOCK));
+
+			ScintillaGetText(nppData._scintillaMainHandle, buffer1, curPos, length - 1);
+			ScintillaGetText(nppData._scintillaSecondHandle, buffer2, curPos, length - 1);
+
+			CHAR	val	= FALSE;
+
+			while (posSrc < length)
+			{
+				if (buffer1[posSrc] != buffer2[posSrc])
+				{
+					val		= TRUE;
+					doMatch	= FALSE;
+				}
+
+				/* increment source buffer */
+				posSrc++;
+
+				/* write to file */
+				DWORD	hasWritten	= 0;
+				if (hexProp1.bits == 1) {
+					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
+					val = FALSE;
+				} else if ((posSrc % hexProp1.bits) == 0) {
+					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
+					val = FALSE;
+				}
+			}
+
+			/* increment file position */
+			curPos += posSrc;
 		}
-		/* increment source buffer */
-		posSrc++;
 
-		/* increment target buffer */
-		if (hexProp1.bits != 1) {
-			posTgt = posSrc / hexProp1.bits;
-		} else {
-			posTgt++;
+		if (doMatch == TRUE)
+		{
+			if (NLMessageBox((HINSTANCE)g_hModule, nppData._nppHandle, _T("MsgBox CompMatch"), MB_OK) == FALSE)
+				::MessageBox(nppData._nppHandle, _T("Files Match."), _T("Hex-Editor Compare"), MB_OK);
+			::CloseHandle(cmpResult.hFile);
+			::DeleteFile(cmpResult.szFileName);
 		}
-	}
+		else
+		{
+			tCmpResult*	pCmpResult = (tCmpResult*)new tCmpResult;
+			*pCmpResult = cmpResult;
+			hexEdit1.SetCompareResult(pCmpResult);
+			hexEdit2.SetCompareResult(pCmpResult);
+		}
 
-	if (doMatch == TRUE)
-	{
-		if (NLMessageBox((HINSTANCE)g_hModule, nppData._nppHandle, _T("MsgBox CompMatch"), MB_OK) == FALSE)
-			::MessageBox(nppData._nppHandle, _T("Files Match."), _T("Hex-Editor Compare"), MB_OK);
-		delete [] compare1;
-		delete [] compare2;
+		delete [] buffer1;
+		delete [] buffer2;
 	}
-	else
-	{
-		hexEdit1.SetCompareResult(compare1);
-		hexEdit2.SetCompareResult(compare2);
-	}
-
-	delete [] buffer1;
-	delete [] buffer2;
 }
 
 
@@ -1544,7 +1593,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		if (isMenuHex == TRUE)
 		{
 			BOOL	lastSep = FALSE;
-			for (INT nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
 				switch (vMenuInfoFile[nPos].uID) {
 					case 0:
 					{
@@ -1587,7 +1636,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		}
 		else
 		{
-			for (INT nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoFile.size(); nPos++) {
 				::AppendMenu(hMenuTemp, 
 					vMenuInfoFile[nPos].uFlags | (vMenuInfoFile[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
 					vMenuInfoFile[nPos].uID, vMenuInfoFile[nPos].szName);
@@ -1608,7 +1657,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		if (isMenuHex == TRUE)
 		{
 			BOOL	lastSep = FALSE;
-			for (INT nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
 				switch (vMenuInfoEdit[nPos].uID) {
 					case 0:
 					{
@@ -1650,7 +1699,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		}
 		else
 		{
-			for (INT nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoEdit.size(); nPos++) {
 				::AppendMenu(hMenuTemp, 
 					vMenuInfoEdit[nPos].uFlags | (vMenuInfoEdit[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
 					vMenuInfoEdit[nPos].uID, vMenuInfoEdit[nPos].szName);
@@ -1671,7 +1720,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		if (isMenuHex == TRUE)
 		{
 			BOOL	lastSep = FALSE;
-			for (INT nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
 				switch (vMenuInfoSearch[nPos].uID) {
 					case 0:
 					{
@@ -1715,7 +1764,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		}
 		else
 		{
-			for (INT nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoSearch.size(); nPos++) {
 				::AppendMenu(hMenuTemp, 
 					vMenuInfoSearch[nPos].uFlags | (vMenuInfoSearch[nPos].uFlags & MF_SEPARATOR ? 0 : MF_STRING),
 					vMenuInfoSearch[nPos].uID, vMenuInfoSearch[nPos].szName);
@@ -1736,7 +1785,7 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		if (isMenuHex == TRUE)
 		{
 			BOOL	lastSep = FALSE;
-			for (INT nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
 				switch (vMenuInfoView[nPos].uID) {
 					case 0:
 					{
@@ -1772,12 +1821,12 @@ void ChangeNppMenu(BOOL toHexStyle, HWND hSci)
 		}
 		else
 		{
-			for (INT nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
+			for (size_t nPos = 0; nPos < vMenuInfoView.size(); nPos++) {
 				HMENU	hSubMenu = NULL;
 				tMenu	testMenu = vMenuInfoView[nPos];
 				if (vMenuInfoView[nPos].uFlags & MF_POPUP) {
 					hSubMenu = ::CreatePopupMenu();
-					for (INT nPosSub = 0; nPosSub < vMenuInfoView[nPos].vSubMenu.size(); nPosSub++) {
+					for (size_t nPosSub = 0; nPosSub < vMenuInfoView[nPos].vSubMenu.size(); nPosSub++) {
 						::AppendMenu(hSubMenu, vMenuInfoView[nPos].vSubMenu[nPosSub].uFlags | MF_STRING,
 							vMenuInfoView[nPos].vSubMenu[nPosSub].uID, vMenuInfoView[nPos].vSubMenu[nPosSub].szName);
 					}
@@ -1811,15 +1860,15 @@ void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 
 	vMenuInfo.clear();
 
-	for (INT nPos = 0; nPos < elemCnt; nPos++)
+	for (size_t nPos = 0; nPos < elemCnt; nPos++)
 	{
-		menuItem.uID = ::GetMenuItemID(hMenuItem, nPos);
-		menuItem.uFlags	= ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);
+		menuItem.uID = ::GetMenuItemID(hMenuItem, (int)nPos);
+		menuItem.uFlags	= ::GetMenuState(hMenuItem, (UINT)nPos, MF_BYPOSITION);
 
-		::GetMenuString(hMenuItem, nPos, menuItem.szName, sizeof(menuItem.szName) / sizeof(TCHAR), MF_BYPOSITION);
+		::GetMenuString(hMenuItem, (UINT)nPos, menuItem.szName, sizeof(menuItem.szName) / sizeof(TCHAR), MF_BYPOSITION);
 		if ((menuItem.uID == 0) || (menuItem.uID == -1))
 		{
-			HMENU	hSubMenu = ::GetSubMenu(hMenuItem, nPos);
+			HMENU	hSubMenu = ::GetSubMenu(hMenuItem, (int)nPos);
 			if (hSubMenu != NULL) {
 				StoreNppMenuInfo(hSubMenu, menuItem.vSubMenu);
 			}
@@ -1833,7 +1882,7 @@ void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 	UINT	nPos	= 0;
 	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
 
-	for (INT i = 0; i < vMenuInfo.size() && ((vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0)); i++)
+	for (size_t i = 0; i < vMenuInfo.size() && ((vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0)); i++)
 	{
 		if (vMenuInfo[i].uID == ::GetMenuItemID(hMenuItem, nPos)) {
 			vMenuInfo[i].uFlags = ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);

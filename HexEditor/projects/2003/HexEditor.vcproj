@@ -72,7 +72,7 @@
 				OptimizeForProcessor="1"
 				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="../../src,../../src/HelpDlg,../../src/MISC,../../src/OptionDlg,../../src/UserDlg,../../../Common/Ccpp,../../../NativeLang/src"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS;UNICODE"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;HEXEDITOR_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"

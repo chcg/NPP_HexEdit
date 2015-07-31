@@ -98,7 +98,7 @@ BOOL CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam
 		}
 		
 		case WM_CTLCOLORLISTBOX:
-			return (LRESULT) CreateSolidBrush(GetSysColor(COLOR_3DFACE));
+			return (BOOL)((HBRUSH)::CreateSolidBrush(GetSysColor(COLOR_3DFACE)));
 
 		case WM_DRAWITEM:
 		{
@@ -213,8 +213,8 @@ BOOL CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam
                 {
 			        if (HIWORD(wParam) == LBN_SELCHANGE)
 		            {
-                        int i = ::SendMessage((HWND)lParam, LB_GETCURSEL, 0L, 0L);
-                        _color = ::SendMessage((HWND)lParam, LB_GETITEMDATA, i, 0L);
+                        int i = (int)::SendMessage((HWND)lParam, LB_GETCURSEL, 0L, 0L);
+                        _color = (COLORREF)::SendMessage((HWND)lParam, LB_GETITEMDATA, i, 0L);
 
                         ::SendMessage(_hParent, HEXM_PICKUP_COLOR, _color, 0);
 					    return TRUE;

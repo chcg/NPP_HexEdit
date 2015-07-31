@@ -36,12 +36,14 @@ using namespace std;
 
 #include "HEXResource.h"
 
-#define DT_HEX_VIEW		(DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX)
-#define	VIEW_ROW		(_pCurProp->columns * _pCurProp->bits)
-#define FACTOR			((_pCurProp->isBin == TRUE)?8:2)
-#define	SUBITEM_LENGTH	(_pCurProp->bits * FACTOR)
-#define FULL_SUBITEM	((_pCurProp->cursorItem * VIEW_ROW + (_pCurProp->cursorSubItem * _pCurProp->bits)) <= _currLength)
-#define DUMP_FIELD		(_pCurProp->columns + 1)
+#define HEX_FIRST_TIME_VIS	(0xFFFFFFFF)
+
+#define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX)
+#define	VIEW_ROW			(_pCurProp->columns * _pCurProp->bits)
+#define FACTOR				((_pCurProp->isBin == TRUE)?8:2)
+#define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
+#define FULL_SUBITEM		((_pCurProp->cursorItem * VIEW_ROW + (_pCurProp->cursorSubItem * _pCurProp->bits)) <= _currLength)
+#define DUMP_FIELD			(_pCurProp->columns + 1)
 
 extern tClipboard	g_clipboard;
 
@@ -66,14 +68,14 @@ public:
 
    	void doDialog(BOOL toggle = FALSE);
 
-	void UpdateDocs(LPCWSTR* pFiles, UINT numFiles, INT openDoc);
+	void UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc);
 
-	void FileNameChanged(LPWSTR newPath)
+	void FileNameChanged(LPTSTR newPath)
 	{
 		if (_openDoc == -1)
 			return;
 
-		wcscpy(_hexProp[_openDoc].pszFileName, newPath);
+		_tcscpy(_hexProp[_openDoc].szFileName, newPath);
 	};
 
 	void SetParentNppHandle(HWND hWnd, UINT cont)
@@ -149,11 +151,23 @@ public:
 			return;
 
 		if (_iUnReCnt == -1) {
-			_uUnReCode = code & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT);
-			_uFirstPos = position;
+			_uUnReCode		= code & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT);
+			_uFirstPos		= position;
+			_uLastPos		= position;
+			_uLastLength	= length;
 			_iUnReCnt++;
 		} else if (_uUnReCode & code) {
-			_iUnReCnt++;
+			if ((_pCurProp->isLittle == TRUE) && (_pCurProp->bits != HEX_BYTE)) {
+				if (position != (_uLastPos + 1)) {
+					_iUnReCnt++;
+					_uLastLength = length;
+				} else {
+					_uLastLength += length;
+				}
+				_uLastPos = position;
+			} else {
+				_iUnReCnt++;
+			}
 		}
 
 		UpdateBookmarks(position, (code & SC_MOD_DELETETEXT ? -1:1) * length);
@@ -161,15 +175,30 @@ public:
 		if (code & SC_LASTSTEPINUNDOREDO) {
 			if (code & SC_MOD_INSERTTEXT) {
 				if (_iUnReCnt > 1) {
+					/* changed a block */
+					if ((_pCurProp->isLittle == TRUE) && (_pCurProp->bits != HEX_BYTE)) {
+						UINT offset = position % _pCurProp->bits;
+						position = (position - offset) + (_pCurProp->bits - offset - 1);
+
+						offset = _uFirstPos % _pCurProp->bits;
+						_uFirstPos = (_uFirstPos - offset) + (_pCurProp->bits - offset - 1);
+					}
+
 					if (position < _uFirstPos) {
-						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + length, HEX_SEL_BLOCK);
+						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
 					} else {
-						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + length, HEX_SEL_BLOCK);
+						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
 					}
 				} else {
-					SetSelection(position, position + length, HEX_SEL_NORM, (position + length) % VIEW_ROW == 0);
+					/* changed only one character */
+					if ((_pCurProp->isLittle == TRUE) && (_pCurProp->bits != HEX_BYTE)) {
+						UINT offset = position % _pCurProp->bits;
+						position = (position - offset) + (_pCurProp->bits - offset - 1);
+					}
+					SetSelection(position, position + _uLastLength, HEX_SEL_NORM, (position + _uLastLength) % VIEW_ROW == 0);
 				}
 			} else {
+				/* delete some characters */
 				SetSelection(_uFirstPos, _uFirstPos);
 			}
 			_iUnReCnt = -1;
@@ -184,7 +213,7 @@ public:
 			return;
 
 		/* correct length of file */
-		_currLength = SciSubClassWrp::execute(SCI_GETLENGTH);
+		_currLength = (UINT)SciSubClassWrp::execute(SCI_GETLENGTH);
 
 		/* correct item count */
 		if ((_currLength == GetCurrentPos()) && (_pCurProp->anchorPos == 0)) {
@@ -258,12 +287,38 @@ public:
 		SetFont();
 	};
 
-	void SetCompareResult(LPSTR compareData)
+
+	void ClearAllCompareResults()
 	{
-		if (_pCurProp->pCompareData) {
-			delete [] _pCurProp->pCompareData;
+		for (size_t i = 0; i < _hexProp.size(); i++) {
+			if (_hexProp[i].pCmpResult != NULL) {
+				_hexProp[i].pCmpResult->pOpenCnt--;
+				if (_hexProp[i].pCmpResult->pOpenCnt == 0) {
+					::CloseHandle(_hexProp[i].pCmpResult->hFile);
+					::DeleteFile(_hexProp[i].pCmpResult->szFileName);
+					delete _hexProp[i].pCmpResult;
+				}
+				_hexProp[i].pCmpResult = NULL;
+			}
 		}
-		_pCurProp->pCompareData = compareData;
+	};
+
+	void SetCompareResult(tCmpResult* pCmpResult)
+	{
+		if (pCmpResult == NULL) {
+			if (_pCurProp->pCmpResult != NULL) {
+				_pCurProp->pCmpResult->pOpenCnt--;
+				if (_pCurProp->pCmpResult->pOpenCnt == 0) {
+					::CloseHandle(_pCurProp->pCmpResult->hFile);
+					::DeleteFile(_pCurProp->pCmpResult->szFileName);
+					delete _pCurProp->pCmpResult;
+				}
+				_pCurProp->pCmpResult = NULL;
+			}
+		} else {
+			_pCurProp->pCmpResult = pCmpResult;
+			_pCurProp->pCmpResult->pOpenCnt++;
+		}
 		::RedrawWindow(_hListCtrl, NULL, NULL, TRUE);
 	}
 
@@ -348,20 +403,29 @@ private:
 
 	BOOL SetFont(void)
 	{
-		BOOL	ret = FALSE;
+		BOOL	ret			= FALSE;
+		HDC		hDc			= ::GetDC(_hSelf);
+		INT		zoomFactor	= 0;
 
 		if (_hFont) {
 			::DeleteObject(_hFont);
 		}
 
-		_hFont = ::CreateFont(g_iFontSize[_fontSize], 0, 0, 0,
-			(isFontBold() == TRUE) ? FW_BOLD : FW_NORMAL, isFontItalic(), isFontUnderline(),
-			0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, ANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
-		if (_hFont)
-		{
-			::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
-			UpdateHeader();
-			ret = TRUE;
+		if (_pCurProp != NULL) {
+			zoomFactor = _pCurProp->fontZoom;
+		}
+
+		if (hDc != NULL) {
+			_hFont = ::CreateFont(-MulDiv(g_iFontSize[_fontSize], GetDeviceCaps(hDc, LOGPIXELSY), 72) - zoomFactor, 0, 0, 0,
+				(isFontBold() == TRUE) ? FW_BOLD : FW_NORMAL, isFontItalic(), isFontUnderline(),
+				0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, ANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
+			if (_hFont)
+			{
+				::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
+				UpdateHeader();
+				ret = TRUE;
+			}
+			::DeleteDC(hDc);
 		}
 
 		return ret;
@@ -369,22 +433,31 @@ private:
 
 	void runCursor(HWND hwnd, UINT Message, WPARAM wParam, unsigned long lParam)
 	{
-		_isCurOn ^= TRUE;
-		ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
+		if (_pCurProp != NULL)
+		{
+			_isCurOn ^= TRUE;
+			ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
+		}
 	};
 
 	void RestartCursor(void)
 	{
-		_isCurOn = TRUE;
-		ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
-		::SetTimer(_hSelf, IDC_HEX_CURSORTIMER, 500, cursorFunc);
+		if (_pCurProp != NULL)
+		{
+			_isCurOn = TRUE;
+			ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
+			::SetTimer(_hSelf, IDC_HEX_CURSORTIMER, 500, cursorFunc);
+		}
 	};
 
 	void DisableCursor(void)
 	{
-		_isCurOn = FALSE;
-		::KillTimer(_hSelf, IDC_HEX_CURSORTIMER);
-		ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
+		if (_pCurProp != NULL)
+		{
+			_isCurOn = FALSE;
+			::KillTimer(_hSelf, IDC_HEX_CURSORTIMER);
+			ListView_RedrawItems(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorItem);
+		}
 	}
 
 	static void CALLBACK cursorFunc(HWND hWnd, UINT Message, WPARAM wParam, unsigned long lParam) {
@@ -393,15 +466,18 @@ private:
 
 	BOOL TabMessage(void)
 	{
-		if (_pCurProp->isVisible == TRUE)
+		if (_pCurProp != NULL)
 		{
-			INT		posBeg, posEnd;
-			GetSelection(&posBeg, &posEnd);
-			_pCurProp->editType = (_pCurProp->editType == HEX_EDIT_HEX ? HEX_EDIT_ASCII : HEX_EDIT_HEX);
-			SetSelection(posBeg, posEnd, _pCurProp->selection, _pCurProp->cursorSubItem == DUMP_FIELD);
-			EnsureVisible(_pCurProp->cursorItem, (_pCurProp->editType == HEX_EDIT_ASCII) ? DUMP_FIELD : _pCurProp->cursorSubItem);
-			RestartCursor();
-			return TRUE;
+			if (_pCurProp->isVisible == TRUE)
+			{
+				INT		posBeg, posEnd;
+				GetSelection(&posBeg, &posEnd);
+				_pCurProp->editType = (_pCurProp->editType == HEX_EDIT_HEX ? HEX_EDIT_ASCII : HEX_EDIT_HEX);
+				SetSelection(posBeg, posEnd, _pCurProp->selection, _pCurProp->cursorSubItem == DUMP_FIELD);
+				EnsureVisible(_pCurProp->cursorItem, (_pCurProp->editType == HEX_EDIT_ASCII) ? DUMP_FIELD : _pCurProp->cursorSubItem);
+				RestartCursor();
+				return TRUE;
+			}
 		}
 		return FALSE;
 	};
@@ -602,6 +678,8 @@ private:
 	INT					_iUnReCnt;
 	UINT				_uUnReCode;
 	UINT				_uFirstPos;
+	UINT				_uLastPos;
+	UINT				_uLastLength;
 
 	/* mouse states */
 	BOOL				_isLBtnDown;

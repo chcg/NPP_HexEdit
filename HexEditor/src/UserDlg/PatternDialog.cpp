@@ -93,8 +93,10 @@ BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 					break;
 				case IDOK:
 				{
-					BOOL	ret = FALSE;
-					ScintillaMsg(SCI_BEGINUNDOACTION);
+					BOOL	ret		= FALSE;
+					HWND	hSci	= getCurrentHScintilla();
+
+					::SendMessage(hSci, SCI_BEGINUNDOACTION, 0, 0);
 					if (_isReplace == TRUE)
 					{
 						ret = onReplace();
@@ -103,7 +105,7 @@ BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LP
 					{
 						ret = onInsert();
 					}
-					ScintillaMsg(SCI_ENDUNDOACTION);
+					::SendMessage(hSci, SCI_ENDUNDOACTION, 0, 0);
 
 					if (ret == TRUE)
 					{
@@ -217,7 +219,7 @@ BOOL PatternDlg::onInsert(void)
 		}
 		else
 		{
-			LITTLE_REPLEACE_ERROR;
+			LITTLE_REPLACE_ERROR;
 
 			/* free allocated space */
 			CleanScintillaBuf(hSciPat);
@@ -290,7 +292,7 @@ BOOL PatternDlg::onReplace(void)
 
 		if (E_OK != replaceLittleToBig(hSciTgt, hSciPat, 0, (posBeg < posEnd ? posBeg : posEnd), length, length))
 		{
-			LITTLE_REPLEACE_ERROR;
+			LITTLE_REPLACE_ERROR;
 			bRet = FALSE;
 		}
 	}
@@ -320,7 +322,7 @@ BOOL PatternDlg::onReplace(void)
 			}
 			else
 			{
-				LITTLE_REPLEACE_ERROR;
+				LITTLE_REPLACE_ERROR;
 
 				/* free allocated space */
 				CleanScintillaBuf(hSciPat);

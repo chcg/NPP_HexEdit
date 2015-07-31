@@ -166,7 +166,7 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMen
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 
-	return nli.lRes;
+	return (BOOL)nli.lRes;
 }
 
 /**

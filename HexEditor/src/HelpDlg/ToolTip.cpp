@@ -65,7 +65,7 @@ void ToolTip::Show(RECT rectTitle, string strTitle, int iXOff, int iWidthOff)
 	SIZE	size;
 	RECT	rectDisplay	= rectTitle;
 
-	::GetTextExtentPoint(hDc, strTitle.c_str(), strTitle.size(), &size);
+	::GetTextExtentPoint(hDc, strTitle.c_str(), (int)strTitle.size(), &size);
 	rectDisplay.left   += iXOff + iWidthOff;
 	rectDisplay.right   = rectDisplay.left + size.cx + 3;
 
@@ -93,7 +93,7 @@ void ToolTip::Show(RECT rectTitle, string strTitle, int iXOff, int iWidthOff)
 				  rectDisplay.right-rectDisplay.left, rectDisplay.bottom-rectDisplay.top, 
 				  SWP_SHOWWINDOW|SWP_NOACTIVATE );
 	::SetBkMode(hDc, TRANSPARENT );
-	::TextOut(hDc, 0, (rectTitle.bottom-rectTitle.top)/2-7, strTitle.c_str(), strTitle.size());
+	::TextOut(hDc, 0, (rectTitle.bottom-rectTitle.top)/2-7, strTitle.c_str(), (int)strTitle.size());
 
 	::ReleaseDC(_hSelf, hDc);
 }

@@ -407,12 +407,12 @@ BOOL OptionDlg::GetParams(void)
 			_pProp->hexProp.isBin    = TRUE;
 
 		/* get autostart properties */
-		::GetWindowTextW(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->autoProp.szExtensions, sizeof(_pProp->autoProp.szExtensions));
+		::GetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_EXTLIST), _pProp->autoProp.szExtensions, sizeof(_pProp->autoProp.szExtensions));
 		::GetWindowText(::GetDlgItem(_hSelf, IDC_EDIT_PERCENT), _pProp->autoProp.szPercent, sizeof(_pProp->autoProp.szPercent));
 
 		/* get font information */
 		::GetWindowText(::GetDlgItem(_hSelf, IDC_COMBO_FONTNAME), _pProp->fontProp.szFontName, sizeof(_pProp->fontProp.szFontName));
-		_pProp->fontProp.iFontSizeElem	= ::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTSIZE, CB_GETCURSEL, 0, 0);
+		_pProp->fontProp.iFontSizeElem	= (UINT)::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTSIZE, CB_GETCURSEL, 0, 0);
 		_pProp->fontProp.isBold			= (::SendDlgItemMessage(_hSelf, IDC_CHECK_BOLD, BM_GETCHECK, 0, 0) == BST_CHECKED);
 		_pProp->fontProp.isItalic		= (::SendDlgItemMessage(_hSelf, IDC_CHECK_ITALIC, BM_GETCHECK, 0, 0) == BST_CHECKED);
 		_pProp->fontProp.isUnderline	= (::SendDlgItemMessage(_hSelf, IDC_CHECK_UNDERLINE, BM_GETCHECK, 0, 0) == BST_CHECKED);
@@ -425,6 +425,7 @@ BOOL OptionDlg::GetParams(void)
 		_ColCmbSelBk.getColor(&_pProp->colorProp.rgbSelBk);
 		_ColCmbDiffTxt.getColor(&_pProp->colorProp.rgbDiffTxt);
 		_ColCmbDiffBk.getColor(&_pProp->colorProp.rgbDiffBk);
+		_ColCmbBkMk.getColor(&_pProp->colorProp.rgbBkMk);
 		_ColCmbCurLine.getColor(&_pProp->colorProp.rgbCurLine);
 	}
 	else
