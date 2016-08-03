@@ -28,11 +28,11 @@ build:
     verbosity: minimal
 
 build_script:
-    - cd c:\projects\NPP_HexEdit\HexEditor\projects\2003\
+    - cd c:\projects\npp-hexedit\HexEditor\projects\2003\
     - msbuild HexEditor.vcxproj /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
 
 after_build:
-    - cd c:\projects\NPP_HexEdit\HexEditor\projects\2003\
+    - cd c:\projects\npp-hexedit\HexEditor\projects\2003\
     - ps: >-
         $hexediterFileName = "HexEditor.$env:PLATFORM.$env:CONFIGURATION.$env:PLATFORMTOOLSET.dll"
 
