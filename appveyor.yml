@@ -1,0 +1,54 @@
+version: 1.0.{build}
+image: Visual Studio 2015
+
+
+clone_depth: 1
+
+
+environment:
+  matrix:
+  - PlatformToolset: v140
+  - PlatformToolset: v120
+
+platform:
+    - x64
+    - Win32
+
+configuration:
+    - Release
+    - Debug
+
+install:
+    - if "%platform%"=="x64" set archi=amd64
+    - if "%platform%"=="Win32" set archi=x86
+    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
+
+build:
+    parallel: true                  # enable MSBuild parallel builds
+    verbosity: minimal
+
+build_script:
+    - cd c:\projects\NPP_HexEdit\HexEditor\projects\2003\
+    - msbuild HexEditor.vcxproj /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
+
+after_build:
+    - cd c:\projects\NPP_HexEdit\HexEditor\projects\2003\
+    - ps: >-
+        $hexediterFileName = "HexEditor.$env:PLATFORM.$env:CONFIGURATION.$env:PLATFORMTOOLSET.dll"
+
+        if ($env:PLATFORM -eq "x64" -and $env:CONFIGURATION -eq "Release") {
+            Push-AppveyorArtifact "x64\Release\HexEditor.dll" -FileName "$hexediterFileName"
+        }
+
+        if ($env:PLATFORM -eq "x64" -and $env:CONFIGURATION -eq "Debug") {
+            Push-AppveyorArtifact "x64\Debug\HexEditor.dll" -FileName "$hexediterFileName"
+        }
+
+        if ($env:PLATFORM -eq "Win32" -and $env:CONFIGURATION -eq "Release") {
+            Push-AppveyorArtifact "Release\HexEditor.dll" -FileName "$hexediterFileName"
+        }
+
+        if ($env:PLATFORM -eq "Win32" -and $env:CONFIGURATION -eq "Debug") {
+            Push-AppveyorArtifact "Debug\HexEditor.dll" -FileName "$hexediterFileName"
+        }
+
