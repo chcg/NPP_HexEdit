@@ -25,82 +25,76 @@
 // along with this program; if not, write to the Free Software
 
 
-#ifndef DOCKINGDLGINTERFACE_H
-#define DOCKINGDLGINTERFACE_H
+#pragma once
 
-#ifndef DOCKING_RESOURCE_H
 #include "dockingResource.h"
-#endif //DOCKING_RESOURCE_H
-
-#ifndef DOCKING_H
 #include "Docking.h"
-#endif //DOCKING_H
 
 #include <assert.h>
 #include <shlwapi.h>
 #include "Common.h"
 #include "StaticDialog.h"
 
+
+
 class DockingDlgInterface : public StaticDialog
 {
 public:
-	DockingDlgInterface(): StaticDialog(), _HSource(NULL),\
-		_dlgID(-1), _isFloating(TRUE), _iDockedPos(0), _pluginName(TEXT("")) {};
+	DockingDlgInterface() = default;
+	explicit DockingDlgInterface(int dlgID): _dlgID(dlgID) {}
 
-	DockingDlgInterface(int dlgID): StaticDialog(), _HSource(NULL),\
-		_dlgID(dlgID), _isFloating(TRUE), _iDockedPos(0), _pluginName(TEXT("")) {};
-	
-	virtual void init(HINSTANCE hInst, HWND parent)	{
+	virtual void init(HINSTANCE hInst, HWND parent)
+	{
 		StaticDialog::init(hInst, parent);
 		TCHAR temp[MAX_PATH];
-		::GetModuleFileName((HMODULE)hInst, temp, MAX_PATH);
+		::GetModuleFileName(reinterpret_cast<HMODULE>(hInst), temp, MAX_PATH);
 		_moduleName = ::PathFindFileName(temp);
-	};
+	}
 
-    void create(tTbData * data, bool isRTL = false){
+    void create(tTbData * data, bool isRTL = false)
+	{
+		assert(data != nullptr);
 		StaticDialog::create(_dlgID, isRTL);
 		TCHAR temp[MAX_PATH];
 		::GetWindowText(_hSelf, temp, MAX_PATH);
 		_pluginName = temp;
+
         // user information
 		data->hClient		= _hSelf;
-		data->pszName		= (TCHAR *)_pluginName.c_str();
+		data->pszName		= _pluginName.c_str();
 
 		// supported features by plugin
 		data->uMask			= 0;
 
 		// additional info
 		data->pszAddInfo	= NULL;
-	};
-
-	virtual void updateDockingDlg() {
-		::SendMessage(_hParent, NPPM_DMMUPDATEDISPINFO, 0, (LPARAM)_hSelf);
 	}
 
-    virtual void destroy() {
-    };
+	virtual void updateDockingDlg()
+	{
+		::SendMessage(_hParent, NPPM_DMMUPDATEDISPINFO, 0, reinterpret_cast<LPARAM>(_hSelf));
+	}
 
-	virtual void setBackgroundColor(COLORREF) {
-    };
+    virtual void destroy() {}
 
-	virtual void setForegroundColor(COLORREF) {
-    };
+	virtual void setBackgroundColor(COLORREF) {}
+	virtual void setForegroundColor(COLORREF) {}
 
 	virtual void display(bool toShow = true) const {
-		::SendMessage(_hParent, toShow?NPPM_DMMSHOW:NPPM_DMMHIDE, 0, (LPARAM)_hSelf);
-	};
+		::SendMessage(_hParent, toShow ? NPPM_DMMSHOW : NPPM_DMMHIDE, 0, reinterpret_cast<LPARAM>(_hSelf));
+	}
 
 	bool isClosed() const {
 		return _isClosed;
-	};
+	}
 
 	void setClosed(bool toClose) {
 		_isClosed = toClose;
-	};
+	}
 
 	const TCHAR * getPluginFileName() const {
 		return _moduleName.c_str();
-	};
+	}
 
 protected :
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM, LPARAM lParam)
@@ -110,7 +104,7 @@ protected :
 
 			case WM_NOTIFY: 
 			{
-				LPNMHDR	pnmh	= (LPNMHDR)lParam;
+				LPNMHDR	pnmh = reinterpret_cast<LPNMHDR>(lParam);
 
 				if (pnmh->hwndFrom == _hParent)
 				{
@@ -144,13 +138,11 @@ protected :
 	};
 	
 	// Handles
-    HWND			_HSource;
-	int				_dlgID;
-	bool            _isFloating;
-	int				_iDockedPos;
+    HWND			_HSource = NULL;
+	int				_dlgID = -1;
+	bool            _isFloating = true;
+	int				_iDockedPos = 0;
 	generic_string  _moduleName;
 	generic_string  _pluginName;
-	bool			_isClosed;
+	bool			_isClosed = false;
 };
-
-#endif // DOCKINGDLGINTERFACE_H
