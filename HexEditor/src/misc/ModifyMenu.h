@@ -20,6 +20,7 @@
 #define _MODIFYMENU_H_
 
 #include "keys.h"
+#include "menuCmdID.h"
 
 
 const UINT pSuppFileIds[] = {

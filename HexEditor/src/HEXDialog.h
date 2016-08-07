@@ -333,7 +333,7 @@ public:
 	void SetStatusBar(void);
 
 protected :
-	BOOL CALLBACK run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
+	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
@@ -406,7 +406,7 @@ private:
 	/* Subclassing list */
 	LRESULT runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK wndListProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-		return (((HexEdit *)(::GetWindowLong(hwnd, GWL_USERDATA)))->runProcList(hwnd, Message, wParam, lParam));
+		return (((HexEdit *)(::GetWindowLong(hwnd, GWLP_USERDATA)))->runProcList(hwnd, Message, wParam, lParam));
 	};
 
 	BOOL SetFont(void)
@@ -469,7 +469,7 @@ private:
 	}
 
 	static void CALLBACK cursorFunc(HWND hWnd, UINT Message, WPARAM wParam, unsigned long lParam) {
-		(((HexEdit *)(::GetWindowLong(hWnd, GWL_USERDATA)))->runCursor(hWnd, Message, wParam, lParam));
+		(((HexEdit *)(::GetWindowLong(hWnd, GWLP_USERDATA)))->runCursor(hWnd, Message, wParam, lParam));
 	};
 
 	BOOL TabMessage(void)

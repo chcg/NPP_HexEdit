@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "SysMsg.h"
+#include "Common.h"
 #include "MultiTypeCombo.h"
 #include "tables.h"
 #include "Utf8_16.h"
@@ -48,8 +48,8 @@ void MultiTypeCombo::init(HWND hNpp, HWND hCombo)
 	comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 
 	::SendMessage(_hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&comboBoxInfo);
-	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWL_USERDATA, reinterpret_cast<LONG>(this));
-	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(comboBoxInfo.hwndItem, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
+	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG>(this));
+	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
 }
 
 

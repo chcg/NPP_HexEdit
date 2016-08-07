@@ -26,7 +26,7 @@ UINT CompareDlg::doDialog(HexEdit *pHexEdit1, HexEdit *pHexEdit2, UINT currentSC
 	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COMPARE_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
 }
 
-BOOL CALLBACK CompareDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK CompareDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch (Message) 
 	{

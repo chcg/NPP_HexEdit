@@ -42,7 +42,7 @@ public:
     virtual void destroy() {};
 
 protected :
-	virtual BOOL CALLBACK run_dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 	NppData			_nppData;
 	HexEdit*		_pHexEdit1;

@@ -488,9 +488,9 @@ UINT MapShortCutToMenuId(BYTE uChar)
         {
             if (g_scList[i].isEnable == TRUE)
             {
-                if ((g_scList[i].scKey._isAlt   == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_MENU))))    return 0;
-                if ((g_scList[i].scKey._isCtrl  == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_CONTROL)))) return 0;
-                if ((g_scList[i].scKey._isShift == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_SHIFT))))   return 0;
+                if ((g_scList[i].scKey._isAlt   == true) != ((0x80 & ::GetKeyState(VK_MENU))!= 0))    return 0;
+                if ((g_scList[i].scKey._isCtrl  == true) != ((0x80 & ::GetKeyState(VK_CONTROL))!= 0)) return 0;
+                if ((g_scList[i].scKey._isShift == true) != ((0x80 & ::GetKeyState(VK_SHIFT))!= 0))   return 0;
                 return g_scList[i].uID;
             }
             return 0;

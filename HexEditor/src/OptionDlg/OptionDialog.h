@@ -51,7 +51,7 @@ public:
 
 
 protected :
-	BOOL CALLBACK run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
+	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
 
 	void TabUpdate(void);
 	void SetParams(void);

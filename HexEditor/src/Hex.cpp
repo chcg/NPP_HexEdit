@@ -28,7 +28,7 @@
 #include "HelpDialog.h"
 #include "ToolTip.h"
 #include "tables.h"
-#include "SysMsg.h"
+#include "Common.h"
 #include "ModifyMenu.h"
 #include <stdlib.h>
 
@@ -151,7 +151,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 				::DestroyIcon(g_TBHex.hToolbarIcon);
 
 			/* Remove subclaasing */
-			SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LONG)wndProcNotepad);
+			SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LONG)wndProcNotepad);
 			break;
 		}
 		case DLL_THREAD_ATTACH:
@@ -186,7 +186,7 @@ extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
 	helpDlg.init((HINSTANCE)g_hModule, nppData);
 
 	/* Subclassing for Notepad */
-	wndProcNotepad = (WNDPROC)SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LPARAM)SubWndProcNotepad);
+	wndProcNotepad = (WNDPROC)SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LPARAM)SubWndProcNotepad);
 
 	pCurHexEdit = &hexEdit1;
 	setHexMask();
@@ -364,7 +364,7 @@ void loadSettings(void)
 	{
 		HANDLE	hFile			= NULL;
 #ifdef UNICODE
-		CHAR	szBOM[]			= {0xFF, 0xFE};
+		CHAR	szBOM[]			= {(CHAR)0xFF, (CHAR)0xFE};
 		DWORD	dwByteWritten	= 0;
 #endif
 			
@@ -1288,7 +1288,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 				UINT offset = (lenCpy) % hexProp.bits;
 				UINT max	= (lenCpy) / hexProp.bits + 1;
 
-				for (i = 1; i <= max; i++)
+				for (UINT i = 1; i <= max; i++)
 				{
 					if (i == max)
 					{
@@ -1520,7 +1520,7 @@ void DoCompare(void)
 			DWORD	hasWritten	= 0;
 			CHAR    val		    = TRUE;
 
-            for (UINT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+            for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
 			    ::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
             }
 

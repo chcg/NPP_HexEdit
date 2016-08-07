@@ -48,7 +48,7 @@ public:
 
 
 protected :
-	virtual BOOL CALLBACK run_dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
    	void doDialog(HWND hHexEdit);
 	BOOL onInsert(void);
@@ -57,7 +57,7 @@ protected :
 	/* Subclassing list */
 	LRESULT runProcEdit(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK wndEditProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-		return (((PatternDlg *)(::GetWindowLong(hwnd, GWL_USERDATA)))->runProcEdit(hwnd, Message, wParam, lParam));
+		return (((PatternDlg *)(::GetWindowLong(hwnd, GWLP_USERDATA)))->runProcEdit(hwnd, Message, wParam, lParam));
 	};
 
 

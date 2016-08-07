@@ -24,7 +24,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
 typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
+#ifndef CB_SETMINVISIBLE
 #define CB_SETMINVISIBLE 0x1701
+#endif // !CB_SETMINVISIBLE
 
 
 
@@ -67,7 +69,7 @@ void FindReplaceDlg::display(bool toShow)
 }
 
 
-BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK FindReplaceDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch (Message) 
 	{
@@ -515,7 +517,7 @@ void FindReplaceDlg::onReplace(void)
 
 			/* make difference between match case modes */
     		if (((_isMatchCase == TRUE) && (memcmp(text, _find.text, lenStr) == 0)) ||
-				((_isMatchCase == FALSE) && (stricmp(text, _find.text) == 0)))
+				((_isMatchCase == FALSE) && (_stricmp(text, _find.text) == 0)))
     		{
     			ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION);
     			ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
@@ -773,7 +775,7 @@ void FindReplaceDlg::getSelText(tComboInfo* info)
 	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
 
 	INT	offset	= (INT)(posBeg < posEnd ? posBeg : posEnd);
-	INT	length	= (abs(posEnd-posBeg) > COMBO_STR_MAX ? COMBO_STR_MAX : abs(posEnd-posBeg));
+	INT	length	= (abs((INT)(posEnd-posBeg)) > COMBO_STR_MAX ? COMBO_STR_MAX : abs((INT)(posEnd-posBeg)));
 	info->length = length;
 
 	if (info->length != 0)

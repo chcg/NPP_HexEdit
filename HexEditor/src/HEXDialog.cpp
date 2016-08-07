@@ -72,7 +72,7 @@ void HexEdit::init(HINSTANCE hInst, NppData nppData, LPCTSTR iniFilePath)
 	}
 }
 
-BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch (Message) 
 	{
@@ -82,8 +82,8 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 			UpdateFont();
 
 			/* intial subclassing for key mapping */
-			::SetWindowLongPtr(_hListCtrl, GWL_USERDATA, (LONG)(void *)this);
-			_hDefaultListProc = (WNDPROC)(void *)(::SetWindowLongPtr(_hListCtrl, GWL_WNDPROC, (LONG)(void *)wndListProc));
+			::SetWindowLongPtr(_hListCtrl, GWLP_USERDATA, (LONG)(void *)this);
+			_hDefaultListProc = (WNDPROC)(void *)(::SetWindowLongPtr(_hListCtrl, GWLP_WNDPROC, (LONG)(void *)wndListProc));
 			ListView_SetExtendedListViewStyleEx(_hListCtrl, LVS_EX_ONECLICKACTIVATE, LVS_EX_ONECLICKACTIVATE);
 			break;
 		}
@@ -196,7 +196,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 									}
 								}
 
-								SetWindowLongPtrW(hwnd, DWL_MSGRESULT, (LONG)(CDRF_NOTIFYITEMDRAW|CDRF_NOTIFYPOSTPAINT));
+								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_NOTIFYITEMDRAW|CDRF_NOTIFYPOSTPAINT));
 								return TRUE;
 
 							case CDDS_ITEMPREPAINT:
@@ -271,7 +271,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
                                 /* destroy background brush */
 							    ::DeleteObject(_hBkBrush);
 
-								SetWindowLongPtr(hwnd, DWL_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
+								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
 								return TRUE;
 
 							case CDDS_POSTPAINT:
@@ -289,7 +289,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 								_uFirstVisSubItem = 0;
 								_uLastVisSubItem = 0;
 
-								SetWindowLongPtr(hwnd, DWL_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
+								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
 								return TRUE;
 							}
 							default:
@@ -1466,7 +1466,7 @@ void HexEdit::Paste(void)
 					{
 						isOk = FALSE;
 						TCHAR	TEMP[256];
-						_stprintf(TEMP, _T("%s %d\n"), buffer, ASCIIConvert(buffer)/0x10);
+						_stprintf(TEMP, _T("%s %d\n"), (LPTSTR)buffer, ASCIIConvert(buffer)/0x10);
 						OutputDebugString(TEMP);
 					}
 				}
@@ -1491,10 +1491,10 @@ void HexEdit::Paste(void)
 
 			/* remove resources */
 			if (buffer != NULL) {
-				delete buffer;
+				delete [] buffer;
 			}
 			if (target != NULL) {
-				delete target;
+				delete [] target;
 			}
 		}
 		else
@@ -1905,7 +1905,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 		UINT offset = length % _pCurProp->bits;
 		UINT max	= length / _pCurProp->bits + 1;
 
-		for (i = 1; i <= max; i++)
+		for (UINT i = 1; i <= max; i++)
 		{
 			if (i == max)
 			{
@@ -2220,8 +2220,8 @@ void HexEdit::Delete(void)
 	/* get horizontal and vertical gap size */
 	if (_pCurProp->selection == HEX_SEL_BLOCK)
 	{
-		count = abs(_pCurProp->anchorPos  - _pCurProp->cursorPos);
-		lines = abs(_pCurProp->anchorItem - _pCurProp->cursorItem);
+		count = abs(int(_pCurProp->anchorPos  - _pCurProp->cursorPos));
+		lines = abs(int(_pCurProp->anchorItem - _pCurProp->cursorItem));
 	}
 	else
 	{

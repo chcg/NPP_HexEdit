@@ -53,7 +53,7 @@ protected:
     WNDPROC		_defaultProc;
 
     static LRESULT CALLBACK staticWinProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-        return (((ToolTip *)(::GetWindowLong(hwnd, GWL_USERDATA)))->runProc(Message, wParam, lParam));
+        return (((ToolTip *)(::GetWindowLong(hwnd, GWLP_USERDATA)))->runProc(Message, wParam, lParam));
     };
 	LRESULT runProc(UINT Message, WPARAM wParam, LPARAM lParam);
 };
