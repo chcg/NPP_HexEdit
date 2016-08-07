@@ -1,25 +1,33 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+#include <stdio.h>
+#include <windows.h>
 #include "StaticDialog.h"
-#include "SysMsg.h"
-
-#define WS_EX_LAYOUTRTL 0x00400000L
-
 
 void StaticDialog::goToCenter()
 {
@@ -42,7 +50,8 @@ void StaticDialog::display(bool toShow) const
 	if (toShow) {
 		// If the user has switched from a dual monitor to a single monitor since we last
 		// displayed the dialog, then ensure that it's still visible on the single monitor.
-		RECT workAreaRect, rc;
+		RECT workAreaRect = {0};
+		RECT rc = {0};
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &workAreaRect, 0);
 		::GetWindowRect(_hSelf, &rc);
 		int newLeft = rc.left;
@@ -70,9 +79,17 @@ HGLOBAL StaticDialog::makeRTLResource(int dialogID, DLGTEMPLATE **ppMyDlgTemplat
 {
 	// Get Dlg Template resource
 	HRSRC  hDialogRC = ::FindResource(_hInst, MAKEINTRESOURCE(dialogID), RT_DIALOG);
+	if (!hDialogRC)
+		return NULL;
+
 	HGLOBAL  hDlgTemplate = ::LoadResource(_hInst, hDialogRC);
+	if (!hDlgTemplate)
+		return NULL;
+
 	DLGTEMPLATE *pDlgTemplate = (DLGTEMPLATE *)::LockResource(hDlgTemplate);
-	
+	if (!pDlgTemplate)
+		return NULL;
+
 	// Duplicate Dlg Template resource
 	unsigned long sizeDlg = ::SizeofResource(_hInst, hDialogRC);
 	HGLOBAL hMyDlgTemplate = ::GlobalAlloc(GPTR, sizeDlg);
@@ -89,31 +106,32 @@ HGLOBAL StaticDialog::makeRTLResource(int dialogID, DLGTEMPLATE **ppMyDlgTemplat
 	return hMyDlgTemplate;
 }
 
-void StaticDialog::create(int dialogID, bool isRTL, bool isModeles)
+void StaticDialog::create(int dialogID, bool isRTL, bool msgDestParent)
 {
 	if (isRTL)
 	{
 		DLGTEMPLATE *pMyDlgTemplate = NULL;
 		HGLOBAL hMyDlgTemplate = makeRTLResource(dialogID, &pMyDlgTemplate);
-		_hSelf = ::CreateDialogIndirectParam(_hInst, pMyDlgTemplate, _hParent, (DLGPROC)dlgProc, (LPARAM)this);
+		_hSelf = ::CreateDialogIndirectParam(_hInst, pMyDlgTemplate, _hParent, dlgProc, (LPARAM)this);
 		::GlobalFree(hMyDlgTemplate);
 	}
 	else
-		_hSelf = ::CreateDialogParam(_hInst, MAKEINTRESOURCE(dialogID), _hParent, (DLGPROC)dlgProc, (LPARAM)this);
+		_hSelf = ::CreateDialogParam(_hInst, MAKEINTRESOURCE(dialogID), _hParent, dlgProc, (LPARAM)this);
 
 	if (!_hSelf)
 	{
-		systemMessage(_T("StaticDialog"));
-		throw int(666);
+		DWORD err = ::GetLastError();
+		char errMsg[256];
+		sprintf(errMsg, "CreateDialogParam() return NULL.\rGetLastError() == %u", err);
+		::MessageBoxA(NULL, errMsg, "In StaticDialog::create()", MB_OK);
+		return;
 	}
 
-	if (isModeles) {
-		_isModeles = isModeles;
-		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (WPARAM)_hSelf);
-	}
+	// if the destination of message NPPM_MODELESSDIALOG is not its parent, then it's the grand-parent
+	::SendMessage(msgDestParent?_hParent:(::GetParent(_hParent)), NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (WPARAM)_hSelf);
 }
 
-BOOL CALLBACK StaticDialog::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) 
+INT_PTR CALLBACK StaticDialog::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) 
 {
 	switch (message) 
 	{
@@ -121,19 +139,19 @@ BOOL CALLBACK StaticDialog::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPAR
 		{
 			StaticDialog *pStaticDlg = (StaticDialog *)(lParam);
 			pStaticDlg->_hSelf = hwnd;
-			::SetWindowLongPtr(hwnd, GWL_USERDATA, (long)lParam);
+			::SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)lParam);
 			::GetWindowRect(hwnd, &(pStaticDlg->_rc));
-            pStaticDlg->run_dlgProc(hwnd, message, wParam, lParam);
+            pStaticDlg->run_dlgProc(message, wParam, lParam);
 			
 			return TRUE;
 		}
 
 		default :
 		{
-			StaticDialog *pStaticDlg = reinterpret_cast<StaticDialog *>(::GetWindowLong(hwnd, GWL_USERDATA));
+			StaticDialog *pStaticDlg = reinterpret_cast<StaticDialog *>(::GetWindowLongPtr(hwnd, GWLP_USERDATA));
 			if (!pStaticDlg)
 				return FALSE;
-			return pStaticDlg->run_dlgProc(hwnd, message, wParam, lParam);
+			return pStaticDlg->run_dlgProc(message, wParam, lParam);
 		}
 	}
 }

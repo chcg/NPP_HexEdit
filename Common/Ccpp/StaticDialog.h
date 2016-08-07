@@ -1,29 +1,36 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #ifndef STATIC_DIALOG_H
 #define STATIC_DIALOG_H
 
-//#include "resource.h"
+#include "Notepad_plus_msgs.h"
 #include "Window.h"
-#include <TCHAR.h>
-#include "notepad_plus_msgs.h"
-
-#include <uxtheme.h>
 
 typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
 
@@ -46,12 +53,14 @@ struct DLGTEMPLATEEX {
 class StaticDialog : public Window
 {
 public :
-	StaticDialog() : Window(), _isModeles(false) {};
+	StaticDialog() : Window() {};
 	~StaticDialog(){
-		if (isCreated())
+		if (isCreated()) {
+			::SetWindowLongPtr(_hSelf, GWLP_USERDATA, (LONG_PTR)NULL);	//Prevent run_dlgProc from doing anything, since its virtual
 			destroy();
+		}
 	};
-	virtual void create(int dialogID, bool isRTL = false, bool isModeles = true);
+	virtual void create(int dialogID, bool isRTL = false, bool msgDestParent = true);
 
     virtual bool isCreated() const {
 		return (_hSelf != NULL);
@@ -61,32 +70,35 @@ public :
 
 	void display(bool toShow = true) const;
 
-	POINT getLeftTopPoint(HWND hwnd/*, POINT & p*/) const {
+	POINT getTopPoint(HWND hwnd, bool isLeft = true) const {
 		RECT rc;
 		::GetWindowRect(hwnd, &rc);
 		POINT p;
-		p.x = rc.left;
+		if (isLeft)
+			p.x = rc.left;
+		else
+			p.x = rc.right;
 		p.y = rc.top;
 		::ScreenToClient(_hSelf, &p);
 		return p;
 	};
 
+	bool isCheckedOrNot(int checkControlID) const {
+		return (BST_CHECKED == ::SendMessage(::GetDlgItem(_hSelf, checkControlID), BM_GETCHECK, 0, 0));
+	};
+
     void destroy() {
-		if (_isModeles) {
-			::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (WPARAM)_hSelf);
-		}
+		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (WPARAM)_hSelf);
 		::DestroyWindow(_hSelf);
 	};
 
 protected :
 	RECT _rc;
-	static BOOL CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-	virtual BOOL CALLBACK run_dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
+	static INT_PTR CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
     void alignWith(HWND handle, HWND handle2Align, PosAlign pos, POINT & point);
 	HGLOBAL makeRTLResource(int dialogID, DLGTEMPLATE **ppMyDlgTemplate);
-
-	bool		_isModeles;
 };
 
 #endif //STATIC_DIALOG_H
