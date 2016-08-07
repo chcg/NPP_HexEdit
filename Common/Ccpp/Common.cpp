@@ -33,7 +33,7 @@
 #include "StaticDialog.h"
 
 #include "Common.h"
-#include "../Utf8.h"
+#include "Utf8.h"
 
 
 WcharMbcsConvertor* WcharMbcsConvertor::_pSelf = new WcharMbcsConvertor;
