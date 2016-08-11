@@ -311,7 +311,7 @@ void OptionDlg::SetParams(void)
 	::SendDlgItemMessage(_hSelf, IDC_EDIT_PERCENT, EM_LIMITTEXT, 3, 0);
 
 	/* set font information */
-	UINT iPos = ::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTNAME, CB_FINDSTRINGEXACT, (WPARAM)-1, (LPARAM)_pProp->fontProp.szFontName);
+	LRESULT iPos = ::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTNAME, CB_FINDSTRINGEXACT, (WPARAM)-1, (LPARAM)_pProp->fontProp.szFontName);
 	if (iPos == CB_ERR) iPos = 0;
 	::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTNAME, CB_SETCURSEL, iPos, 0);
 
