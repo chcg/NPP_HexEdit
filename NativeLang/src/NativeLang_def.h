@@ -57,6 +57,7 @@ typedef struct tNatLangInfo {
 } tNatLangInfo;
 
 
+#pragma warning(disable : 4505)
 
 /**
  * @fn			void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection)
@@ -308,6 +309,7 @@ static INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, 
 	return FALSE;
 }
 
+#pragma warning(default : 4505)
 
 
 #endif	/* NATIVE_LANG_DEF_H */
