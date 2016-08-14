@@ -364,7 +364,7 @@ void loadSettings(void)
 	{
 		HANDLE	hFile			= NULL;
 #ifdef UNICODE
-		CHAR	szBOM[]			= {(CHAR)0xFF, (CHAR)0xFE};
+		UCHAR	szBOM[]			= {(UCHAR)0xFF, (UCHAR)0xFE};
 		DWORD	dwByteWritten	= 0;
 #endif
 			
