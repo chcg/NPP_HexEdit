@@ -49,11 +49,11 @@ public:
 		{
 			if ( ::IsWindowUnicode( hWnd ) )
 			{
-				SetWindowLongW( hWnd, GWLP_WNDPROC, (LONG) OrigSciWndProc );
+				SetWindowLongPtrW( hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(OrigSciWndProc) );
 			}
 			else
 			{
-				SetWindowLongA( hWnd, GWLP_WNDPROC, (LONG) OrigSciWndProc );
+				SetWindowLongPtrA( hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(OrigSciWndProc) );
 			}
 		}
 		OrigSciWndProc = 0;
@@ -80,12 +80,12 @@ private:
 		if ( ::IsWindowUnicode( hWnd ) )
 		{
 			SciCallWndProc = CallWindowProcW;
-			OrigSciWndProc = (WNDPROC) SetWindowLongW( hWnd, GWLP_WNDPROC, (LONG) NewWndProc );
+			OrigSciWndProc = (WNDPROC) SetWindowLongPtrW( hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(NewWndProc) );
 		}
 		else
 		{
 			SciCallWndProc = CallWindowProcA;
-			OrigSciWndProc = (WNDPROC) SetWindowLongA( hWnd, GWLP_WNDPROC, (LONG) NewWndProc );
+			OrigSciWndProc = (WNDPROC) SetWindowLongPtrA( hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(NewWndProc) );
 		}
 	}
 };

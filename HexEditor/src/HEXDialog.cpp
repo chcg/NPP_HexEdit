@@ -82,8 +82,8 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 			UpdateFont();
 
 			/* intial subclassing for key mapping */
-			::SetWindowLongPtr(_hListCtrl, GWLP_USERDATA, (LONG)(void *)this);
-			_hDefaultListProc = (WNDPROC)(void *)(::SetWindowLongPtr(_hListCtrl, GWLP_WNDPROC, (LONG)(void *)wndListProc));
+			::SetWindowLongPtr(_hListCtrl, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+			_hDefaultListProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hListCtrl, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndListProc)));
 			ListView_SetExtendedListViewStyleEx(_hListCtrl, LVS_EX_ONECLICKACTIVATE, LVS_EX_ONECLICKACTIVATE);
 			break;
 		}

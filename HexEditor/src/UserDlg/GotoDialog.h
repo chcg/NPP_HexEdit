@@ -51,7 +51,7 @@ protected :
 	/* Subclassing list */
 	LRESULT runProcEdit(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK wndEditProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-		return (((GotoDlg *)(::GetWindowLong(hwnd, GWLP_USERDATA)))->runProcEdit(hwnd, Message, wParam, lParam));
+		return (((GotoDlg *)(::GetWindowLongPtr(hwnd, GWLP_USERDATA)))->runProcEdit(hwnd, Message, wParam, lParam));
 	};
 
 

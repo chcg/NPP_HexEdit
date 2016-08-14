@@ -50,8 +50,8 @@ INT_PTR CALLBACK GotoDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 			_hLineEdit = ::GetDlgItem(_hSelf, IDC_EDIT_GOTO);
 
 			/* intial subclassing */
-			::SetWindowLongPtr(_hLineEdit, GWLP_USERDATA, reinterpret_cast<LONG>(this));
-			_hDefaultEditProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hLineEdit, GWLP_WNDPROC, reinterpret_cast<LONG>(wndEditProc)));
+			::SetWindowLongPtr(_hLineEdit, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+			_hDefaultEditProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hLineEdit, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndEditProc)));
 
 			::SendDlgItemMessage(_hSelf, IDC_CHECK_LINE, BM_SETCHECK, (_isHex == TRUE)?BST_UNCHECKED:BST_CHECKED, 0);
 			::SendDlgItemMessage(_hSelf, IDC_RADIO_ADDRESS, BM_SETCHECK, BST_CHECKED, 0);

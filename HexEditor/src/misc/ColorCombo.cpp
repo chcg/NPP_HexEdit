@@ -30,8 +30,8 @@ void ColorCombo::init(HINSTANCE hInst, HWND hNpp, HWND hCombo)
 	/* subclass combo to get edit messages */
 	_comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 	::SendMessage(hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&_comboBoxInfo);
-	::SetWindowLongPtr(_comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG>(this));
-	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(_comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
+	::SetWindowLongPtr(_comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndDefaultProc)));
 }
 
 

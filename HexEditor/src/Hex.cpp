@@ -151,7 +151,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 				::DestroyIcon(g_TBHex.hToolbarIcon);
 
 			/* Remove subclaasing */
-			SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LONG)wndProcNotepad);
+			SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndProcNotepad));
 			break;
 		}
 		case DLL_THREAD_ATTACH:
@@ -186,7 +186,7 @@ extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
 	helpDlg.init((HINSTANCE)g_hModule, nppData);
 
 	/* Subclassing for Notepad */
-	wndProcNotepad = (WNDPROC)SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LPARAM)SubWndProcNotepad);
+	wndProcNotepad = reinterpret_cast<WNDPROC>(SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubWndProcNotepad)));
 
 	pCurHexEdit = &hexEdit1;
 	setHexMask();

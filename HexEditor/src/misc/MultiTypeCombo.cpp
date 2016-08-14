@@ -48,8 +48,8 @@ void MultiTypeCombo::init(HWND hNpp, HWND hCombo)
 	comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 
 	::SendMessage(_hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&comboBoxInfo);
-	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG>(this));
-	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtrW(comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
+	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndDefaultProc)));
 }
 
 
