@@ -78,19 +78,19 @@ public:
 		_tcscpy(_hexProp[_openDoc].szFileName, newPath);
 	};
 
-	void SetParentNppHandle(HWND hWnd, UINT cont)
+	void SetParentNppHandle(HWND hWndParam, UINT cont)
 	{
 		/* restore subclasses */
 		SciSubClassWrp::CleanUp();
 
 		/* store given parent handle */
-		_hParentHandle = hWnd;
+		_hParentHandle = hWndParam;
 
 		/* intial subclassing */
 		if (cont == MAIN_VIEW) {
-			SciSubClassWrp::Init(hWnd, wndParentProc0);
+			SciSubClassWrp::Init(hWndParam, wndParentProc0);
 		} else {
-			SciSubClassWrp::Init(hWnd, wndParentProc1);
+			SciSubClassWrp::Init(hWndParam, wndParentProc1);
 		}
 	};
 
@@ -585,8 +585,8 @@ private:
 		SetStatusBar();
 	};
 
-	void SetFocusNpp(HWND hWnd) {
-		::SetFocus(hWnd);
+	void SetFocusNpp(HWND hWndParam) {
+		::SetFocus(hWndParam);
 		SetStatusBar();
 	};
 
