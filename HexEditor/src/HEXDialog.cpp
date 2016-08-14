@@ -1089,12 +1089,12 @@ void HexEdit::Copy(void)
 
 	if (_pCurProp->isSel == TRUE)
 	{
-		HWND		hSciTgt;
-		INT			offset;
-		INT			length;
-		INT			posBeg;
-		INT			posEnd;
-		tClipboard	clipboard;
+		HWND		hSciTgt = nullptr;
+		INT			offset = 0;
+		INT			length = 0;
+		INT			posBeg = 0;
+		INT			posEnd = 0;
+		tClipboard	clipboard = { 0 };
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
@@ -1228,12 +1228,12 @@ void HexEdit::Cut(void)
 
 	if (_pCurProp->isSel == TRUE)
 	{
-		HWND		hSciTgt	= NULL;
+		HWND		hSciTgt	= nullptr;
 		INT			offset	= 0;
 		INT			length	= 0;
 		INT			posBeg	= 0;
 		INT			posEnd	= 0;
-		tClipboard	clipboard;
+		tClipboard	clipboard = { 0 };
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
