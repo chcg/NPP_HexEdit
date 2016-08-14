@@ -97,7 +97,7 @@ BOOL CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam
 		}
 		
 		case WM_CTLCOLORLISTBOX:
-			return (BOOL)((HBRUSH)::CreateSolidBrush(GetSysColor(COLOR_3DFACE)));
+			return (BOOL)(::CreateSolidBrush(GetSysColor(COLOR_3DFACE)) != nullptr);
 
 		case WM_DRAWITEM:
 		{
