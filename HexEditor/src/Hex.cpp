@@ -1285,14 +1285,14 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 					temp[i] = buffer[i];
 				}
 
-				UINT offset = (lenCpy) % hexProp.bits;
+				UINT offsetValue = (lenCpy) % hexProp.bits;
 				UINT max	= (lenCpy) / hexProp.bits + 1;
 
 				for (UINT i = 1; i <= max; i++)
 				{
 					if (i == max)
 					{
-						for (UINT j = 1; j <= offset; j++)
+						for (UINT j = 1; j <= offsetValue; j++)
 						{
 							*pText = temp[lenCpy-j];
 							pText++;
