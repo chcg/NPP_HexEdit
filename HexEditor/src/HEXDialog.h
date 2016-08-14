@@ -439,7 +439,7 @@ private:
 		return ret;
 	};
 
-	void runCursor(HWND hwnd, UINT Message, WPARAM wParam, unsigned long lParam)
+	void runCursor(HWND , UINT , WPARAM , unsigned long )
 	{
 		if (_pCurProp != NULL)
 		{

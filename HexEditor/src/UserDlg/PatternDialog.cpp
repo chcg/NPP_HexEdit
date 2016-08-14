@@ -69,7 +69,7 @@ void PatternDlg::doDialog(HWND hHexEdit)
 }
 
 
-INT_PTR CALLBACK PatternDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PatternDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM )
 {
 	switch (Message) 
 	{

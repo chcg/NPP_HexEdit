@@ -86,7 +86,7 @@ BOOL	isNotepadCreated		= FALSE;
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  reasonForCall, 
-                       LPVOID lpReserved )
+                       LPVOID )
 {
 	g_hModule = hModule;
 
@@ -297,7 +297,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
  *
  *	This function is called, if a notification from Notepad occurs
  */
-extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM wParam, LPARAM lParam)
+extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM , LPARAM )
 {
 	if (Message == WM_CREATE)
 	{

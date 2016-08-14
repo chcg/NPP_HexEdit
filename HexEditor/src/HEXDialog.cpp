@@ -1009,7 +1009,7 @@ void HexEdit::MoveView(void)
 }
 
 
-void HexEdit::UpdateHeader(BOOL isFirstTime)
+void HexEdit::UpdateHeader(BOOL )
 {
 	if (_pCurProp == NULL)
 		return;
@@ -2348,7 +2348,7 @@ void HexEdit::SelectItem(UINT iItem, UINT iSubItem, INT iCursor)
 }
 
 
-void HexEdit::OnMouseClickItem(WPARAM wParam, LPARAM lParam)
+void HexEdit::OnMouseClickItem(WPARAM , LPARAM lParam)
 {
 	LV_HITTESTINFO	info;
 
@@ -2515,7 +2515,7 @@ BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 }
 
 
-BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM lParam)
+BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM )
 {
 	CHAR	text[65];
 	UINT	posBeg	= 0;
@@ -2966,7 +2966,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 }
 
 
-void HexEdit::OnMouseClickDump(WPARAM wParam, LPARAM lParam)
+void HexEdit::OnMouseClickDump(WPARAM , LPARAM lParam)
 {
 	LV_HITTESTINFO	info;
 
@@ -3435,7 +3435,7 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 }
 
 
-BOOL HexEdit::GlobalKeys(WPARAM wParam, LPARAM lParam)
+BOOL HexEdit::GlobalKeys(WPARAM wParam, LPARAM )
 {
 	INT		posBeg;
 	INT		posEnd;
@@ -3587,7 +3587,7 @@ BOOL HexEdit::GlobalKeys(WPARAM wParam, LPARAM lParam)
 }
 
 
-void HexEdit::SelectionKeys(WPARAM wParam, LPARAM lParam)
+void HexEdit::SelectionKeys(WPARAM wParam, LPARAM )
 {
 	INT		posBeg;
 	INT		posEnd;
