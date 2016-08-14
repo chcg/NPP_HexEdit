@@ -482,6 +482,7 @@ void FindReplaceDlg::onReplace(void)
 {
 	HWND	hSciSrc	= getCurrentHScintilla();
 	INT		lenSrc  = ScintillaMsg(hSciSrc, SCI_GETLENGTH);
+	lenSrc; //avoid compiler warning  C4189
 	INT		lenStr	= 0;
 	INT		offset	= 0;
 	INT		length  = 0;

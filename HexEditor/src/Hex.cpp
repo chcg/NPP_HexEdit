@@ -224,7 +224,6 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 				{
 					tHexProp	hexProp1	= hexEdit1.GetHexProp();
 					tHexProp	hexProp2	= hexEdit2.GetHexProp();
-					INT			length		= notifyCode->length;
 
 					if ((hexProp1.szFileName != NULL) && (hexProp2.szFileName != NULL) &&
 						(_tcscmp(hexProp1.szFileName, hexProp2.szFileName) == 0))
@@ -1000,7 +999,6 @@ void SystemUpdate(void)
 	OutputDebugString(_T("SystemUpdate\n"));
 
 	UINT		oldSC		= currentSC;
-	UINT		newDocCnt	= 0;
 	TCHAR		pszNewPath[MAX_PATH];
 
 	/* update open files */
@@ -1422,8 +1420,6 @@ void DoCompare(void)
 {
 	TCHAR		szFile[MAX_PATH];
 	BOOL		doMatch		= TRUE;
-	LPSTR		compare1	= NULL;
-	LPSTR		compare2	= NULL;
 	tHexProp	hexProp1	= hexEdit1.GetHexProp();
 	tHexProp	hexProp2	= hexEdit2.GetHexProp();
 	tCmpResult	cmpResult	= {0};

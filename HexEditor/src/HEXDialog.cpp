@@ -1985,9 +1985,6 @@ void HexEdit::TrackMenu(POINT pt)
 	UINT	anchorPos	= GetAnchor();
 	UINT	cursorPos	= GetCurrentPos();
 	UINT	oldColumns  = _pCurProp->columns;
-	UINT	oldBits     = _pCurProp->bits;
-	BOOL	oldBin		= _pCurProp->isBin;
-	BOOL	oldLittle   = _pCurProp->isLittle;
 	TCHAR	txtMenu[16];
 
 	/* set bit decoding */
@@ -2208,8 +2205,6 @@ BOOL HexEdit::ShouldDeleteCompare(void)
 
 void HexEdit::Delete(void)
 {
-	INT		offset	= 0;
-	INT		length	= 0;
 	INT		posBeg	= 0;
 	INT		posItr	= 0;
 	INT		count	= 0;
@@ -2520,9 +2515,6 @@ BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM )
 	CHAR	text[65];
 	UINT	posBeg	= 0;
 	UINT	textPos = 0;
-	DWORD	start	= 0;
-	DWORD	end		= 0;
-	BOOL	newLine	= FALSE;
 
 	if (_pCurProp->isBin == FALSE) {
 		if (((wParam < 0x30) || (wParam > 0x66)) ||
@@ -2653,7 +2645,6 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		/* paint cursor */
 		if (item == _pCurProp->cursorItem)
 		{
-			UINT	posCurBeg = 0;
 			if ((_pCurProp->editType == HEX_EDIT_HEX) && (subItem == _pCurProp->cursorSubItem)) {
 				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos, &size);
 				rcCursor.left += size.cx;
@@ -3741,7 +3732,6 @@ void HexEdit::SetSelection(UINT posBegin, UINT posEnd, eSel selection, BOOL isEN
 	{
 		UINT	modPosBegin			= posBegin % VIEW_ROW;
 		UINT	modPosEnd			= posEnd % VIEW_ROW;
-		BOOL	oldSel				= _pCurProp->isSel;
 
 		_pCurProp->isSel			= posBegin == posEnd ? FALSE : TRUE;
 		_pCurProp->selection		= selection;
@@ -3902,7 +3892,6 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 
 	RECT	rcOld	= {0};
 	RECT	rcNew	= {0};
-	UINT	endPos	= firstAdd + abs(length);
 
 	for (UINT i = 0; i < _pCurProp->vBookmarks.size(); i++)
 	{
@@ -3957,8 +3946,6 @@ void HexEdit::CutBookmarkLines(void)
 		return;
 
 	HWND		hSciTgt	= NULL;
-	INT			posBeg	= 0;
-	INT			posEnd	= 0;
 	INT			deleted = 0;
 	INT			offset	= 0;
 	INT			length	= 0;
@@ -4035,8 +4022,6 @@ void HexEdit::CopyBookmarkLines(void)
 		return;
 
 	HWND		hSciTgt	= NULL;
-	INT			posBeg	= 0;
-	INT			posEnd	= 0;
 	INT			offset	= 0;
 	INT			length	= 0;
 	tClipboard	clipboard;
@@ -4107,7 +4092,6 @@ void HexEdit::PasteBookmarkLines(void)
 	INT		posBeg	= 0;
 	INT		posEnd	= 0;
 	INT		length	= 0;
-	INT		deleted = 0;
 
 	SciSubClassWrp::execute(SCI_BEGINUNDOACTION);
 
