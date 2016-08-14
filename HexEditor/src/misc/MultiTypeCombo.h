@@ -62,16 +62,9 @@ typedef enum
 	NPP_CP_USCBE
 } eNppCP;
 
-typedef union {
-	struct {
+typedef struct  {
 		tComboInfo	comboInfo;
 		eNppCoding	codePage;
-	};
-	struct {
-		int 		length;
-		char		text[COMBO_STR_MAX];
-		eNppCoding	codePage;
-	};
 } tEncComboInfo;
 
 

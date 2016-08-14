@@ -121,7 +121,7 @@ void MultiTypeCombo::addText(tComboInfo info)
 
 	for (; i < count; i++)
 	{
-		if (memcmp(info.text, _comboItems[i].text, info.length) == 0)
+		if (memcmp(info.text, _comboItems[i].comboInfo.text, info.length) == 0)
 		{
 			hasFoundOn = (LONG)count - (LONG)i - 1;
 		}
@@ -223,14 +223,14 @@ BOOL MultiTypeCombo::setComboText(tEncComboInfo info, UINT message)
 	if (_currDataType == HEX_CODE_UNI)
 	{
 		/* if string not exists in combo, add to it */
-		if (CB_ERR == ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text))
-			::SendMessageW(_hCombo, message, 0, (LPARAM)info.text);
+		if (CB_ERR == ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, static_cast<WPARAM>(-1), (LPARAM)info.comboInfo.text))
+			::SendMessageW(_hCombo, message, 0, (LPARAM)info.comboInfo.text);
 		else
 			isAdd = FALSE;
 	}
 	else
 	{
-		::SendMessageA(_hCombo, message, 0, (LPARAM)info.text);
+		::SendMessageA(_hCombo, message, 0, (LPARAM)info.comboInfo.text);
 	}
 
 	return isAdd;
@@ -253,9 +253,9 @@ void MultiTypeCombo::selectComboText(tEncComboInfo info)
 
 	encode(&info, _currDataType);
 	if (_currDataType == HEX_CODE_UNI) {
-		lResult = ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text);
+		lResult = ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, static_cast<WPARAM>(-1), (LPARAM)info.comboInfo.text);
 	} else {
-		lResult = ::SendMessageA(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.text);
+		lResult = ::SendMessageA(_hCombo, CB_FINDSTRINGEXACT, static_cast<WPARAM>(-1), (LPARAM)info.comboInfo.text);
 	}
 	::SendMessage(_hCombo, CB_SETCURSEL, lResult, 0);
 }
@@ -403,10 +403,10 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 				(info->codePage == HEX_CODE_NPP_UTF8) || 
 				(info->codePage == HEX_CODE_NPP_UTF8_BOM))
 			{
-				memcpy(buffer, info->text, info->length);
-				length = info->length;
+				memcpy(buffer, info->comboInfo.text, info->comboInfo.length);
+				length = info->comboInfo.length;
 
-				codePage = (IsTextUnicode(info->text, info->length, &uniMask) != 0) ? CP_ACP:CP_UTF8;
+				codePage = (IsTextUnicode(info->comboInfo.text, info->comboInfo.length, &uniMask) != 0) ? CP_ACP:CP_UTF8;
 			}
 			else
 			{
@@ -417,36 +417,36 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 				if (info->codePage == HEX_CODE_NPP_USCBE)
 				{
 					uniConv.forceEncoding(Utf8_16::eUtf16BigEndian);
-					length = uniConv.convert(info->text, info->length);
+					length = uniConv.convert(info->comboInfo.text, info->comboInfo.length);
 				}
 				else if (info->codePage == HEX_CODE_NPP_USCLE)
 				{
 					uniConv.forceEncoding(Utf8_16::eUtf16LittleEndian);
-					length = uniConv.convert(info->text, info->length);
+					length = uniConv.convert(info->comboInfo.text, info->comboInfo.length);
 				}
 				memcpy(buffer, uniConv.getNewBuf(), length);
 				codePage = CP_UTF8;
 			}
 
-			::MultiByteToWideChar(codePage, 0, buffer, -1, (WCHAR*)info->text, COMBO_STR_MAX);
+			::MultiByteToWideChar(codePage, 0, buffer, -1, (WCHAR*)info->comboInfo.text, COMBO_STR_MAX);
 			break;
 		}
 		case HEX_CODE_HEX:
 		{
-			if (info->length != 0)
+			if (info->comboInfo.length != 0)
 			{
-				LPSTR temp	= (LPSTR)new CHAR[info->length+1];
+				LPSTR temp	= (LPSTR)new CHAR[info->comboInfo.length+1];
 				if (temp != NULL)
 				{
-					memcpy(temp, info->text, info->length);
+					memcpy(temp, info->comboInfo.text, info->comboInfo.length);
 
-					strcpy(info->text, hexMask[(UCHAR)temp[0]]);
-					for (INT i = 1; (i < info->length) && ((i*3) < COMBO_STR_MAX); i++)
+					strcpy(info->comboInfo.text, hexMask[(UCHAR)temp[0]]);
+					for (INT i = 1; (i < info->comboInfo.length) && ((i*3) < COMBO_STR_MAX); i++)
 					{
-						strcat(info->text, " ");
-						strcat(info->text, hexMask[(UCHAR)temp[i]]);
+						strcat(info->comboInfo.text, " ");
+						strcat(info->comboInfo.text, hexMask[(UCHAR)temp[i]]);
 					}
-					info->length = (info->length * 3) - 1;
+					info->comboInfo.length = (info->comboInfo.length * 3) - 1;
 					delete [] temp;
 				}
 			}
