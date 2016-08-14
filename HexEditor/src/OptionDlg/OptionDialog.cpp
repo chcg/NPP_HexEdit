@@ -351,7 +351,7 @@ BOOL OptionDlg::GetParams(void)
 	TCHAR		text[16];
 	UINT		col		= 0;
 	UINT		add		= 0;
-	UINT		bits	= 0;
+	UINT		bitsValue	= 0;
 	BOOL		bRet	= FALSE;
 
 	/* get default layout */
@@ -362,16 +362,16 @@ BOOL OptionDlg::GetParams(void)
 
 	/* get bit alignment */
 	if (::SendDlgItemMessage(_hSelf, IDC_RADIO_8, BM_GETCHECK, 0, 0) == BST_CHECKED)
-		bits = HEX_BYTE;
+		bitsValue = HEX_BYTE;
 	else if (::SendDlgItemMessage(_hSelf, IDC_RADIO_16, BM_GETCHECK, 0, 0) == BST_CHECKED)
-		bits = HEX_WORD;
+		bitsValue = HEX_WORD;
 	else if (::SendDlgItemMessage(_hSelf, IDC_RADIO_32, BM_GETCHECK, 0, 0) == BST_CHECKED)
-		bits = HEX_DWORD;
+		bitsValue = HEX_DWORD;
 	else
-		bits = HEX_LONG;
+		bitsValue = HEX_LONG;
 
 	/* test if values are possible */
-	if ((col > 0) && (col <= (128 / bits)))
+	if ((col > 0) && (col <= (128 / bitsValue)))
 	{
 		bRet = TRUE;
 	}
@@ -399,7 +399,7 @@ BOOL OptionDlg::GetParams(void)
 	if (bRet == TRUE) {
 		_pProp->hexProp.addWidth	= add;
 		_pProp->hexProp.columns		= col;
-		_pProp->hexProp.bits		= bits;
+		_pProp->hexProp.bits		= bitsValue;
 		
 		/* get endian */
 		if (::SendDlgItemMessage(_hSelf, IDC_RADIO_BIG, BM_GETCHECK, 0, 0) == BST_CHECKED)

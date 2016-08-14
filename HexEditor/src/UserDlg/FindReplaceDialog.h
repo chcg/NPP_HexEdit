@@ -105,9 +105,9 @@ private:
 	{
 		if (::SendDlgItemMessage(_hSelf, IDC_CHECK_TRANSPARENT, BM_GETCHECK, 0, 0) == BST_CHECKED)
 		{
-			INT percent = (INT)::SendDlgItemMessage(_hSelf, IDC_SLIDER_PERCENTAGE, TBM_GETPOS, 0, 0);
+			INT percentage = (INT)::SendDlgItemMessage(_hSelf, IDC_SLIDER_PERCENTAGE, TBM_GETPOS, 0, 0);
 			::SetWindowLongPtr(_hSelf, GWL_EXSTYLE, ::GetWindowLong(_hSelf, GWL_EXSTYLE) | /*WS_EX_LAYERED*/0x00080000);
-			_transFuncAddr(_hSelf, 0, percent, 0x00000002);
+			_transFuncAddr(_hSelf, 0, percentage, 0x00000002);
 			::ShowWindow(::GetDlgItem(_hSelf, IDC_SLIDER_PERCENTAGE), SW_SHOW);
 
 		}
