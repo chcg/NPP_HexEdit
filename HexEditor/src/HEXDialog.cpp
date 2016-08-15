@@ -196,7 +196,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 									}
 								}
 
-								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_NOTIFYITEMDRAW|CDRF_NOTIFYPOSTPAINT));
+								SetWindowLongPtr(_hSelf, DWLP_MSGRESULT, (LONG)(CDRF_NOTIFYITEMDRAW|CDRF_NOTIFYPOSTPAINT));
 								return TRUE;
 
 							case CDDS_ITEMPREPAINT:
@@ -271,7 +271,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
                                 /* destroy background brush */
 							    ::DeleteObject(_hBkBrush);
 
-								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
+								SetWindowLongPtr(_hSelf, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
 								return TRUE;
 
 							case CDDS_POSTPAINT:
@@ -289,7 +289,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 								_uFirstVisSubItem = 0;
 								_uLastVisSubItem = 0;
 
-								SetWindowLongPtr(_hListCtrl, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
+								SetWindowLongPtr(_hSelf, DWLP_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
 								return TRUE;
 							}
 							default:
