@@ -29,24 +29,25 @@ build_script:
     - msbuild HexEditor.vcxproj /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
 
 after_build:
-    - cd "%APPVEYOR_BUILD_FOLDER%"\HexEditor\projects\2003\
+    - cd "%APPVEYOR_BUILD_FOLDER%"
     - ps: >-
 
         if ($env:PLATFORM -eq "x64") {
-            Push-AppveyorArtifact "$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
+            Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
         }
 
         if ($env:PLATFORM -eq "Win32" ) {
-            Push-AppveyorArtifact "$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
+            Push-AppveyorArtifact "HexEditor\projects\2003\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
         }
 
         if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v120_xp") {
-            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_$env:PLATFORM.zip"
             if($env:PLATFORM -eq "x64"){
-            7z a $ZipFileName $env:PLATFORM\$env:CONFIGURATION\*.dll
+            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
+            7z a $ZipFileName HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\*.dll
             }
             if($env:PLATFORM -eq "Win32"){
-            7z a $ZipFileName $env:CONFIGURATION\*.dll
+            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
+            7z a $ZipFileName HexEditor\projects\2003\$env:CONFIGURATION\*.dll
             }
         }
 
