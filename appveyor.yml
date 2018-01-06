@@ -1,11 +1,11 @@
 version: 0.9.5.{build}
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 
 environment:
   matrix:
   - PlatformToolset: v140_xp
-  - PlatformToolset: v120_xp
+  - PlatformToolset: v141_xp
 
 platform:
     - x64
@@ -17,37 +17,39 @@ configuration:
 
 install:
     - if "%platform%"=="x64" set archi=amd64
-    - if "%platform%"=="Win32" set archi=x86
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
+    - if "%platform%"=="x64" set platform_input=x64
 
-build:
-    parallel: true                  # enable MSBuild parallel builds
-    verbosity: minimal
+    - if "%platform%"=="Win32" set archi=x86
+    - if "%platform%"=="Win32" set platform_input=Win32
+
+    - if "%PlatformToolset%"=="v140_xp" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
+    - if "%PlatformToolset%"=="v141_xp" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
+
 
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"\HexEditor\projects\2003\
-    - msbuild HexEditor.vcxproj /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
+    - msbuild HexEditor.vcxproj /m /p:configuration="%configuration%" /p:platform="%platform_input%" /p:PlatformToolset="%PlatformToolset%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - ps: >-
 
-        if ($env:PLATFORM -eq "x64") {
+        if ($env:PLATFORM_INPUT -eq "x64") {
             Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
         }
 
-        if ($env:PLATFORM -eq "Win32" ) {
+        if ($env:PLATFORM_INPUT -eq "Win32" ) {
             Push-AppveyorArtifact "HexEditor\projects\2003\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
         }
 
-        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v120_xp") {
-            if($env:PLATFORM -eq "x64"){
+        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v140_xp") {
+            if($env:PLATFORM_INPUT -eq "x64"){
             $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
-            7z a $ZipFileName HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\*.dll
+            7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
             }
-            if($env:PLATFORM -eq "Win32"){
+            if($env:PLATFORM_INPUT -eq "Win32"){
             $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
-            7z a $ZipFileName HexEditor\projects\2003\$env:CONFIGURATION\*.dll
+            7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:CONFIGURATION\*.dll"
             }
         }
 
@@ -65,5 +67,5 @@ deploy:
     force_update: true
     on:
         appveyor_repo_tag: true
-        PlatformToolset: v120_xp
+        PlatformToolset: v140_xp
         configuration: Release
