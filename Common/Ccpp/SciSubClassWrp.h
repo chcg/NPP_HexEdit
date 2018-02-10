@@ -39,8 +39,8 @@ public:
 	{
 		hWnd = hSci;
 		SubclassScintillaWndProc( NewWndProc );
-		SciFunc = (int(*)(void*,int,int,int))::SendMessage( hSci, SCI_GETDIRECTFUNCTION, 0, 0);
-		SciPtr = (void*)::SendMessage( hSci, SCI_GETDIRECTPOINTER, 0, 0);
+		SciFunc = (SciFnDirect)::SendMessage(hSci, SCI_GETDIRECTFUNCTION, 0, 0);
+		SciPtr = (sptr_t)::SendMessage( hSci, SCI_GETDIRECTPOINTER, 0, 0);
 	}
 
 	void CleanUp()
@@ -61,7 +61,7 @@ public:
 
 	LRESULT execute(UINT Msg, WPARAM wParam=0, LPARAM lParam=0) const
 	{
-		return SciFunc(SciPtr, static_cast<int>(Msg), static_cast<int>(wParam), static_cast<int>(lParam));
+		return SciFunc(SciPtr, Msg, wParam, lParam);
 	};
 
 	LRESULT CALLBACK CallScintillaWndProc( HWND hwnd, UINT msg, WPARAM wp, LPARAM lp )
@@ -71,8 +71,8 @@ public:
 
 private:
 	LRESULT (WINAPI *SciCallWndProc) (WNDPROC,HWND,UINT,WPARAM,LPARAM);
-	int (* SciFunc) (void*, int, int, int);
-	void * SciPtr;
+	SciFnDirect SciFunc;
+	sptr_t SciPtr;
 	WNDPROC OrigSciWndProc;
 
 	void SubclassScintillaWndProc( WNDPROC NewWndProc )
