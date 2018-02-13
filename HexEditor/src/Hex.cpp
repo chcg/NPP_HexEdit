@@ -340,9 +340,9 @@ void loadSettings(void)
 			*_tcsrchr(configPath, NULL) = NULL;
 		} while (::PathFileExists(configPath) == FALSE);
 
-		for (size_t i = vPaths.size()-1; i >= 0; i--)
+		for (size_t i = vPaths.size(); i > 0; --i)
 		{
-			_tcscpy(configPath, vPaths[i].c_str());
+			_tcscpy(configPath, vPaths[i-1].c_str());
 			::CreateDirectory(configPath, NULL);
 		}
 	}
