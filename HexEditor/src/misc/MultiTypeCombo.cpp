@@ -279,7 +279,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 			INT				uniMask		= IS_TEXT_UNICODE_NOT_UNICODE_MASK;
 			UINT			codePage	= 0;
 
-			memset(buffer, 0, COMBO_STR_MAX);
+			memset(buffer, 0, COMBO_STR_MAX*2);
 
 			codePage = (IsTextUnicode(info->text, info->length, &uniMask) != 0) ? CP_ACP:CP_UTF8;
 			length = ::WideCharToMultiByte(codePage, 0, (WCHAR*)info->text, -1, buffer, 256, NULL, NULL) - 1;

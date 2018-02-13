@@ -150,7 +150,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			if (g_TBHex.hToolbarIcon)
 				::DestroyIcon(g_TBHex.hToolbarIcon);
 
-			/* Remove subclaasing */
+			/* Remove subclassing */
 			SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndProcNotepad));
 			break;
 		}
@@ -393,7 +393,7 @@ void loadSettings(void)
 	prop.colorProp.rgbBkMkTxt	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
 	prop.colorProp.rgbBkMkBk	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkBk, RGB(0xFF,0x00,0x00), iniFilePath);
 	prop.colorProp.rgbCurLine	= ::GetPrivateProfileInt(dlgEditor, rgbCurLine, RGB(0xDF,0xDF,0xDF), iniFilePath);
-	::GetPrivateProfileString(dlgEditor, fontname, _T("Courier New"), prop.fontProp.szFontName, 256, iniFilePath);
+	::GetPrivateProfileString(dlgEditor, fontname, _T("Courier New"), prop.fontProp.szFontName, _countof(prop.fontProp.szFontName), iniFilePath);
 	prop.fontProp.iFontSizeElem	= ::GetPrivateProfileInt(dlgEditor, fontsize, FONTSIZE_DEFAULT, iniFilePath);
 	prop.fontProp.isCapital		= ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
 	prop.fontProp.isBold		= ::GetPrivateProfileInt(dlgEditor, bold, FALSE, iniFilePath);
@@ -999,7 +999,7 @@ void SystemUpdate(void)
 	OutputDebugString(_T("SystemUpdate\n"));
 
 	UINT		oldSC		= currentSC;
-	TCHAR		pszNewPath[MAX_PATH];
+	TCHAR		pszNewPath[MAX_PATH] = { 0 };
 
 	/* update open files */
 	UpdateCurrentHScintilla();
@@ -1136,7 +1136,7 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 
 	if (TEMP != NULL)
 	{
-		_tcscpy(TEMP, prop.autoProp.szExtensions);
+		_tcsncpy(TEMP, prop.autoProp.szExtensions, MAX_PATH);
 
 		ptr = _tcstok(TEMP, _T(" "));
 		while (ptr != NULL)

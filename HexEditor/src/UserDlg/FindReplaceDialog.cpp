@@ -638,8 +638,8 @@ void FindReplaceDlg::processAll(UINT process)
 		} while (loopEnd == FALSE);
 	}
 
-	TCHAR	TEMP[128];
-	TCHAR	text[128];
+	TCHAR	TEMP[128] = { 0 };
+	TCHAR	text[128] = { 0 };
 
 	/* display result */
 	if (cnt == 0)

@@ -4168,9 +4168,9 @@ void HexEdit::DeleteBookmarkLines(void)
 
 void HexEdit::SetStatusBar(void)
 {
-	if (_pCurProp->isVisible == TRUE)
+	if (_pCurProp && _pCurProp->isVisible == TRUE)
 	{
-		TCHAR buffer[64];
+		TCHAR buffer[64] = { 0 };
 
 		/* set mode */
 		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_TYPE, (LPARAM)_T("Hex Edit View"));
