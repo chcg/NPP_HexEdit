@@ -29,7 +29,9 @@ class PatternDlg : public StaticDialog
 {
 
 public:
-	PatternDlg() : StaticDialog() {};
+	PatternDlg() : StaticDialog()
+		, _pCombo(nullptr)
+	{};
     
     void init(HINSTANCE hInst, NppData nppData)
 	{

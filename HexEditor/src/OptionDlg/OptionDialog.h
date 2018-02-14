@@ -37,7 +37,9 @@ class OptionDlg : public StaticDialog
 {
 
 public:
-	OptionDlg() : StaticDialog() {};
+	OptionDlg() : StaticDialog()
+		, _pProp(nullptr)
+	{};
     
     void init(HINSTANCE hInst, NppData nppData)
 	{

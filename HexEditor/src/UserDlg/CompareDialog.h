@@ -29,7 +29,10 @@ class CompareDlg : public StaticDialog
 {
 
 public:
-	CompareDlg() : StaticDialog() {};
+	CompareDlg() : StaticDialog()
+		, _pHexEdit1(nullptr)
+		, _pHexEdit2(nullptr)
+	{};
     
     void init(HINSTANCE hInst, NppData nppData)
 	{

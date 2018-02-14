@@ -28,9 +28,10 @@ extern char	hexMask[256][3];
 
 
 MultiTypeCombo::MultiTypeCombo() : Window()
+	, _hCombo(NULL)
+	, _currDataType(HEX_CODE_ASCI)
+	, _docCodePage(HEX_CODE_NPP_ASCI)
 {
-	_hCombo			= NULL;
-	_currDataType	= HEX_CODE_ASCI;
 	_comboItems.clear();
 }
 

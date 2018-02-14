@@ -44,15 +44,19 @@ class FindReplaceDlg : public StaticDialog
 {
 
 public:
-	FindReplaceDlg() : StaticDialog(), _transFuncAddr(NULL)
-	{
-		_findReplace	= FALSE;
-		_whichDirection	= DIR_DOWN;
-		_isMatchCase	= FALSE;
-		_isWrap			= TRUE;
-		_isInSel		= FALSE;
-		_hSCI			= NULL;
-	};
+	FindReplaceDlg() : StaticDialog()
+		, _hSCI(NULL)
+		, _findReplace(FALSE)
+		, _whichDirection(DIR_DOWN)
+		, _isMatchCase(FALSE)
+		, _isWrap(TRUE)
+		, _isInSel(FALSE)
+		, _nppBaseCode(HEX_CODE_NPP_ASCI)
+		, _currDataType(HEX_CODE_ASCI)
+		, _pFindCombo(nullptr)
+		, _pReplaceCombo(nullptr)
+		, _transFuncAddr(nullptr)
+	{};
     
     void init(HINSTANCE hInst, NppData nppData)
 	{

@@ -32,12 +32,16 @@ const Utf8_16::utf8 Utf8_16::k_Boms[][3] = {
 
 // ==================================================================
 
-Utf8_16_Read::Utf8_16_Read() {
-	m_eEncoding		= eUnknown;
-	m_nBufSize		= 0;
-	m_pNewBuf		= NULL;
-	m_bFirstRead	= true;
-}
+Utf8_16_Read::Utf8_16_Read() : m_eEncoding(eUnknown)
+	, m_pBuf(nullptr)
+	, m_pNewBuf(nullptr)
+	, m_nBufSize(0)
+	, m_nSkip(0)
+	, m_bFirstRead(true)
+	, m_nLen(0)
+	, m_Iter16()
+	, m_bIsBOM(false)
+{}
 
 Utf8_16_Read::~Utf8_16_Read()
 {
