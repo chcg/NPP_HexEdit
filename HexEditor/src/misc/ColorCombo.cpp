@@ -19,7 +19,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "Common.h"
 #include "ColorCombo.h"
-#include "tables.h"
 
 
 void ColorCombo::init(HINSTANCE hInst, HWND hNpp, HWND hCombo)

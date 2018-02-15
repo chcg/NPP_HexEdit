@@ -86,13 +86,11 @@ public:
 	void getText(tComboInfo* info);
 	eCodingType setCodingType(eCodingType code);
 	void setDocCodePage(eNppCoding codepage);
-	void convertBaseCoding(void);
 
 private:
-	void changeCoding(void);
 	BOOL setComboText(tComboInfo info, UINT message = CB_ADDSTRING);
 	BOOL setComboText(tEncComboInfo info, UINT message = CB_ADDSTRING);
-	void getComboText(char* str);
+	void getComboText(CHAR* str);
 	void selectComboText(tEncComboInfo info);
 	void decode(tComboInfo* info, eCodingType type);
 	void encode(tComboInfo* info, eCodingType type);

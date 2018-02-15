@@ -89,7 +89,6 @@ private:
 	void changeCoding(void);
 	void getSelText(tComboInfo* info);
 	void processAll(UINT process);
-	BOOL processFindReplace(BOOL find = TRUE);
 
 	BOOL isChecked(int id) const {
 		return ((BST_CHECKED == ::SendMessage(::GetDlgItem(_hSelf, id), BM_GETCHECK, 0, 0)) ? TRUE : FALSE);

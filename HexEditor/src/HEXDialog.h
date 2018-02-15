@@ -380,7 +380,6 @@ private:
 
 
 	INT  CalcCursorPos(LV_HITTESTINFO info);
-	void ConvertCursorPos(void);
 	BOOL GlobalKeys(WPARAM wParam, LPARAM lParam);
 	void SelectionKeys(WPARAM wParam, LPARAM lParam);
 	void SetPosition(UINT pos, BOOL isLittle = FALSE);

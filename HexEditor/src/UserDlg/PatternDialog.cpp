@@ -17,7 +17,6 @@
 
 #include "PatternDialog.h"
 #include "PluginInterface.h"
-#include "tables.h"
 
 
 extern char	hexMask[256][3];

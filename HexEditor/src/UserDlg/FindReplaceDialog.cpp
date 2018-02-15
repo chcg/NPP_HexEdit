@@ -19,7 +19,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "FindReplaceDialog.h"
 #include "PluginInterface.h"
-#include "tables.h"
 #include <uxtheme.h>
 
 

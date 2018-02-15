@@ -27,7 +27,6 @@
 #include "PatternDialog.h"
 #include "HelpDialog.h"
 #include "ToolTip.h"
-#include "tables.h"
 #include "Common.h"
 #include "ModifyMenu.h"
 #include <stdlib.h>

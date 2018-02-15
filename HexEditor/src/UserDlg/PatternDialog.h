@@ -56,12 +56,6 @@ protected:
 	BOOL onInsert(void);
 	BOOL onReplace(void);
 
-	/* Subclassing list */
-	LRESULT runProcEdit(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
-	static LRESULT CALLBACK wndEditProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-		return (((PatternDlg *)(::GetWindowLongPtr(hwnd, GWLP_USERDATA)))->runProcEdit(hwnd, Message, wParam, lParam));
-	};
-
 
 private:
 	/* Handles */

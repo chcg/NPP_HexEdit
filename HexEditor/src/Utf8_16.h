@@ -61,9 +61,6 @@ public:
 	operator bool() { return m_pRead <= m_pEnd; };
 
 protected:
-	void toStart(); // Put to start state, swap bytes if necessary
-
-protected:
 	encodingType m_eEncoding;
 	eState m_eState;
 	utf8 m_nCur;
@@ -120,7 +117,6 @@ public:
 	void noBOM(void) { m_bIsBOM = false; };
 
 	encodingType getEncoding() const { return m_eEncoding; }
-	size_t calcCurPos(size_t pos);
 protected:
 	void determineEncoding();
 	int isUTF8_16();
@@ -151,7 +147,6 @@ public:
 
 	size_t convert(char* p, size_t _size);
 	char* getNewBuf() { return reinterpret_cast<char*>(m_pNewBuf); }
-	size_t calcCurPos(size_t pos);
 
 protected:
 	encodingType	m_eEncoding;
