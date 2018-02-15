@@ -38,7 +38,7 @@
 
 /* menu entry count */
 const
-INT				nbFunc	= 9;
+INT				nbFunc = 9;
 
 /* for subclassing */
 WNDPROC	wndProcNotepad = NULL;
@@ -51,9 +51,9 @@ TCHAR			currentPath[MAX_PATH];
 TCHAR			configPath[MAX_PATH];
 TCHAR			iniFilePath[MAX_PATH];
 TCHAR			cmparePath[MAX_PATH];
-UINT			currentSC	= MAIN_VIEW;
-INT				openDoc1	= -1;
-INT				openDoc2	= -1;
+UINT			currentSC = MAIN_VIEW;
+INT				openDoc1 = -1;
+INT				openDoc2 = -1;
 
 /* global values */
 NppData			nppData;
@@ -79,91 +79,91 @@ tProp			prop;
 char			hexMask[256][3];
 
 /* handle of current used edit */
-HexEdit*		pCurHexEdit		= NULL;
+HexEdit*		pCurHexEdit = NULL;
 
 /* get system information */
-BOOL	isNotepadCreated		= FALSE;
+BOOL	isNotepadCreated = FALSE;
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  reasonForCall, 
-                       LPVOID )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  reasonForCall,
+	LPVOID)
 {
 	g_hModule = hModule;
 
-    switch (reasonForCall)
-    {
-		case DLL_PROCESS_ATTACH:
-		{
-			/* Set function pointers */
-			funcItem[0]._pFunc = toggleHexEdit;
-			funcItem[1]._pFunc = compareHex;
-			funcItem[2]._pFunc = clearCompare;
-			funcItem[3]._pFunc = NULL;
-			funcItem[4]._pFunc = insertColumnsDlg;
-			funcItem[5]._pFunc = replacePatternDlg;
-			funcItem[6]._pFunc = NULL;
-			funcItem[7]._pFunc = openPropDlg;
-			funcItem[8]._pFunc = openHelpDlg;
-			
-			/* Fill menu names */
-			_tcscpy(funcItem[0]._itemName, _T("View in &HEX"));
-			_tcscpy(funcItem[1]._itemName, _T("&Compare HEX"));
-			_tcscpy(funcItem[2]._itemName, _T("Clear Compare &Result"));
-			_tcscpy(funcItem[4]._itemName, _T("&Insert Columns..."));
-			_tcscpy(funcItem[5]._itemName, _T("&Pattern Replace..."));
-			_tcscpy(funcItem[7]._itemName, _T("&Options..."));
-			_tcscpy(funcItem[8]._itemName, _T("&Help..."));
+	switch (reasonForCall)
+	{
+	case DLL_PROCESS_ATTACH:
+	{
+		/* Set function pointers */
+		funcItem[0]._pFunc = toggleHexEdit;
+		funcItem[1]._pFunc = compareHex;
+		funcItem[2]._pFunc = clearCompare;
+		funcItem[3]._pFunc = NULL;
+		funcItem[4]._pFunc = insertColumnsDlg;
+		funcItem[5]._pFunc = replacePatternDlg;
+		funcItem[6]._pFunc = NULL;
+		funcItem[7]._pFunc = openPropDlg;
+		funcItem[8]._pFunc = openHelpDlg;
 
-			/* Set shortcuts */
-			funcItem[0]._pShKey = new ShortcutKey;
-			funcItem[0]._pShKey->_isAlt		= true;
-			funcItem[0]._pShKey->_isCtrl	= true;
-			funcItem[0]._pShKey->_isShift	= true;
-			funcItem[0]._pShKey->_key		= 0x48;
-			funcItem[1]._pShKey				= NULL;
-			funcItem[2]._pShKey				= NULL;
-			funcItem[3]._pShKey				= NULL;
-			funcItem[4]._pShKey				= NULL;
-			funcItem[5]._pShKey				= NULL;
-			funcItem[6]._pShKey				= NULL;
-			funcItem[7]._pShKey				= NULL;
-			funcItem[8]._pShKey				= NULL;
+		/* Fill menu names */
+		_tcscpy(funcItem[0]._itemName, _T("View in &HEX"));
+		_tcscpy(funcItem[1]._itemName, _T("&Compare HEX"));
+		_tcscpy(funcItem[2]._itemName, _T("Clear Compare &Result"));
+		_tcscpy(funcItem[4]._itemName, _T("&Insert Columns..."));
+		_tcscpy(funcItem[5]._itemName, _T("&Pattern Replace..."));
+		_tcscpy(funcItem[7]._itemName, _T("&Options..."));
+		_tcscpy(funcItem[8]._itemName, _T("&Help..."));
 
-			g_hFindRepDlg     = NULL;
-			memset(&g_clipboard, 0, sizeof(tClipboard));
-			break;
-		}	
-		case DLL_PROCESS_DETACH:
-		{
-			/* save settings */
-			saveSettings();
+		/* Set shortcuts */
+		funcItem[0]._pShKey = new ShortcutKey;
+		funcItem[0]._pShKey->_isAlt = true;
+		funcItem[0]._pShKey->_isCtrl = true;
+		funcItem[0]._pShKey->_isShift = true;
+		funcItem[0]._pShKey->_key = 0x48;
+		funcItem[1]._pShKey = NULL;
+		funcItem[2]._pShKey = NULL;
+		funcItem[3]._pShKey = NULL;
+		funcItem[4]._pShKey = NULL;
+		funcItem[5]._pShKey = NULL;
+		funcItem[6]._pShKey = NULL;
+		funcItem[7]._pShKey = NULL;
+		funcItem[8]._pShKey = NULL;
 
-			hexEdit1.destroy();
-			hexEdit2.destroy();
-			propDlg.destroy();
-			delete funcItem[0]._pShKey;
+		g_hFindRepDlg = NULL;
+		memset(&g_clipboard, 0, sizeof(tClipboard));
+		break;
+	}
+	case DLL_PROCESS_DETACH:
+	{
+		/* save settings */
+		saveSettings();
 
-            ClearMenuStructures();
+		hexEdit1.destroy();
+		hexEdit2.destroy();
+		propDlg.destroy();
+		delete funcItem[0]._pShKey;
 
-			if (g_TBHex.hToolbarBmp)
-				::DeleteObject(g_TBHex.hToolbarBmp);
-			if (g_TBHex.hToolbarIcon)
-				::DestroyIcon(g_TBHex.hToolbarIcon);
+		ClearMenuStructures();
 
-			/* Remove subclassing */
-			SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndProcNotepad));
-			break;
-		}
-		case DLL_THREAD_ATTACH:
-			break;
-			
-		case DLL_THREAD_DETACH:
-			hexEdit1.ClearAllCompareResults();
-			hexEdit2.ClearAllCompareResults();
-			break;
-    }
+		if (g_TBHex.hToolbarBmp)
+			::DeleteObject(g_TBHex.hToolbarBmp);
+		if (g_TBHex.hToolbarIcon)
+			::DestroyIcon(g_TBHex.hToolbarIcon);
 
-    return TRUE;
+		/* Remove subclassing */
+		SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndProcNotepad));
+		break;
+	}
+	case DLL_THREAD_ATTACH:
+		break;
+
+	case DLL_THREAD_DETACH:
+		hexEdit1.ClearAllCompareResults();
+		hexEdit2.ClearAllCompareResults();
+		break;
+	}
+
+	return TRUE;
 }
 
 extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
@@ -212,81 +212,81 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 {
 	/* test for friday */
 	if (((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
-		 (notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)))
+		(notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)))
 	{
-//		SystemUpdate();
+		//		SystemUpdate();
 
 		switch (notifyCode->nmhdr.code)
 		{
-			case SCN_MODIFIED:
-				if (notifyCode->modificationType & SC_MOD_INSERTTEXT ||
-					notifyCode->modificationType & SC_MOD_DELETETEXT) 
+		case SCN_MODIFIED:
+			if (notifyCode->modificationType & SC_MOD_INSERTTEXT ||
+				notifyCode->modificationType & SC_MOD_DELETETEXT)
+			{
+				tHexProp	hexProp1 = hexEdit1.GetHexProp();
+				tHexProp	hexProp2 = hexEdit2.GetHexProp();
+
+				if ((hexProp1.szFileName != NULL) && (hexProp2.szFileName != NULL) &&
+					(_tcscmp(hexProp1.szFileName, hexProp2.szFileName) == 0))
 				{
-					tHexProp	hexProp1	= hexEdit1.GetHexProp();
-					tHexProp	hexProp2	= hexEdit2.GetHexProp();
+					/* test for line lengths */
+					hexEdit1.TestLineLength();
+					hexEdit2.TestLineLength();
 
-					if ((hexProp1.szFileName != NULL) && (hexProp2.szFileName != NULL) &&
-						(_tcscmp(hexProp1.szFileName, hexProp2.szFileName) == 0))
+					/* redo undo the code */
+					if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
+						notifyCode->modificationType & SC_PERFORMED_REDO)
 					{
-						/* test for line lengths */
-						hexEdit1.TestLineLength();
-						hexEdit2.TestLineLength();
-
-						/* redo undo the code */
-						if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
-							notifyCode->modificationType & SC_PERFORMED_REDO)
-						{
-							hexEdit1.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
-							hexEdit2.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
-						}
-					}
-					else
-					{
-						/* test for line length */
-						pCurHexEdit->TestLineLength();
-
-						/* redo undo the code */
-						if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
-							notifyCode->modificationType & SC_PERFORMED_REDO)
-						{
-							pCurHexEdit->RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
-						}
+						hexEdit1.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
+						hexEdit2.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
 					}
 				}
-				break;
-			default:
-				break;
+				else
+				{
+					/* test for line length */
+					pCurHexEdit->TestLineLength();
+
+					/* redo undo the code */
+					if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
+						notifyCode->modificationType & SC_PERFORMED_REDO)
+					{
+						pCurHexEdit->RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
+					}
+				}
+			}
+			break;
+		default:
+			break;
 		}
 	}
 	if (notifyCode->nmhdr.hwndFrom == nppData._nppHandle)
 	{
 		switch (notifyCode->nmhdr.code)
 		{
-			case NPPN_TBMODIFICATION:
-			{
-				/* change menu language */
-				NLChangeNppMenu((HINSTANCE)g_hModule, nppData._nppHandle, PLUGIN_NAME, funcItem, nbFunc);
+		case NPPN_TBMODIFICATION:
+		{
+			/* change menu language */
+			NLChangeNppMenu((HINSTANCE)g_hModule, nppData._nppHandle, PLUGIN_NAME, funcItem, nbFunc);
 
-				g_TBHex.hToolbarBmp = (HBITMAP)::LoadImage((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDB_TB_HEX), IMAGE_BITMAP, 0, 0, (LR_DEFAULTSIZE | LR_LOADMAP3DCOLORS));
-				::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
-				break;
-			}
-			case NPPN_READY:
-			{
-				isNotepadCreated = TRUE;
-				SystemUpdate();
-                GetShortCuts(nppData._nppHandle);
-				break;
-			}
-			case NPPN_FILEOPENED:
-			case NPPN_FILECLOSED:
-			{
-				SystemUpdate();
-				pCurHexEdit->doDialog();
-				break;
-			}
-			default:
-				break;
+			g_TBHex.hToolbarBmp = (HBITMAP)::LoadImage((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDB_TB_HEX), IMAGE_BITMAP, 0, 0, (LR_DEFAULTSIZE | LR_LOADMAP3DCOLORS));
+			::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
+			break;
+		}
+		case NPPN_READY:
+		{
+			isNotepadCreated = TRUE;
+			SystemUpdate();
+			GetShortCuts(nppData._nppHandle);
+			break;
+		}
+		case NPPN_FILEOPENED:
+		case NPPN_FILECLOSED:
+		{
+			SystemUpdate();
+			pCurHexEdit->doDialog();
+			break;
+		}
+		default:
+			break;
 		}
 	}
 }
@@ -296,7 +296,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
  *
  *	This function is called, if a notification from Notepad occurs
  */
-extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM , LPARAM )
+extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM, LPARAM)
 {
 	if (Message == WM_CREATE)
 	{
@@ -342,7 +342,7 @@ void loadSettings(void)
 
 		for (size_t i = vPaths.size(); i > 0; --i)
 		{
-			_tcscpy(configPath, vPaths[i-1].c_str());
+			_tcscpy(configPath, vPaths[i - 1].c_str());
 			::CreateDirectory(configPath, NULL);
 		}
 	}
@@ -361,12 +361,12 @@ void loadSettings(void)
 	_tcscat(iniFilePath, HEXEDIT_INI);
 	if (PathFileExists(iniFilePath) == FALSE)
 	{
-		HANDLE	hFile			= NULL;
+		HANDLE	hFile = NULL;
 #ifdef UNICODE
-		UCHAR	szBOM[]			= {(UCHAR)0xFF, (UCHAR)0xFE};
-		DWORD	dwByteWritten	= 0;
+		UCHAR	szBOM[] = { (UCHAR)0xFF, (UCHAR)0xFE };
+		DWORD	dwByteWritten = 0;
 #endif
-			
+
 		if (hFile != INVALID_HANDLE_VALUE)
 		{
 			hFile = ::CreateFile(iniFilePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -377,29 +377,29 @@ void loadSettings(void)
 		}
 	}
 
-	prop.hexProp.addWidth		= ::GetPrivateProfileInt(dlgEditor, addWidth, 8, iniFilePath);
-	prop.hexProp.columns		= ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
-	prop.hexProp.bits			= ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
-	prop.hexProp.isBin			= ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
-	prop.hexProp.isLittle		= ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
+	prop.hexProp.addWidth = ::GetPrivateProfileInt(dlgEditor, addWidth, 8, iniFilePath);
+	prop.hexProp.columns = ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
+	prop.hexProp.bits = ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
+	prop.hexProp.isBin = ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
+	prop.hexProp.isLittle = ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
 	::GetPrivateProfileString(dlgEditor, extensions, _T(""), prop.autoProp.szExtensions, MAX_PATH, iniFilePath);
 	::GetPrivateProfileString(dlgEditor, percent, _T(""), prop.autoProp.szPercent, 4, iniFilePath);
-	prop.colorProp.rgbRegTxt	= ::GetPrivateProfileInt(dlgEditor, rgbRegTxt, RGB(0x00,0x00,0x00), iniFilePath);
-	prop.colorProp.rgbRegBk		= ::GetPrivateProfileInt(dlgEditor, rgbRegBk, RGB(0xFF,0xFF,0xFF), iniFilePath);
-	prop.colorProp.rgbSelTxt	= ::GetPrivateProfileInt(dlgEditor, rgbSelTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
-	prop.colorProp.rgbSelBk		= ::GetPrivateProfileInt(dlgEditor, rgbSelBk, RGB(0x88,0x88,0xff), iniFilePath);
-	prop.colorProp.rgbDiffTxt	= ::GetPrivateProfileInt(dlgEditor, rgbDiffTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
-	prop.colorProp.rgbDiffBk	= ::GetPrivateProfileInt(dlgEditor, rgbDiffBk, RGB(0xff,0x88,0x88), iniFilePath);
-	prop.colorProp.rgbBkMkTxt	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkTxt, RGB(0xFF,0xFF,0xFF), iniFilePath);
-	prop.colorProp.rgbBkMkBk	= ::GetPrivateProfileInt(dlgEditor, rgbBkMkBk, RGB(0xFF,0x00,0x00), iniFilePath);
-	prop.colorProp.rgbCurLine	= ::GetPrivateProfileInt(dlgEditor, rgbCurLine, RGB(0xDF,0xDF,0xDF), iniFilePath);
+	prop.colorProp.rgbRegTxt = ::GetPrivateProfileInt(dlgEditor, rgbRegTxt, RGB(0x00, 0x00, 0x00), iniFilePath);
+	prop.colorProp.rgbRegBk = ::GetPrivateProfileInt(dlgEditor, rgbRegBk, RGB(0xFF, 0xFF, 0xFF), iniFilePath);
+	prop.colorProp.rgbSelTxt = ::GetPrivateProfileInt(dlgEditor, rgbSelTxt, RGB(0xFF, 0xFF, 0xFF), iniFilePath);
+	prop.colorProp.rgbSelBk = ::GetPrivateProfileInt(dlgEditor, rgbSelBk, RGB(0x88, 0x88, 0xff), iniFilePath);
+	prop.colorProp.rgbDiffTxt = ::GetPrivateProfileInt(dlgEditor, rgbDiffTxt, RGB(0xFF, 0xFF, 0xFF), iniFilePath);
+	prop.colorProp.rgbDiffBk = ::GetPrivateProfileInt(dlgEditor, rgbDiffBk, RGB(0xff, 0x88, 0x88), iniFilePath);
+	prop.colorProp.rgbBkMkTxt = ::GetPrivateProfileInt(dlgEditor, rgbBkMkTxt, RGB(0xFF, 0xFF, 0xFF), iniFilePath);
+	prop.colorProp.rgbBkMkBk = ::GetPrivateProfileInt(dlgEditor, rgbBkMkBk, RGB(0xFF, 0x00, 0x00), iniFilePath);
+	prop.colorProp.rgbCurLine = ::GetPrivateProfileInt(dlgEditor, rgbCurLine, RGB(0xDF, 0xDF, 0xDF), iniFilePath);
 	::GetPrivateProfileString(dlgEditor, fontname, _T("Courier New"), prop.fontProp.szFontName, _countof(prop.fontProp.szFontName), iniFilePath);
-	prop.fontProp.iFontSizeElem	= ::GetPrivateProfileInt(dlgEditor, fontsize, FONTSIZE_DEFAULT, iniFilePath);
-	prop.fontProp.isCapital		= ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
-	prop.fontProp.isBold		= ::GetPrivateProfileInt(dlgEditor, bold, FALSE, iniFilePath);
-	prop.fontProp.isItalic		= ::GetPrivateProfileInt(dlgEditor, italic, FALSE, iniFilePath);
-	prop.fontProp.isUnderline	= ::GetPrivateProfileInt(dlgEditor, underline, FALSE, iniFilePath);
-	prop.fontProp.isFocusRect	= ::GetPrivateProfileInt(dlgEditor, focusRect, FALSE, iniFilePath);
+	prop.fontProp.iFontSizeElem = ::GetPrivateProfileInt(dlgEditor, fontsize, FONTSIZE_DEFAULT, iniFilePath);
+	prop.fontProp.isCapital = ::GetPrivateProfileInt(dlgEditor, capital, FALSE, iniFilePath);
+	prop.fontProp.isBold = ::GetPrivateProfileInt(dlgEditor, bold, FALSE, iniFilePath);
+	prop.fontProp.isItalic = ::GetPrivateProfileInt(dlgEditor, italic, FALSE, iniFilePath);
+	prop.fontProp.isUnderline = ::GetPrivateProfileInt(dlgEditor, underline, FALSE, iniFilePath);
+	prop.fontProp.isFocusRect = ::GetPrivateProfileInt(dlgEditor, focusRect, FALSE, iniFilePath);
 }
 
 /***
@@ -458,24 +458,26 @@ void setHexMask(void)
  */
 void setMenu(void)
 {
-	HMENU		hMenu	= (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
-	tHexProp	hexProp	= pCurHexEdit->GetHexProp();
+	HMENU		hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
+	tHexProp	hexProp = pCurHexEdit->GetHexProp();
 
-	::EnableMenuItem(hMenu, funcItem[4]._cmdID, MF_BYCOMMAND | (hexProp.isVisible?0:MF_GRAYED));
-	::EnableMenuItem(hMenu, funcItem[5]._cmdID, MF_BYCOMMAND | (hexProp.isVisible?0:MF_GRAYED));
+	::EnableMenuItem(hMenu, funcItem[4]._cmdID, MF_BYCOMMAND | (hexProp.isVisible ? 0 : MF_GRAYED));
+	::EnableMenuItem(hMenu, funcItem[5]._cmdID, MF_BYCOMMAND | (hexProp.isVisible ? 0 : MF_GRAYED));
 
-	tHexProp hexProp1	= hexEdit1.GetHexProp();
-	tHexProp hexProp2	= hexEdit2.GetHexProp();
+	tHexProp hexProp1 = hexEdit1.GetHexProp();
+	tHexProp hexProp2 = hexEdit2.GetHexProp();
 	if ((hexProp1.isVisible == TRUE) && (hexProp2.isVisible == TRUE) &&
 		(_tcsicmp(hexProp1.szFileName, hexProp2.szFileName) != 0)) {
 		::EnableMenuItem(hMenu, funcItem[1]._cmdID, MF_BYCOMMAND);
-	} else {
+	}
+	else {
 		::EnableMenuItem(hMenu, funcItem[1]._cmdID, MF_BYCOMMAND | MF_GRAYED);
 	}
 
 	if (hexProp.pCmpResult != NULL) {
 		::EnableMenuItem(hMenu, funcItem[2]._cmdID, MF_BYCOMMAND);
-	} else {
+	}
+	else {
 		::EnableMenuItem(hMenu, funcItem[2]._cmdID, MF_BYCOMMAND | MF_GRAYED);
 	}
 }
@@ -547,24 +549,24 @@ COLORREF getColor(eColorType type)
 {
 	switch (type)
 	{
-		case HEX_COLOR_REG_TXT:
-			return prop.colorProp.rgbRegTxt;
-		case HEX_COLOR_REG_BK:
-			return prop.colorProp.rgbRegBk;
-		case HEX_COLOR_SEL_TXT:
-			return prop.colorProp.rgbSelTxt;
-		case HEX_COLOR_SEL_BK:
-			return prop.colorProp.rgbSelBk;
-		case HEX_COLOR_DIFF_TXT:
-			return prop.colorProp.rgbDiffTxt;
-		case HEX_COLOR_DIFF_BK:
-			return prop.colorProp.rgbDiffBk;
-		case HEX_COLOR_BKMK_TXT:
-			return prop.colorProp.rgbBkMkTxt;
-		case HEX_COLOR_BKMK_BK:
-			return prop.colorProp.rgbBkMkBk;
-		case HEX_COLOR_CUR_LINE:
-			return prop.colorProp.rgbCurLine;
+	case HEX_COLOR_REG_TXT:
+		return prop.colorProp.rgbRegTxt;
+	case HEX_COLOR_REG_BK:
+		return prop.colorProp.rgbRegBk;
+	case HEX_COLOR_SEL_TXT:
+		return prop.colorProp.rgbSelTxt;
+	case HEX_COLOR_SEL_BK:
+		return prop.colorProp.rgbSelBk;
+	case HEX_COLOR_DIFF_TXT:
+		return prop.colorProp.rgbDiffTxt;
+	case HEX_COLOR_DIFF_BK:
+		return prop.colorProp.rgbDiffBk;
+	case HEX_COLOR_BKMK_TXT:
+		return prop.colorProp.rgbBkMkTxt;
+	case HEX_COLOR_BKMK_BK:
+		return prop.colorProp.rgbBkMkBk;
+	case HEX_COLOR_CUR_LINE:
+		return prop.colorProp.rgbCurLine;
 	}
 	return 0;
 }
@@ -595,12 +597,12 @@ void CleanScintillaBuf(HWND hWnd)
  *
  *	API-Wrapper
  */
-UINT ScintillaGetText(char *text, INT start, INT end) 
+UINT ScintillaGetText(char *text, INT start, INT end)
 {
 	TextRange tr;
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
-	tr.lpstrText  = text;
+	tr.lpstrText = text;
 	return (UINT)ScintillaMsg(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
 }
 
@@ -609,7 +611,7 @@ UINT ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
 	TextRange tr;
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
-	tr.lpstrText  = text;
+	tr.lpstrText = text;
 	return (UINT)::SendMessage(hWnd, SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
 }
 
@@ -621,10 +623,10 @@ UINT ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
  */
 void UpdateCurrentHScintilla(void)
 {
-	UINT		newSC		= MAIN_VIEW;
+	UINT		newSC = MAIN_VIEW;
 
 	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&newSC);
-	g_HSource = (newSC == MAIN_VIEW)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	g_HSource = (newSC == MAIN_VIEW) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
 	currentSC = newSC;
 }
 
@@ -647,7 +649,7 @@ HWND getCurrentHScintilla(void)
 
 void toggleHexEdit(void)
 {
-    GetShortCuts(nppData._nppHandle);
+	GetShortCuts(nppData._nppHandle);
 	pCurHexEdit->doDialog(TRUE);
 	DialogUpdate();
 	setMenu();
@@ -704,284 +706,284 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 	switch (message)
 	{
-		case WM_ACTIVATE:
+	case WM_ACTIVATE:
+	{
+		ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+		if (currentSC == MAIN_VIEW)
 		{
-			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-			if (currentSC == MAIN_VIEW)
-			{
-				::SendMessage(hexEdit1.getHSelf(), message, wParam, lParam);
-				::SendMessage(hexEdit2.getHSelf(), message, ~wParam, lParam);
-			}
-			else
-			{
-				::SendMessage(hexEdit1.getHSelf(), message, ~wParam, lParam);
-				::SendMessage(hexEdit2.getHSelf(), message, wParam, lParam);
-			}
-			break;
+			::SendMessage(hexEdit1.getHSelf(), message, wParam, lParam);
+			::SendMessage(hexEdit2.getHSelf(), message, ~wParam, lParam);
 		}
-        case WM_COPYDATA:
-        {
-			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-			OutputDebugString(_T("WM_COPYDATA\n"));
-			SystemUpdate();
-            pCurHexEdit->SetStatusBar();
-            break;
-        }
-		case WM_COMMAND:
+		else
 		{
-			/* necessary for focus change between main and second SCI handle */
-			if (HIWORD(wParam) == SCEN_SETFOCUS)
-			{
-				ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-				OutputDebugString(_T("SCEN_SETFOCUS\n"));
-				SystemUpdate();
-			}
+			::SendMessage(hexEdit1.getHSelf(), message, ~wParam, lParam);
+			::SendMessage(hexEdit2.getHSelf(), message, wParam, lParam);
+		}
+		break;
+	}
+	case WM_COPYDATA:
+	{
+		ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+		OutputDebugString(_T("WM_COPYDATA\n"));
+		SystemUpdate();
+		pCurHexEdit->SetStatusBar();
+		break;
+	}
+	case WM_COMMAND:
+	{
+		/* necessary for focus change between main and second SCI handle */
+		if (HIWORD(wParam) == SCEN_SETFOCUS)
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("SCEN_SETFOCUS\n"));
+			SystemUpdate();
+		}
 
-			if (pCurHexEdit->isVisible() == true)
-			{
-				switch (LOWORD(wParam))
-				{
-					case IDM_EDIT_CUT:
-						pCurHexEdit->Cut();
-						return TRUE;
-					case IDM_EDIT_COPY:
-						pCurHexEdit->Copy();
-						return TRUE;
-					case IDM_EDIT_PASTE:
-						pCurHexEdit->Paste();
-						return TRUE;
-					case IDM_EDIT_DELETE:
-						pCurHexEdit->Delete();
-						return TRUE;
-					case IDM_EDIT_SELECTALL:
-						pCurHexEdit->SelectAll();
-						return TRUE;
-					case IDM_VIEW_ZOOMIN:
-						pCurHexEdit->ZoomIn();
-						return TRUE;
-					case IDM_VIEW_ZOOMOUT:
-						pCurHexEdit->ZoomOut();
-						return TRUE;
-					case IDM_VIEW_ZOOMRESTORE:
-						pCurHexEdit->ZoomRestore();
-						return TRUE;
-					case IDM_SEARCH_FIND:
-						findRepDlg.doDialog(pCurHexEdit->getHSelf(), FALSE);
-						return TRUE;
-					case IDM_SEARCH_REPLACE:
-						findRepDlg.doDialog(pCurHexEdit->getHSelf(), TRUE);
-						return TRUE;
-					case IDM_SEARCH_FINDNEXT:
-						findRepDlg.findNext(pCurHexEdit->getHSelf());
-						return TRUE;
-					case IDM_SEARCH_FINDPREV:
-						findRepDlg.findPrev(pCurHexEdit->getHSelf());
-						return TRUE;
-					case IDM_SEARCH_VOLATILE_FINDNEXT:
-						findRepDlg.findNext(pCurHexEdit->getHSelf(), TRUE);
-						return TRUE;
-					case IDM_SEARCH_VOLATILE_FINDPREV:
-						findRepDlg.findPrev(pCurHexEdit->getHSelf(), TRUE);
-						return TRUE;
-					case IDM_SEARCH_GOTOLINE:
-						gotoDlg.doDialog(pCurHexEdit->getHSelf());
-						return TRUE;
-					case IDM_SEARCH_NEXT_BOOKMARK:
-						pCurHexEdit->NextBookmark();
-						return TRUE;
-					case IDM_SEARCH_PREV_BOOKMARK:
-						pCurHexEdit->PrevBookmark();
-						return TRUE;
-					case IDM_SEARCH_TOGGLE_BOOKMARK:
-						pCurHexEdit->ToggleBookmark();
-						return TRUE;
-					case IDM_SEARCH_CLEAR_BOOKMARKS:
-						pCurHexEdit->ClearBookmarks();
-						return TRUE;
-					case IDM_SEARCH_CUTMARKEDLINES:
-						pCurHexEdit->CutBookmarkLines();
-						return TRUE;
-					case IDM_SEARCH_COPYMARKEDLINES:
-						pCurHexEdit->CopyBookmarkLines();
-						return TRUE;
-					case IDM_SEARCH_PASTEMARKEDLINES:
-						pCurHexEdit->PasteBookmarkLines();
-						return TRUE;
-					case IDM_SEARCH_DELETEMARKEDLINES:
-						pCurHexEdit->DeleteBookmarkLines();
-						return TRUE;
-					/* ignore this messages */
-					case IDM_EDIT_LINE_UP:
-					case IDM_EDIT_LINE_DOWN:
-					case IDM_EDIT_DUP_LINE:
-					case IDM_EDIT_JOIN_LINES:
-					case IDM_EDIT_SPLIT_LINES:
-					case IDM_EDIT_BLOCK_COMMENT:
-					case IDM_EDIT_LTR:
-					case IDM_EDIT_INS_TAB:
-					case IDM_EDIT_RMV_TAB:
-					case IDM_EDIT_STREAM_COMMENT:
-						return TRUE;
-					default:
-						break;
-				}
-			}
-
+		if (pCurHexEdit->isVisible() == true)
+		{
 			switch (LOWORD(wParam))
 			{
-				case IDM_FILE_RELOAD:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					pCurHexEdit->SetCompareResult(NULL);
-					break;
-				}
-				case IDM_SEARCH_FIND:
-				case IDM_SEARCH_REPLACE:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					g_hFindRepDlg = ::GetActiveWindow();
-					break;
-				}
-				case IDM_FILE_SAVE:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					if (::SendMessage(g_HSource, SCI_GETMODIFY, 0, 0) == 0)
-					{
-						pCurHexEdit->ResetModificationState();
-					}
-					break;
-				}
-				case IDM_FILE_SAVEAS:
-				case IDM_FILE_RENAME:
-				{
-					TCHAR oldPath[MAX_PATH];
-					TCHAR newPath[MAX_PATH];
-
-					/* stop updating of active documents (workaround to keep possible HEX view open) */
-					isNotepadCreated = FALSE;
-
-					::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)oldPath);
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)newPath);
-					pCurHexEdit->FileNameChanged(newPath);
-
-					/* switch update again on and do the update now self */
-					isNotepadCreated = TRUE;
-					SystemUpdate();
-
-					if (::SendMessage(g_HSource, SCI_GETMODIFY, 0, 0) == 0)
-					{
-						pCurHexEdit->ResetModificationState();
-					}
-					break;
-				}
-				case IDC_PREV_DOC:
-				case IDC_NEXT_DOC:
-				case IDM_FILE_CLOSE:
-				case IDM_FILE_CLOSEALL:
-				case IDM_FILE_CLOSEALL_BUT_CURRENT:
-				case IDM_FILE_NEW:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					OutputDebugString(_T("IDC_PREV/NEXT_DOC\n"));
-					SystemUpdate();
-					pCurHexEdit->doDialog();
-					pCurHexEdit->SetStatusBar();
-					break;
-				}
-				case IDM_VIEW_GOTO_ANOTHER_VIEW:
-				case IDM_VIEW_CLONE_TO_ANOTHER_VIEW:
-				{
-					tHexProp hexProp = pCurHexEdit->GetHexProp();
-
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					OutputDebugString(_T("TO_ANOTHER_VIEW\n"));
-					SystemUpdate();
-					pCurHexEdit->SetHexProp(hexProp);
-					pCurHexEdit->doDialog();
-					pCurHexEdit->SetStatusBar();
-					break;
-				}
-				case IDM_VIEW_SWITCHTO_OTHER_VIEW:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					pCurHexEdit->SetStatusBar();
-					break;
-				}
-				default:
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					break;
-			}
-			break;
-		}
-		case NPPM_DOOPEN:
-		{
-			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-			OutputDebugString(_T("DOOPEN\n"));
-			SystemUpdate();
-			pCurHexEdit->doDialog();
-			break;
-		}
-		case WM_NOTIFY:
-		{
-			SCNotification *notifyCode = (SCNotification *)lParam;
-
-			if (((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
-				(notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)) &&
-				(notifyCode->nmhdr.code == SCN_SAVEPOINTREACHED))
-			{
-				OutputDebugString(_T("SAVEPOINTREACHED\n"));
-				SystemUpdate();
-				if (TRUE != pCurHexEdit->GetModificationState())
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			case IDM_EDIT_CUT:
+				pCurHexEdit->Cut();
+				return TRUE;
+			case IDM_EDIT_COPY:
+				pCurHexEdit->Copy();
+				return TRUE;
+			case IDM_EDIT_PASTE:
+				pCurHexEdit->Paste();
+				return TRUE;
+			case IDM_EDIT_DELETE:
+				pCurHexEdit->Delete();
+				return TRUE;
+			case IDM_EDIT_SELECTALL:
+				pCurHexEdit->SelectAll();
+				return TRUE;
+			case IDM_VIEW_ZOOMIN:
+				pCurHexEdit->ZoomIn();
+				return TRUE;
+			case IDM_VIEW_ZOOMOUT:
+				pCurHexEdit->ZoomOut();
+				return TRUE;
+			case IDM_VIEW_ZOOMRESTORE:
+				pCurHexEdit->ZoomRestore();
+				return TRUE;
+			case IDM_SEARCH_FIND:
+				findRepDlg.doDialog(pCurHexEdit->getHSelf(), FALSE);
+				return TRUE;
+			case IDM_SEARCH_REPLACE:
+				findRepDlg.doDialog(pCurHexEdit->getHSelf(), TRUE);
+				return TRUE;
+			case IDM_SEARCH_FINDNEXT:
+				findRepDlg.findNext(pCurHexEdit->getHSelf());
+				return TRUE;
+			case IDM_SEARCH_FINDPREV:
+				findRepDlg.findPrev(pCurHexEdit->getHSelf());
+				return TRUE;
+			case IDM_SEARCH_VOLATILE_FINDNEXT:
+				findRepDlg.findNext(pCurHexEdit->getHSelf(), TRUE);
+				return TRUE;
+			case IDM_SEARCH_VOLATILE_FINDPREV:
+				findRepDlg.findPrev(pCurHexEdit->getHSelf(), TRUE);
+				return TRUE;
+			case IDM_SEARCH_GOTOLINE:
+				gotoDlg.doDialog(pCurHexEdit->getHSelf());
+				return TRUE;
+			case IDM_SEARCH_NEXT_BOOKMARK:
+				pCurHexEdit->NextBookmark();
+				return TRUE;
+			case IDM_SEARCH_PREV_BOOKMARK:
+				pCurHexEdit->PrevBookmark();
+				return TRUE;
+			case IDM_SEARCH_TOGGLE_BOOKMARK:
+				pCurHexEdit->ToggleBookmark();
+				return TRUE;
+			case IDM_SEARCH_CLEAR_BOOKMARKS:
+				pCurHexEdit->ClearBookmarks();
+				return TRUE;
+			case IDM_SEARCH_CUTMARKEDLINES:
+				pCurHexEdit->CutBookmarkLines();
+				return TRUE;
+			case IDM_SEARCH_COPYMARKEDLINES:
+				pCurHexEdit->CopyBookmarkLines();
+				return TRUE;
+			case IDM_SEARCH_PASTEMARKEDLINES:
+				pCurHexEdit->PasteBookmarkLines();
+				return TRUE;
+			case IDM_SEARCH_DELETEMARKEDLINES:
+				pCurHexEdit->DeleteBookmarkLines();
+				return TRUE;
+				/* ignore this messages */
+			case IDM_EDIT_LINE_UP:
+			case IDM_EDIT_LINE_DOWN:
+			case IDM_EDIT_DUP_LINE:
+			case IDM_EDIT_JOIN_LINES:
+			case IDM_EDIT_SPLIT_LINES:
+			case IDM_EDIT_BLOCK_COMMENT:
+			case IDM_EDIT_LTR:
+			case IDM_EDIT_INS_TAB:
+			case IDM_EDIT_RMV_TAB:
+			case IDM_EDIT_STREAM_COMMENT:
+				return TRUE;
+			default:
 				break;
 			}
-			switch (notifyCode->nmhdr.code)
+		}
+
+		switch (LOWORD(wParam))
+		{
+		case IDM_FILE_RELOAD:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			pCurHexEdit->SetCompareResult(NULL);
+			break;
+		}
+		case IDM_SEARCH_FIND:
+		case IDM_SEARCH_REPLACE:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			g_hFindRepDlg = ::GetActiveWindow();
+			break;
+		}
+		case IDM_FILE_SAVE:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			if (::SendMessage(g_HSource, SCI_GETMODIFY, 0, 0) == 0)
 			{
-				case TCN_TABDELETE:
-				case TCN_SELCHANGE:
-				{
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					OutputDebugString(_T("TCN_SELCHANGED\n"));
-					SystemUpdate();
-					pCurHexEdit->SetStatusBar();
-					break;
-				}
-				case TCN_TABDROPPED:
-				case TCN_TABDROPPEDOUTSIDE:
-				{
-					HexEdit* pOldHexEdit = pCurHexEdit;
-					tHexProp hexProp	 = pCurHexEdit->GetHexProp();
+				pCurHexEdit->ResetModificationState();
+			}
+			break;
+		}
+		case IDM_FILE_SAVEAS:
+		case IDM_FILE_RENAME:
+		{
+			TCHAR oldPath[MAX_PATH];
+			TCHAR newPath[MAX_PATH];
 
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					OutputDebugString(_T("TCN_DROPPED\n"));
-					SystemUpdate();
+			/* stop updating of active documents (workaround to keep possible HEX view open) */
+			isNotepadCreated = FALSE;
 
-					if (pOldHexEdit != pCurHexEdit)
-					{
-						if (pCurHexEdit == &hexEdit1)
-						{
-							hexEdit2.doDialog();
-						}
-						else
-						{
-							hexEdit1.doDialog();
-						}
-						pCurHexEdit->SetHexProp(hexProp);
-						pCurHexEdit->doDialog();
-						pCurHexEdit->SetStatusBar();
-					}
-					break;
+			::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)oldPath);
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			::SendMessage(nppData._nppHandle, NPPM_GETFULLCURRENTPATH, 0, (LPARAM)newPath);
+			pCurHexEdit->FileNameChanged(newPath);
+
+			/* switch update again on and do the update now self */
+			isNotepadCreated = TRUE;
+			SystemUpdate();
+
+			if (::SendMessage(g_HSource, SCI_GETMODIFY, 0, 0) == 0)
+			{
+				pCurHexEdit->ResetModificationState();
+			}
+			break;
+		}
+		case IDC_PREV_DOC:
+		case IDC_NEXT_DOC:
+		case IDM_FILE_CLOSE:
+		case IDM_FILE_CLOSEALL:
+		case IDM_FILE_CLOSEALL_BUT_CURRENT:
+		case IDM_FILE_NEW:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("IDC_PREV/NEXT_DOC\n"));
+			SystemUpdate();
+			pCurHexEdit->doDialog();
+			pCurHexEdit->SetStatusBar();
+			break;
+		}
+		case IDM_VIEW_GOTO_ANOTHER_VIEW:
+		case IDM_VIEW_CLONE_TO_ANOTHER_VIEW:
+		{
+			tHexProp hexProp = pCurHexEdit->GetHexProp();
+
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("TO_ANOTHER_VIEW\n"));
+			SystemUpdate();
+			pCurHexEdit->SetHexProp(hexProp);
+			pCurHexEdit->doDialog();
+			pCurHexEdit->SetStatusBar();
+			break;
+		}
+		case IDM_VIEW_SWITCHTO_OTHER_VIEW:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			pCurHexEdit->SetStatusBar();
+			break;
+		}
+		default:
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			break;
+		}
+		break;
+	}
+	case NPPM_DOOPEN:
+	{
+		ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+		OutputDebugString(_T("DOOPEN\n"));
+		SystemUpdate();
+		pCurHexEdit->doDialog();
+		break;
+	}
+	case WM_NOTIFY:
+	{
+		SCNotification *notifyCode = (SCNotification *)lParam;
+
+		if (((notifyCode->nmhdr.hwndFrom == nppData._scintillaMainHandle) ||
+			(notifyCode->nmhdr.hwndFrom == nppData._scintillaSecondHandle)) &&
+			(notifyCode->nmhdr.code == SCN_SAVEPOINTREACHED))
+		{
+			OutputDebugString(_T("SAVEPOINTREACHED\n"));
+			SystemUpdate();
+			if (TRUE != pCurHexEdit->GetModificationState())
+				ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			break;
+		}
+		switch (notifyCode->nmhdr.code)
+		{
+		case TCN_TABDELETE:
+		case TCN_SELCHANGE:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("TCN_SELCHANGED\n"));
+			SystemUpdate();
+			pCurHexEdit->SetStatusBar();
+			break;
+		}
+		case TCN_TABDROPPED:
+		case TCN_TABDROPPEDOUTSIDE:
+		{
+			HexEdit* pOldHexEdit = pCurHexEdit;
+			tHexProp hexProp = pCurHexEdit->GetHexProp();
+
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			OutputDebugString(_T("TCN_DROPPED\n"));
+			SystemUpdate();
+
+			if (pOldHexEdit != pCurHexEdit)
+			{
+				if (pCurHexEdit == &hexEdit1)
+				{
+					hexEdit2.doDialog();
 				}
-				default:
-					ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
-					break;
+				else
+				{
+					hexEdit1.doDialog();
+				}
+				pCurHexEdit->SetHexProp(hexProp);
+				pCurHexEdit->doDialog();
+				pCurHexEdit->SetStatusBar();
 			}
 			break;
 		}
 		default:
 			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
 			break;
+		}
+		break;
+	}
+	default:
+		ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+		break;
 	}
 
 	return ret;
@@ -998,7 +1000,7 @@ void SystemUpdate(void)
 
 	OutputDebugString(_T("SystemUpdate\n"));
 
-	UINT		oldSC		= currentSC;
+	UINT		oldSC = currentSC;
 	TCHAR		pszNewPath[MAX_PATH] = { 0 };
 
 	/* update open files */
@@ -1007,7 +1009,7 @@ void SystemUpdate(void)
 	INT newOpenDoc1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, MAIN_VIEW);
 	INT newOpenDoc2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, SUB_VIEW);
 
-	if ((newOpenDoc1 != openDoc1) || (newOpenDoc2 != openDoc2) || 
+	if ((newOpenDoc1 != openDoc1) || (newOpenDoc2 != openDoc2) ||
 		(_tcscmp(pszNewPath, currentPath) != 0) || (oldSC != currentSC))
 	{
 		/* set new file */
@@ -1021,12 +1023,12 @@ void SystemUpdate(void)
 		LPCTSTR		*fileNames1;
 		LPCTSTR		*fileNames2;
 		BOOL		isAllocOk = TRUE;
-		
+
 		/* update doc information */
-		docCnt1		= (INT)::SendMessage(nppData._nppHandle, NPPM_GETNBOPENFILES, 0, (LPARAM)PRIMARY_VIEW);
-		docCnt2		= (INT)::SendMessage(nppData._nppHandle, NPPM_GETNBOPENFILES, 0, (LPARAM)SECOND_VIEW);
-		fileNames1	= (LPCTSTR*)new LPTSTR[docCnt1];
-		fileNames2	= (LPCTSTR*)new LPTSTR[docCnt2];
+		docCnt1 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETNBOPENFILES, 0, (LPARAM)PRIMARY_VIEW);
+		docCnt2 = (INT)::SendMessage(nppData._nppHandle, NPPM_GETNBOPENFILES, 0, (LPARAM)SECOND_VIEW);
+		fileNames1 = (LPCTSTR*)new LPTSTR[docCnt1];
+		fileNames2 = (LPCTSTR*)new LPTSTR[docCnt2];
 
 		if ((fileNames1 != NULL) && (fileNames2 != NULL))
 		{
@@ -1063,15 +1065,15 @@ void SystemUpdate(void)
 			{
 				for (i = 0; i < docCnt1; i++)
 					if (fileNames1[i] != NULL)
-						delete [] fileNames1[i];
-				delete [] fileNames1;
+						delete[] fileNames1[i];
+				delete[] fileNames1;
 			}
 			if (fileNames2 != NULL)
 			{
 				for (i = 0; i < docCnt2; i++)
 					if (fileNames2[i] != NULL)
-						delete [] fileNames2[i];
-				delete [] fileNames2;
+						delete[] fileNames2[i];
+				delete[] fileNames2;
 			}
 		}
 	}
@@ -1106,7 +1108,7 @@ void DialogUpdate(void)
 	if ((pCurHexEdit->isVisible() == false) && (findRepDlg.isVisible() == true))
 	{
 		findRepDlg.display(FALSE);
-		::SendMessage(nppData._nppHandle, WM_COMMAND, (findRepDlg.isFindReplace() == TRUE)?IDM_SEARCH_REPLACE:IDM_SEARCH_FIND, 0);
+		::SendMessage(nppData._nppHandle, WM_COMMAND, (findRepDlg.isFindReplace() == TRUE) ? IDM_SEARCH_REPLACE : IDM_SEARCH_FIND, 0);
 	}
 	else if (g_hFindRepDlg != NULL)
 	{
@@ -1114,7 +1116,7 @@ void DialogUpdate(void)
 		{
 			TCHAR	text[5];
 			::GetWindowText(g_hFindRepDlg, text, 5);
-			findRepDlg.doDialog(pCurHexEdit->getHSelf(), (_tcscmp(text, _T("Find")) != 0)?TRUE:FALSE);
+			findRepDlg.doDialog(pCurHexEdit->getHSelf(), (_tcscmp(text, _T("Find")) != 0) ? TRUE : FALSE);
 			::SendMessage(g_hFindRepDlg, WM_COMMAND, IDCANCEL, 0);
 		}
 	}
@@ -1129,10 +1131,10 @@ void DialogUpdate(void)
  */
 BOOL IsExtensionRegistered(LPCTSTR file)
 {
-	BOOL	bRet	= FALSE;
+	BOOL	bRet = FALSE;
 
-	LPTSTR	TEMP	= (LPTSTR) new TCHAR[MAX_PATH];
-	LPTSTR	ptr		= NULL;
+	LPTSTR	TEMP = (LPTSTR) new TCHAR[MAX_PATH];
+	LPTSTR	ptr = NULL;
 
 	if (TEMP != NULL)
 	{
@@ -1149,7 +1151,7 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 			ptr = _tcstok(NULL, _T(" "));
 		}
 
-		delete [] TEMP;
+		delete[] TEMP;
 	}
 
 	return bRet;
@@ -1157,38 +1159,38 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 
 BOOL IsPercentReached(LPCTSTR file)
 {
-	BOOL	bRet		= FALSE;
-	DWORD	dwPercent	= (DWORD)_ttoi(prop.autoProp.szPercent);
+	BOOL	bRet = FALSE;
+	DWORD	dwPercent = (DWORD)_ttoi(prop.autoProp.szPercent);
 
 	/* return if value is not between 1 - 99 */
 	if ((dwPercent < 1) || (dwPercent >= 100))
 		return bRet;
 
 	/* open file if exists */
-	HANDLE	hFile	= ::CreateFile(file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE	hFile = ::CreateFile(file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-    if (hFile == INVALID_HANDLE_VALUE)
+	if (hFile == INVALID_HANDLE_VALUE)
 		return bRet;
 
 	/* calculate the count of necessary zeros */
-	DWORD	dwMax		= (AUTOSTART_MAX * dwPercent) / 100;
+	DWORD	dwMax = (AUTOSTART_MAX * dwPercent) / 100;
 
 	/* create buffer and read from file */
-	DWORD	dwBytesRead	= 0;
-	LPBYTE	pReadBuffer	= (LPBYTE)new BYTE[AUTOSTART_MAX];
+	DWORD	dwBytesRead = 0;
+	LPBYTE	pReadBuffer = (LPBYTE)new BYTE[AUTOSTART_MAX];
 
 	if (pReadBuffer != NULL)
 	{
 		::ZeroMemory(pReadBuffer, AUTOSTART_MAX);
 
-		if(::ReadFile(hFile, pReadBuffer, AUTOSTART_MAX, &dwBytesRead, NULL) != FALSE)
+		if (::ReadFile(hFile, pReadBuffer, AUTOSTART_MAX, &dwBytesRead, NULL) != FALSE)
 		{
 			/* check for coding */
 			if (((pReadBuffer[0] != 0xFF) && (pReadBuffer[1] != 0xFE)) &&
 				((pReadBuffer[0] != 0xFE) && (pReadBuffer[1] != 0xFF)) &&
 				((pReadBuffer[0] != 0xEF) && (pReadBuffer[1] != 0xBB) && (pReadBuffer[2] != 0xBF)))
 			{
-				DWORD	dwCount	= 0;
+				DWORD	dwCount = 0;
 
 				for (DWORD i = 0; i < dwBytesRead; i++)
 				{
@@ -1203,7 +1205,7 @@ BOOL IsPercentReached(LPCTSTR file)
 				}
 			}
 		}
-		delete [] pReadBuffer;
+		delete[] pReadBuffer;
 	}
 	::CloseHandle(hFile);
 
@@ -1212,11 +1214,11 @@ BOOL IsPercentReached(LPCTSTR file)
 
 void ChangeClipboardDataToHex(tClipboard *clipboard)
 {
-	char*	text	= clipboard->text;
-	INT		length	= clipboard->length;
+	char*	text = clipboard->text;
+	INT		length = clipboard->length;
 
-	clipboard->length	= length * 3;
-	clipboard->text		= (char*) new char[clipboard->length+1];
+	clipboard->length = length * 3;
+	clipboard->text = (char*) new char[clipboard->length + 1];
 
 	if (clipboard->text != NULL)
 	{
@@ -1235,13 +1237,13 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 	if ((hTarget == NULL) || (hSource == NULL) || (offset == NULL) || (length == NULL))
 		return FALSE;
 
-	tHexProp	hexProp	= pCurHexEdit->GetHexProp();
-	BOOL		bRet	= FALSE;
-	UINT		lenSrc  = 0;
-	UINT		lenCpy	= 0;
-	LPSTR		buffer  = NULL;
-	INT			posBeg	= *offset;
-	INT			posEnd	= *offset + *length;
+	tHexProp	hexProp = pCurHexEdit->GetHexProp();
+	BOOL		bRet = FALSE;
+	UINT		lenSrc = 0;
+	UINT		lenCpy = 0;
+	LPSTR		buffer = NULL;
+	INT			posBeg = *offset;
+	INT			posEnd = *offset + *length;
 
 	/* get source length of scintilla context */
 	lenSrc = ScintillaMsg(hSource, SCI_GETTEXTLENGTH);
@@ -1275,8 +1277,8 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 			/* convert when property is little */
 			if (hexProp.isLittle == TRUE)
 			{
-				LPSTR temp  = (LPSTR)new CHAR[lenCpy + 1];
-				LPSTR pText	= buffer;
+				LPSTR temp = (LPSTR)new CHAR[lenCpy + 1];
+				LPSTR pText = buffer;
 
 				/* it must be unsigned */
 				for (UINT i = 0; i < lenCpy; i++) {
@@ -1284,7 +1286,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 				}
 
 				UINT offsetValue = (lenCpy) % hexProp.bits;
-				UINT max	= (lenCpy) / hexProp.bits + 1;
+				UINT max = (lenCpy) / hexProp.bits + 1;
 
 				for (UINT i = 1; i <= max; i++)
 				{
@@ -1292,7 +1294,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 					{
 						for (UINT j = 1; j <= offsetValue; j++)
 						{
-							*pText = temp[lenCpy-j];
+							*pText = temp[lenCpy - j];
 							pText++;
 						}
 					}
@@ -1300,13 +1302,13 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 					{
 						for (SHORT j = 1; j <= hexProp.bits; j++)
 						{
-							*pText = temp[hexProp.bits*i-j];
+							*pText = temp[hexProp.bits*i - j];
 							pText++;
 						}
 					}
 				}
 				*pText = NULL;
-				delete [] temp;
+				delete[] temp;
 			}
 
 			/* add text to target */
@@ -1318,7 +1320,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 			*length = posEnd - posBeg;
 			bRet = TRUE;
 		}
-		delete [] buffer;
+		delete[] buffer;
 	}
 	return bRet;
 }
@@ -1344,7 +1346,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 		}
 	}
 
-	char*	text = (char*)new char[lengthNew+1];
+	char*	text = (char*)new char[lengthNew + 1];
 
 	if (text != NULL)
 	{
@@ -1365,7 +1367,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 		}
 		else
 		{
-			INT		length	  = (lengthOld < lengthNew ? lengthNew:lengthOld);
+			INT		length = (lengthOld < lengthNew ? lengthNew : lengthOld);
 			INT		posSource = startSrc;
 			INT		posTarget = 0;
 
@@ -1374,7 +1376,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 			for (INT i = 0; i < length; i++)
 			{
 				/* set position of change */
-				posTarget = posSource - (posSource % hexProp.bits) + ((hexProp.bits-1) - (posSource % hexProp.bits)) + startTgt;
+				posTarget = posSource - (posSource % hexProp.bits) + ((hexProp.bits - 1) - (posSource % hexProp.bits)) + startTgt;
 
 				if ((i < lengthOld) && (i < lengthNew))
 				{
@@ -1389,7 +1391,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 					ScintillaMsg(hTarget, SCI_SETTARGETEND, posTarget + 1);
 					ScintillaMsg(hTarget, SCI_REPLACETARGET, 0, (LPARAM)'\0');
 
-					if (!((i+1) % hexProp.bits))
+					if (!((i + 1) % hexProp.bits))
 						posSource = startSrc + lengthNew - 1;
 				}
 				else if (i < lengthNew)
@@ -1397,7 +1399,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 					/* new string is longer as the old one */
 					ScintillaMsg(hTarget, SCI_SETCURRENTPOS, posTarget - hexProp.bits + 1);
 					ScintillaMsg(hTarget, SCI_ADDTEXT, 1, (LPARAM)&text[i]);
-					if (!((i+1) % hexProp.bits))
+					if (!((i + 1) % hexProp.bits))
 						posSource += hexProp.bits;
 					posSource--;
 				}
@@ -1407,7 +1409,7 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 
 			ScintillaMsg(hTarget, SCI_ENDUNDOACTION);
 		}
-		delete [] text;
+		delete[] text;
 
 		return E_OK;
 	}
@@ -1419,10 +1421,10 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 void DoCompare(void)
 {
 	TCHAR		szFile[MAX_PATH];
-	BOOL		doMatch		= TRUE;
-	tHexProp	hexProp1	= hexEdit1.GetHexProp();
-	tHexProp	hexProp2	= hexEdit2.GetHexProp();
-	tCmpResult	cmpResult	= {0};
+	BOOL		doMatch = TRUE;
+	tHexProp	hexProp1 = hexEdit1.GetHexProp();
+	tHexProp	hexProp2 = hexEdit2.GetHexProp();
+	tCmpResult	cmpResult = { 0 };
 
 	if ((hexProp1.bits != hexProp2.bits) || (hexProp1.columns != hexProp2.columns) || (hexProp1.isBin != hexProp2.isBin))
 	{
@@ -1444,47 +1446,48 @@ void DoCompare(void)
 	::PathRemoveExtension(szFile);
 	_tcscat(cmpResult.szFileName, szFile);
 	_tcscat(cmpResult.szFileName, _T(".cmp"));
-	cmpResult.hFile = ::CreateFile(cmpResult.szFileName, 
-		GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 
+	cmpResult.hFile = ::CreateFile(cmpResult.szFileName,
+		GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
 		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		
+
 	if (cmpResult.hFile != INVALID_HANDLE_VALUE)
 	{
-		LPSTR	buffer1 = (LPSTR)new CHAR[COMP_BLOCK+1];
-		LPSTR	buffer2 = (LPSTR)new CHAR[COMP_BLOCK+1];
+		LPSTR	buffer1 = (LPSTR)new CHAR[COMP_BLOCK + 1];
+		LPSTR	buffer2 = (LPSTR)new CHAR[COMP_BLOCK + 1];
 
 		/* get text size to comapre */
 		INT		maxLength1 = ScintillaMsg(nppData._scintillaMainHandle, SCI_GETTEXTLENGTH) + 1;
 		INT		maxLength2 = ScintillaMsg(nppData._scintillaSecondHandle, SCI_GETTEXTLENGTH) + 1;
 
 		/* get max length */
-		INT		curPos		= 0;
-		INT		maxLength	= maxLength1;
-		INT		minLength	= maxLength1;
-        if (maxLength2 > maxLength1) {
+		INT		curPos = 0;
+		INT		maxLength = maxLength1;
+		INT		minLength = maxLength1;
+		if (maxLength2 > maxLength1) {
 			maxLength = maxLength2;
-        } else {
+		}
+		else {
 			minLength = maxLength2;
-        }
+		}
 
 		while (curPos < minLength)
 		{
-		    CHAR	val	    = FALSE;
-			INT	    posSrc	= 0;
-			INT	    length1	= ((maxLength1 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength1 % COMP_BLOCK));
-			INT	    length2	= ((maxLength2 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength2 % COMP_BLOCK));
+			CHAR	val = FALSE;
+			INT	    posSrc = 0;
+			INT	    length1 = ((maxLength1 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength1 % COMP_BLOCK));
+			INT	    length2 = ((maxLength2 - curPos) > COMP_BLOCK ? COMP_BLOCK : (maxLength2 % COMP_BLOCK));
 
-		    ScintillaGetText(nppData._scintillaMainHandle, buffer1, curPos, length1 - 1);
-            ScintillaGetText(nppData._scintillaSecondHandle, buffer2, curPos, length2 - 1);
+			ScintillaGetText(nppData._scintillaMainHandle, buffer1, curPos, length1 - 1);
+			ScintillaGetText(nppData._scintillaSecondHandle, buffer2, curPos, length2 - 1);
 
 			while ((posSrc < length1) && (posSrc < length2))
 			{
-				DWORD	hasWritten	= 0;
+				DWORD	hasWritten = 0;
 
 				if (buffer1[posSrc] != buffer2[posSrc])
 				{
-					val		= TRUE;
-					doMatch	= FALSE;
+					val = TRUE;
+					doMatch = FALSE;
 				}
 
 				/* increment source buffer */
@@ -1493,10 +1496,11 @@ void DoCompare(void)
 				/* write to file */
 				if (hexProp1.bits == 1) {
 					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
-                    val	= FALSE;
-				} else if ((posSrc % hexProp1.bits) == 0) {
+					val = FALSE;
+				}
+				else if ((posSrc % hexProp1.bits) == 0) {
 					::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
-                    val	= FALSE;
+					val = FALSE;
 				}
 			}
 
@@ -1513,35 +1517,35 @@ void DoCompare(void)
 		}
 		else
 		{
-			DWORD	hasWritten	= 0;
-			CHAR    val		    = TRUE;
+			DWORD	hasWritten = 0;
+			CHAR    val = TRUE;
 
-            for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
-			    ::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
-            }
+			for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+				::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
+			}
 
-            /* create two structures for each view */
+			/* create two structures for each view */
 			tCmpResult* pCmpResult1 = (tCmpResult*)new tCmpResult;
 			tCmpResult* pCmpResult2 = (tCmpResult*)new tCmpResult;
 
-            if ((pCmpResult1 != NULL) && (pCmpResult2 != NULL))
-            {
-                /* set data */
-			    *pCmpResult1 = cmpResult;
-			    *pCmpResult2 = cmpResult;
+			if ((pCmpResult1 != NULL) && (pCmpResult2 != NULL))
+			{
+				/* set data */
+				*pCmpResult1 = cmpResult;
+				*pCmpResult2 = cmpResult;
 
-                hexEdit1.SetCompareResult(pCmpResult1, pCmpResult2);
-                hexEdit2.SetCompareResult(pCmpResult2, pCmpResult1);
-            }
-            else
-            {
-		        delete pCmpResult1;
-		        delete pCmpResult2;
-            }
+				hexEdit1.SetCompareResult(pCmpResult1, pCmpResult2);
+				hexEdit2.SetCompareResult(pCmpResult2, pCmpResult1);
+			}
+			else
+			{
+				delete pCmpResult1;
+				delete pCmpResult2;
+			}
 		}
 
-		delete [] buffer1;
-		delete [] buffer2;
+		delete[] buffer1;
+		delete[] buffer2;
 	}
 }
 
@@ -1551,18 +1555,18 @@ void DoCompare(void)
  */
 eNppCoding GetNppEncoding(void)
 {
-	eNppCoding	ret		= HEX_CODE_NPP_ASCI;
-	HMENU		hMenu	= (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
+	eNppCoding	ret = HEX_CODE_NPP_ASCI;
+	HMENU		hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
 
 	if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2BE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
 		ret = HEX_CODE_NPP_USCBE;
 	}
-	else if	((::GetMenuState(hMenu, IDM_FORMAT_UCS_2LE, MF_BYCOMMAND) & MF_CHECKED) != 0)
+	else if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2LE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
 		ret = HEX_CODE_NPP_USCLE;
 	}
-	else if	((::GetMenuState(hMenu, IDM_FORMAT_UTF_8, MF_BYCOMMAND) & MF_CHECKED) != 0)
+	else if ((::GetMenuState(hMenu, IDM_FORMAT_UTF_8, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
 		ret = HEX_CODE_NPP_UTF8_BOM;
 	}
@@ -1579,16 +1583,16 @@ void ClientToScreen(HWND hWnd, RECT* rect)
 {
 	POINT		pt;
 
-	pt.x		 = rect->left;
-	pt.y		 = rect->top;
-	::ClientToScreen( hWnd, &pt );
-	rect->left   = pt.x;
-	rect->top    = pt.y;
+	pt.x = rect->left;
+	pt.y = rect->top;
+	::ClientToScreen(hWnd, &pt);
+	rect->left = pt.x;
+	rect->top = pt.y;
 
-	pt.x		 = rect->right;
-	pt.y		 = rect->bottom;
-	::ClientToScreen( hWnd, &pt );
-	rect->right  = pt.x;
+	pt.x = rect->right;
+	pt.y = rect->bottom;
+	::ClientToScreen(hWnd, &pt);
+	rect->right = pt.x;
 	rect->bottom = pt.y;
 }
 
@@ -1597,15 +1601,15 @@ void ScreenToClient(HWND hWnd, RECT* rect)
 {
 	POINT		pt;
 
-	pt.x		 = rect->left;
-	pt.y		 = rect->top;
-	::ScreenToClient( hWnd, &pt );
-	rect->left   = pt.x;
-	rect->top    = pt.y;
+	pt.x = rect->left;
+	pt.y = rect->top;
+	::ScreenToClient(hWnd, &pt);
+	rect->left = pt.x;
+	rect->top = pt.y;
 
-	pt.x		 = rect->right;
-	pt.y		 = rect->bottom;
-	::ScreenToClient( hWnd, &pt );
-	rect->right  = pt.x;
+	pt.x = rect->right;
+	pt.y = rect->bottom;
+	::ScreenToClient(hWnd, &pt);
+	rect->right = pt.x;
 	rect->bottom = pt.y;
 }

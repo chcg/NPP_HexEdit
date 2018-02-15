@@ -24,7 +24,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 void ColorCombo::init(HINSTANCE hInst, HWND hNpp, HWND hCombo)
 {
-	_hNpp	= hNpp;
+	_hNpp = hNpp;
 	Window::init(hInst, hNpp);
 
 	/* subclass combo to get edit messages */
@@ -39,49 +39,49 @@ LRESULT ColorCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 {
 	switch (Message)
 	{
-		case HEXM_PICKUP_COLOR:
-		{
-			setColor((COLORREF)wParam);
+	case HEXM_PICKUP_COLOR:
+	{
+		setColor((COLORREF)wParam);
 
+		_pColorPopup->destroy();
+		delete _pColorPopup;
+		_pColorPopup = NULL;
+		return TRUE;
+	}
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+	{
+		RECT		rc;
+		POINT		pt;
+		::GetWindowRect(hwnd, &rc);
+		pt.x = rc.left;
+		pt.y = rc.bottom;
+
+		if (_pColorPopup == NULL) {
+			_pColorPopup = new ColorPopup(_rgbCol);
+			_pColorPopup->init(_hInst, hwnd, _hNpp);
+			_pColorPopup->doDialog(pt);
+		}
+		return TRUE;
+	}
+	case HEXM_PICKUP_CANCEL:
+	case WM_DESTROY:
+	{
+		if (_pColorPopup != NULL) {
 			_pColorPopup->destroy();
-            delete _pColorPopup;
+			delete _pColorPopup;
 			_pColorPopup = NULL;
-            return TRUE;
 		}
-		case WM_LBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		{
-			RECT		rc;
-			POINT		pt;
-			::GetWindowRect(hwnd, &rc);
-			pt.x = rc.left;
-			pt.y = rc.bottom;
-
-			if (_pColorPopup == NULL) {
-				_pColorPopup = new ColorPopup(_rgbCol);
-				_pColorPopup->init(_hInst, hwnd, _hNpp);
-				_pColorPopup->doDialog(pt);
-			}
-			return TRUE;
-		}
-		case HEXM_PICKUP_CANCEL:
-		case WM_DESTROY:
-		{
-			if (_pColorPopup != NULL) {
-				_pColorPopup->destroy();
-				delete _pColorPopup;
-				_pColorPopup = NULL;
-			}
-			break;
-		}
-        case WM_PAINT:
-        {
-			LRESULT lpRet = ::CallWindowProc(_hDefaultComboProc, hwnd, Message, wParam, lParam);
-			DrawColor((HDC)wParam);
-			return lpRet;
-        }
-		default :
-			break;
+		break;
+	}
+	case WM_PAINT:
+	{
+		LRESULT lpRet = ::CallWindowProc(_hDefaultComboProc, hwnd, Message, wParam, lParam);
+		DrawColor((HDC)wParam);
+		return lpRet;
+	}
+	default:
+		break;
 	}
 	return ::CallWindowProc(_hDefaultComboProc, hwnd, Message, wParam, lParam);
 }
@@ -89,22 +89,23 @@ LRESULT ColorCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 
 void ColorCombo::DrawColor(HDC hDcExt)
 {
-	HDC		hDc			= NULL;
-	HBRUSH	hBrush		= ::CreateSolidBrush(_rgbCol);
+	HDC		hDc = NULL;
+	HBRUSH	hBrush = ::CreateSolidBrush(_rgbCol);
 
 	if (hDcExt == NULL) {
-		hDc	= ::GetWindowDC(_comboBoxInfo.hwndCombo);
-	} else {
+		hDc = ::GetWindowDC(_comboBoxInfo.hwndCombo);
+	}
+	else {
 		hDc = hDcExt;
 	}
 
 	/* draw item */
 	::FillRect(hDc, &_comboBoxInfo.rcItem, hBrush);
 
-    /* draw selection on focus */
+	/* draw selection on focus */
 	if (_comboBoxInfo.hwndCombo == ::GetFocus())
 	{
-		RECT	rc	= _comboBoxInfo.rcItem;
+		RECT	rc = _comboBoxInfo.rcItem;
 		::InflateRect(&rc, -1, -1);
 		::DrawFocusRect(hDc, &rc);
 	}

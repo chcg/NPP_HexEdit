@@ -20,129 +20,136 @@
 
 UINT CompareDlg::doDialog(HexEdit *pHexEdit1, HexEdit *pHexEdit2, UINT currentSC)
 {
-	_currentSC	= currentSC;
-	_pHexEdit1	= pHexEdit1;
-	_pHexEdit2	= pHexEdit2;
-	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COMPARE_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	_currentSC = currentSC;
+	_pHexEdit1 = pHexEdit1;
+	_pHexEdit2 = pHexEdit2;
+	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COMPARE_DLG), _hParent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
-INT_PTR CALLBACK CompareDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM )
+INT_PTR CALLBACK CompareDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 {
-	switch (Message) 
+	switch (Message)
 	{
-		case WM_INITDIALOG:
-		{
-			goToCenter();
+	case WM_INITDIALOG:
+	{
+		goToCenter();
 
-			_pHexEdit1->getWindowRect(_rcEdit1);
-			_pHexEdit2->getWindowRect(_rcEdit2);
-			_isUpDown = (_rcEdit1.left == _rcEdit2.left ? TRUE : FALSE);
+		_pHexEdit1->getWindowRect(_rcEdit1);
+		_pHexEdit2->getWindowRect(_rcEdit2);
+		_isUpDown = (_rcEdit1.left == _rcEdit2.left ? TRUE : FALSE);
 
-			if (_isUpDown == FALSE) {
-				/* hide the unneccesary elements */
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_COMPARE_TB), SW_HIDE);
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_TOP), SW_HIDE);
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM), SW_HIDE);
+		if (_isUpDown == FALSE) {
+			/* hide the unneccesary elements */
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_COMPARE_TB), SW_HIDE);
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_TOP), SW_HIDE);
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM), SW_HIDE);
 
-				/* focus the correct button */
-				if (_rcEdit1.left < _rcEdit2.left) {
-					if (_currentSC == MAIN_VIEW) {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT));
-					} else {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT));
-					}
-				} else {
-					if (_currentSC == SUB_VIEW) {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT));
-					} else {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT));
-					}
+			/* focus the correct button */
+			if (_rcEdit1.left < _rcEdit2.left) {
+				if (_currentSC == MAIN_VIEW) {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT));
 				}
-			} else {
-				/* hide the unneccesary elements */
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_COMPARE_LR), SW_HIDE);
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT), SW_HIDE);
-				::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT), SW_HIDE);
-
-				/* focus the correct button */
-				if (_rcEdit1.top < _rcEdit2.top) {
-					if (_currentSC == MAIN_VIEW) {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_TOP));
-					} else {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM));
-					}
-				} else {
-					if (_currentSC == SUB_VIEW) {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_TOP));
-					} else {
-						::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM));
-					}
+				else {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT));
 				}
 			}
-
-			/* change language */
-			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("CompDialog"));
-			break;
+			else {
+				if (_currentSC == SUB_VIEW) {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT));
+				}
+				else {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT));
+				}
+			}
 		}
-		case WM_COMMAND : 
+		else {
+			/* hide the unneccesary elements */
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_STATIC_COMPARE_LR), SW_HIDE);
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_LEFT), SW_HIDE);
+			::ShowWindow(::GetDlgItem(_hSelf, IDC_BUTTON_RIGHT), SW_HIDE);
+
+			/* focus the correct button */
+			if (_rcEdit1.top < _rcEdit2.top) {
+				if (_currentSC == MAIN_VIEW) {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_TOP));
+				}
+				else {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM));
+				}
+			}
+			else {
+				if (_currentSC == SUB_VIEW) {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_TOP));
+				}
+				else {
+					::SetFocus(::GetDlgItem(_hSelf, IDC_BUTTON_BOTTOM));
+				}
+			}
+		}
+
+		/* change language */
+		NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("CompDialog"));
+		break;
+	}
+	case WM_COMMAND:
+	{
+		BOOL	owEdit2 = FALSE;
+
+		switch (LOWORD(wParam))
 		{
-			BOOL	owEdit2			= FALSE;
+		case IDCANCEL:
+			::EndDialog(_hSelf, IDCANCEL);
+			return FALSE;
 
-			switch (LOWORD(wParam))
-			{
-				case IDCANCEL:
-                    ::EndDialog(_hSelf, IDCANCEL);
-					return FALSE;
-
-				case IDC_BUTTON_TOP:
-					if (_rcEdit1.top < _rcEdit2.top)
-						owEdit2 = TRUE;
-					break;
-
-				case IDC_BUTTON_BOTTOM:
-					if (_rcEdit2.top < _rcEdit1.top)
-						owEdit2 = TRUE;
-					break;
-
-				case IDC_BUTTON_LEFT:
-					if (_rcEdit1.left < _rcEdit2.left)
-						owEdit2 = TRUE;
-					break;
-
-				case IDC_BUTTON_RIGHT:
-					if (_rcEdit2.left < _rcEdit1.left)
-						owEdit2 = TRUE;
-					break;
-
-				default:
-					break;
-			}
-
-			tHexProp hexProp1 = _pHexEdit1->GetHexProp();
-			tHexProp hexProp2 = _pHexEdit2->GetHexProp();
-
-			/* set settings in on of the hex edit */
-			if (owEdit2 == TRUE)
-			{
-				tHexProp hexProp = hexProp2;
-				hexProp.bits	= hexProp1.bits;
-				hexProp.columns	= hexProp1.columns;
-				hexProp.isBin	= hexProp1.isBin;
-				_pHexEdit2->SetHexProp(hexProp);
-			}
-			else
-			{
-				tHexProp hexProp = hexProp1;
-				hexProp.bits	= hexProp2.bits;
-				hexProp.columns	= hexProp2.columns;
-				hexProp.isBin	= hexProp2.isBin;
-				_pHexEdit1->SetHexProp(hexProp);
-			}
-            ::EndDialog(_hSelf, LOWORD(wParam));
+		case IDC_BUTTON_TOP:
+			if (_rcEdit1.top < _rcEdit2.top)
+				owEdit2 = TRUE;
 			break;
-		}
+
+		case IDC_BUTTON_BOTTOM:
+			if (_rcEdit2.top < _rcEdit1.top)
+				owEdit2 = TRUE;
+			break;
+
+		case IDC_BUTTON_LEFT:
+			if (_rcEdit1.left < _rcEdit2.left)
+				owEdit2 = TRUE;
+			break;
+
+		case IDC_BUTTON_RIGHT:
+			if (_rcEdit2.left < _rcEdit1.left)
+				owEdit2 = TRUE;
+			break;
+
 		default:
 			break;
+		}
+
+		tHexProp hexProp1 = _pHexEdit1->GetHexProp();
+		tHexProp hexProp2 = _pHexEdit2->GetHexProp();
+
+		/* set settings in on of the hex edit */
+		if (owEdit2 == TRUE)
+		{
+			tHexProp hexProp = hexProp2;
+			hexProp.bits = hexProp1.bits;
+			hexProp.columns = hexProp1.columns;
+			hexProp.isBin = hexProp1.isBin;
+			_pHexEdit2->SetHexProp(hexProp);
+		}
+		else
+		{
+			tHexProp hexProp = hexProp1;
+			hexProp.bits = hexProp2.bits;
+			hexProp.columns = hexProp2.columns;
+			hexProp.isBin = hexProp2.isBin;
+			_pHexEdit1->SetHexProp(hexProp);
+		}
+		::EndDialog(_hSelf, LOWORD(wParam));
+		break;
+	}
+	default:
+		break;
 	}
 	return FALSE;
 }

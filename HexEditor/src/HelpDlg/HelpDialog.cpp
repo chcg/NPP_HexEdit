@@ -21,44 +21,44 @@
 
 void HelpDlg::doDialog()
 {
-    if (!isCreated())
-        create(IDD_HELP_DLG);
+	if (!isCreated())
+		create(IDD_HELP_DLG);
 
 	goToCenter();
 }
 
 
-INT_PTR CALLBACK HelpDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM )
+INT_PTR CALLBACK HelpDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 {
-	switch (Message) 
+	switch (Message)
 	{
-        case WM_INITDIALOG :
+	case WM_INITDIALOG:
+	{
+		_emailLink.init(_hInst, _hSelf);
+		_emailLink.create(::GetDlgItem(_hSelf, IDC_EMAIL_LINK), _T("mailto:jens.plugin.npp@gmx.de"));
+
+		_urlNppPlugins.init(_hInst, _hSelf);
+		_urlNppPlugins.create(::GetDlgItem(_hSelf, IDC_NPP_PLUGINS_URL), _T("http://sourceforge.net/projects/npp-plugins/"));
+
+		/* change language */
+		NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("Help"));
+
+		return TRUE;
+	}
+	case WM_COMMAND:
+	{
+		switch (wParam)
 		{
-            _emailLink.init(_hInst, _hSelf);
-            _emailLink.create(::GetDlgItem(_hSelf, IDC_EMAIL_LINK), _T("mailto:jens.plugin.npp@gmx.de"));
-
-            _urlNppPlugins.init(_hInst, _hSelf);
-            _urlNppPlugins.create(::GetDlgItem(_hSelf, IDC_NPP_PLUGINS_URL), _T("http://sourceforge.net/projects/npp-plugins/"));
-
-			/* change language */
-			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("Help"));
-
+		case IDOK:
+		case IDCANCEL:
+			display(FALSE);
 			return TRUE;
-		}
-		case WM_COMMAND : 
-		{
-			switch (wParam)
-			{
-				case IDOK :
-				case IDCANCEL :
-					display(FALSE);
-					return TRUE;
 
-				default :
-					break;
-			}
+		default:
 			break;
 		}
+		break;
+	}
 	}
 	return FALSE;
 }

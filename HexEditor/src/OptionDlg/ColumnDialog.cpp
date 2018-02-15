@@ -23,58 +23,60 @@ UINT ColumnDlg::doDialogColumn(UINT column)
 {
 	_isColumn = TRUE;
 	_column = column;
-	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COLUMN_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COLUMN_DLG), _hParent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 UINT ColumnDlg::doDialogAddWidth(UINT width)
 {
 	_isColumn = FALSE;
 	_width = width;
-	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COLUMN_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	return (UINT)::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_COLUMN_DLG), _hParent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 
-INT_PTR CALLBACK ColumnDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM )
+INT_PTR CALLBACK ColumnDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 {
 	TCHAR	text[16];
 
-	switch (Message) 
+	switch (Message)
 	{
-		case WM_INITDIALOG:
-		{
-			goToCenter();
+	case WM_INITDIALOG:
+	{
+		goToCenter();
 
-			if (_isColumn == TRUE) {
-				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_column, text, 10));
-				NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("ColumnCount"));
-			} else {
-				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_width, text, 10));
-				::SetWindowText(_hSelf, _T("Address Width"));
-				NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("AddressWidth"));
-			}
-			break;
+		if (_isColumn == TRUE) {
+			::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_column, text, 10));
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("ColumnCount"));
 		}
-		case WM_COMMAND : 
+		else {
+			::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_width, text, 10));
+			::SetWindowText(_hSelf, _T("Address Width"));
+			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("AddressWidth"));
+		}
+		break;
+	}
+	case WM_COMMAND:
+	{
+		switch (wParam)
 		{
-			switch (wParam)
-			{
-				case IDCANCEL:
-					if (_isColumn == TRUE) {
-						::EndDialog(_hSelf, _column);
-					} else {
-						::EndDialog(_hSelf, _width);
-					}
-					return TRUE;
-				case IDOK:
-					::GetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text, 16);
-					::EndDialog(_hSelf, _ttoi(text));
-					return TRUE;
-				default:
-					return FALSE;
+		case IDCANCEL:
+			if (_isColumn == TRUE) {
+				::EndDialog(_hSelf, _column);
 			}
-		}
+			else {
+				::EndDialog(_hSelf, _width);
+			}
+			return TRUE;
+		case IDOK:
+			::GetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text, 16);
+			::EndDialog(_hSelf, _ttoi(text));
+			return TRUE;
 		default:
-			break;
+			return FALSE;
+		}
+	}
+	default:
+		break;
 	}
 	return FALSE;
 }

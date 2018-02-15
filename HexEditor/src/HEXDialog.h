@@ -53,7 +53,7 @@ class HexEdit : public StaticDialog, private SciSubClassWrp
 public:
 	HexEdit(void);
 	~HexEdit(void);
-    void init(HINSTANCE hInst, NppData nppData, LPCTSTR iniFilePath);
+	void init(HINSTANCE hInst, NppData nppData, LPCTSTR iniFilePath);
 
 	void destroy(void)
 	{
@@ -66,7 +66,7 @@ public:
 		}
 	};
 
-   	void doDialog(BOOL toggle = FALSE);
+	void doDialog(BOOL toggle = FALSE);
 
 	void UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc);
 
@@ -89,7 +89,8 @@ public:
 		/* intial subclassing */
 		if (cont == MAIN_VIEW) {
 			SciSubClassWrp::Init(hWndParam, wndParentProc0);
-		} else {
+		}
+		else {
 			SciSubClassWrp::Init(hWndParam, wndParentProc1);
 		}
 	};
@@ -100,12 +101,12 @@ public:
 		{
 			*_pCurProp = prop;
 
-			_oldAnchorItem		= prop.anchorItem;
-			_oldAnchorSubItem	= prop.anchorSubItem;
-			_oldAnchorCurPos	= prop.anchorPos;
-			_oldCursorItem		= prop.cursorItem;
-			_oldCursorSubItem	= prop.cursorSubItem;
-			_oldCursorCurPos	= prop.cursorPos;
+			_oldAnchorItem = prop.anchorItem;
+			_oldAnchorSubItem = prop.anchorSubItem;
+			_oldAnchorCurPos = prop.anchorPos;
+			_oldCursorItem = prop.cursorItem;
+			_oldCursorSubItem = prop.cursorSubItem;
+			_oldCursorCurPos = prop.cursorPos;
 
 			if (_pCurProp->isVisible == TRUE) {
 				UpdateHeader();
@@ -119,7 +120,7 @@ public:
 		if (_pCurProp != NULL) {
 			GetLineVis();
 			return *_pCurProp;
-		} 
+		}
 		tHexProp prop;
 		return prop;
 	};
@@ -151,26 +152,29 @@ public:
 			return;
 
 		if (_iUnReCnt == -1) {
-			_uUnReCode		= code & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT);
-			_uFirstPos		= position;
-			_uLastPos		= position;
-			_uLastLength	= length;
+			_uUnReCode = code & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT);
+			_uFirstPos = position;
+			_uLastPos = position;
+			_uLastLength = length;
 			_iUnReCnt++;
-		} else if (_uUnReCode & code) {
+		}
+		else if (_uUnReCode & code) {
 			if ((_pCurProp->isLittle == TRUE) && (_pCurProp->bits != HEX_BYTE)) {
 				if (position != (_uLastPos + 1)) {
 					_iUnReCnt++;
 					_uLastLength = length;
-				} else {
+				}
+				else {
 					_uLastLength += length;
 				}
 				_uLastPos = position;
-			} else {
+			}
+			else {
 				_iUnReCnt++;
 			}
 		}
 
-		UpdateBookmarks(position, (code & SC_MOD_DELETETEXT ? -1:1) * length);
+		UpdateBookmarks(position, (code & SC_MOD_DELETETEXT ? -1 : 1) * length);
 
 		if (code & SC_LASTSTEPINUNDOREDO) {
 			if (code & SC_MOD_INSERTTEXT) {
@@ -186,10 +190,12 @@ public:
 
 					if (position < _uFirstPos) {
 						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
-					} else {
+					}
+					else {
 						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
 					}
-				} else {
+				}
+				else {
 					/* changed only one character */
 					if ((_pCurProp->isLittle == TRUE) && (_pCurProp->bits != HEX_BYTE)) {
 						UINT offset = position % _pCurProp->bits;
@@ -197,7 +203,8 @@ public:
 					}
 					SetSelection(position, position + _uLastLength, HEX_SEL_NORM, (position + _uLastLength) % VIEW_ROW == 0);
 				}
-			} else {
+			}
+			else {
 				/* delete some characters */
 				SetSelection(_uFirstPos, _uFirstPos);
 			}
@@ -217,9 +224,10 @@ public:
 
 		/* correct item count */
 		if ((_currLength == GetCurrentPos()) && (_pCurProp->anchorPos == 0)) {
-			ListView_SetItemCountEx(_hListCtrl, (_currLength/VIEW_ROW ) + 1, LVSICF_NOSCROLL);
-		} else {
-			ListView_SetItemCountEx(_hListCtrl, (_currLength/VIEW_ROW) + (_currLength%VIEW_ROW?1:0), LVSICF_NOSCROLL);
+			ListView_SetItemCountEx(_hListCtrl, (_currLength / VIEW_ROW) + 1, LVSICF_NOSCROLL);
+		}
+		else {
+			ListView_SetItemCountEx(_hListCtrl, (_currLength / VIEW_ROW) + (_currLength%VIEW_ROW ? 1 : 0), LVSICF_NOSCROLL);
 		}
 	};
 
@@ -283,7 +291,7 @@ public:
 
 	void UpdateFont(void)
 	{
-		_fontSize	= getFontSizeElem();
+		_fontSize = getFontSizeElem();
 		SetFont();
 	};
 
@@ -293,8 +301,9 @@ public:
 		for (size_t i = 0; i < _hexProp.size(); i++) {
 			if (_hexProp[i].pCmpResult != NULL) {
 				if (_hexProp[i].pCmpResult->pCmpRef != NULL) {
-                    _hexProp[i].pCmpResult->pCmpRef->pCmpRef = NULL;
-                } else {
+					_hexProp[i].pCmpResult->pCmpRef->pCmpRef = NULL;
+				}
+				else {
 					::CloseHandle(_hexProp[i].pCmpResult->hFile);
 					::DeleteFile(_hexProp[i].pCmpResult->szFileName);
 				}
@@ -307,23 +316,25 @@ public:
 	{
 		if (pCmpResult == NULL) {
 			if (_pCurProp->pCmpResult != NULL) {
-                /* if a reference exist mark in them that this was deleted */
+				/* if a reference exist mark in them that this was deleted */
 				if (_pCurProp->pCmpResult->pCmpRef != NULL) {
-                    _pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
-                } else {
+					_pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
+				}
+				else {
 					::CloseHandle(_pCurProp->pCmpResult->hFile);
 					::DeleteFile(_pCurProp->pCmpResult->szFileName);
 				}
-    			delete _pCurProp->pCmpResult;
+				delete _pCurProp->pCmpResult;
 				_pCurProp->pCmpResult = NULL;
 			}
-		} else {
-            /* this avoids resource leak */
-            if (_pCurProp->pCmpResult != NULL) {
+		}
+		else {
+			/* this avoids resource leak */
+			if (_pCurProp->pCmpResult != NULL) {
 				if (_pCurProp->pCmpResult->pCmpRef != NULL)
-                    _pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
-                delete _pCurProp->pCmpResult;
-            }
+					_pCurProp->pCmpResult->pCmpRef->pCmpRef = NULL;
+				delete _pCurProp->pCmpResult;
+			}
 			_pCurProp->pCmpResult = pCmpResult;
 			_pCurProp->pCmpResult->pCmpRef = pCmpRef;
 		}
@@ -332,12 +343,12 @@ public:
 
 	void SetStatusBar(void);
 
-protected :
+protected:
 	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
-	void ReadArrayToList(LPSTR text,INT iItem, INT iSubItem);
+	void ReadArrayToList(LPSTR text, INT iItem, INT iSubItem);
 	void AddressConvert(LPSTR text, INT length);
 	void DumpConvert(LPSTR text, UINT length);
 	void BinHexConvert(LPSTR text, INT length);
@@ -411,9 +422,9 @@ private:
 
 	BOOL SetFont(void)
 	{
-		BOOL	ret			= FALSE;
-		HDC		hDc			= ::GetDC(_hSelf);
-		INT		zoomFactor	= 0;
+		BOOL	ret = FALSE;
+		HDC		hDc = ::GetDC(_hSelf);
+		INT		zoomFactor = 0;
 
 		if (_hFont) {
 			::DeleteObject(_hFont);
@@ -439,7 +450,7 @@ private:
 		return ret;
 	};
 
-	void runCursor(HWND , UINT , WPARAM , unsigned long )
+	void runCursor(HWND, UINT, WPARAM, unsigned long)
 	{
 		if (_pCurProp != NULL)
 		{
@@ -495,10 +506,12 @@ private:
 		if (drawRect == TRUE) {
 			if (isFocusRect() == TRUE) {
 				::DrawFocusRect(hDc, &rcPos);
-			} else {
+			}
+			else {
 				::PatBlt(hDc, rcPos.left, rcPos.bottom - 2, rcPos.right - rcPos.left, 2, DSTINVERT);
 			}
-		} else if (_isCurOn == TRUE) {
+		}
+		else if (_isCurOn == TRUE) {
 			::PatBlt(hDc, rcPos.left, rcPos.top, 2, rcPos.bottom - rcPos.top, PATINVERT);
 		}
 	};
@@ -537,20 +550,20 @@ private:
 			rc.top = rcTop.top;
 			::RedrawWindow(_hListCtrl, &rc, NULL, TRUE);
 
-			_oldAnchorItem		= _pCurProp->anchorItem;
-			_oldAnchorSubItem	= _pCurProp->anchorSubItem;
-			_oldAnchorCurPos	= _pCurProp->anchorPos;
-			_oldCursorItem		= _pCurProp->cursorItem;
-			_oldCursorSubItem	= _pCurProp->cursorSubItem;
-			_oldCursorCurPos	= _pCurProp->cursorPos;
+			_oldAnchorItem = _pCurProp->anchorItem;
+			_oldAnchorSubItem = _pCurProp->anchorSubItem;
+			_oldAnchorCurPos = _pCurProp->anchorPos;
+			_oldCursorItem = _pCurProp->cursorItem;
+			_oldCursorSubItem = _pCurProp->cursorSubItem;
+			_oldCursorCurPos = _pCurProp->cursorPos;
 		}
 		InvalidateNotepad();
 	};
 
 	void EnsureVisible(UINT iItem, UINT iSubItem)
 	{
-		RECT	rcView		= {0};
-		RECT	rcSubItem	= {0};
+		RECT	rcView = { 0 };
+		RECT	rcSubItem = { 0 };
 
 		ListView_EnsureVisible(_hListCtrl, iItem, TRUE);
 
@@ -558,16 +571,17 @@ private:
 		ListView_GetSubItemRect(_hListCtrl, iItem, iSubItem, LVIR_BOUNDS, &rcSubItem);
 		if (rcSubItem.left < rcView.left) {
 			ListView_Scroll(_hListCtrl, -(rcView.left - rcSubItem.left), 0);
-		} else if (rcView.right < rcSubItem.right) {
+		}
+		else if (rcView.right < rcSubItem.right) {
 			ListView_Scroll(_hListCtrl, rcSubItem.right - rcView.right, 0);
 		}
 	};
 
 	void InvalidateList(void)
 	{
-		_pCurProp->anchorItem		= _pCurProp->cursorItem;
-		_pCurProp->anchorSubItem	= _pCurProp->cursorSubItem;
-		_pCurProp->anchorPos		= _pCurProp->cursorPos;
+		_pCurProp->anchorItem = _pCurProp->cursorItem;
+		_pCurProp->anchorSubItem = _pCurProp->cursorSubItem;
+		_pCurProp->anchorPos = _pCurProp->cursorPos;
 
 		RestartCursor();
 		UpdateListChanges();
@@ -592,9 +606,9 @@ private:
 
 	void QuickSortRecursive(INT d, INT h)
 	{
-		INT		i		= 0;
-		INT		j		= 0;
-		LONG	lAddr	= 0;
+		INT		i = 0;
+		INT		j = 0;
+		LONG	lAddr = 0;
 
 		/* return on empty list */
 		if (d > h || d < 0)
@@ -603,15 +617,15 @@ private:
 		i = h;
 		j = d;
 
-		lAddr = _pCurProp->vBookmarks[((INT) ((d+h) / 2))].lAddress;
+		lAddr = _pCurProp->vBookmarks[((INT)((d + h) / 2))].lAddress;
 		do
 		{
 			while (_pCurProp->vBookmarks[j].lAddress < lAddr) j++;
 			while (_pCurProp->vBookmarks[i].lAddress > lAddr) i--;
 
-			if ( i >= j )
+			if (i >= j)
 			{
-				if ( i != j )
+				if (i != j)
 				{
 					tBkMk buf = _pCurProp->vBookmarks[i];
 					_pCurProp->vBookmarks[i] = _pCurProp->vBookmarks[j];
@@ -622,8 +636,8 @@ private:
 			}
 		} while (j <= i);
 
-		if (d < i) QuickSortRecursive(d,i);
-		if (j < h) QuickSortRecursive(j,h);
+		if (d < i) QuickSortRecursive(d, i);
+		if (j < h) QuickSortRecursive(j, h);
 	};
 
 private:
@@ -631,7 +645,7 @@ private:
 	HWND				_hListCtrl;
 	HWND				_hHeader;
 	HFONT				_hFont;
-	
+
 	/* handle of parent handle (points to scintilla main view) */
 	HWND				_hParentHandle;
 	HHOOK				_hParentHook;

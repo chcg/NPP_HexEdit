@@ -30,26 +30,26 @@ class ColumnDlg : public StaticDialog
 
 public:
 	ColumnDlg() : StaticDialog() {};
-    
-    void init(HINSTANCE hInst, NppData nppData)
+
+	void init(HINSTANCE hInst, NppData nppData)
 	{
 		_nppData = nppData;
 		Window::init(hInst, nppData._nppHandle);
 	};
 
-   	UINT doDialogColumn(UINT column);
-   	UINT doDialogAddWidth(UINT column);
+	UINT doDialogColumn(UINT column);
+	UINT doDialogAddWidth(UINT column);
 
-    virtual void destroy() {};
+	virtual void destroy() {};
 
 
-protected :
+protected:
 	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
 
 private:
 	/* Handles */
 	NppData			_nppData;
-    HWND			_HSource;
+	HWND			_HSource;
 
 	BOOL			_isColumn;
 	UINT			_column;

@@ -42,15 +42,15 @@ const TCHAR strCode[HEX_CODE_MAX][16] =
 };
 
 #if(WINVER <= 0x0400)
-struct COMBOBOXINFO 
+struct COMBOBOXINFO
 {
-    int cbSize;
-    RECT rcItem;
-    RECT rcButton;
-    DWORD stateButton;
-    HWND hwndCombo;
-    HWND hwndItem;
-    HWND hwndList; 
+	int cbSize;
+	RECT rcItem;
+	RECT rcButton;
+	DWORD stateButton;
+	HWND hwndCombo;
+	HWND hwndItem;
+	HWND hwndList;
 };
 #endif 
 
@@ -62,9 +62,9 @@ typedef enum
 	NPP_CP_USCBE
 } eNppCP;
 
-typedef struct  {
-		tComboInfo	comboInfo;
-		eNppCoding	codePage;
+typedef struct {
+	tComboInfo	comboInfo;
+	eNppCoding	codePage;
 } tEncComboInfo;
 
 
@@ -73,9 +73,9 @@ typedef struct  {
 
 class MultiTypeCombo : public Window
 {
-public :
+public:
 	MultiTypeCombo();
-    ~MultiTypeCombo () {};
+	~MultiTypeCombo() {};
 	virtual void init(HWND hNpp, HWND hCombo);
 	virtual void destroy() {
 		DestroyWindow(_hSelf);
@@ -98,10 +98,10 @@ private:
 	void encode(tComboInfo* info, eCodingType type);
 	void encode(tEncComboInfo* info, eCodingType type);
 
-private :
+private:
 	HWND					_hNpp;
 	HWND					_hCombo;
-    WNDPROC					_hDefaultComboProc;
+	WNDPROC					_hDefaultComboProc;
 
 	tComboInfo				_currData;
 	vector<tEncComboInfo>	_comboItems;

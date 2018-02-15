@@ -29,24 +29,24 @@ class GotoDlg : public StaticDialog
 
 public:
 	GotoDlg() : StaticDialog(), _isOff(FALSE) {};
-    
-    void init(HINSTANCE hInst, NppData nppData, LPTSTR iniFilePath)
+
+	void init(HINSTANCE hInst, NppData nppData, LPTSTR iniFilePath)
 	{
 		_nppData = nppData;
 		_iniFilePath = iniFilePath;
 		Window::init(hInst, nppData._nppHandle);
 	};
 
-   	void doDialog(HWND hParent);
+	void doDialog(HWND hParent);
 
-    virtual void destroy() {};
+	virtual void destroy() {};
 
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 	void calcAddress(void);
-    void UpdateDialog(void);
+	void UpdateDialog(void);
 
 	/* Subclassing list */
 	LRESULT runProcEdit(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
@@ -58,7 +58,7 @@ protected :
 private:
 	/* Handles */
 	NppData			_nppData;
-    HWND			_HSource;
+	HWND			_HSource;
 	HWND			_hParentHandle;
 
 	HWND			_hLineEdit;

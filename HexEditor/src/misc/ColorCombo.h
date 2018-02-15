@@ -24,15 +24,15 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include "ColorPopup.h"
 
 #if(WINVER <= 0x0400)
-struct COMBOBOXINFO 
+struct COMBOBOXINFO
 {
-    int cbSize;
-    RECT rcItem;
-    RECT rcButton;
-    DWORD stateButton;
-    HWND hwndCombo;
-    HWND hwndItem;
-    HWND hwndList; 
+	int cbSize;
+	RECT rcItem;
+	RECT rcButton;
+	DWORD stateButton;
+	HWND hwndCombo;
+	HWND hwndItem;
+	HWND hwndList;
 };
 #endif 
 
@@ -41,11 +41,11 @@ struct COMBOBOXINFO
 
 class ColorCombo : public Window
 {
-public :
+public:
 	ColorCombo() : Window(), _rgbCol(0), _pColorPopup(NULL) {
 		::ZeroMemory(&_comboBoxInfo, sizeof(_comboBoxInfo));
 	};
-    ~ColorCombo () {};
+	~ColorCombo() {};
 	virtual void init(HINSTANCE hInst, HWND hNpp, HWND hCombo);
 	virtual void destroy() {
 		DestroyWindow(_hSelf);
@@ -68,12 +68,12 @@ public :
 private:
 	void DrawColor(HDC hDcExt = NULL);
 
-private :
+private:
 	HWND					_hNpp;
 	COMBOBOXINFO			_comboBoxInfo;
-    WNDPROC					_hDefaultComboProc;
-    
-    COLORREF                _rgbCol;
+	WNDPROC					_hDefaultComboProc;
+
+	COLORREF                _rgbCol;
 	ColorPopup*				_pColorPopup;
 
 	/* Subclassing combo boxes */

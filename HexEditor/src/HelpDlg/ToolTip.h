@@ -33,28 +33,28 @@ using namespace std;
 
 class ToolTip : public Window
 {
-public :
-	ToolTip(){};
-	void destroy(void){
+public:
+	ToolTip() {};
+	void destroy(void) {
 		DestroyWindow(_hSelf);
 		_hSelf = NULL;
 	};
 
-// Attributes
+	// Attributes
 public:
 
-// Implementation
+	// Implementation
 public:
 	virtual void init(HINSTANCE hInst, HWND hParent);
 	void Show(RECT rectTitle, string strTitleText, int iXOff = 0, int iWidthOff = 0);
 
 protected:
 	POINT		_startPt;
-    WNDPROC		_defaultProc;
+	WNDPROC		_defaultProc;
 
-    static LRESULT CALLBACK staticWinProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-        return (((ToolTip *)(::GetWindowLongPtr(hwnd, GWLP_USERDATA)))->runProc(Message, wParam, lParam));
-    };
+	static LRESULT CALLBACK staticWinProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
+		return (((ToolTip *)(::GetWindowLongPtr(hwnd, GWLP_USERDATA)))->runProc(Message, wParam, lParam));
+	};
 	LRESULT runProc(UINT Message, WPARAM wParam, LPARAM lParam);
 };
 

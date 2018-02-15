@@ -33,18 +33,18 @@ public:
 		, _pHexEdit1(nullptr)
 		, _pHexEdit2(nullptr)
 	{};
-    
-    void init(HINSTANCE hInst, NppData nppData)
+
+	void init(HINSTANCE hInst, NppData nppData)
 	{
 		_nppData = nppData;
 		Window::init(hInst, nppData._nppHandle);
 	};
 
-   	UINT doDialog(HexEdit *pHexEdit1, HexEdit *pHexEdit2, UINT currentSC);
+	UINT doDialog(HexEdit *pHexEdit1, HexEdit *pHexEdit2, UINT currentSC);
 
-    virtual void destroy() {};
+	virtual void destroy() {};
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 	NppData			_nppData;

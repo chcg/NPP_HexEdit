@@ -32,8 +32,8 @@ public:
 	PatternDlg() : StaticDialog()
 		, _pCombo(nullptr)
 	{};
-    
-    void init(HINSTANCE hInst, NppData nppData)
+
+	void init(HINSTANCE hInst, NppData nppData)
 	{
 		_nppData = nppData;
 		Window::init(hInst, nppData._nppHandle);
@@ -42,17 +42,17 @@ public:
 	void patternReplace(HWND hHexEdit);
 	void insertColumns(HWND hHexEdit);
 
-    virtual void destroy() {
+	virtual void destroy() {
 		/* deregister this dialog */
 		display(false);
 		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (LPARAM)_hSelf);
 	};
 
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
-   	void doDialog(HWND hHexEdit);
+	void doDialog(HWND hHexEdit);
 	BOOL onInsert(void);
 	BOOL onReplace(void);
 

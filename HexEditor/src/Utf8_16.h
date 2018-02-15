@@ -32,12 +32,12 @@ public:
 	typedef unsigned char utf8; // 8 bits
 	typedef unsigned char ubyte;
 	enum encodingType {
-	    eUnknown,
-	    eUtf8,
-	    eUtf16BigEndian,
-	    eUtf16LittleEndian,  // Default on Windows
+		eUnknown,
+		eUtf8,
+		eUtf16BigEndian,
+		eUtf16LittleEndian,  // Default on Windows
 		eUtf8Plain,
-	    eLast
+		eLast
 	};
 	static const utf8 k_Boms[eLast][3];
 };
@@ -46,10 +46,10 @@ public:
 class Utf16_Iter : public Utf8_16 {
 public:
 	enum eState {
-	    eStart,
-	    e2Bytes2,
-	    e3Bytes2,
-	    e3Bytes3
+		eStart,
+		e2Bytes2,
+		e3Bytes2,
+		e3Bytes3
 	};
 
 	Utf16_Iter();
@@ -93,10 +93,10 @@ protected:
 	void swap();
 	void toStart(); // Put to start state, swap bytes if necessary
 	enum eState {
-	    eStart,
-	    e2Bytes_Byte2,
-	    e3Bytes_Byte2,
-	    e3Bytes_Byte3
+		eStart,
+		e2Bytes_Byte2,
+		e3Bytes_Byte2,
+		e3Bytes_Byte3
 	};
 protected:
 	encodingType m_eEncoding;

@@ -31,31 +31,31 @@ class HelpDlg : public StaticDialog
 
 public:
 	HelpDlg() : StaticDialog() {};
-    
-    void init(HINSTANCE hInst, NppData nppData)
+
+	void init(HINSTANCE hInst, NppData nppData)
 	{
 		_nppData = nppData;
 		Window::init(hInst, nppData._nppHandle);
 	};
 
-   	void doDialog();
+	void doDialog();
 
-    virtual void destroy() {
-        _emailLink.destroy();
+	virtual void destroy() {
+		_emailLink.destroy();
 		_urlNppPlugins.destroy();
-    };
+	};
 
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
 	/* Handles */
 	NppData			_nppData;
-    HWND			_HSource;
-	
+	HWND			_HSource;
+
 	/* for eMail */
-    URLCtrl			_emailLink;
+	URLCtrl			_emailLink;
 	URLCtrl			_urlNppPlugins;
 };
 

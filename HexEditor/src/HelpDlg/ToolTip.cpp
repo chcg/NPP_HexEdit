@@ -31,13 +31,13 @@ void ToolTip::init(HINSTANCE hInst, HWND hParent)
 	{
 		Window::init(hInst, hParent);
 
-		_hSelf = CreateWindowEx( WS_EX_TOOLWINDOW | WS_EX_TOPMOST, TITLETIP_CLASSNAME, NULL, WS_BORDER | WS_POPUP,
-		   0, 0, 0, 0, NULL, NULL, NULL, NULL );
+		_hSelf = CreateWindowEx(WS_EX_TOOLWINDOW | WS_EX_TOPMOST, TITLETIP_CLASSNAME, NULL, WS_BORDER | WS_POPUP,
+			0, 0, 0, 0, NULL, NULL, NULL, NULL);
 		if (!_hSelf)
 		{
 			throw std::runtime_error("ToolTip::init : CreateWindowEx() function return null");
 		}
-    
+
 		::SetWindowLongPtr(_hSelf, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 		_defaultProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hSelf, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(staticWinProc)));
 	}
@@ -47,26 +47,26 @@ void ToolTip::init(HINSTANCE hInst, HWND hParent)
 void ToolTip::Show(RECT rectTitle, string strTitle, int iXOff, int iWidthOff)
 {
 	/* If titletip is already displayed, don't do anything. */
-	if( ::IsWindowVisible(_hSelf))
+	if (::IsWindowVisible(_hSelf))
 		return;
 
-	if( strTitle.size() == 0 )
+	if (strTitle.size() == 0)
 		return;
 
 	/* Determine the width of the text */
 	ClientToScreen(_hParent, &rectTitle);
 
 	/* Select window standard font */
-	HDC hDc	= ::GetDC(_hSelf);
-	::SelectObject(hDc,GetStockObject(ANSI_VAR_FONT));
+	HDC hDc = ::GetDC(_hSelf);
+	::SelectObject(hDc, GetStockObject(ANSI_VAR_FONT));
 
 	/* Calculate box size for font length */
 	SIZE	size;
-	RECT	rectDisplay	= rectTitle;
+	RECT	rectDisplay = rectTitle;
 
 	::GetTextExtentPoint(hDc, strTitle.c_str(), (int)strTitle.size(), &size);
-	rectDisplay.left   += iXOff + iWidthOff;
-	rectDisplay.right   = rectDisplay.left + size.cx + 3;
+	rectDisplay.left += iXOff + iWidthOff;
+	rectDisplay.right = rectDisplay.left + size.cx + 3;
 
 	/* Calc new position if box is outside the screen */
 	if (rectDisplay.right > GetSystemMetrics(SM_CXSCREEN))
@@ -78,21 +78,21 @@ void ToolTip::Show(RECT rectTitle, string strTitle, int iXOff, int iWidthOff)
 	/* Offset for tooltip. It should displayed under the cursor */
 	if ((rectDisplay.bottom + 40) < GetSystemMetrics(SM_CYSCREEN))
 	{
-		rectDisplay.top	   += 40;
+		rectDisplay.top += 40;
 		rectDisplay.bottom += 40;
 	}
 	else
 	{
-		rectDisplay.top	   -= 10;
+		rectDisplay.top -= 10;
 		rectDisplay.bottom -= 10;
 	}
 
 	/* Show the titletip */
-	SetWindowPos( _hSelf, NULL, rectDisplay.left, rectDisplay.top, 
-				  rectDisplay.right-rectDisplay.left, rectDisplay.bottom-rectDisplay.top, 
-				  SWP_SHOWWINDOW|SWP_NOACTIVATE );
-	::SetBkMode(hDc, TRANSPARENT );
-	::TextOut(hDc, 0, (rectTitle.bottom-rectTitle.top)/2-7, strTitle.c_str(), (int)strTitle.size());
+	SetWindowPos(_hSelf, NULL, rectDisplay.left, rectDisplay.top,
+		rectDisplay.right - rectDisplay.left, rectDisplay.bottom - rectDisplay.top,
+		SWP_SHOWWINDOW | SWP_NOACTIVATE);
+	::SetBkMode(hDc, TRANSPARENT);
+	::TextOut(hDc, 0, (rectTitle.bottom - rectTitle.top) / 2 - 7, strTitle.c_str(), (int)strTitle.size());
 
 	::ReleaseDC(_hSelf, hDc);
 }
