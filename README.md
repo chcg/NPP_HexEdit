@@ -11,5 +11,4 @@ AppVeyor `VS2013` and `VS2015`  [![Build status](https://ci.appveyor.com/api/pro
 Further repos at github:
 - https://github.com/JetNpp/HexEditor
 - https://github.com/darkdragon-001/NPP-Plugins-HexEditor
-- https://github.com/JetNpp/HexEditor
 - https://github.com/mackwai/NPPHexEditor
