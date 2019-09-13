@@ -14,7 +14,7 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
 
     - name: MSBuild
-      working-directory: $GITHUB_WORKSPACE\HexEditor\projects\2003\
+      working-directory: HexEditor\projects\2003\
       run: msbuild HexEditor.vcxproj /m /p:configuration="Release" /p:platform="x64" /p:PlatformToolset="v141_xp"
 
 
