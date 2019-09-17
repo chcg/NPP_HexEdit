@@ -16,15 +16,15 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v1
 
-    - name: Setup MSBuild.exe to path
+    - name: Setup to add MSBuild.exe to path
       uses: warrenbuckley/Setup-MSBuild@v1
 
     - name: MSBuild with ${ matrix.build_configuration } ${ matrix.build_platform }
       working-directory: HexEditor\projects\2003\
       run: msbuild HexEditor.vcxproj /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v141_xp"
 
-    - name: Archive artifacts for ${ matrix.build_configuration } ${ matrix.build_platform }
+    - name: Archive artifacts for $matrix.build_configuration ${ matrix.build_platform }
       uses: actions/upload-artifact@v1
       with:
-          name: dll for ${ matrix.build_configuration } ${ matrix.build_platform }
+          name: HexEditor.dll_$matrix.build_configuration_$matrix.build_platform
           path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll
