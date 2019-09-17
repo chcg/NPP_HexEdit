@@ -19,12 +19,20 @@ jobs:
     - name: Setup to add MSBuild.exe to path
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    - name: MSBuild with ${ matrix.build_configuration } ${ matrix.build_platform }
+    - name: MSBuild of plugin dll
       working-directory: HexEditor\projects\2003\
       run: msbuild HexEditor.vcxproj /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v141_xp"
 
-    - name: Archive artifacts for $matrix.build_configuration ${ matrix.build_platform }
+    - name: Archive artifacts for x64
+      if: matrix.build_platform == 'x64'
       uses: actions/upload-artifact@v1
       with:
-          name: HexEditor.dll_$matrix.build_configuration_$matrix.build_platform
+          name: plugin_dll_x64
+          path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll
+
+    - name: Archive artifacts for Win32
+      if: matrix.build_platform == 'Win32'
+      uses: actions/upload-artifact@v1
+      with:
+          name: plugin_dll_x86
           path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll
