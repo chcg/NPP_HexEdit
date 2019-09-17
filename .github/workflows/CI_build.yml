@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
           name: plugin_dll_x86
-          path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll
+          path: HexEditor\projects\2003\${{ matrix.build_configuration }}\HexEditor.dll
