@@ -7,7 +7,7 @@ jobs:
 
     runs-on: windows-2016
     strategy:
-      max-parallel: 1
+      max-parallel: 4
       matrix:
         build_configuration: [Release, Debug]
         build_platform: [x64, Win32]
