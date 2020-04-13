@@ -59,6 +59,7 @@ NppData			nppData;
 HANDLE			g_hModule;
 HWND			g_HSource;
 HWND			g_hFindRepDlg;
+HWND			g_hGotoLineDlg;
 FuncItem		funcItem[nbFunc];
 toolbarIcons	g_TBHex;
 
@@ -129,6 +130,7 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 		funcItem[8]._pShKey = NULL;
 
 		g_hFindRepDlg = NULL;
+		g_hGotoLineDlg = NULL;
 		memset(&g_clipboard, 0, sizeof(tClipboard));
 		break;
 	}
@@ -843,6 +845,12 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			g_hFindRepDlg = ::GetActiveWindow();
 			break;
 		}
+		case IDM_SEARCH_GOTOLINE:
+		{
+			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
+			g_hGotoLineDlg = ::GetActiveWindow();
+			break;
+		}
 		case IDM_FILE_SAVE:
 		{
 			ret = ::CallWindowProc(wndProcNotepad, hWnd, message, wParam, lParam);
@@ -1101,6 +1109,21 @@ void DialogUpdate(void)
 		(patDlg.isVisible() == true))
 	{
 		patDlg.destroy();
+	}
+
+	/* goto line dialog change */
+	if ((pCurHexEdit->isVisible() == false) && (gotoDlg.isVisible() == true))
+	{
+		gotoDlg.display(FALSE);
+		::SendMessage(nppData._nppHandle, WM_COMMAND, IDM_SEARCH_GOTOLINE, 0);
+	}
+	else if (g_hGotoLineDlg != NULL)
+	{
+		if ((pCurHexEdit->isVisible() == true) && (::IsWindowVisible(g_hGotoLineDlg) == TRUE))
+		{
+			gotoDlg.doDialog(pCurHexEdit->getHSelf());
+			::SendMessage(g_hGotoLineDlg, WM_COMMAND, IDCANCEL, 0);
+		}
 	}
 
 	/* find replace dialog change */
