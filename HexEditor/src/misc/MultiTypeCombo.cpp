@@ -282,14 +282,16 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 		INT				uniMask = IS_TEXT_UNICODE_NOT_UNICODE_MASK;
 		UINT			codePage = 0;
 
-		memset(buffer, 0, COMBO_STR_MAX * 2);
+		memset(buffer, 0, sizeof(buffer));
 
 		codePage = (IsTextUnicode(info->text, info->length, &uniMask) != 0) ? CP_ACP : CP_UTF8;
 		length = ::WideCharToMultiByte(codePage, 0, (WCHAR*)info->text, -1, buffer, 256, NULL, NULL) - 1;
 
 		if ((nppCoding == HEX_CODE_NPP_ASCI) ||
 			(nppCoding == HEX_CODE_NPP_UTF8) ||
-			(nppCoding == HEX_CODE_NPP_UTF8_BOM))
+			(nppCoding == HEX_CODE_NPP_UTF8_BOM)
+			&&
+			(length < COMBO_STR_MAX))
 		{
 			memcpy(info->text, buffer, length);
 			info->text[length] = 0;
@@ -336,7 +338,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 				ptr = strtok(NULL, " ");
 			}
 
-			/* if sting is odd -> return */
+			/* if string is odd -> return */
 			length = (INT)strlen(temp);
 			if (length & 0x1)
 			{
@@ -400,7 +402,7 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 		INT				uniMask = IS_TEXT_UNICODE_NOT_UNICODE_MASK;
 		UINT			codePage = CP_ACP;
 
-		memset(buffer, 0, COMBO_STR_MAX * 2);
+		memset(buffer, 0, sizeof(buffer));
 
 		if ((info->codePage == HEX_CODE_NPP_ASCI) ||
 			(info->codePage == HEX_CODE_NPP_UTF8) ||
@@ -431,7 +433,7 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 			codePage = CP_UTF8;
 		}
 
-		::MultiByteToWideChar(codePage, 0, buffer, -1, (WCHAR*)info->comboInfo.text, COMBO_STR_MAX);
+		::MultiByteToWideChar(codePage, 0, buffer, -1, (WCHAR*)info->comboInfo.text, COMBO_STR_MAX / sizeof(WCHAR));
 		break;
 	}
 	case HEX_CODE_HEX:

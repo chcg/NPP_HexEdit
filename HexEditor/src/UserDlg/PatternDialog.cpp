@@ -176,7 +176,7 @@ BOOL PatternDlg::onInsert(void)
 	/* get column position and test if exists */
 	::GetDlgItemText(_hSelf, IDC_EDIT_COL, buffer, 16);
 	pos = _ttoi(buffer);
-	if (pos > prop.columns)
+	if (pos > static_cast<INT>(prop.columns))
 	{
 		TCHAR	txtMsgBox[MAX_PATH];
 

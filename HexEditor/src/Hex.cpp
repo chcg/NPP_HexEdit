@@ -311,7 +311,7 @@ extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM, LPARA
 /***
  *	isUnicode()
  *
- *	This function notificates Notepad++ the unicode compability
+ *	This function notificates Notepad++ the unicode compatibility
  */
 extern "C" __declspec(dllexport) BOOL isUnicode()
 {
@@ -1273,7 +1273,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 	if (posBeg < 0)
 		posBeg = 0;
 
-	/* calculate positions alligned */
+	/* calculate positions aligned */
 	posBeg -= (posBeg % hexProp.bits);
 	if (posEnd % hexProp.bits) {
 		posEnd += hexProp.bits - (posEnd % hexProp.bits);
@@ -1322,7 +1322,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 					}
 					else
 					{
-						for (SHORT j = 1; j <= hexProp.bits; j++)
+						for (UINT j = 1; j <= hexProp.bits; j++)
 						{
 							*pText = temp[hexProp.bits*i - j];
 							pText++;
@@ -1542,7 +1542,7 @@ void DoCompare(void)
 			DWORD	hasWritten = 0;
 			CHAR    val = TRUE;
 
-			for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+			for (INT i = (minLength / hexProp1.bits); i < (maxLength / static_cast<INT>(hexProp1.bits)); i++) {
 				::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
 			}
 

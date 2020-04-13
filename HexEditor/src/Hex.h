@@ -167,8 +167,8 @@ typedef struct tHexProp
 	BOOL				isVisible;				// is current file visible
 	INT					fontZoom;				// view zoom factor
 	UINT				addWidth;				// char width of address field
-	SHORT				columns;				// number of columns
-	SHORT				bits;					// number of bits used
+	UINT				columns;				// number of columns
+	UINT				bits;					// number of bits used
 	BOOL				isBin;					// shows in binary
 	BOOL				isLittle;				// shows in little endian
 	eEdit				editType;				// edit in hex or in ascii
@@ -298,7 +298,6 @@ HWND getCurrentHScintilla(void);
 void loadSettings(void);
 void saveSettings(void);
 void setHexMask(void);
-void initMenu(void);
 
 void checkMenu(BOOL state);
 tHexProp getProp(void);
@@ -324,7 +323,6 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 void setMenu(void);
 void ActivateWindow(void);
 void SystemUpdate(void);
-void GetSecondFileName(void);
 void DialogUpdate(void);
 void DoCompare(void);
 

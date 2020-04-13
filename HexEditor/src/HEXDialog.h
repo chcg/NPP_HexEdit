@@ -588,7 +588,7 @@ private:
 
 	void InvalidateNotepad(void)
 	{
-		/* select something in scintilla, it doesn't metter what your selected */
+		/* select something in scintilla, it doesn't matter what is selected */
 		SciSubClassWrp::execute(SCI_SETSEL, 0, _pCurProp->isSel);
 
 		/* updates notepad icons and menus */

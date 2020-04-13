@@ -499,7 +499,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 				_pCurProp->editType = (info.iSubItem == DUMP_FIELD) ? HEX_EDIT_ASCII : HEX_EDIT_HEX;
 
 				/* keep sure that selection is off */
-				if (!0x80 & ::GetKeyState(VK_SHIFT)) {
+				if (~0x80 & ::GetKeyState(VK_SHIFT)) {
 					_pCurProp->isSel = FALSE;
 				}
 
@@ -862,7 +862,7 @@ void HexEdit::UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc)
 		/* store current open document */
 		_openDoc = openDoc;
 
-		if (openDoc != -1)
+		if ((_hexProp.size() != 0) && _openDoc >= 0)
 		{
 			/* set the current file attributes */
 			_pCurProp = &_hexProp[_openDoc];
@@ -882,7 +882,7 @@ void HexEdit::UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc)
 			_pCurProp = NULL;
 		}
 	}
-	else if ((tmpList.size() != 0) && (openDoc != -1))
+	else if ((_hexProp.size() != 0) && (openDoc >= 0))
 	{
 		/* set the current file attributes */
 		_pCurProp = &_hexProp[openDoc];
@@ -1046,7 +1046,7 @@ void HexEdit::UpdateHeader(BOOL)
 			ColSetupTermin.pszText = _T("Add");
 		ListView_InsertColumn(_hListCtrl, 0, &ColSetupTermin);
 
-		for (SHORT i = 0; i < _pCurProp->columns; i++)
+		for (UINT i = 0; i < _pCurProp->columns; i++)
 		{
 			if (getCLM()) {
 				_stprintf(temp, _T("%X"), i * _pCurProp->bits);
@@ -1930,7 +1930,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 		{
 			if (i == max)
 			{
-				for (UINT j = 1; j <= offset; j++)
+				for (UINT j = 1; j <= offset && j <= length; j++)
 				{
 					*pText = temp[length - j];
 					pText++;
@@ -1938,7 +1938,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 			}
 			else
 			{
-				for (SHORT j = 1; j <= _pCurProp->bits; j++)
+				for (UINT j = 1; j <= _pCurProp->bits; j++)
 				{
 					*pText = temp[_pCurProp->bits*i - j];
 					pText++;
@@ -2983,7 +2983,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 {
 	UINT	editMax = iItem * VIEW_ROW + iCursor + 1;
 
-	if ((iItem != -1) && (iCursor <= VIEW_ROW) && (editMax <= _currLength + 1))
+	if ((iItem != -1) && (iCursor <= static_cast<INT>(VIEW_ROW)) && (editMax <= _currLength + 1))
 	{
 		_pCurProp->cursorItem = iItem;
 		_pCurProp->cursorSubItem = iCursor / DUMP_FIELD;
@@ -3233,7 +3233,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 		INT pos = (item * _pCurProp->columns) - _pCurProp->pCmpResult->offCmpCache;
 		if (pos < CACHE_SIZE)
 		{
-			for (INT i = 0; i < _pCurProp->columns; i++, pos++) {
+			for (UINT i = 0; i < _pCurProp->columns && (pos < (CACHE_SIZE - 1)); i++, pos++) {
 				if ((_pCurProp->pCmpResult->cmpCache[pos] == TRUE) &&
 					(pos < _pCurProp->pCmpResult->lenCmpCache)) {
 					DrawPartOfDumpText(hDc, rc, text, i * _pCurProp->bits, _pCurProp->bits, HEX_COLOR_DIFF);
@@ -3312,7 +3312,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 					{
 						/* calculate length and selection of string */
 						length = lastCur;
-						length += (length < VIEW_ROW) ? 1 : 0;
+						length += (length < static_cast<INT>(VIEW_ROW)) ? 1 : 0;
 					}
 					break;
 				}
@@ -3323,7 +3323,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 			{
 				/* calculate length and selection of string */
 				length = lastCur - firstCur;
-				length += (firstCur + length < VIEW_ROW) ? 1 : 0;
+				length += (firstCur + length < static_cast<INT>(VIEW_ROW)) ? 1 : 0;
 				begText = firstCur;
 				break;
 			}
@@ -4272,8 +4272,7 @@ void HexEdit::ConvertSelNppToHEX(void)
 	if (_pCurProp == NULL)
 		return;
 
-	extern
-		UINT	currentSC;
+	extern	UINT	currentSC;
 	UINT	selStart = (UINT)SciSubClassWrp::execute(SCI_GETSELECTIONSTART);
 	UINT	selEnd = (UINT)SciSubClassWrp::execute(SCI_GETSELECTIONEND);
 	UINT	offset = 0;
@@ -4377,8 +4376,7 @@ void HexEdit::ConvertSelHEXToNpp(void)
 	if (_pCurProp == NULL)
 		return;
 
-	extern
-		UINT	currentSC;
+	extern	UINT	currentSC;
 	INT		selStart = GetAnchor();
 	INT		selEnd = GetCurrentPos();
 	INT		offset = 0;

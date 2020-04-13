@@ -49,7 +49,7 @@ INT_PTR CALLBACK GotoDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 
 		_hLineEdit = ::GetDlgItem(_hSelf, IDC_EDIT_GOTO);
 
-		/* intial subclassing */
+		/* initial subclassing */
 		::SetWindowLongPtr(_hLineEdit, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 		_hDefaultEditProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hLineEdit, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndEditProc)));
 

@@ -1,10 +1,20 @@
 
 Change-log for HexEditor.dll
+------------------------------------------------------------------------------------
+13/04/20  v0.9.6 :
+------------------------------------------------------------------------------------
+    Fix: crash on missing config dir, github #1 
+    Fix: Pattern Replace window has wrong title #30
+    Fix: Activate View in HEX should switch beetwen original/plugin Go to window. #29
+    Fix: some typos
+    New: x64 support
+    Note: update common n++ files with versions from 7.8.5
+    Note: added editorconfig settings to visual studio project and formatted the sourcefiles accordingly
 
 ------------------------------------------------------------------------------------
 09/09/09  v0.9.5 :
 ------------------------------------------------------------------------------------
-	Fix: Menu of Npp++ isn't displayed properly after using hex [NPP-P-B-2799622]
+    Fix: Menu of Npp++ isn't displayed properly after using hex [NPP-P-B-2799622]
     Fix: HEX v0.9.3 forgets scroll position when switching tabs [NPP-P-B-2721661]
     Fix: "Repleace" misspell in HEX-Editor plugins Help dialog [NPP-P-B-2351008]
     Fix: Opening a file from outside with enabled Hex-Mode cause graphic issues.
