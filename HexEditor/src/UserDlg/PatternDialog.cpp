@@ -62,6 +62,12 @@ void PatternDlg::doDialog(HWND hHexEdit)
 		goToCenter();
 		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 	}
+	else
+	{
+		//update caption text as WM_INITDIALOG is just called once
+		//and the dialog is shared between insertColumns and patternReplace
+		::SetWindowText(_hSelf, _txtCaption);
+	}
 
 	_hParentHandle = hHexEdit;
 	::SetFocus(::GetDlgItem(_hSelf, IDC_COMBO_PATTERN));
