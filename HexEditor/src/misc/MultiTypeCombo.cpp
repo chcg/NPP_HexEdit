@@ -342,7 +342,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 			{
 				HWND hWnd = ::GetActiveWindow();
 				if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK) == FALSE)
-					::MessageBox(_hNpp, _T("There are odd digits. The data will be trunkated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
+					::MessageBox(_hNpp, _T("There are odd digits. The data will be truncated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
 				length--;
 			}
 

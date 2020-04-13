@@ -193,7 +193,7 @@ typedef struct tColor
 	COLORREF			rgbRegBk;				// regular background color
 	COLORREF			rgbSelTxt;				// selected text color
 	COLORREF			rgbSelBk;				// selected background color
-	COLORREF			rgbDiffTxt;				// differnece text color
+	COLORREF			rgbDiffTxt;				// difference text color
 	COLORREF			rgbDiffBk;				// difference background color
 	COLORREF			rgbBkMkTxt;				// bookmark text color
 	COLORREF			rgbBkMkBk;				// bookmark background color

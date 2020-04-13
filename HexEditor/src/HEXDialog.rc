@@ -288,9 +288,9 @@ BEGIN
     PUSHBUTTON      "Right",IDC_BUTTON_RIGHT,99,32,50,14
     PUSHBUTTON      "Top",IDC_BUTTON_TOP,31,32,50,14
     PUSHBUTTON      "Bottom",IDC_BUTTON_BOTTOM,99,32,50,14
-    CTEXT           "The layout settings are differnt.\nWould you like to set to left or to right view?",
+    CTEXT           "The layout settings are different.\nWould you like to set to left or to right view?",
                     IDC_STATIC_COMPARE_LR,12,7,159,17
-    CTEXT           "The layout settings are differnt.\nWould you like to set to top or to bottom view?",
+    CTEXT           "The layout settings are different.\nWould you like to set to top or to bottom view?",
                     IDC_STATIC_COMPARE_TB,12,7,159,17
 END
 
