@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2003 Don HO <don.h@free.fr>
+// Copyright (C)2020 Don HO <don.h@free.fr>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -30,12 +30,14 @@
 #include <shlobj.h>
 #include <uxtheme.h>
 #include <cassert>
+#include <codecvt>
+#include <locale>
+
 #include "StaticDialog.h"
 
 #include "Common.h"
 #include "Utf8.h" //MODIFIED by HEXEDIT
-
-WcharMbcsConvertor* WcharMbcsConvertor::_pSelf = new WcharMbcsConvertor;
+//#include <Parameters.h> //MODIFIED by HEXEDIT
 
 void printInt(int int2print)
 {
@@ -971,12 +973,21 @@ bool str2Clipboard(const generic_string &str2cpy, HWND hwnd)
 
 bool matchInList(const TCHAR *fileName, const std::vector<generic_string> & patterns)
 {
+	bool is_matched = false;
 	for (size_t i = 0, len = patterns.size(); i < len; ++i)
 	{
+		if (patterns[i].length() > 1 && patterns[i][0] == '!')
+		{
+			if (PathMatchSpec(fileName, patterns[i].c_str() + 1))
+				return false;
+
+			continue;
+		} 
+
 		if (PathMatchSpec(fileName, patterns[i].c_str()))
-			return true;
+			is_matched = true;
 	}
-	return false;
+	return is_matched;
 }
 
 generic_string GetLastErrorAsString(DWORD errorCode)
@@ -1016,7 +1027,7 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
 	}
 
 	// Create the tooltip. g_hInst is the global instance handle.
-	HWND hwndTip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
+	HWND hwndTip = CreateWindowEx(0, TOOLTIPS_CLASS, NULL,
 		WS_POPUP | TTS_ALWAYSTIP | TTS_BALLOON,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
@@ -1040,6 +1051,11 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
 		DestroyWindow(hwndTip);
 		return NULL;
 	}
+
+	SendMessage(hwndTip, TTM_ACTIVATE, TRUE, 0);
+	SendMessage(hwndTip, TTM_SETMAXTIPWIDTH, 0, 200);
+	// Make tip stay 15 seconds
+	SendMessage(hwndTip, TTM_SETDELAYTIME, TTDT_AUTOPOP, MAKELPARAM((15000), (0)));
 
 	return hwndTip;
 }
@@ -1200,3 +1216,69 @@ bool isAssoCommandExisting(LPCTSTR FullPathName)
 	}
 	return isAssoCommandExisting;
 }
+
+std::wstring s2ws(const std::string& str)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.from_bytes(str);
+}
+
+std::string ws2s(const std::wstring& wstr)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.to_bytes(wstr);
+}
+
+bool deleteFileOrFolder(const generic_string& f2delete)
+{
+	auto len = f2delete.length();
+	TCHAR* actionFolder = new TCHAR[len + 2];
+	wcscpy_s(actionFolder, len + 2, f2delete.c_str());
+	actionFolder[len] = 0;
+	actionFolder[len + 1] = 0;
+
+	SHFILEOPSTRUCT fileOpStruct = { 0 };
+	fileOpStruct.hwnd = NULL;
+	fileOpStruct.pFrom = actionFolder;
+	fileOpStruct.pTo = NULL;
+	fileOpStruct.wFunc = FO_DELETE;
+	fileOpStruct.fFlags = FOF_NOCONFIRMATION | FOF_SILENT | FOF_ALLOWUNDO;
+	fileOpStruct.fAnyOperationsAborted = false;
+	fileOpStruct.hNameMappings = NULL;
+	fileOpStruct.lpszProgressTitle = NULL;
+
+	int res = SHFileOperation(&fileOpStruct);
+
+	delete[] actionFolder;
+	return (res == 0);
+}
+
+// Get a vector of full file paths in a given folder. File extension type filter should be *.*, *.xml, *.dll... according the type of file you want to get.  
+void getFilesInFolder(std::vector<generic_string>& files, const generic_string& extTypeFilter, const generic_string& inFolder)
+{
+	generic_string filter = inFolder;
+	PathAppend(filter, extTypeFilter);
+
+	WIN32_FIND_DATA foundData;
+	HANDLE hFindFile = ::FindFirstFile(filter.c_str(), &foundData);
+
+	if (hFindFile != INVALID_HANDLE_VALUE && !(foundData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+	{
+		generic_string foundFullPath = inFolder;
+		PathAppend(foundFullPath, foundData.cFileName);
+		files.push_back(foundFullPath);
+
+		while (::FindNextFile(hFindFile, &foundData))
+		{
+			generic_string foundFullPath2 = inFolder;
+			PathAppend(foundFullPath2, foundData.cFileName);
+			files.push_back(foundFullPath2);
+		}
+	}
+	::FindClose(hFindFile);
+}
+

@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2003 Don HO <don.h@free.fr>
+// Copyright (C)2020 Don HO <don.h@free.fr>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,8 +26,7 @@
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-#ifndef NOTEPAD_PLUS_MSGS_H
-#define NOTEPAD_PLUS_MSGS_H
+#pragma once
 
 #include <windows.h>
 #include <tchar.h>
@@ -54,7 +53,6 @@ enum Platform { PF_UNKNOWN, PF_X86, PF_X64, PF_IA64 };
 
 
 
-//Here you can find how to use these messages : http://docs.notepad-plus-plus.org/index.php/Messages_And_Notifications
 #define NPPMSG  (WM_USER + 1000)
 
 	#define NPPM_GETCURRENTSCINTILLA  (NPPMSG + 4)
@@ -378,7 +376,7 @@ enum Platform { PF_UNKNOWN, PF_X86, PF_X64, PF_IA64 };
 	// by passing allocated buffer as argument langDesc
 
 	#define NPPM_SHOWDOCSWITCHER    (NPPMSG + 85)
-	// VOID NPPM_ISDOCSWITCHERSHOWN(0, BOOL toShowOrNot)
+	// VOID NPPM_SHOWDOCSWITCHER(0, BOOL toShowOrNot)
 	// Send this message to show or hide doc switcher.
 	// if toShowOrNot is TRUE then show doc switcher, otherwise hide it.
 
@@ -612,5 +610,3 @@ enum Platform { PF_UNKNOWN, PF_X86, PF_X64, PF_IA64 };
 	//scnNotification->nmhdr.code = NPPN_FILEDELETED;
 	//scnNotification->nmhdr.hwndFrom = hwndNpp;
 	//scnNotification->nmhdr.idFrom = BufferID;
-
-#endif //NOTEPAD_PLUS_MSGS_H

@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2003 Don HO <don.h@free.fr>
+// Copyright (C)2020 Don HO <don.h@free.fr>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -106,7 +106,7 @@ bool ToolBar::init( HINSTANCE hInst, HWND hPere, toolBarStatusType type, ToolBar
 {
 	Window::init(hInst, hPere);
 	_state = type;
-	int iconSize = NppParameters::getInstance()->_dpiManager.scaleX(_state == TB_LARGE?32:16);
+	int iconSize = NppParameters::getInstance()._dpiManager.scaleX(_state == TB_LARGE?32:16);
 
 	_toolBarIcons.init(buttonUnitArray, arraySize);
 	_toolBarIcons.create(_hInst, iconSize);
@@ -214,7 +214,7 @@ void ToolBar::reduce()
 	if (_state == TB_SMALL)
 		return;
 
-	int iconDpiDynamicalSize = NppParameters::getInstance()->_dpiManager.scaleX(16);
+	int iconDpiDynamicalSize = NppParameters::getInstance()._dpiManager.scaleX(16);
 	_toolBarIcons.resizeIcon(iconDpiDynamicalSize);
 	bool recreate = (_state == TB_STANDARD || _state == TB_LARGE);
 	setState(TB_SMALL);
@@ -227,7 +227,7 @@ void ToolBar::enlarge()
 	if (_state == TB_LARGE)
 		return;
 
-	int iconDpiDynamicalSize = NppParameters::getInstance()->_dpiManager.scaleX(32);
+	int iconDpiDynamicalSize = NppParameters::getInstance()._dpiManager.scaleX(32);
 	_toolBarIcons.resizeIcon(iconDpiDynamicalSize);
 	bool recreate = (_state == TB_STANDARD || _state == TB_SMALL);
 	setState(TB_LARGE);
@@ -296,7 +296,7 @@ void ToolBar::reset(bool create)
 	else
 	{
 		//Else set the internal imagelist with standard bitmaps
-		int iconDpiDynamicalSize = NppParameters::getInstance()->_dpiManager.scaleX(16);;
+		int iconDpiDynamicalSize = NppParameters::getInstance()._dpiManager.scaleX(16);;
 		::SendMessage(_hSelf, TB_SETBITMAPSIZE, 0, MAKELPARAM(iconDpiDynamicalSize, iconDpiDynamicalSize));
 
 		//TBADDBITMAP addbmp = {_hInst, 0};
@@ -447,12 +447,15 @@ bool ReBar::addBand(REBARBANDINFO * rBand, bool useID)
 	}
 	else
 		rBand->fStyle = RBBS_GRIPPERALWAYS;
+
 	rBand->fMask |= RBBIM_ID | RBBIM_STYLE;
-	if (useID) {
+	if (useID)
+	{
 		if (isIDTaken(rBand->wID))
 			return false;
-
-	} else {
+	}
+	else
+	{
 		rBand->wID = getNewID();
 	}
 	::SendMessage(_hSelf, RB_INSERTBAND, static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(rBand));	//add to end of list
