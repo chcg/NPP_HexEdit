@@ -326,9 +326,18 @@ extern "C" __declspec(dllexport) BOOL isUnicode()
  */
 void loadSettings(void)
 {
-	/* initialize the config directory */
-	::SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)configPath);
-	::PathRemoveBackslash(configPath);
+	/* get the length of config directory path */
+	INT dirPathLength = (INT)::SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, 0, (LPARAM)NULL);
+	if(dirPathLength >0 && dirPathLength < MAX_PATH)
+	{
+		::SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)configPath);
+		::PathRemoveBackslash(configPath);
+	}
+	else
+	{
+		//no path to config dir or path is too long for allocated array with size MAX_PATH
+		return;
+	}
 
 	/* Test if config path exist, if not create */
 	if (::PathFileExists(configPath) == FALSE)
