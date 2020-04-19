@@ -351,6 +351,11 @@ void loadSettings(void)
 	/* init compare file path */
 	_tcscpy(cmparePath, configPath);
 	*_tcsrchr(cmparePath, '\\') = NULL;
+	::PathAppend(cmparePath, HEX_PLUGIN_PATH);
+	if (::PathFileExists(cmparePath) == FALSE)
+	{
+		::CreateDirectory(cmparePath, NULL);
+	}
 	::PathAppend(cmparePath, COMPARE_PATH);
 	if (::PathFileExists(cmparePath) == FALSE)
 	{

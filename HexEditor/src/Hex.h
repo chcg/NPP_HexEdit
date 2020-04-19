@@ -61,6 +61,7 @@ const TCHAR focusRect[] = _T("Focus Rect");
 
 const TCHAR HEXEDIT_INI[] = _T("\\HexEditor.ini");
 const TCHAR COMPARE_PATH[] = _T("\\Compare");
+const TCHAR HEX_PLUGIN_PATH[] = _T("\\HexEditor");
 
 #define AUTOSTART_MAX	(1024000)
 #define FIND_BLOCK		(1024000)
