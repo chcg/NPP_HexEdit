@@ -439,7 +439,7 @@ void GetShortCuts(HWND hWnd)
 		g_scList[i].isEnable = FALSE;
 		if (::GetMenuString(hMenu, g_scList[i].uID, text, 64, MF_BYCOMMAND) != 0)
 		{
-			pSc = &(_tcsstr(text, _T("\t")))[1];
+			pSc = _tcsstr(text, _T("\t"));
 			if (pSc != NULL) {
 				g_scList[i].isEnable = TRUE;
 				pScKey = _tcsstr(pSc, _T("Ctrl+"));
