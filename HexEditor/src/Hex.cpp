@@ -237,8 +237,8 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 					if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
 						notifyCode->modificationType & SC_PERFORMED_REDO)
 					{
-						hexEdit1.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
-						hexEdit2.RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
+						hexEdit1.RedoUndo(static_cast<UINT>(notifyCode->position), static_cast<UINT>(notifyCode->length), notifyCode->modificationType);
+						hexEdit2.RedoUndo(static_cast<UINT>(notifyCode->position), static_cast<UINT>(notifyCode->length), notifyCode->modificationType);
 					}
 				}
 				else
@@ -250,7 +250,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 					if (notifyCode->modificationType & SC_PERFORMED_UNDO ||
 						notifyCode->modificationType & SC_PERFORMED_REDO)
 					{
-						pCurHexEdit->RedoUndo(notifyCode->position, notifyCode->length, notifyCode->modificationType);
+						pCurHexEdit->RedoUndo(static_cast<UINT>(notifyCode->position), static_cast<UINT>(notifyCode->length), notifyCode->modificationType);
 					}
 				}
 			}
