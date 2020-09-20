@@ -386,8 +386,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,6,0
- PRODUCTVERSION 0,9,6,0
+ FILEVERSION 0,9,7,0
+ PRODUCTVERSION 0,9,7,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -405,12 +405,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.9.6"
+            VALUE "FileVersion", "0.9.7"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.9.6"
+            VALUE "ProductVersion", "0.9.7"
             VALUE "SpecialBuild", "UNICODE"
         END
     END
