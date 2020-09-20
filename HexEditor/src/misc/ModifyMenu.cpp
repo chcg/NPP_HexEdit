@@ -319,7 +319,6 @@ void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 {
 	UINT	nPos = 0;
-	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
 
 	for (size_t i = 0; i < vMenuInfo.size() && ((vMenuInfo[i].uFlags != 0) || (vMenuInfo[i].uID != 0)); i++)
 	{
