@@ -467,7 +467,7 @@ void GetShortCuts(HWND hWnd)
 	}
 }
 
-void UpdateShortCut(NotifyHeader *nmhdr)
+void UpdateShortCut(Sci_NotifyHeader* nmhdr)
 {
 	UINT    max = sizeof(g_scList) / sizeof(tShortCut);
 

@@ -213,7 +213,7 @@ static KeyIDNAME namedKeyArray[] = {
 #define nrKeys sizeof(namedKeyArray)/sizeof(struct KeyIDNAME)
 
 void GetShortCuts(HWND hWnd);
-void UpdateShortCut(NotifyHeader *nmhdr);
+void UpdateShortCut(Sci_NotifyHeader* nmhdr);
 UINT MapShortCutToMenuId(BYTE uChar);
 
 
