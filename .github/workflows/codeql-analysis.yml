@@ -12,7 +12,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+    runs-on: windows-2016
 
     steps:
     - name: Checkout repository
@@ -55,7 +55,7 @@ jobs:
 
     - name: MSBuild of plugin dll
       working-directory: HexEditor\projects\2003\
-      run: msbuild HexEditor.vcxproj /m /p:configuration="Debug" /p:platform="x64" /p:PlatformToolset="v142"
+      run: msbuild HexEditor.vcxproj /m /p:configuration="Debug" /p:platform="x64" /p:PlatformToolset="v141"
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
