@@ -16,8 +16,8 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v1
 
-    - name: Setup to add MSBuild.exe to path
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.1
 
     - name: MSBuild of plugin dll
       working-directory: HexEditor\projects\2003\
