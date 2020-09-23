@@ -63,7 +63,7 @@ BEGIN
     LTEXT           "eMail:",IDC_STATIC_EMAIL,12,41,21,9
     CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
                     IDC_STATIC_THX,7,67,216,25
-    CTEXT           "HEX-Editor Plugin for Notepad++ v7.8                         v0.9.7",
+    CTEXT           "HEX-Editor Plugin for Notepad++ v7.8                         v0.9.8",
                     IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
                     WS_EX_TRANSPARENT
     LTEXT           "http://sourceforge.net/projects/npp-plugins",
@@ -386,8 +386,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,7,0
- PRODUCTVERSION 0,9,7,0
+ FILEVERSION 0,9,8,0
+ PRODUCTVERSION 0,9,8,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -405,12 +405,12 @@ BEGIN
             VALUE "Comments", "Visit: http://sourceforge.net/projects/npp-plugins"
             VALUE "CompanyName", "jens.plugin.npp@gmx.de"
             VALUE "FileDescription", "Notepad++ Plugin : a free (GNU) source code hex editor"
-            VALUE "FileVersion", "0.9.7"
+            VALUE "FileVersion", "0.9.8"
             VALUE "InternalName", "HexEditor for npp.exe"
             VALUE "LegalCopyright", "Copyright 2006-2008 by Jens Lorenz"
             VALUE "OriginalFilename", "HexEditor.dll"
             VALUE "ProductName", "Hex Edit Plugin"
-            VALUE "ProductVersion", "0.9.7"
+            VALUE "ProductVersion", "0.9.8"
             VALUE "SpecialBuild", "UNICODE"
         END
     END
