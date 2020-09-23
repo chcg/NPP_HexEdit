@@ -1542,10 +1542,12 @@ void HexEdit::Paste(void)
 
 			if (uCF == CF_TEXT) {
 				LPSTR	pchBuffer = (LPSTR)GlobalLock(hClipboardData);
-				lenData = (UINT)strlen(pchBuffer);
-				pchData = new CHAR[lenData + 1];
-				if (pchData != NULL) {
-					::CopyMemory(pchData, pchBuffer, lenData);
+				if (pchBuffer != NULL) {
+					lenData = (UINT)strlen(pchBuffer);
+					pchData = new CHAR[lenData + 1];
+					if (pchData != NULL) {
+						::CopyMemory(pchData, pchBuffer, lenData);
+					}
 				}
 			}
 			else if (uCF == CF_UNICODETEXT) {
