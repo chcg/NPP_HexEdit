@@ -314,6 +314,9 @@ public:
 
 	void SetCompareResult(tCmpResult* pCmpResult, tCmpResult* pCmpRef = NULL)
 	{
+		if (_pCurProp == NULL)
+			return;
+
 		if (pCmpResult == NULL) {
 			if (_pCurProp->pCmpResult != NULL) {
 				/* if a reference exist mark in them that this was deleted */
@@ -517,6 +520,9 @@ private:
 
 	void UpdateListChanges(void)
 	{
+		if (_pCurProp == NULL)
+			return;
+
 		/* update list only on changes (prevent flickering) */
 		if ((_oldCursorItem != _pCurProp->cursorItem) || (_oldCursorSubItem != _pCurProp->cursorSubItem) ||
 			(_oldCursorCurPos != _pCurProp->cursorPos))
@@ -578,6 +584,9 @@ private:
 
 	void InvalidateList(void)
 	{
+		if (_pCurProp == NULL)
+			return;
+
 		_pCurProp->anchorItem = _pCurProp->cursorItem;
 		_pCurProp->anchorSubItem = _pCurProp->cursorSubItem;
 		_pCurProp->anchorPos = _pCurProp->cursorPos;
@@ -588,6 +597,9 @@ private:
 
 	void InvalidateNotepad(void)
 	{
+		if (_pCurProp == NULL)
+			return;
+
 		/* select something in scintilla, it doesn't matter what is selected */
 		SciSubClassWrp::execute(SCI_SETSEL, 0, _pCurProp->isSel);
 
@@ -608,6 +620,9 @@ private:
 		INT		i = 0;
 		INT		j = 0;
 		LONG	lAddr = 0;
+
+		if (_pCurProp == NULL)
+			return;
 
 		/* return on empty list */
 		if (d > h || d < 0)
@@ -676,7 +691,7 @@ private:
 	UINT				_currLength;
 
 	/* properties of open files */
-	tHexProp*			_pCurProp;
+	tHexProp*			_pCurProp = NULL;
 	vector<tHexProp>	_hexProp;
 
 	/* for selection */
