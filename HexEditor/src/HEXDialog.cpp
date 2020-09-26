@@ -2303,7 +2303,7 @@ void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 	ListView_GetSubItemRect(_hListCtrl, iItem, 0, LVIR_LABEL, &rc);
 
 	/* get size of text */
-	::GetTextExtentPoint(hDc, text, _pCurProp->addWidth, &size);
+	::GetTextExtentPoint32(hDc, text, _pCurProp->addWidth, &size);
 
 	for (UINT i = 0; (i < _pCurProp->vBookmarks.size()) && (_pCurProp->vBookmarks[i].iItem <= iItem); i++)
 	{
@@ -2641,7 +2641,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 	ListView_GetSubItemRect(_hListCtrl, item, subItem, LVIR_BOUNDS, &rc);
 
 	/* calculate text begin position */
-	::GetTextExtentPoint(hDc, text, SUBITEM_LENGTH, &size);
+	::GetTextExtentPoint32(hDc, text, SUBITEM_LENGTH, &size);
 	rcText = rc;
 	rcText.left += (rc.right - rc.left - size.cx) / 2;
 	rcCursor = rcText;
@@ -2694,16 +2694,16 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		if (item == _pCurProp->cursorItem)
 		{
 			if ((_pCurProp->editType == HEX_EDIT_HEX) && (subItem == _pCurProp->cursorSubItem)) {
-				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos, &size);
+				::GetTextExtentPoint32(hDc, text, _pCurProp->cursorPos, &size);
 				rcCursor.left += size.cx;
-				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos + FACTOR, &size);
+				::GetTextExtentPoint32(hDc, text, _pCurProp->cursorPos + FACTOR, &size);
 				rcCursor.right += size.cx;
 				DrawCursor(hDc, rcCursor);
 			}
 			else if ((_pCurProp->editType == HEX_EDIT_ASCII) && ((_pCurProp->cursorPos / _pCurProp->bits) + 1 == subItem)) {
-				::GetTextExtentPoint(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
+				::GetTextExtentPoint32(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
 				rcCursor.left += size.cx;
-				::GetTextExtentPoint(hDc, text, ((_pCurProp->cursorPos % _pCurProp->bits) * FACTOR) + FACTOR, &size);
+				::GetTextExtentPoint32(hDc, text, ((_pCurProp->cursorPos % _pCurProp->bits) * FACTOR) + FACTOR, &size);
 				rcCursor.right += size.cx;
 				DrawCursor(hDc, rcCursor, TRUE);
 			}
@@ -2849,7 +2849,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					((_pCurProp->cursorPos % _pCurProp->bits) == 0) && (_pCurProp->anchorPos < _pCurProp->cursorPos))
 				{
 					/* correction to last element */
-					::GetTextExtentPoint(hDc, text, _pCurProp->bits * FACTOR, &size);
+					::GetTextExtentPoint32(hDc, text, _pCurProp->bits * FACTOR, &size);
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
@@ -2857,7 +2857,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorPos >= _pCurProp->cursorPos)))
 				{
 					/* standard cursor position */
-					::GetTextExtentPoint(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
+					::GetTextExtentPoint32(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
@@ -2868,7 +2868,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					(_pCurProp->anchorItem < _pCurProp->cursorItem))
 				{
 					/* correction to last element */
-					::GetTextExtentPoint(hDc, text, _pCurProp->bits * FACTOR, &size);
+					::GetTextExtentPoint32(hDc, text, _pCurProp->bits * FACTOR, &size);
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
@@ -2876,7 +2876,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorItem > _pCurProp->cursorItem)))
 				{
 					/* standard cursor position */
-					::GetTextExtentPoint(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
+					::GetTextExtentPoint32(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
@@ -2914,7 +2914,7 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 	case HEX_ITEM_FIRST:
 	{
 		/* first subitem to be drawn */
-		::GetTextExtentPoint(hDc, text, beg, &size);
+		::GetTextExtentPoint32(hDc, text, beg, &size);
 		rcText.left += size.cx;
 		rc.left = rcText.left;
 		diff = length - beg;
@@ -2924,9 +2924,9 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 	{
 		/* drawn only when one item is selected */
 		rcText.right = rcText.left;
-		::GetTextExtentPoint(hDc, text, beg, &size);
+		::GetTextExtentPoint32(hDc, text, beg, &size);
 		rcText.left += size.cx;
-		::GetTextExtentPoint(hDc, text, length, &size);
+		::GetTextExtentPoint32(hDc, text, length, &size);
 		rcText.right += size.cx;
 		rc = rcText;
 		diff = length - beg;
@@ -2934,7 +2934,7 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 	}
 	case HEX_ITEM_LAST:
 	{
-		::GetTextExtentPoint(hDc, text, length, &size);
+		::GetTextExtentPoint32(hDc, text, length, &size);
 		rc.right = rcText.left + size.cx;
 		diff = length;
 		break;
@@ -3255,9 +3255,9 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 			else {
 				posCurBeg += ((_pCurProp->cursorSubItem - 1) * _pCurProp->bits + _pCurProp->cursorPos / FACTOR);
 			}
-			::GetTextExtentPoint(hDc, text, posCurBeg, &size);
+			::GetTextExtentPoint32(hDc, text, posCurBeg, &size);
 			rcCursor.left += size.cx;
-			::GetTextExtentPoint(hDc, text, posCurBeg + 1, &size);
+			::GetTextExtentPoint32(hDc, text, posCurBeg + 1, &size);
 			rcCursor.right += size.cx;
 			DrawCursor(hDc, rcCursor, _pCurProp->editType == HEX_EDIT_HEX);
 		}
@@ -3335,7 +3335,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 
 			/* paint cursor */
 			if ((item == _pCurProp->cursorItem) && (_pCurProp->editType == HEX_EDIT_ASCII)) {
-				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos, &size);
+				::GetTextExtentPoint32(hDc, text, _pCurProp->cursorPos, &size);
 				rcCursor.left += size.cx;
 				DrawCursor(hDc, rcCursor);
 			}
@@ -3368,9 +3368,9 @@ void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT l
 
 	/* calculate text witdth */
 	rc.right = rc.left;
-	::GetTextExtentPoint(hDc, text, beg, &size);
+	::GetTextExtentPoint32(hDc, text, beg, &size);
 	rc.left += size.cx;
-	::GetTextExtentPoint(hDc, text, beg + length, &size);
+	::GetTextExtentPoint32(hDc, text, beg + length, &size);
 	rc.right += size.cx;
 
 	/* draw background of text */
@@ -3422,7 +3422,7 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 
 		/* get clicked position */
 		for (cursorPos = 0; cursorPos < (UINT)VIEW_ROW; cursorPos++) {
-			::GetTextExtentPoint(hDc, &text[cursorPos], 1, &size);
+			::GetTextExtentPoint32(hDc, &text[cursorPos], 1, &size);
 			if (info.pt.x < (rc.left + (size.cx / 2))) {
 				break;
 			}
@@ -3442,12 +3442,12 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 	else
 	{
 		/* left offset */
-		::GetTextExtentPoint(hDc, text, SUBITEM_LENGTH, &size);
+		::GetTextExtentPoint32(hDc, text, SUBITEM_LENGTH, &size);
 		rc.left += ((rc.right - rc.left) - size.cx) / 2;
 
 		/* get clicked position */
 		for (cursorPos = 0; cursorPos < (UINT)VIEW_ROW; cursorPos++) {
-			::GetTextExtentPoint(hDc, &text[cursorPos], 1, &size);
+			::GetTextExtentPoint32(hDc, &text[cursorPos], 1, &size);
 			if (info.pt.x < (rc.left + (size.cx / 2))) {
 				break;
 			}
