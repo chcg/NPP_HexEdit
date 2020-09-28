@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: windows-2016
+    runs-on: windows-latest
     strategy:
       max-parallel: 4
       matrix:
@@ -21,7 +21,7 @@ jobs:
 
     - name: MSBuild of plugin dll
       working-directory: HexEditor\projects\2003\
-      run: msbuild HexEditor.vcxproj /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v141_xp"
+      run: msbuild HexEditor.vcxproj /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v142"
 
     - name: Archive artifacts for x64
       if: matrix.build_platform == 'x64'
