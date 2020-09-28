@@ -45,7 +45,7 @@ public:
 	// Implementation
 public:
 	virtual void init(HINSTANCE hInst, HWND hParent);
-	void Show(RECT rectTitle, string strTitleText, int iXOff = 0, int iWidthOff = 0);
+	void Show(RECT rectTitle, std::string strTitleText, int iXOff = 0, int iWidthOff = 0);
 
 protected:
 	POINT		_startPt;
