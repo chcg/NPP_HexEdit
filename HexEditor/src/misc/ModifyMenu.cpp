@@ -18,6 +18,7 @@
 #include "hex.h"
 #include "ModifyMenu.h"
 
+using namespace std;
 
 /* notepad menus */
 BOOL			isMenuHex = FALSE;

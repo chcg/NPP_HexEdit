@@ -27,7 +27,6 @@
 #include <TCHAR.h>
 #include <vector>
 
-using namespace std;
 
 
 #define TITLETIP_CLASSNAME _T("MyToolTip")
@@ -174,7 +173,7 @@ typedef struct tHexProp
 	BOOL				isLittle;				// shows in little endian
 	eEdit				editType;				// edit in hex or in ascii
 	UINT				firstVisRow;			// last selected scroll position
-	vector<tBkMk>		vBookmarks;				// bookmarks of the view
+	std::vector<tBkMk>		vBookmarks;				// bookmarks of the view
 
 	BOOL				isSel;					// is text selected...
 	eSel				selection;				// selection type
@@ -257,7 +256,7 @@ typedef struct tMenu {
 	UINT			uID;
 	UINT			uFlags;
 	TCHAR			szName[128];
-	vector<tMenu>	vSubMenu;
+	std::vector<tMenu>	vSubMenu;
 } tMenu;
 
 typedef struct tShortCut {

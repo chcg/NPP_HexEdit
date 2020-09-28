@@ -94,9 +94,9 @@ const UINT pSuppViewIds[] = {
 
 
 void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci);
-void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
-void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo);
-UINT CreateNppMenu(HMENU & hMenuItem, vector<tMenu> & vMenuInfo, const UINT* idArray = NULL);
+void StoreNppMenuInfo(HMENU hMenuItem, std::vector<tMenu> & vMenuInfo);
+void UpdateNppMenuInfo(HMENU hMenuItem, std::vector<tMenu> & vMenuInfo);
+UINT CreateNppMenu(HMENU & hMenuItem, std::vector<tMenu> & vMenuInfo, const UINT* idArray = NULL);
 void DestroyNppMenuHndl(HMENU hMenuItem);
 void ClearMenuStructures(void);
 

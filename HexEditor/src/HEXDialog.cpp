@@ -25,6 +25,7 @@
 #include <windows.h>
 #include <commctrl.h>
 
+using namespace std;
 
 extern char	hexMask[256][3];
 

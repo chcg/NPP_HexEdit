@@ -32,7 +32,6 @@
 
 #include "tables.h"
 
-using namespace std;
 
 #include "HEXResource.h"
 
@@ -692,7 +691,7 @@ private:
 
 	/* properties of open files */
 	tHexProp*			_pCurProp = NULL;
-	vector<tHexProp>	_hexProp;
+	std::vector<tHexProp>	_hexProp;
 
 	/* for selection */
 	BOOL				_onChar;

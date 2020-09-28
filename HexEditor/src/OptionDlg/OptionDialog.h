@@ -25,7 +25,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
 
 #ifdef UNICODE
 #define string wstring

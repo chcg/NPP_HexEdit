@@ -21,6 +21,8 @@
 #include <shlobj.h>
 #include <uxtheme.h>
 
+using namespace std;
+
 typedef HRESULT(WINAPI * ETDTProc) (HWND, DWORD);
 
 
