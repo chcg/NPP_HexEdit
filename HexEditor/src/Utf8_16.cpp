@@ -395,7 +395,7 @@ void Utf8_Iter::reset()
 	m_pBuf = NULL;
 	m_pRead = NULL;
 	m_pEnd = NULL;
-	m_eState = eStart;
+	m_eState = eState::eStart;
 	m_nCur = 0;
 	m_eEncoding = eUnknown;
 }
@@ -415,28 +415,28 @@ void Utf8_Iter::operator++()
 {
 	switch (m_eState)
 	{
-	case eStart:
+	case eState::eStart:
 		if (*m_pRead < 0x80) {
 			m_nCur = *m_pRead;
 			toStart();
 		}
 		else if (*m_pRead < 0xE0) {
 			m_nCur = static_cast<utf16>((0x1F & *m_pRead) << 6);
-			m_eState = e2Bytes_Byte2;
+			m_eState = eState::e2Bytes_Byte2;
 		}
 		else {
 			m_nCur = static_cast<utf16>((0xF & *m_pRead) << 12);
-			m_eState = e3Bytes_Byte2;
+			m_eState = eState::e3Bytes_Byte2;
 		}
 		break;
-	case e2Bytes_Byte2:
-	case e3Bytes_Byte3:
+	case eState::e2Bytes_Byte2:
+	case eState::e3Bytes_Byte3:
 		m_nCur |= static_cast<utf8>(0x3F & *m_pRead);
 		toStart();
 		break;
-	case e3Bytes_Byte2:
+	case eState::e3Bytes_Byte2:
 		m_nCur |= static_cast<utf16>((0x3F & *m_pRead) << 6);
-		m_eState = e3Bytes_Byte3;
+		m_eState = eState::e3Bytes_Byte3;
 		break;
 	}
 	++m_pRead;
@@ -444,7 +444,7 @@ void Utf8_Iter::operator++()
 
 void Utf8_Iter::toStart()
 {
-	m_eState = eStart;
+	m_eState = eState::eStart;
 	if (m_eEncoding == eUtf16BigEndian)
 	{
 		swap();
@@ -470,7 +470,7 @@ void Utf16_Iter::reset()
 	m_pBuf = NULL;
 	m_pRead = NULL;
 	m_pEnd = NULL;
-	m_eState = eStart;
+	m_eState = eState::eStart;
 	m_nCur = 0;
 	m_nCur16 = 0;
 	m_eEncoding = eUnknown;
@@ -482,7 +482,7 @@ void Utf16_Iter::set(const ubyte* pBuf, size_t nLen, encodingType eEncoding)
 	m_pRead = pBuf;
 	m_pEnd = pBuf + nLen;
 	m_eEncoding = eEncoding;
-	m_eState = eStart;
+	m_eState = eState::eStart;
 	operator++();
 	// Note: m_eState, m_nCur, m_nCur16 not reinitalized.
 }
@@ -494,7 +494,7 @@ void Utf16_Iter::operator++()
 {
 	switch (m_eState)
 	{
-	case eStart:
+	case eState::eStart:
 		if (m_eEncoding == eUtf16LittleEndian) {
 			m_nCur16 = *m_pRead++;
 			m_nCur16 |= static_cast<utf16>(*m_pRead << 8);
@@ -507,25 +507,25 @@ void Utf16_Iter::operator++()
 
 		if (m_nCur16 < 0x80) {
 			m_nCur = static_cast<ubyte>(m_nCur16 & 0xFF);
-			m_eState = eStart;
+			m_eState = eState::eStart;
 		}
 		else if (m_nCur16 < 0x800) {
 			m_nCur = static_cast<ubyte>(0xC0 | m_nCur16 >> 6);
-			m_eState = e2Bytes2;
+			m_eState = eState::e2Bytes2;
 		}
 		else {
 			m_nCur = static_cast<ubyte>(0xE0 | m_nCur16 >> 12);
-			m_eState = e3Bytes2;
+			m_eState = eState::e3Bytes2;
 		}
 		break;
-	case e2Bytes2:
-	case e3Bytes3:
+	case eState::e2Bytes2:
+	case eState::e3Bytes3:
 		m_nCur = static_cast<ubyte>(0x80 | m_nCur16 & 0x3F);
-		m_eState = eStart;
+		m_eState = eState::eStart;
 		break;
-	case e3Bytes2:
+	case eState::e3Bytes2:
 		m_nCur = static_cast<ubyte>(0x80 | ((m_nCur16 >> 6) & 0x3F));
-		m_eState = e3Bytes3;
+		m_eState = eState::e3Bytes3;
 		break;
 	}
 }

@@ -19,6 +19,8 @@
 // - Add convert function in Utf8_16_Write
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -45,7 +47,7 @@ public:
 // Reads UTF-16 and outputs UTF-8
 class Utf16_Iter : public Utf8_16 {
 public:
-	enum eState {
+	enum class eState {
 		eStart,
 		e2Bytes2,
 		e3Bytes2,
@@ -78,18 +80,18 @@ public:
 	void set(const ubyte* pBuf, size_t nLen, encodingType eEncoding);
 	utf16 get() const {
 #ifdef _DEBUG
-		assert(m_eState == eStart);
+		assert(m_eState == eState::eStart);
 #endif
 		return m_nCur;
 	}
-	bool canGet() const { return m_eState == eStart; }
+	bool canGet() const { return m_eState == eState::eStart; }
 	void operator++();
 	operator bool() { return m_pRead <= m_pEnd; }
 
 protected:
 	void swap();
 	void toStart(); // Put to start state, swap bytes if necessary
-	enum eState {
+	enum class eState {
 		eStart,
 		e2Bytes_Byte2,
 		e3Bytes_Byte2,
