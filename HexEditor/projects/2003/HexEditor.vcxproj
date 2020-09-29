@@ -201,7 +201,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\HelpDlg\HelpDialog.cpp" />
-    <ClCompile Include="..\..\src\HelpDlg\ToolTip.cpp" />
     <ClCompile Include="..\..\src\HelpDlg\URLCtrl.cpp" />
     <ClCompile Include="..\..\src\Hex.cpp" />
     <ClCompile Include="..\..\src\HEXDialog.cpp" />
@@ -229,7 +228,6 @@
     <ClInclude Include="..\..\..\Common\Ccpp\Window.h" />
     <ClInclude Include="..\..\..\NativeLang\src\NativeLang_def.h" />
     <ClInclude Include="..\..\src\HelpDlg\HelpDialog.h" />
-    <ClInclude Include="..\..\src\HelpDlg\ToolTip.h" />
     <ClInclude Include="..\..\src\HelpDlg\URLCtrl.h" />
     <ClInclude Include="..\..\src\Hex.h" />
     <ClInclude Include="..\..\src\HEXDialog.h" />
