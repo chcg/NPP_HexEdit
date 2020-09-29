@@ -19,6 +19,7 @@
 /* include files */
 #include "stdafx.h"
 #include "Hex.h"
+#include "Common.h"
 #include "HexDialog.h"
 #include "CompareDialog.h"
 #include <OptionDialog.h>
@@ -26,7 +27,6 @@
 #include "GotoDialog.h"
 #include "PatternDialog.h"
 #include "HelpDialog.h"
-#include "Common.h"
 #include "ModifyMenu.h"
 #include <stdlib.h>
 
