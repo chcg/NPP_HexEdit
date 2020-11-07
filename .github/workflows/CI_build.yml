@@ -14,10 +14,10 @@ jobs:
         
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.1
+      uses: microsoft/setup-msbuild@v1
 
     - name: MSBuild of plugin dll
       working-directory: HexEditor\projects\2003\
