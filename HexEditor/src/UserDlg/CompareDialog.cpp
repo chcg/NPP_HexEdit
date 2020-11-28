@@ -36,7 +36,7 @@ INT_PTR CALLBACK CompareDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 
 		_pHexEdit1->getWindowRect(_rcEdit1);
 		_pHexEdit2->getWindowRect(_rcEdit2);
-		_isUpDown = (_rcEdit1.left == _rcEdit2.left ? TRUE : FALSE);
+		BOOL _isUpDown = (_rcEdit1.left == _rcEdit2.left ? TRUE : FALSE);
 
 		if (_isUpDown == FALSE) {
 			/* hide the unneccesary elements */

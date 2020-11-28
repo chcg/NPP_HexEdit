@@ -32,6 +32,7 @@ public:
 	CompareDlg() : StaticDialog()
 		, _pHexEdit1(nullptr)
 		, _pHexEdit2(nullptr)
+		, _currentSC(MAIN_VIEW)
 	{};
 
 	void init(HINSTANCE hInst, NppData nppData)
@@ -54,7 +55,6 @@ protected:
 	/* Get client orientation */
 	RECT			_rcEdit1;
 	RECT			_rcEdit2;
-	BOOL			_isUpDown;
 	UINT			_currentSC;
 };
 
