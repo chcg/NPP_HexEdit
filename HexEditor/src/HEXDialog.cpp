@@ -497,7 +497,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 			else
 			{
 				/* change edit type */
-				_pCurProp->editType = (info.iSubItem == DUMP_FIELD) ? HEX_EDIT_ASCII : HEX_EDIT_HEX;
+				_pCurProp->editType = (info.iSubItem == static_cast<int>(DUMP_FIELD)) ? HEX_EDIT_ASCII : HEX_EDIT_HEX;
 
 				/* keep sure that selection is off */
 				if (~0x80 & ::GetKeyState(VK_SHIFT)) {
@@ -625,7 +625,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 					return FALSE;
 
 
-				if (info.iSubItem == DUMP_FIELD)
+				if (info.iSubItem == static_cast<int>(DUMP_FIELD))
 				{
 					/* calculate cursor */
 					_pCurProp->cursorPos = CalcCursorPos(info);
@@ -1451,7 +1451,7 @@ void HexEdit::Paste(void)
 
 					if ((ASCIIConvert(buffer) / 0x10) == expLine)
 					{
-						UINT	curLength = (curLine != lineCnt - 1 ? charPerLine - 3 : length % charPerLine);
+						UINT	curLength = (curLine != (static_cast<INT>(lineCnt) - 1) ? charPerLine - 3 : length % charPerLine);
 						ScintillaGetText(hSciTgt, buffer, posBeg, posBeg + curLength);
 
 						/* get chars */
@@ -1815,7 +1815,7 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 		}
 	}
 	/* create dump */
-	else if (iSubItem == DUMP_FIELD)
+	else if (iSubItem == static_cast<int>(DUMP_FIELD))
 	{
 		UINT	posBeg = iItem * VIEW_ROW;
 
@@ -2671,7 +2671,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					if (subItem == 1) {
 						sel = HEX_ITEM_FIRST;
 					}
-					else if (subItem == _pCurProp->columns) {
+					else if (subItem == static_cast<INT>(_pCurProp->columns)) {
 						sel = HEX_ITEM_LAST;
 					}
 					else {
@@ -2694,7 +2694,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		/* paint cursor */
 		if (item == _pCurProp->cursorItem)
 		{
-			if ((_pCurProp->editType == HEX_EDIT_HEX) && (subItem == _pCurProp->cursorSubItem)) {
+			if ((_pCurProp->editType == HEX_EDIT_HEX) && (subItem == static_cast<INT>(_pCurProp->cursorSubItem))) {
 				::GetTextExtentPoint32(hDc, text, _pCurProp->cursorPos, &size);
 				rcCursor.left += size.cx;
 				::GetTextExtentPoint32(hDc, text, _pCurProp->cursorPos + FACTOR, &size);
@@ -2760,7 +2760,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 				if ((firstSub == subItem) && (firstItem == item))
 				{
 					/* first selected item */
-					if (subItem == _pCurProp->columns) {
+					if (subItem == static_cast<INT>(_pCurProp->columns)) {
 						DrawPartOfItemText(hDc, rc, rcText, text, factor1, SUBITEM_LENGTH, HEX_ITEM_MIDDLE, HEX_COLOR_SEL);
 					}
 					else {
@@ -2780,7 +2780,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					((item > firstItem) && (item < lastItem)) ||
 					((item == lastItem) && (subItem < lastSub)))
 				{
-					if ((subItem == _pCurProp->columns) ||
+					if ((subItem == static_cast<INT>(_pCurProp->columns)) ||
 						((item == lastItem) && ((lastCur % _pCurProp->bits) == 0) && ((subItem + 1) == lastSub))) {
 						if (subItem == 1) {
 							DrawPartOfItemText(hDc, rc, rcText, text, 0, SUBITEM_LENGTH, HEX_ITEM_MIDDLE, HEX_COLOR_SEL);
@@ -2813,7 +2813,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 				else if (firstSub == subItem)
 				{
 					/* first subitem to be drawn */
-					if ((subItem == _pCurProp->columns) ||
+					if ((subItem == static_cast<INT>(_pCurProp->columns)) ||
 						((firstSub == lastSub - 1) && ((lastCur % _pCurProp->bits) == 0))) {
 						DrawPartOfItemText(hDc, rc, rcText, text, factor1, SUBITEM_LENGTH - factor2, HEX_ITEM_MIDDLE, HEX_COLOR_SEL);
 					}
@@ -2854,7 +2854,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
-				else if ((subItem == _pCurProp->cursorSubItem) &&
+				else if ((subItem == static_cast<INT>(_pCurProp->cursorSubItem)) &&
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorPos >= _pCurProp->cursorPos)))
 				{
 					/* standard cursor position */
@@ -2873,7 +2873,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
-				else if ((subItem == _pCurProp->cursorSubItem) &&
+				else if ((subItem == static_cast<INT>(_pCurProp->cursorSubItem)) &&
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorItem > _pCurProp->cursorItem)))
 				{
 					/* standard cursor position */
@@ -3416,7 +3416,7 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 	ListView_GetItemText(_hListCtrl, info.iItem, info.iSubItem, text, 128);
 	ListView_GetSubItemRect(_hListCtrl, info.iItem, info.iSubItem, LVIR_BOUNDS, &rc);
 
-	if (info.iSubItem == DUMP_FIELD)
+	if (info.iSubItem == static_cast<int>(DUMP_FIELD))
 	{
 		/* left offset */
 		rc.left += 6;
