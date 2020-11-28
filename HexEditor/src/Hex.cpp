@@ -1174,6 +1174,7 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 	if (TEMP != NULL)
 	{
 		_tcsncpy(TEMP, prop.autoProp.szExtensions, MAX_PATH);
+		TEMP[MAX_PATH-1] = _T('\0');
 
 		ptr = _tcstok(TEMP, _T(" "));
 		while (ptr != NULL)

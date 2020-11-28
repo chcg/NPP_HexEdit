@@ -287,9 +287,9 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 		codePage = (IsTextUnicode(info->text, info->length, &uniMask) != 0) ? CP_ACP : CP_UTF8;
 		length = ::WideCharToMultiByte(codePage, 0, (WCHAR*)info->text, -1, buffer, 256, NULL, NULL) - 1;
 
-		if ((nppCoding == HEX_CODE_NPP_ASCI) ||
+		if (((nppCoding == HEX_CODE_NPP_ASCI) ||
 			(nppCoding == HEX_CODE_NPP_UTF8) ||
-			(nppCoding == HEX_CODE_NPP_UTF8_BOM)
+			(nppCoding == HEX_CODE_NPP_UTF8_BOM))
 			&&
 			(length < COMBO_STR_MAX))
 		{
@@ -343,6 +343,10 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 			if (length & 0x1)
 			{
 				HWND hWnd = ::GetActiveWindow();
+				if (hWnd == nullptr)
+				{
+					::MessageBox(_hNpp, _T("Couldn't get GetActiveWindow."), _T("Hex-Editor"), MB_OK | MB_ICONERROR);
+				}
 				if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK) == FALSE)
 					::MessageBox(_hNpp, _T("There are odd digits. The data will be truncated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
 				length--;
