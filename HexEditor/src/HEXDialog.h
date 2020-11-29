@@ -438,7 +438,7 @@ private:
 		if (hDc != NULL) {
 			_hFont = ::CreateFont(-MulDiv(g_iFontSize[_fontSize], GetDeviceCaps(hDc, LOGPIXELSY), 72) - zoomFactor, 0, 0, 0,
 				(isFontBold() == TRUE) ? FW_BOLD : FW_NORMAL, isFontItalic(), isFontUnderline(),
-				0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, ANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
+				0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
 			if (_hFont)
 			{
 				::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);
