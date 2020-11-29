@@ -31,6 +31,8 @@
 #include <windows.h>
 #include <iso646.h>
 #include <cstdint>
+#include <unordered_set>
+#include <algorithm>
 
 
 const bool dirUp = true;
@@ -92,6 +94,7 @@ std::string getFileContent(const TCHAR *file2read);
 generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath);
 void writeFileContent(const TCHAR *file2write, const char *content2write);
 bool matchInList(const TCHAR *fileName, const std::vector<generic_string> & patterns);
+bool allPatternsAreExclusion(const std::vector<generic_string> patterns);
 
 class WcharMbcsConvertor final
 {
@@ -179,6 +182,7 @@ generic_string stringToUpper(generic_string strToConvert);
 generic_string stringToLower(generic_string strToConvert);
 generic_string stringReplace(generic_string subject, const generic_string& search, const generic_string& replace);
 std::vector<generic_string> stringSplit(const generic_string& input, const generic_string& delimiter);
+bool str2numberVector(generic_string str2convert, std::vector<size_t>& numVect);
 generic_string stringJoin(const std::vector<generic_string>& strings, const generic_string& separator);
 generic_string stringTakeWhileAdmissable(const generic_string& input, const generic_string& admissable);
 double stodLocale(const generic_string& str, _locale_t loc, size_t* idx = NULL);
@@ -203,3 +207,29 @@ std::string ws2s(const std::wstring& wstr);
 bool deleteFileOrFolder(const generic_string& f2delete);
 
 void getFilesInFolder(std::vector<generic_string>& files, const generic_string& extTypeFilter, const generic_string& inFolder);
+
+template<typename T> size_t vecRemoveDuplicates(std::vector<T>& vec, bool isSorted = false, bool canSort = false)
+{
+	if (!isSorted && canSort)
+	{
+		std::sort(vec.begin(), vec.end());
+		isSorted = true;
+	}
+
+	if (isSorted)
+	{
+		typename std::vector<T>::iterator it;
+		it = std::unique(vec.begin(), vec.end());
+		vec.resize(distance(vec.begin(), it));  // unique() does not shrink the vector
+	}
+	else
+	{
+		std::unordered_set<T> seen;
+		auto newEnd = std::remove_if(vec.begin(), vec.end(), [&seen](const T& value)
+			{
+				return !seen.insert(value).second;
+			});
+		vec.erase(newEnd, vec.end());
+	}
+	return vec.size();
+}
