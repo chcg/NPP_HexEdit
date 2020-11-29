@@ -1484,7 +1484,14 @@ void HexEdit::Paste(void)
 					{
 						isOk = FALSE;
 						TCHAR	TEMP[256];
-						_stprintf(TEMP, _T("%s %d\n"), (LPTSTR)buffer, ASCIIConvert(buffer) / 0x10);
+#ifdef UNICODE
+						TCHAR tempBuffer[256];
+						::MultiByteToWideChar(CP_UTF8, 0, buffer, -1, tempBuffer, 256);
+						tempBuffer[255] = L'\0';
+						_stprintf(TEMP, _T("%s %d\n"), tempBuffer, ASCIIConvert(buffer) / 0x10);
+#else
+						_stprintf(TEMP, _T("%s %d\n"), buffer, ASCIIConvert(buffer) / 0x10);
+#endif
 						OutputDebugString(TEMP);
 					}
 				}
