@@ -1,9 +1,20 @@
 
 Change-log for HexEditor.dll
 ------------------------------------------------------------------------------------
+23/09/20  v0.9.8 :
+------------------------------------------------------------------------------------
+    Fix: Update infos in help... command. #38
+    Fix: Crash when I open .nfo files #13 with Fix crash on opening .nfo files #39
+
+------------------------------------------------------------------------------------
+20/09/20  v0.9.7 :
+------------------------------------------------------------------------------------
+    Fix: fixed issue #36 HexEdit crash on Notepad++ v7.9
+
+------------------------------------------------------------------------------------
 13/04/20  v0.9.6 :
 ------------------------------------------------------------------------------------
-    Fix: crash on missing config dir, github #1 
+    Fix: crash on missing config dir, github #1
     Fix: Pattern Replace window has wrong title #30
     Fix: Activate View in HEX should switch beetwen original/plugin Go to window. #29
     Fix: some typos
@@ -26,7 +37,7 @@ Change-log for HexEditor.dll
     New: Changed Bookmark style.
     New: Shortcuts for Undo, Redo, Copy, Cut, Paste and Select All are now in sync
          with the Notepad++ shortcuts.
-    
+
 ------------------------------------------------------------------------------------
 09/04/11  v0.9.4 :
 ------------------------------------------------------------------------------------
@@ -50,8 +61,8 @@ Change-log for HexEditor.dll
     Fix: Hidden menu will be now correctet restricted.
     Fix: Color selection dialog now restore the current color.
     Fix: Fonts are now drawn in anti alias mode.
-    New: Selected line now with different background color (changeable in Options). 
-    New: Selected mirror of character is now underlined (changeable in Options). 
+    New: Selected line now with different background color (changeable in Options).
+    New: Selected mirror of character is now underlined (changeable in Options).
 
 ------------------------------------------------------------------------------------
 08/12/08  v0.9.2 :
@@ -67,8 +78,8 @@ Change-log for HexEditor.dll
     Fix: Insufficent memory detection for dynamic memory creation
     Fix: Buffer overrun removed layout is set to 64-Bit/Binary [NPP-P-B-2017962]
     New: In Hex-Editor the menu of Notepad++ will be restricted
-    New: Automatic Hex-Edit-Mode: If the plugin detects in file within the first 
-         1MB a user defined count of zeros - specified in percent - the Hex-Editor 
+    New: Automatic Hex-Edit-Mode: If the plugin detects in file within the first
+         1MB a user defined count of zeros - specified in percent - the Hex-Editor
          will be lunched automatically.
     Restriction: Simple Compare only possible with file sizes less 40 MB.
     Restriction: Only fonts with fix pitch size supported
@@ -76,10 +87,10 @@ Change-log for HexEditor.dll
 ------------------------------------------------------------------------------------
 08/07/01  v0.9.0 :
 ------------------------------------------------------------------------------------
-    Fix: When using the "Replace All" while the replace-string is greater than the 
+    Fix: When using the "Replace All" while the replace-string is greater than the
          find-string, the function stops before it reaches the end of file
          [NPP-P-B-1897604]
-    Fix: The "Unicode string" option in the Search dialog shows plain ASCII texts 
+    Fix: The "Unicode string" option in the Search dialog shows plain ASCII texts
          only [NPP-P-B-1899671]
     Fix: Paste does nothing when clipboard was filled from outside [NPP-P-B-1807069]
     Fix: Resource leak by using the find/replace operation [NPP-P-B-1936857]
@@ -102,19 +113,19 @@ Change-log for HexEditor.dll
 ------------------------------------------------------------------------------------
     Fix: Problems with new Notepad++ version 4.2 (Column Editor)
     Change: Now using NPPM_GETPLUGINSCONFIGDIR to get ini file location
-    
+
 ------------------------------------------------------------------------------------
 07/05/28  v0.8.3 :
 ------------------------------------------------------------------------------------
     Fix: Every crash is now prevent while switching between files
     Fix: Correct display of Find/Replace on shortcut in Notepad
-    
+
 ------------------------------------------------------------------------------------
 07/05/04  v0.8.2 :
     Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version.
 ------------------------------------------------------------------------------------
     Fix: When user started Notepad "clean", it crashed by hitting a key
-    
+
 ------------------------------------------------------------------------------------
 07/05/02  v0.8.1 :
     Note: v0.8 Comes with Notepad++ 4.1. Please exchange this version
@@ -122,13 +133,13 @@ Change-log for HexEditor.dll
     Fix: After deleting a selected block, the selection wasn't cleared
     Fix: HEX Address column was incorrect
     Fix: Coping of HEX code crashed Notepad
-    
+
 ------------------------------------------------------------------------------------
 07/03/13  v0.7 :
 ------------------------------------------------------------------------------------
     Fix: Resource leak during Scintillas UNDO/REDO stack
     Fix: Flickering when switching between documents
-    
+
 ------------------------------------------------------------------------------------
 07/03/01  v0.7 Beta 1 :
 ------------------------------------------------------------------------------------
