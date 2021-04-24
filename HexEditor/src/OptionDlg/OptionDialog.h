@@ -48,11 +48,11 @@ public:
 
 	UINT doDialog(tProp *prop);
 
-	virtual void destroy() {};
+	virtual void destroy() override {};
 
 
 protected:
-	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
+	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam) override;
 
 	void TabUpdate(void);
 	void SetParams(void);

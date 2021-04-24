@@ -48,7 +48,7 @@ public:
 		::SetWindowPos(_hSelf, HWND_TOP, p.x, p.y, _rc.right - _rc.left, _rc.bottom - _rc.top, SWP_SHOWWINDOW);
 	};
 
-	virtual void destroy() {
+	virtual void destroy() override {
 		::DestroyWindow(_hSelf);
 	};
 	COLORREF getSelColor() { return _color; };

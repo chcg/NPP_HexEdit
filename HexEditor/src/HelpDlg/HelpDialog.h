@@ -40,14 +40,14 @@ public:
 
 	void doDialog();
 
-	virtual void destroy() {
+	virtual void destroy() override {
 		_emailLink.destroy();
 		_urlNppPlugins.destroy();
 	};
 
 
 protected:
-	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 private:
 	/* Handles */

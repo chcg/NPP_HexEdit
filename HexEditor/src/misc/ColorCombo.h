@@ -47,7 +47,7 @@ public:
 	};
 	~ColorCombo() {};
 	virtual void init(HINSTANCE hInst, HWND hNpp, HWND hCombo);
-	virtual void destroy() {
+	virtual void destroy() override {
 		DestroyWindow(_hSelf);
 	};
 

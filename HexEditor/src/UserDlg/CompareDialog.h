@@ -43,10 +43,10 @@ public:
 
 	UINT doDialog(HexEdit *pHexEdit1, HexEdit *pHexEdit2, UINT currentSC);
 
-	virtual void destroy() {};
+	virtual void destroy() override {};
 
 protected:
-	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 	NppData			_nppData;
 	HexEdit*		_pHexEdit1;

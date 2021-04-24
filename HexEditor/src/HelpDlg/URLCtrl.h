@@ -32,7 +32,7 @@ public:
 		_linkColor(), _visitedColor(), _clicking(false) { _URL[0] = '\0'; };
 
 	void create(HWND itemHandle, LPTSTR link, COLORREF linkColor = RGB(0, 0, 255));
-	void destroy() {
+	void destroy() override {
 		if (_hfUnderlined)
 			::DeleteObject(_hfUnderlined);
 		if (_hCursor)
