@@ -41,5 +41,5 @@ jobs:
       if: matrix.build_platform == 'ARM64' && matrix.build_configuration == 'Release'
       uses: actions/upload-artifact@v2
       with:
-          name: plugin_dll_x86
+          name: plugin_dll_arm64
           path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll

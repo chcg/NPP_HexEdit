@@ -52,10 +52,9 @@ UpgradeLog*.htm
 .builds
 *.pidb
 
-HexEditor/projects/2003/Debug/
-HexEditor/projects/2003/Release/
-HexEditor/projects/2003/x64/Debug/
-HexEditor/projects/2003/x64/Release/
+HexEditor/projects/2003/Win32/
+HexEditor/projects/2003/x64/
+HexEditor/projects/2003/ARM64/
 
 
 #-------------------------------------------------------------------------------

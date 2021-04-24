@@ -38,10 +38,10 @@ after_build:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - ps: >-
 
-        Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
+        Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
 
         if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v142") {
-            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
+            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_$($env:PLATFORM_INPUT).zip"
             7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
         }
 
