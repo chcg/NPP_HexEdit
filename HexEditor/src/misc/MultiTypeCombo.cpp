@@ -45,7 +45,7 @@ void MultiTypeCombo::init(HWND hNpp, HWND hCombo)
 	::SetWindowLongPtr(_hSelf, GWL_EXSTYLE, CBS_DROPDOWN | CBS_AUTOHSCROLL);
 
 	/* subclass combo to get edit messages */
-	COMBOBOXINFO	comboBoxInfo;
+	COMBOBOXINFO	comboBoxInfo{};
 	comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 
 	::SendMessage(_hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&comboBoxInfo);
@@ -128,7 +128,7 @@ void MultiTypeCombo::addText(tComboInfo info)
 		}
 	}
 
-	tEncComboInfo	encInfo;
+	tEncComboInfo	encInfo{};
 
 	encInfo.comboInfo = info;
 	encInfo.codePage = _docCodePage;
@@ -186,7 +186,7 @@ eCodingType MultiTypeCombo::setCodingType(eCodingType code)
 	/* set correct text */
 	if (currSel != -1)
 	{
-		tEncComboInfo	encInfo;
+		tEncComboInfo	encInfo{};
 
 		encInfo.comboInfo = _currData;
 		encInfo.codePage = _docCodePage;
@@ -207,7 +207,7 @@ void MultiTypeCombo::setDocCodePage(eNppCoding codepage)
 
 BOOL MultiTypeCombo::setComboText(tComboInfo info, UINT message)
 {
-	tEncComboInfo	encInfo;
+	tEncComboInfo	encInfo{};
 
 	encInfo.comboInfo = info;
 	encInfo.codePage = _docCodePage;
@@ -383,7 +383,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 /* convert it into the user requested type, e.g. UNI (UTF8) */
 void MultiTypeCombo::encode(tComboInfo* info, eCodingType type)
 {
-	tEncComboInfo	encInfo;
+	tEncComboInfo	encInfo{};
 
 	encInfo.comboInfo = *info;
 	encInfo.codePage = _docCodePage;

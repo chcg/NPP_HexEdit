@@ -477,7 +477,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 		}
 		case WM_LBUTTONDOWN:
 		{
-			LV_HITTESTINFO	info;
+			LV_HITTESTINFO	info{};
 
 			/* get selected sub item */
 			info.pt.x = LOWORD(lParam);
@@ -607,7 +607,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 					}
 				}
 
-				LV_HITTESTINFO	info;
+				LV_HITTESTINFO	info{};
 
 				::GetCursorPos(&info.pt);
 				::ScreenToClient(_hListCtrl, &info.pt);
@@ -800,7 +800,7 @@ void HexEdit::UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc)
 	/* update current visible line */
 	GetLineVis();
 
-	vector<tHexProp>	tmpList;
+	std::vector<tHexProp>	tmpList;
 
 	/* attach (un)known files */
 	for (size_t i = 0; i < numFiles; i++)
@@ -1924,7 +1924,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 	}
 	else
 	{
-		CHAR	temp[129];
+		CHAR	temp[129]{};
 		LPSTR	pText = text;
 
 		/* i must be unsigned */
@@ -2304,7 +2304,7 @@ void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 	RECT		rc = { 0 };
 	SIZE		size = { 0 };
 	COLORREF    color = getColor(HEX_COLOR_REG_TXT);
-	TCHAR		text[17];
+	TCHAR		text[17]{};
 
 	/* get list information */
 	ListView_GetItemText(_hListCtrl, iItem, 0, text, 17);
@@ -2380,7 +2380,7 @@ void HexEdit::SelectItem(UINT iItem, UINT iSubItem, INT iCursor)
 
 void HexEdit::OnMouseClickItem(WPARAM, LPARAM lParam)
 {
-	LV_HITTESTINFO	info;
+	LV_HITTESTINFO	info{};
 
 	/* get selected sub item */
 	info.pt.x = LOWORD(lParam);
@@ -2592,7 +2592,7 @@ BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM)
 
 	/* prepare text */
 #ifdef UNICODE
-	WCHAR	wText[65];
+	WCHAR	wText[65]{};
 	ListView_GetItemText(_hListCtrl, _pCurProp->cursorItem, _pCurProp->cursorSubItem, wText, SUBITEM_LENGTH);
 	wText[_pCurProp->cursorPos] = (TCHAR)wParam;
 	::WideCharToMultiByte(CP_ACP, 0, wText, -1, text, SUBITEM_LENGTH, NULL, NULL);
@@ -2638,10 +2638,10 @@ BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM)
 
 void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 {
-	RECT		rc;
+	RECT		rc{};
 	RECT		rcText;
 	SIZE		size;
-	TCHAR		text[65];
+	TCHAR		text[65]{};
 	RECT		rcCursor;
 
 	/* get list informations */
@@ -3024,7 +3024,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 
 void HexEdit::OnMouseClickDump(WPARAM, LPARAM lParam)
 {
-	LV_HITTESTINFO	info;
+	LV_HITTESTINFO	info{};
 
 	/* get selected sub item */
 	info.pt.x = LOWORD(lParam);
@@ -3215,8 +3215,8 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 
 void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
-	RECT		rc;
-	TCHAR		text[129];
+	RECT		rc{};
+	TCHAR		text[129]{};
 	RECT		rcCursor = { 0 };
 	SIZE		size = { 0 };
 	UINT		diff = VIEW_ROW;
@@ -3408,9 +3408,9 @@ void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT l
 
 INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 {
-	RECT			rc;
+	RECT			rc{};
 	SIZE			size;
-	TCHAR			text[128];
+	TCHAR			text[128]{};
 	UINT			cursorPos;
 
 	/* get dc for calculate the font size */
@@ -3962,7 +3962,7 @@ void HexEdit::ToggleBookmark(UINT iItem)
 	}
 
 	/* redraw bookmark */
-	RECT	rc;
+	RECT	rc{};
 	ListView_GetSubItemRect(_hListCtrl, iItem, 0, LVIR_BOUNDS, &rc);
 	::RedrawWindow(_hListCtrl, &rc, NULL, TRUE);
 }
@@ -4032,7 +4032,7 @@ void HexEdit::CutBookmarkLines(void)
 	INT			deleted = 0;
 	INT			offset = 0;
 	INT			length = 0;
-	tClipboard	clipboard;
+	tClipboard	clipboard{};
 
 	/* set selection */
 	clipboard.selection = HEX_SEL_BLOCK;
@@ -4107,7 +4107,7 @@ void HexEdit::CopyBookmarkLines(void)
 	HWND		hSciTgt = NULL;
 	INT			offset = 0;
 	INT			length = 0;
-	tClipboard	clipboard;
+	tClipboard	clipboard{};
 
 	/* set selection */
 	clipboard.selection = HEX_SEL_BLOCK;

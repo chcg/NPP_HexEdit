@@ -17,9 +17,11 @@
 
 #include "OptionDialog.h"
 #include "PluginInterface.h"
+#include "Common.h"
 #include <Commctrl.h>
 #include <shlobj.h>
 #include <uxtheme.h>
+#include <vector>
 
 using namespace std;
 
@@ -43,7 +45,7 @@ typedef enum {
 
 static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *, DWORD, LPARAM lParam)
 {
-	vector<string> *pvStrFont = (vector<string> *)lParam;
+	vector<generic_string> *pvStrFont = (vector<generic_string> *)lParam;
 	size_t vectSize = pvStrFont->size();
 	if (vectSize == 0)
 		pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
@@ -73,7 +75,7 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 	{
 	case WM_INITDIALOG:
 	{
-		TCITEM		item;
+		TCITEM		item{};
 		TCHAR		text[32];
 
 		goToCenter();
@@ -113,7 +115,7 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 		lf.lfCharSet = DEFAULT_CHARSET;
 		lf.lfPitchAndFamily = FIXED_PITCH | FF_DONTCARE;
 
-		vector<string>	vFontList;
+		vector<generic_string>	vFontList;
 		vFontList.push_back(_T(""));
 		HDC hDC = ::GetDC(NULL);
 		::EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)&vFontList, 0);

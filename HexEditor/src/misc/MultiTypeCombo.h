@@ -23,7 +23,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include "Window.h"
 #include "Hex.h"
 #include <vector>
-using namespace std;
 
 
 typedef enum
@@ -102,7 +101,7 @@ private:
 	WNDPROC					_hDefaultComboProc;
 
 	tComboInfo				_currData;
-	vector<tEncComboInfo>	_comboItems;
+	std::vector<tEncComboInfo>	_comboItems;
 	eCodingType				_currDataType;
 
 	eNppCoding				_docCodePage;

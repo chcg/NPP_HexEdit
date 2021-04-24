@@ -22,13 +22,6 @@
 #include "Hex.h"
 #include "HexResource.h"
 #include "ColorCombo.h"
-#include <vector>
-#include <string>
-
-
-#ifdef UNICODE
-#define string wstring
-#endif
 
 
 

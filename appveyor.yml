@@ -1,11 +1,11 @@
 version: 0.9.8.{build}
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 
 environment:
   matrix:
-  - PlatformToolset: v141_xp
-  #- PlatformToolset: v142
+  #- PlatformToolset: v141_xp
+  - PlatformToolset: v142
 
 platform:
     - x64
@@ -42,14 +42,14 @@ after_build:
             Push-AppveyorArtifact "HexEditor\projects\2003\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
         }
 
-        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v141_xp") {
+        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v142") {
             if($env:PLATFORM_INPUT -eq "x64"){
-            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
-            7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
+                $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
+                7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
             }
             if($env:PLATFORM_INPUT -eq "Win32"){
-            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
-            7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:CONFIGURATION\*.dll"
+                $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
+                7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:CONFIGURATION\*.dll"
             }
         }
 
@@ -67,5 +67,5 @@ deploy:
     force_update: true
     on:
         appveyor_repo_tag: true
-        PlatformToolset: v141_xp
+        PlatformToolset: v142
         configuration: Release

@@ -17,12 +17,11 @@
 
 
 /* include files */
-#include "stdafx.h"
 #include "Hex.h"
 #include "Common.h"
 #include "HexDialog.h"
 #include "CompareDialog.h"
-#include <OptionDialog.h>
+#include "OptionDialog.h"
 #include "FindReplaceDialog.h"
 #include "GotoDialog.h"
 #include "PatternDialog.h"
@@ -33,6 +32,8 @@
 #include <shlwapi.h>
 #include <shlobj.h>
 #include <assert.h>
+
+using namespace std;
 
 /* menu entry count */
 const
@@ -341,7 +342,7 @@ void loadSettings(void)
 	/* Test if config path exist, if not create */
 	if (::PathFileExists(configPath) == FALSE)
 	{
-		vector<string>  vPaths;
+		vector<generic_string>  vPaths;
 
 		*_tcsrchr(configPath, '\\') = NULL;
 		do {
@@ -876,8 +877,8 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		case IDM_FILE_SAVEAS:
 		case IDM_FILE_RENAME:
 		{
-			TCHAR oldPath[MAX_PATH];
-			TCHAR newPath[MAX_PATH];
+			TCHAR oldPath[MAX_PATH]{};
+			TCHAR newPath[MAX_PATH]{};
 
 			/* stop updating of active documents (workaround to keep possible HEX view open) */
 			isNotepadCreated = FALSE;
@@ -1617,7 +1618,7 @@ eNppCoding GetNppEncoding(void)
 
 void ClientToScreen(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x = rect->left;
 	pt.y = rect->top;
@@ -1635,7 +1636,7 @@ void ClientToScreen(HWND hWnd, RECT* rect)
 
 void ScreenToClient(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x = rect->left;
 	pt.y = rect->top;

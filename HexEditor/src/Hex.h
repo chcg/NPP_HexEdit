@@ -28,9 +28,7 @@
 #include <vector>
 
 
-
-#define TITLETIP_CLASSNAME _T("MyToolTip")
-
+const TCHAR TITLETIP_CLASSNAME[] = _T("MyToolTip");
 
 const TCHAR dlgEditor[] = _T("HEX-Editor");
 const TCHAR addWidth[] = _T("Address Width");
@@ -126,7 +124,7 @@ typedef enum eSelItem
 } eSelItem;
 
 
-#define		COMBO_STR_MAX	1024
+constexpr auto COMBO_STR_MAX = 1024;
 
 typedef struct tComboInfo
 {

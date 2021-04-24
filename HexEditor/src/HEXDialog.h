@@ -527,7 +527,8 @@ private:
 			(_oldCursorCurPos != _pCurProp->cursorPos))
 		{
 			/* repaint last selection */
-			RECT	rc, rcTop;
+			RECT	rc{};
+			RECT rcTop{};
 			if (_oldAnchorItem <= _oldCursorItem)
 			{
 				ListView_GetItemRect(_hListCtrl, _oldAnchorItem, &rcTop, LVIR_BOUNDS);

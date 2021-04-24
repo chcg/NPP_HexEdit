@@ -224,7 +224,7 @@ generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
 		memset(&info, 0, sizeof(info));
 		info.hwndOwner = parent;
 		info.pidlRoot = NULL;
-		TCHAR szDisplayName[MAX_PATH];
+		TCHAR szDisplayName[MAX_PATH]{};
 		info.pszDisplayName = szDisplayName;
 		info.lpszTitle = TEXT("Select a folder");
 		info.ulFlags = 0;
@@ -254,7 +254,7 @@ generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
 
 void ClientRectToScreenRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
@@ -295,7 +295,7 @@ std::vector<generic_string> tokenizeString(const generic_string & tokenString, c
 
 void ScreenRectToClientRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
