@@ -7,10 +7,10 @@ jobs:
 
     runs-on: windows-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 6
       matrix:
         build_configuration: [Release, Debug]
-        build_platform: [x64, Win32]
+        build_platform: [x64, Win32, ARM64]
         
     steps:
     - name: Checkout repo
@@ -35,4 +35,11 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
           name: plugin_dll_x86
-          path: HexEditor\projects\2003\${{ matrix.build_configuration }}\HexEditor.dll
+          path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll
+
+    - name: Archive artifacts for ARM64
+      if: matrix.build_platform == 'ARM64' && matrix.build_configuration == 'Release'
+      uses: actions/upload-artifact@v2
+      with:
+          name: plugin_dll_x86
+          path: HexEditor\projects\2003\${{ matrix.build_platform }}\${{ matrix.build_configuration }}\HexEditor.dll

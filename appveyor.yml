@@ -10,6 +10,7 @@ environment:
 platform:
     - x64
     - Win32
+    - arm64
 
 configuration:
     - Release
@@ -21,6 +22,9 @@ install:
 
     - if "%platform%"=="Win32" set archi=x86
     - if "%platform%"=="Win32" set platform_input=Win32
+
+    - if "%platform%"=="arm64" set archi=amd64_arm64
+    - if "%platform%"=="arm64" set platform_input=arm64
 
     - if "%PlatformToolset%"=="v141_xp" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
     - if "%PlatformToolset%"=="v142" call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
@@ -34,23 +38,11 @@ after_build:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - ps: >-
 
-        if ($env:PLATFORM_INPUT -eq "x64") {
-            Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
-        }
-
-        if ($env:PLATFORM_INPUT -eq "Win32" ) {
-            Push-AppveyorArtifact "HexEditor\projects\2003\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
-        }
+        Push-AppveyorArtifact "HexEditor\projects\2003\$env:PLATFORM\$env:CONFIGURATION\HexEditor.dll" -FileName HexEditor.dll
 
         if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v142") {
-            if($env:PLATFORM_INPUT -eq "x64"){
-                $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
-                7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
-            }
-            if($env:PLATFORM_INPUT -eq "Win32"){
-                $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
-                7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:CONFIGURATION\*.dll"
-            }
+            $ZipFileName = "HexEditor_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
+            7z a $ZipFileName "$($env:APPVEYOR_BUILD_FOLDER)\HexEditor\projects\2003\$env:PLATFORM_INPUT\$env:CONFIGURATION\*.dll"
         }
 
 artifacts:
