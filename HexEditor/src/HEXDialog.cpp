@@ -2376,7 +2376,8 @@ void HexEdit::OnMouseClickItem(WPARAM, LPARAM lParam)
 	}
 }
 
-
+#pragma warning(push)
+#pragma warning(disable: 4702) //unreachable code
 BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 {
 	bool	isShift = ((0x80 & ::GetKeyState(VK_SHIFT)) == 0x80);
@@ -2521,6 +2522,7 @@ BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 
 	return TRUE;
 }
+#pragma warning(pop)
 
 
 BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM)
@@ -3012,7 +3014,8 @@ void HexEdit::OnMouseClickDump(WPARAM, LPARAM lParam)
 	}
 }
 
-
+#pragma warning(push)
+#pragma warning(disable: 4702) //unreachable code
 BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 {
 	bool	isShift = ((0x80 & ::GetKeyState(VK_SHIFT)) == 0x80);
@@ -3114,6 +3117,7 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 	}
 	return TRUE;
 }
+#pragma warning(pop)
 
 
 BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
