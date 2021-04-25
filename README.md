@@ -6,7 +6,7 @@ unofficial repo with sourcecode from http://sourceforge.net/projects/npp-plugins
 Build Status
 ------------
 
-AppVeyor `VS2017` and `VS2015`  [![Build status](https://ci.appveyor.com/api/projects/status/x8j5dnfur93n6six?svg=true)](https://ci.appveyor.com/project/chcg/npp-hexedit)
+AppVeyor `VS2019`  [![Build status](https://ci.appveyor.com/api/projects/status/x8j5dnfur93n6six?svg=true)](https://ci.appveyor.com/project/chcg/npp-hexedit)
 
 Further repos at github:
 - https://github.com/JetNpp/HexEditor

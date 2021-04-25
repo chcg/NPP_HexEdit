@@ -1,7 +1,16 @@
 
 Change-log for HexEditor.dll
+
 ------------------------------------------------------------------------------------
-23/09/20  v0.9.8 :
+21/04/24  v0.9.9 :
+------------------------------------------------------------------------------------
+    Fix: Fonts are now drawn in default mode. #43
+    New: arm64 support
+    Note: usage of VS2019
+    Note: reduced compiler and VS code analysis warnings
+
+------------------------------------------------------------------------------------
+20/09/23  v0.9.8 :
 ------------------------------------------------------------------------------------
     Fix: Update infos in help... command. #38
     Fix: Crash when I open .nfo files #13 with Fix crash on opening .nfo files #39
@@ -12,7 +21,7 @@ Change-log for HexEditor.dll
     Fix: fixed issue #36 HexEdit crash on Notepad++ v7.9
 
 ------------------------------------------------------------------------------------
-13/04/20  v0.9.6 :
+20/04/13  v0.9.6 :
 ------------------------------------------------------------------------------------
     Fix: crash on missing config dir, github #1
     Fix: Pattern Replace window has wrong title #30
