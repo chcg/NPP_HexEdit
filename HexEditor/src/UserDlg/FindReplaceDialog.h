@@ -45,14 +45,14 @@ class FindReplaceDlg : public StaticDialog
 
 public:
 	FindReplaceDlg() : StaticDialog()
-		, _hSCI(NULL)
+		, _hSCI(nullptr)
 		, _findReplace(FALSE)
 		, _whichDirection(DIR_DOWN)
 		, _isMatchCase(FALSE)
 		, _isWrap(TRUE)
 		, _isInSel(FALSE)
-		, _nppBaseCode(HEX_CODE_NPP_ASCI)
-		, _currDataType(HEX_CODE_ASCI)
+		, _nppBaseCode(eNppCoding::HEX_CODE_NPP_ASCI)
+		, _currDataType(eCodingType::HEX_CODE_ASCI)
 		, _pFindCombo(nullptr)
 		, _pReplaceCombo(nullptr)
 		, _transFuncAddr(nullptr)
@@ -96,11 +96,11 @@ private:
 
 	int getDisplayPos() const {
 		if (isChecked(IDC_RADIO_TOP))
-			return HEX_LINE_FIRST;
+			return static_cast<int>(eLineVis::HEX_LINE_FIRST);
 		else if (isChecked(IDC_RADIO_MIDDLE))
-			return HEX_LINE_MIDDLE;
+			return static_cast<int>(eLineVis::HEX_LINE_MIDDLE);
 		else //IDC_RADIO_BOTTOM
-			return HEX_LINE_LAST;
+			return static_cast<int>(eLineVis::HEX_LINE_LAST);
 	};
 
 	/* set transparency */

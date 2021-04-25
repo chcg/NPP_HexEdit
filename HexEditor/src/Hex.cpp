@@ -564,23 +564,23 @@ COLORREF getColor(eColorType type)
 {
 	switch (type)
 	{
-	case HEX_COLOR_REG_TXT:
+	case eColorType::HEX_COLOR_REG_TXT:
 		return prop.colorProp.rgbRegTxt;
-	case HEX_COLOR_REG_BK:
+	case eColorType::HEX_COLOR_REG_BK:
 		return prop.colorProp.rgbRegBk;
-	case HEX_COLOR_SEL_TXT:
+	case eColorType::HEX_COLOR_SEL_TXT:
 		return prop.colorProp.rgbSelTxt;
-	case HEX_COLOR_SEL_BK:
+	case eColorType::HEX_COLOR_SEL_BK:
 		return prop.colorProp.rgbSelBk;
-	case HEX_COLOR_DIFF_TXT:
+	case eColorType::HEX_COLOR_DIFF_TXT:
 		return prop.colorProp.rgbDiffTxt;
-	case HEX_COLOR_DIFF_BK:
+	case eColorType::HEX_COLOR_DIFF_BK:
 		return prop.colorProp.rgbDiffBk;
-	case HEX_COLOR_BKMK_TXT:
+	case eColorType::HEX_COLOR_BKMK_TXT:
 		return prop.colorProp.rgbBkMkTxt;
-	case HEX_COLOR_BKMK_BK:
+	case eColorType::HEX_COLOR_BKMK_BK:
 		return prop.colorProp.rgbBkMkBk;
-	case HEX_COLOR_CUR_LINE:
+	case eColorType::HEX_COLOR_CUR_LINE:
 		return prop.colorProp.rgbCurLine;
 	}
 	return 0;
@@ -1375,11 +1375,11 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 	{
 		if (startSrc % hexProp.bits)
 		{
-			return E_START;
+			return eError::E_START;
 		}
 		if ((lengthOld % hexProp.bits) || (lengthNew % hexProp.bits))
 		{
-			return E_STRIDE;
+			return eError::E_STRIDE;
 		}
 	}
 
@@ -1448,10 +1448,10 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 		}
 		delete[] text;
 
-		return E_OK;
+		return eError::E_OK;
 	}
 
-	return E_MEMORY;
+	return eError::E_MEMORY;
 }
 
 
@@ -1592,24 +1592,24 @@ void DoCompare(void)
  */
 eNppCoding GetNppEncoding(void)
 {
-	eNppCoding	ret = HEX_CODE_NPP_ASCI;
+	eNppCoding	ret = eNppCoding::HEX_CODE_NPP_ASCI;
 	HMENU		hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
 
 	if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2BE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
-		ret = HEX_CODE_NPP_USCBE;
+		ret = eNppCoding::HEX_CODE_NPP_USCBE;
 	}
 	else if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2LE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
-		ret = HEX_CODE_NPP_USCLE;
+		ret = eNppCoding::HEX_CODE_NPP_USCLE;
 	}
 	else if ((::GetMenuState(hMenu, IDM_FORMAT_UTF_8, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
-		ret = HEX_CODE_NPP_UTF8_BOM;
+		ret = eNppCoding::HEX_CODE_NPP_UTF8_BOM;
 	}
 	else if ((::GetMenuState(hMenu, IDM_FORMAT_AS_UTF_8, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
-		ret = HEX_CODE_NPP_UTF8;
+		ret = eNppCoding::HEX_CODE_NPP_UTF8;
 	}
 
 	return ret;

@@ -33,7 +33,7 @@ public:
 	typedef unsigned short utf16; // 16 bits
 	typedef unsigned char utf8; // 8 bits
 	typedef unsigned char ubyte;
-	enum encodingType {
+	enum class encodingType {
 		eUnknown,
 		eUtf8,
 		eUtf16BigEndian,
@@ -41,7 +41,7 @@ public:
 		eUtf8Plain,
 		eLast
 	};
-	static const utf8 k_Boms[eLast][3];
+	static const utf8 k_Boms[encodingType::eLast][3];
 };
 
 // Reads UTF-16 and outputs UTF-8

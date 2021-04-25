@@ -67,20 +67,20 @@ const TCHAR HEX_PLUGIN_PATH[] = _T("\\HexEditor");
 #define COMP_BLOCK		(1024000)
 
 
-#define HEX_BYTE		1
-#define HEX_WORD		2
-#define HEX_DWORD		4
-#define HEX_LONG		8
+constexpr auto HEX_BYTE = 1;
+constexpr auto HEX_WORD = 2;
+constexpr auto HEX_DWORD = 4;
+constexpr auto HEX_LONG = 8;
 
-#define MAX_PATH_UNICODE 780
+constexpr auto MAX_PATH_UNICODE = 780;
 
-typedef enum eEdit
+typedef enum class eEdit
 {
 	HEX_EDIT_HEX,
 	HEX_EDIT_ASCII
 } eEdit;
 
-typedef enum eSel
+typedef enum class eSel
 {
 	HEX_SEL_NORM,
 	HEX_SEL_VERTICAL,
@@ -88,14 +88,14 @@ typedef enum eSel
 	HEX_SEL_BLOCK
 } eSel;
 
-typedef enum eLineVis
+typedef enum class eLineVis
 {
 	HEX_LINE_FIRST,
 	HEX_LINE_MIDDLE,
 	HEX_LINE_LAST
 } eLineVis;
 
-typedef enum eColorType
+typedef enum class eColorType
 {
 	HEX_COLOR_REG_TXT,
 	HEX_COLOR_REG_BK,
@@ -108,14 +108,14 @@ typedef enum eColorType
 	HEX_COLOR_CUR_LINE
 } eColorType;
 
-typedef enum eSelType
+typedef enum class eSelType
 {
 	HEX_COLOR_REG,
 	HEX_COLOR_SEL,
 	HEX_COLOR_DIFF
 } eSelType;
 
-typedef enum eSelItem
+typedef enum class eSelItem
 {
 	HEX_ITEM_FIRST,
 	HEX_ITEM_MIDDLE,
@@ -138,7 +138,7 @@ typedef struct tBkMk
 	UINT				iItem;					// row of bookmark
 } tBkMk;
 
-typedef enum eNppCoding
+typedef enum class eNppCoding
 {
 	HEX_CODE_NPP_ASCI = 0,
 	HEX_CODE_NPP_UTF8,
@@ -233,7 +233,7 @@ typedef struct tClipboard
 	UINT		items;
 } tClipboard;
 
-typedef enum eError
+typedef enum class eError
 {
 	E_OK = 0,
 	E_START = -1,
@@ -241,7 +241,7 @@ typedef enum eError
 	E_MEMORY = -3
 } eError;
 
-typedef enum UniMode {
+typedef enum class UniMode {
 	uni8Bit,
 	uniUTF8,
 	uni16BE,

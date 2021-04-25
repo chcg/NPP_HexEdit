@@ -35,7 +35,7 @@
 
 #include "HEXResource.h"
 
-#define HEX_FIRST_TIME_VIS	(0xFFFFFFFF)
+constexpr auto HEX_FIRST_TIME_VIS = (0xFFFFFFFF);
 
 #define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX)
 #define	VIEW_ROW			(_pCurProp->columns * _pCurProp->bits)
@@ -50,8 +50,8 @@ extern tClipboard	g_clipboard;
 class HexEdit : public StaticDialog, private SciSubClassWrp
 {
 public:
-	HexEdit(void);
-	~HexEdit(void);
+	HexEdit(void) {};
+	~HexEdit(void) {};
 	void init(HINSTANCE hInst, NppData nppData, LPCTSTR iniFilePath);
 
 	void destroy(void)
@@ -188,10 +188,10 @@ public:
 					}
 
 					if (position < _uFirstPos) {
-						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
+						SetSelection(position, (position + (VIEW_ROW * _iUnReCnt)) + _uLastLength, eSel::HEX_SEL_BLOCK);
 					}
 					else {
-						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + _uLastLength, HEX_SEL_BLOCK);
+						SetSelection(_uFirstPos, (_uFirstPos + (VIEW_ROW * _iUnReCnt)) + _uLastLength, eSel::HEX_SEL_BLOCK);
 					}
 				}
 				else {
@@ -200,7 +200,7 @@ public:
 						UINT offset = position % _pCurProp->bits;
 						position = (position - offset) + (_pCurProp->bits - offset - 1);
 					}
-					SetSelection(position, position + _uLastLength, HEX_SEL_NORM, (position + _uLastLength) % VIEW_ROW == 0);
+					SetSelection(position, position + _uLastLength, eSel::HEX_SEL_NORM, (position + _uLastLength) % VIEW_ROW == 0);
 				}
 			}
 			else {
@@ -246,7 +246,7 @@ public:
 			item = 0;
 		}
 
-		if (_pCurProp->editType == HEX_EDIT_HEX)
+		if (_pCurProp->editType == eEdit::HEX_EDIT_HEX)
 		{
 			SelectItem(item, 1);
 		}
@@ -387,7 +387,7 @@ private:
 	void SetPosition(UINT pos, BOOL isLittle = FALSE);
 	UINT GetCurrentPos(void);
 	UINT GetAnchor(void);
-	void SetSelection(UINT posBegin, UINT posEnd, eSel selection = HEX_SEL_NORM, BOOL isEND = FALSE);
+	void SetSelection(UINT posBegin, UINT posEnd, eSel selection = eSel::HEX_SEL_NORM, BOOL isEND = FALSE);
 	void GetSelection(LPINT posBegin, LPINT posEnd);
 
 	void ToggleBookmark(UINT item);
@@ -492,9 +492,9 @@ private:
 			{
 				INT		posBeg, posEnd;
 				GetSelection(&posBeg, &posEnd);
-				_pCurProp->editType = (_pCurProp->editType == HEX_EDIT_HEX ? HEX_EDIT_ASCII : HEX_EDIT_HEX);
+				_pCurProp->editType = (_pCurProp->editType == eEdit::HEX_EDIT_HEX ? eEdit::HEX_EDIT_ASCII : eEdit::HEX_EDIT_HEX);
 				SetSelection(posBeg, posEnd, _pCurProp->selection, _pCurProp->cursorSubItem == DUMP_FIELD);
-				EnsureVisible(_pCurProp->cursorItem, (_pCurProp->editType == HEX_EDIT_ASCII) ? DUMP_FIELD : _pCurProp->cursorSubItem);
+				EnsureVisible(_pCurProp->cursorItem, (_pCurProp->editType == eEdit::HEX_EDIT_ASCII) ? DUMP_FIELD : _pCurProp->cursorSubItem);
 				RestartCursor();
 				return TRUE;
 			}
@@ -656,71 +656,71 @@ private:
 
 private:
 	/********************************* handle of list ********************************/
-	HWND				_hListCtrl;
-	HWND				_hHeader;
-	HFONT				_hFont;
+	HWND				_hListCtrl = nullptr;
+	HWND				_hHeader = nullptr;
+	HFONT				_hFont = nullptr;
 
 	/* handle of parent handle (points to scintilla main view) */
-	HWND				_hParentHandle;
-	HHOOK				_hParentHook;
+	HWND				_hParentHandle = nullptr;
+	HHOOK				_hParentHook = nullptr;
 
 	/* Handles */
 	NppData				_nppData;
-	HIMAGELIST			_hImageList;
+	HIMAGELIST			_hImageList = nullptr;
 
-	LPCTSTR				_iniFilePath;
+	LPCTSTR				_iniFilePath = nullptr;
 
 	/* subclassing handle */
-	WNDPROC				_hDefaultListProc;
+	WNDPROC				_hDefaultListProc = nullptr;
 
 	/* double buffer context */
-	RECT				_rcMemDc;
-	HDC					_hMemDc;
-	HBITMAP				_hBmp;
-	HBITMAP				_hOldBmp;
-	HFONT				_hOldFont;
-	HBRUSH				_hBkBrush;
-	UINT				_uFirstVisSubItem;
-	UINT				_uLastVisSubItem;
+	RECT				_rcMemDc{};
+	HDC					_hMemDc = nullptr;
+	HBITMAP				_hBmp = nullptr;
+	HBITMAP				_hOldBmp = nullptr;
+	HFONT				_hOldFont = nullptr;
+	HBRUSH				_hBkBrush = nullptr;
+	UINT				_uFirstVisSubItem = 0;
+	UINT				_uLastVisSubItem = 0;
 
 	/******************************* virables of list *********************************/
 
 	/* current file */
-	INT					_openDoc;
-	INT					_lastOpenHex;
-	UINT				_currLength;
+	INT					_openDoc = -1;
+	INT					_lastOpenHex = -1;
+	UINT				_currLength = 0;
 
 	/* properties of open files */
-	tHexProp*			_pCurProp = NULL;
+	tHexProp*			_pCurProp = nullptr;
 	std::vector<tHexProp>	_hexProp;
 
 	/* for selection */
-	BOOL				_onChar;
-	BOOL				_isCurOn;
-	UINT				_fontSize;
-	UINT				_x;
-	UINT				_y;
+	BOOL				_onChar = FALSE;
+	BOOL				_isCurOn = FALSE;
+	UINT				_fontSize = FALSE;
+	UINT				_x = 0;
+	UINT				_y = 0;
 
-	INT					_iOldHorDiff;
-	INT					_iOldVerDiff;
-	UINT				_oldAnchorItem;
-	UINT				_oldAnchorSubItem;
-	UINT				_oldAnchorCurPos;
-	UINT				_oldCursorItem;
-	UINT				_oldCursorSubItem;
-	UINT				_oldCursorCurPos;
+	INT					_iOldHorDiff = 0;
+	INT					_iOldVerDiff = 0;
+	UINT				_oldAnchorItem = 0;
+	UINT				_oldAnchorSubItem = 0;
+	UINT				_oldAnchorCurPos = 0;
+	UINT				_oldCursorItem = 0;
+	UINT				_oldCursorSubItem = 0;
+	UINT				_oldCursorCurPos = 0;
 
 	/* to reconstuate selecton */
-	INT					_iUnReCnt;
-	UINT				_uUnReCode;
-	UINT				_uFirstPos;
-	UINT				_uLastPos;
-	UINT				_uLastLength;
+	INT					_iUnReCnt = 0;
+	UINT				_uUnReCode = 0;
+	UINT				_uFirstPos = 0;
+	UINT				_uLastPos = 0;
+	UINT				_uLastLength = 0;
 
 	/* mouse states */
-	BOOL				_isLBtnDown;
-	BOOL				_isRBtnDown;
-	BOOL				_isWheel;
+	BOOL				_isLBtnDown = FALSE;
+	BOOL				_isRBtnDown = FALSE;
+	BOOL				_isWheel = FALSE;
 };
 
 

@@ -30,7 +30,6 @@ class OptionDlg : public StaticDialog
 
 public:
 	OptionDlg() : StaticDialog()
-		, _pProp(nullptr)
 	{};
 
 	void init(HINSTANCE hInst, NppData nppData)
@@ -54,7 +53,7 @@ protected:
 private:
 	/* Handles */
 	NppData			_nppData;
-	HWND			_HSource;
+	HWND			_HSource = nullptr;
 
 	ColorCombo		_ColCmbRegTxt;
 	ColorCombo		_ColCmbRegBk;
@@ -66,7 +65,7 @@ private:
 	ColorCombo		_ColCmbBkMkBk;
 	ColorCombo		_ColCmbCurLine;
 
-	tProp*			_pProp;
+	tProp*			_pProp = nullptr;
 };
 
 

@@ -25,7 +25,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <vector>
 
 
-typedef enum
+typedef enum class eCodingType
 {
 	HEX_CODE_HEX = 0,
 	HEX_CODE_ASCI,
@@ -33,7 +33,7 @@ typedef enum
 	HEX_CODE_MAX
 } eCodingType;
 
-const TCHAR strCode[HEX_CODE_MAX][16] =
+const TCHAR strCode[eCodingType::HEX_CODE_MAX][16] =
 {
 	_T("Hexadecimal"),
 	_T("ANSI String"),
@@ -53,7 +53,7 @@ struct COMBOBOXINFO
 };
 #endif 
 
-typedef enum
+typedef enum class eNppCP
 {
 	NPP_CP_ASCI = 0,
 	NPP_CP_UTF8,

@@ -51,8 +51,8 @@ protected:
 
 private:
 	/* Handles */
-	NppData			_nppData;
-	HWND			_HSource;
+	NppData			_nppData{};
+	HWND			_HSource = nullptr;
 
 	/* for eMail */
 	URLCtrl			_emailLink;

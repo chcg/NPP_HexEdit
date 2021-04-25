@@ -49,11 +49,11 @@ protected:
 private:
 	/* Handles */
 	NppData			_nppData;
-	HWND			_HSource;
+	HWND			_HSource = nullptr;
 
-	BOOL			_isColumn;
-	UINT			_column;
-	UINT			_width;
+	BOOL			_isColumn = FALSE;
+	UINT			_column = 0;
+	UINT			_width = 0;
 };
 
 

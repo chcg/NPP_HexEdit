@@ -36,7 +36,7 @@
 
 CONST TCHAR NATIVE_LANG_NAME[] = _T("NativeLang.dll");
 
-typedef enum eNatLangMsg {
+typedef enum class eNatLangMsg {
 	NPP_NATLANG_CHANGEDLG,			/*!< enum change complete dialog info			*/
 	NPP_NATLANG_CHANGENPPMENU,		/*!< enum change plugins menu of Notepad++		*/
 	NPP_NATLANG_CHANGEMENU,			/*!< enum change another menu					*/
@@ -82,13 +82,13 @@ static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSec
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= hWnd;
 	nli.pszCtrl			= pszSection;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEDLG;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_CHANGEDLG);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
@@ -118,15 +118,15 @@ static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, F
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= NULL;
 	nli.pszCtrl			= pszPluginName;
 	nli.wParam			= nbFunc;
 	nli.lParam			= (LPARAM)funcItem;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGENPPMENU;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_CHANGENPPMENU);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
@@ -155,15 +155,15 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMen
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= hMenu;
 	nli.pszCtrl			= pszMenu;
 	nli.lRes			= 0;
 	nli.wParam			= mf_ByComPos;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEMENU;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_CHANGEMENU);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 
@@ -191,13 +191,13 @@ static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR psz
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= hHeader;
 	nli.pszCtrl			= pszSection;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEHEADER;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_CHANGEHEADER);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
@@ -224,14 +224,14 @@ static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSe
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= hCombo;
 	nli.pszCtrl			= pszSection;
 	nli.wParam			= count;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGECOMBO;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_CHANGECOMBO);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 }
@@ -260,16 +260,16 @@ static UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText
 	TCHAR		szPath[MAX_PATH];
 	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
 
-	tNatLangInfo		nli;
+	tNatLangInfo		nli{};
 	nli.hCtrl			= NULL;
 	nli.pszCtrl			= pszKey;
 	nli.lRes			= 0;
 	nli.wParam			= length;
 	nli.lParam			= (LPARAM)&pszText;
 
-	CommunicationInfo	ci;
+	CommunicationInfo	ci{};
 	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_GETTEXT;
+	ci.internalMsg		= static_cast<long>(eNatLangMsg::NPP_NATLANG_GETTEXT);
 	ci.info				= &nli;
 	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
 
@@ -300,7 +300,7 @@ static INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, 
 		hDlg = hNpp;
 
 	LPTSTR	wPtr = NULL;
-	TCHAR	text[MAX_PATH]	= {0};
+	TCHAR	text[MAX_PATH]{};
 	if (NLGetText(hInst, hNpp, pszKey, text, MAX_PATH)) {
 		wPtr = _tcstok(text, _T("\t"));
 		wPtr = _tcstok(NULL, _T("\t"));

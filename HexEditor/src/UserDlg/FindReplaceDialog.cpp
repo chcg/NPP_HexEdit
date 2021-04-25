@@ -210,16 +210,16 @@ void FindReplaceDlg::initDialog(void)
 	_pReplaceCombo->init(_hParent, ::GetDlgItem(_hSelf, IDC_COMBO_REPLACE));
 
 	/* set default coding */
-	_currDataType = HEX_CODE_HEX;
+	_currDataType = eCodingType::HEX_CODE_HEX;
 	_pFindCombo->setCodingType(_currDataType);
 	_pReplaceCombo->setCodingType(_currDataType);
 
 	/* set data types */
-	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_SETMINVISIBLE, HEX_CODE_MAX, 0);
-	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, HEX_CODE_HEX, (LPARAM)strCode[HEX_CODE_HEX]);
-	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, HEX_CODE_ASCI, (LPARAM)strCode[HEX_CODE_ASCI]);
-	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, HEX_CODE_UNI, (LPARAM)strCode[HEX_CODE_UNI]);
-	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_SETCURSEL, _currDataType, 0);
+	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_SETMINVISIBLE, static_cast<WPARAM>(eCodingType::HEX_CODE_MAX), 0);
+	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, static_cast<WPARAM>(eCodingType::HEX_CODE_HEX), (LPARAM)strCode[static_cast<size_t>(eCodingType::HEX_CODE_HEX)]);
+	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, static_cast<WPARAM>(eCodingType::HEX_CODE_ASCI), (LPARAM)strCode[static_cast<size_t>(eCodingType::HEX_CODE_ASCI)]);
+	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_INSERTSTRING, static_cast<WPARAM>(eCodingType::HEX_CODE_UNI), (LPARAM)strCode[static_cast<size_t>(eCodingType::HEX_CODE_UNI)]);
+	::SendDlgItemMessage(_hSelf, IDC_COMBO_DATATYPE, CB_SETCURSEL, static_cast<WPARAM>(_currDataType), 0);
 
 
 	/* set radios */
@@ -282,7 +282,7 @@ void FindReplaceDlg::updateDialog(void)
 	TabCtrl_SetCurSel(::GetDlgItem(_hSelf, IDC_SWITCH), _findReplace);
 
 	/* set codepages of combo boxes */
-	eNppCoding codepage = HEX_CODE_NPP_ASCI;
+	eNppCoding codepage = eNppCoding::HEX_CODE_NPP_ASCI;
 	::SendMessage(_hParentHandle, HEXM_GETDOCCP, 0, (LPARAM)&codepage);
 	_pFindCombo->setDocCodePage(codepage);
 	_pReplaceCombo->setDocCodePage(codepage);
@@ -493,7 +493,7 @@ void FindReplaceDlg::onReplace(void)
 	INT		length = 0;
 	INT		posBeg = 0;
 	INT		posEnd = 0;
-	eError	isRep = E_OK;
+	eError	isRep = eError::E_OK;
 
 	_pFindCombo->getText(&_find);
 	_pReplaceCombo->getText(&_replace);
@@ -528,7 +528,7 @@ void FindReplaceDlg::onReplace(void)
 				ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION);
 				ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
 				isRep = replaceLittleToBig(hSciSrc, _hSCI, posBeg - offset, posBeg, lenStr, _replace.length);
-				if (isRep == E_OK)
+				if (isRep == eError::E_OK)
 				{
 					::SendMessage(_hParentHandle, HEXM_SETPOS, 0, posBeg + _replace.length);
 					_pFindCombo->addText(_find);
@@ -536,7 +536,7 @@ void FindReplaceDlg::onReplace(void)
 				}
 			}
 
-			if (isRep == E_OK) {
+			if (isRep == eError::E_OK) {
 				onFind(FALSE);
 			}
 			else {
@@ -562,7 +562,7 @@ void FindReplaceDlg::processAll(UINT process)
 	INT		posBeg = 0;
 	INT		posEnd = 0;
 	BOOL	loopEnd = FALSE;
-	eError	isRep = E_OK;
+	eError	isRep = eError::E_OK;
 
 	/* get strings */
 	_pFindCombo->getText(&_find);
@@ -607,17 +607,17 @@ void FindReplaceDlg::processAll(UINT process)
 							ScintillaMsg(_hSCI, SCI_GETTARGETSTART, 0, 0) + offset,
 							_find.length,
 							_replace.length);
-						if (isRep == E_STRIDE)
+						if (isRep == eError::E_STRIDE)
 						{
 							LITTLE_REPLACE_ERROR;
 							CleanScintillaBuf(_hSCI);
 							return;
 						}
-						else if (isRep == E_OK)
+						else if (isRep == eError::E_OK)
 						{
 							cnt++;
 						}
-						else if (isRep == E_START)
+						else if (isRep == eError::E_START)
 						{
 							cntError++;
 						}
@@ -765,7 +765,7 @@ void FindReplaceDlg::changeCoding(void)
 	_pReplaceCombo->setCodingType(_currDataType);
 
 	/* in hex mode keep sure that is match case */
-	if (_currDataType == HEX_CODE_HEX)
+	if (_currDataType == eCodingType::HEX_CODE_HEX)
 	{
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_MATCHCASE), SW_HIDE);
 		_isMatchCase = TRUE;

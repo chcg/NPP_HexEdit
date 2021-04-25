@@ -32,7 +32,7 @@ const Utf8_16::utf8 Utf8_16::k_Boms[][3] = {
 
 // ==================================================================
 
-Utf8_16_Read::Utf8_16_Read() : m_eEncoding(eUnknown)
+Utf8_16_Read::Utf8_16_Read() : m_eEncoding(encodingType::eUnknown)
 , m_pBuf(nullptr)
 , m_pNewBuf(nullptr)
 , m_nBufSize(0)
@@ -45,7 +45,7 @@ Utf8_16_Read::Utf8_16_Read() : m_eEncoding(eUnknown)
 
 Utf8_16_Read::~Utf8_16_Read()
 {
-	if ((m_eEncoding == eUtf16BigEndian) || (m_eEncoding == eUtf16LittleEndian))
+	if ((m_eEncoding == encodingType::eUtf16BigEndian) || (m_eEncoding == encodingType::eUtf16LittleEndian))
 	{
 		delete[] m_pNewBuf;
 		m_pNewBuf = NULL;
@@ -131,23 +131,23 @@ size_t Utf8_16_Read::convert(char* buf, size_t len)
 
 	switch (m_eEncoding)
 	{
-	case eUnknown:
-	case eUtf8Plain: {
+	case encodingType::eUnknown:
+	case encodingType::eUtf8Plain: {
 		// Do nothing, pass through
 		m_nBufSize = 0;
 		m_pNewBuf = m_pBuf;
 		ret = len;
 		break;
 	}
-	case eUtf8: {
+	case encodingType::eUtf8: {
 		// Pass through after BOM
 		m_nBufSize = 0;
 		m_pNewBuf = m_pBuf + nSkip;
 		ret = len - nSkip;
 		break;
 	}
-	case eUtf16BigEndian:
-	case eUtf16LittleEndian: {
+	case encodingType::eUtf16BigEndian:
+	case encodingType::eUtf16LittleEndian: {
 		size_t newSize = len + len / 2 + 1;
 
 		if (m_nBufSize != newSize)
@@ -183,25 +183,25 @@ size_t Utf8_16_Read::convert(char* buf, size_t len)
 
 void Utf8_16_Read::determineEncoding()
 {
-	m_eEncoding = eUnknown;
+	m_eEncoding = encodingType::eUnknown;
 	m_nSkip = 0;
 
 	if (m_nLen > 1)
 	{
-		if (m_pBuf[0] == k_Boms[eUtf16BigEndian][0] && m_pBuf[1] == k_Boms[eUtf16BigEndian][1]) {
-			m_eEncoding = eUtf16BigEndian;
+		if (m_pBuf[0] == k_Boms[static_cast<size_t>(encodingType::eUtf16BigEndian)][0] && m_pBuf[1] == k_Boms[static_cast<size_t>(encodingType::eUtf16BigEndian)][1]) {
+			m_eEncoding = encodingType::eUtf16BigEndian;
 			m_nSkip = 2;
 		}
-		else if (m_pBuf[0] == k_Boms[eUtf16LittleEndian][0] && m_pBuf[1] == k_Boms[eUtf16LittleEndian][1]) {
-			m_eEncoding = eUtf16LittleEndian;
+		else if (m_pBuf[0] == k_Boms[static_cast<size_t>(encodingType::eUtf16LittleEndian)][0] && m_pBuf[1] == k_Boms[static_cast<size_t>(encodingType::eUtf16LittleEndian)][1]) {
+			m_eEncoding = encodingType::eUtf16LittleEndian;
 			m_nSkip = 2;
 		}
-		else if (m_nLen > 2 && m_pBuf[0] == k_Boms[eUtf8][0] && m_pBuf[1] == k_Boms[eUtf8][1] && m_pBuf[2] == k_Boms[eUtf8][2]) {
-			m_eEncoding = eUtf8;
+		else if (m_nLen > 2 && m_pBuf[0] == k_Boms[static_cast<size_t>(encodingType::eUtf8)][0] && m_pBuf[1] == k_Boms[static_cast<size_t>(encodingType::eUtf8)][1] && m_pBuf[2] == k_Boms[static_cast<size_t>(encodingType::eUtf8)][2]) {
+			m_eEncoding = encodingType::eUtf8;
 			m_nSkip = 3;
 		}
 		else if (isUTF8_16()) {
-			m_eEncoding = eUtf8Plain;
+			m_eEncoding = encodingType::eUtf8Plain;
 			m_nSkip = 0;
 		}
 	}
@@ -212,7 +212,7 @@ void Utf8_16_Read::determineEncoding()
 
 Utf8_16_Write::Utf8_16_Write()
 {
-	m_eEncoding = eUnknown;
+	m_eEncoding = encodingType::eUnknown;
 	m_pFile = NULL;
 	m_pBuf = NULL;
 	m_pNewBuf = NULL;
@@ -249,13 +249,13 @@ size_t Utf8_16_Write::fwrite(const void* p, size_t _size)
 	{
 		switch (m_eEncoding)
 		{
-		case eUtf8: {
-			::fwrite(k_Boms[m_eEncoding], 3, 1, m_pFile);
+		case encodingType::eUtf8: {
+			::fwrite(k_Boms[static_cast<size_t>(m_eEncoding)], 3, 1, m_pFile);
 			break;
 		}
-		case eUtf16BigEndian:
-		case eUtf16LittleEndian:
-			::fwrite(k_Boms[m_eEncoding], 2, 1, m_pFile);
+		case encodingType::eUtf16BigEndian:
+		case encodingType::eUtf16LittleEndian:
+			::fwrite(k_Boms[static_cast<size_t>(m_eEncoding)], 2, 1, m_pFile);
 			break;
 		default:
 			// nothing to do
@@ -266,15 +266,15 @@ size_t Utf8_16_Write::fwrite(const void* p, size_t _size)
 
 	switch (m_eEncoding)
 	{
-	case eUnknown:
-	case eUtf8Plain:
-	case eUtf8: {
+	case encodingType::eUnknown:
+	case encodingType::eUtf8Plain:
+	case encodingType::eUtf8: {
 		// Normal write
 		ret = ::fwrite(p, _size, 1, m_pFile);
 		break;
 	}
-	case eUtf16BigEndian:
-	case eUtf16LittleEndian: {
+	case encodingType::eUtf16BigEndian:
+	case encodingType::eUtf16LittleEndian: {
 		if (_size > m_nBufSize)
 		{
 			m_nBufSize = _size;
@@ -314,20 +314,20 @@ size_t Utf8_16_Write::convert(char* p, size_t _size)
 
 	switch (m_eEncoding)
 	{
-	case eUnknown:
-	case eUtf8Plain: {
+	case encodingType::eUnknown:
+	case encodingType::eUtf8Plain: {
 		// Normal write
 		m_nBufSize = _size;
 		m_pNewBuf = (ubyte*)new ubyte[m_nBufSize];
 		memcpy(m_pNewBuf, p, _size);
 		break;
 	}
-	case eUtf8: {
+	case encodingType::eUtf8: {
 		if (m_bIsBOM)
 		{
 			m_nBufSize = _size + 3;
 			m_pNewBuf = (ubyte*)new ubyte[m_nBufSize];
-			memcpy(m_pNewBuf, k_Boms[m_eEncoding], 3);
+			memcpy(m_pNewBuf, k_Boms[static_cast<size_t>(m_eEncoding)], 3);
 			memcpy(&m_pNewBuf[3], p, _size);
 		}
 		else
@@ -339,13 +339,13 @@ size_t Utf8_16_Write::convert(char* p, size_t _size)
 		}
 		break;
 	}
-	case eUtf16BigEndian:
-	case eUtf16LittleEndian: {
+	case encodingType::eUtf16BigEndian:
+	case encodingType::eUtf16LittleEndian: {
 		m_pNewBuf = (ubyte*)new ubyte[sizeof(utf16) * (_size + 1)];
 
-		if (m_bIsBOM && (m_eEncoding == eUtf16BigEndian || m_eEncoding == eUtf16LittleEndian)) {
+		if (m_bIsBOM && (m_eEncoding == encodingType::eUtf16BigEndian || m_eEncoding == encodingType::eUtf16LittleEndian)) {
 			// Write the BOM
-			memcpy(m_pNewBuf, k_Boms[m_eEncoding], 2);
+			memcpy(m_pNewBuf, k_Boms[static_cast<size_t>(m_eEncoding)], 2);
 		}
 
 		Utf8_Iter iter8;
@@ -397,7 +397,7 @@ void Utf8_Iter::reset()
 	m_pEnd = NULL;
 	m_eState = eState::eStart;
 	m_nCur = 0;
-	m_eEncoding = eUnknown;
+	m_eEncoding = encodingType::eUnknown;
 }
 
 void Utf8_Iter::set(const ubyte* pBuf, size_t nLen, encodingType eEncoding)
@@ -445,7 +445,7 @@ void Utf8_Iter::operator++()
 void Utf8_Iter::toStart()
 {
 	m_eState = eState::eStart;
-	if (m_eEncoding == eUtf16BigEndian)
+	if (m_eEncoding == encodingType::eUtf16BigEndian)
 	{
 		swap();
 	}
@@ -473,7 +473,7 @@ void Utf16_Iter::reset()
 	m_eState = eState::eStart;
 	m_nCur = 0;
 	m_nCur16 = 0;
-	m_eEncoding = eUnknown;
+	m_eEncoding = encodingType::eUnknown;
 }
 
 void Utf16_Iter::set(const ubyte* pBuf, size_t nLen, encodingType eEncoding)
@@ -495,7 +495,7 @@ void Utf16_Iter::operator++()
 	switch (m_eState)
 	{
 	case eState::eStart:
-		if (m_eEncoding == eUtf16LittleEndian) {
+		if (m_eEncoding == encodingType::eUtf16LittleEndian) {
 			m_nCur16 = *m_pRead++;
 			m_nCur16 |= static_cast<utf16>(*m_pRead << 8);
 		}

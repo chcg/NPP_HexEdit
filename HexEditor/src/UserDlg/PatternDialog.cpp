@@ -82,7 +82,7 @@ INT_PTR CALLBACK PatternDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 	{
 		_pCombo = new MultiTypeCombo;
 		_pCombo->init(_hParent, ::GetDlgItem(_hSelf, IDC_COMBO_PATTERN));
-		_pCombo->setCodingType(HEX_CODE_HEX);
+		_pCombo->setCodingType(eCodingType::HEX_CODE_HEX);
 
 		/* change language */
 		NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("Pattern"));
@@ -215,7 +215,7 @@ BOOL PatternDlg::onInsert(void)
 	cntPat = 0;
 	for (INT i = 0; i < lines; i++)
 	{
-		if (replaceLittleToBig(hSciTgt, hSciPat, cntPat, pos, 0, prop.bits * count) == E_OK)
+		if (replaceLittleToBig(hSciTgt, hSciPat, cntPat, pos, 0, prop.bits * count) == eError::E_OK)
 		{
 			::SendMessage(_hParentHandle, HEXM_UPDATEBKMK, pos, (LPARAM)prop.bits * count);
 			pos += (count + prop.columns) * prop.bits;
@@ -282,7 +282,7 @@ BOOL PatternDlg::onReplace(void)
 	::SendMessage(_hParentHandle, HEXM_GETSETTINGS, 0, (LPARAM)&prop);
 	::SendMessage(_hParentHandle, HEXM_GETLINECNT, 0, (LPARAM)&lines);
 
-	if (prop.selection == HEX_SEL_NORM)
+	if (prop.selection == eSel::HEX_SEL_NORM)
 	{
 		length = abs(posEnd - posBeg);
 
@@ -297,7 +297,7 @@ BOOL PatternDlg::onReplace(void)
 			}
 		}
 
-		if (E_OK != replaceLittleToBig(hSciTgt, hSciPat, 0, (posBeg < posEnd ? posBeg : posEnd), length, length))
+		if (eError::E_OK != replaceLittleToBig(hSciTgt, hSciPat, 0, (posBeg < posEnd ? posBeg : posEnd), length, length))
 		{
 			LITTLE_REPLACE_ERROR;
 			bRet = FALSE;
@@ -323,7 +323,7 @@ BOOL PatternDlg::onReplace(void)
 		/* set pattern in columns */
 		for (INT i = 0; i <= lines; i++)
 		{
-			if (replaceLittleToBig(hSciTgt, hSciPat, 0, posBeg, length, length) == E_OK)
+			if (replaceLittleToBig(hSciTgt, hSciPat, 0, posBeg, length, length) == eError::E_OK)
 			{
 				posBeg += prop.bits * prop.columns;
 			}

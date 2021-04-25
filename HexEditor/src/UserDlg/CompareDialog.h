@@ -33,6 +33,8 @@ public:
 		, _pHexEdit1(nullptr)
 		, _pHexEdit2(nullptr)
 		, _currentSC(MAIN_VIEW)
+		, _rcEdit1()
+		, _rcEdit2()
 	{};
 
 	void init(HINSTANCE hInst, NppData nppData)
@@ -49,13 +51,13 @@ protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 	NppData			_nppData;
-	HexEdit*		_pHexEdit1;
-	HexEdit*		_pHexEdit2;
+	HexEdit*		_pHexEdit1 = nullptr;
+	HexEdit*		_pHexEdit2 = nullptr;
 
 	/* Get client orientation */
 	RECT			_rcEdit1;
 	RECT			_rcEdit2;
-	UINT			_currentSC;
+	UINT			_currentSC = 0;
 };
 
 

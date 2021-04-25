@@ -28,7 +28,7 @@ class GotoDlg : public StaticDialog
 {
 
 public:
-	GotoDlg() : StaticDialog(), _isOff(FALSE) {};
+	GotoDlg() : StaticDialog() {};
 
 	void init(HINSTANCE hInst, NppData nppData, LPTSTR iniFilePath)
 	{
@@ -57,17 +57,17 @@ protected:
 
 private:
 	/* Handles */
-	NppData			_nppData;
-	HWND			_HSource;
-	HWND			_hParentHandle;
+	NppData			_nppData{};
+	HWND			_HSource = nullptr;
+	HWND			_hParentHandle = nullptr;
 
-	HWND			_hLineEdit;
-	WNDPROC			_hDefaultEditProc;
+	HWND			_hLineEdit = nullptr;
+	WNDPROC			_hDefaultEditProc = nullptr;
 
-	LPTSTR			_iniFilePath;
+	LPTSTR			_iniFilePath = nullptr;
 
-	BOOL			_isHex;
-	BOOL			_isOff;
+	BOOL			_isHex = FALSE;
+	BOOL			_isOff = FALSE;
 };
 
 

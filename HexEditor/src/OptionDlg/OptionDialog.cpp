@@ -35,7 +35,7 @@ static LPTSTR	szTabNames[32] = {
 	_T("Font")
 };
 
-typedef enum {
+typedef enum class ePropStr {
 	PROP_VIEW = 0,
 	PROP_EXT,
 	PROP_COLOR,
@@ -87,7 +87,7 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 		/* set tab texts */
 		item.mask = TCIF_TEXT;
 
-		for (UINT i = 0; i < PROP_MAX; i++)
+		for (UINT i = 0; i < static_cast<UINT>(ePropStr::PROP_MAX); i++)
 		{
 			if (NLGetText(_hInst, _hParent, szTabNames[i], text, sizeof(text)) == FALSE)
 				_tcscpy(text, szTabNames[i]);
@@ -210,12 +210,12 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 
 void OptionDlg::TabUpdate(void)
 {
-	INT		iSel = (INT)::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_GETCURSEL, 0, 0);
+	ePropStr	iSel = (ePropStr)::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_GETCURSEL, 0, 0);
 
-	BOOL	bView = (iSel == PROP_VIEW ? SW_SHOW : SW_HIDE);
-	BOOL	bExt = (iSel == PROP_EXT ? SW_SHOW : SW_HIDE);
-	BOOL	bColor = (iSel == PROP_COLOR ? SW_SHOW : SW_HIDE);
-	BOOL	bFont = (iSel == PROP_FONT ? SW_SHOW : SW_HIDE);
+	BOOL	bView = (iSel == ePropStr::PROP_VIEW ? SW_SHOW : SW_HIDE);
+	BOOL	bExt = (iSel == ePropStr::PROP_EXT ? SW_SHOW : SW_HIDE);
+	BOOL	bColor = (iSel == ePropStr::PROP_COLOR ? SW_SHOW : SW_HIDE);
+	BOOL	bFont = (iSel == ePropStr::PROP_FONT ? SW_SHOW : SW_HIDE);
 
 	/* set tab visibility state of "View" */
 	::ShowWindow(::GetDlgItem(_hSelf, IDC_RADIO_8), bView);
@@ -445,7 +445,7 @@ BOOL OptionDlg::GetParams(void)
 	}
 	else
 	{
-		::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_SETCURSEL, PROP_VIEW, NULL);
+		::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_SETCURSEL, static_cast<WPARAM>(ePropStr::PROP_VIEW), NULL);
 	}
 
 	return bRet;

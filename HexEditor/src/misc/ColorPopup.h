@@ -54,10 +54,10 @@ public:
 	COLORREF getSelColor() { return _color; };
 
 private:
-	HWND		_hNpp;
+	HWND		_hNpp = nullptr;
 	RECT		_rc;
-	COLORREF	_color;
-	bool		isColorChooserLaunched;
+	COLORREF	_color = 0;
+	bool		isColorChooserLaunched = false;
 
 	static BOOL CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 	BOOL CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);

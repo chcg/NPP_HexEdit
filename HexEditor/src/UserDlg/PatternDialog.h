@@ -30,7 +30,6 @@ class PatternDlg : public StaticDialog
 
 public:
 	PatternDlg() : StaticDialog()
-		, _pCombo(nullptr)
 	{};
 
 	void init(HINSTANCE hInst, NppData nppData)
@@ -60,14 +59,14 @@ protected:
 private:
 	/* Handles */
 	NppData				_nppData;
-	HWND				_hParentHandle;
-	WNDPROC				_hDefaultEditProc;
+	HWND				_hParentHandle = nullptr;
+	WNDPROC				_hDefaultEditProc = nullptr;
 
-	tComboInfo			_pattern;
-	MultiTypeCombo*		_pCombo;
+	tComboInfo			_pattern{};
+	MultiTypeCombo*		_pCombo = nullptr;
 
-	BOOL				_isReplace;
-	TCHAR				_txtCaption[64];
+	BOOL				_isReplace = FALSE;
+	TCHAR				_txtCaption[64]{};
 };
 
 
