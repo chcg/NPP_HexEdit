@@ -1,43 +1,32 @@
 // This file is part of Notepad++ project
-// Copyright (C)2020 Don HO <don.h@free.fr>
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either
-// version 2 of the License, or (at your option) any later version.
-//
-// Note that the GPL places important restrictions on "derived works", yet
-// it does not provide a detailed definition of that term.  To avoid
-// misunderstandings, we consider an application to constitute a
-// "derivative work" for the purpose of this license if it does any of the
-// following:
-// 1. Integrates source code from Notepad++.
-// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
-//    installer, such as those produced by InstallShield.
-// 3. Links to a library or executes a program that does any of the above.
+// Copyright (C)2021 Don HO <don.h@free.fr>
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// at your option any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <stdexcept>
 #include <shlwapi.h>
-#include <shlobj.h>
 #include <uxtheme.h>
 #include <cassert>
 #include <codecvt>
 #include <locale>
 
 #include "StaticDialog.h"
-
+//#include "CustomFileDialog.h" //MODIFIED by HEXEDIT
 #include "Common.h"
 #include "Utf8.h"
 //#include <Parameters.h> //MODIFIED by HEXEDIT
+#include "NppDarkMode.h"
 
 void printInt(int int2print)
 {
@@ -141,120 +130,44 @@ void writeLog(const TCHAR *logFileName, const char *log2write)
 	fclose(f);
 }
 
-
-// Set a call back with the handle after init to set the path.
-// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/shell/reference/callbackfunctions/browsecallbackproc.asp
-static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM, LPARAM pData)
-{
-	if (uMsg == BFFM_INITIALIZED && pData != 0)
-		::SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
-	return 0;
-};
-
-
+/*NOT USED by HEXEDIT
 generic_string folderBrowser(HWND parent, const generic_string & title, int outputCtrlID, const TCHAR *defaultStr)
 {
-	generic_string dirStr;
-
-	// This code was copied and slightly modifed from:
-	// http://www.bcbdev.com/faqs/faq62.htm
-
-	// SHBrowseForFolder returns a PIDL. The memory for the PIDL is
-	// allocated by the shell. Eventually, we will need to free this
-	// memory, so we need to get a pointer to the shell malloc COM
-	// object that will free the PIDL later on.
-	LPMALLOC pShellMalloc = 0;
-	if (::SHGetMalloc(&pShellMalloc) == NO_ERROR)
-	{
-		// If we were able to get the shell malloc object,
-		// then proceed by initializing the BROWSEINFO stuct
-		BROWSEINFO info;
-		memset(&info, 0, sizeof(info));
-		info.hwndOwner = parent;
-		info.pidlRoot = NULL;
-		TCHAR szDisplayName[MAX_PATH];
-		info.pszDisplayName = szDisplayName;
-		info.lpszTitle = title.c_str();
-		info.ulFlags = BIF_USENEWUI | BIF_NONEWFOLDERBUTTON;
-		info.lpfn = BrowseCallbackProc;
-
-		TCHAR directory[MAX_PATH];
-		if (outputCtrlID != 0)
-			::GetDlgItemText(parent, outputCtrlID, directory, _countof(directory));
-		directory[_countof(directory) - 1] = '\0';
-
-		if (!directory[0] && defaultStr)
-			info.lParam = reinterpret_cast<LPARAM>(defaultStr);
-		else
-			info.lParam = reinterpret_cast<LPARAM>(directory);
-
-		// Execute the browsing dialog.
-		LPITEMIDLIST pidl = ::SHBrowseForFolder(&info);
-
-		// pidl will be null if they cancel the browse dialog.
-		// pidl will be not null when they select a folder.
-		if (pidl)
-		{
-			// Try to convert the pidl to a display generic_string.
-			// Return is true if success.
-			TCHAR szDir[MAX_PATH];
-			if (::SHGetPathFromIDList(pidl, szDir))
-			{
-				// Set edit control to the directory path.
-				if (outputCtrlID != 0)
-					::SetDlgItemText(parent, outputCtrlID, szDir);
-				dirStr = szDir;
-			}
-			pShellMalloc->Free(pidl);
-		}
-		pShellMalloc->Release();
-	}
-	return dirStr;
-}
-
-
-generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
-{
 	generic_string folderName;
-	LPMALLOC pShellMalloc = 0;
+	CustomFileDialog dlg(parent);
+	dlg.setTitle(title.c_str());
 
-	if (::SHGetMalloc(&pShellMalloc) == NO_ERROR)
+	// Get an initial directory from the edit control or from argument provided
+	TCHAR directory[MAX_PATH] = {};
+	if (outputCtrlID != 0)
+		::GetDlgItemText(parent, outputCtrlID, directory, _countof(directory));
+	directory[_countof(directory) - 1] = '\0';
+	if (!directory[0] && defaultStr)
+		dlg.setFolder(defaultStr);
+	else if (directory[0])
+		dlg.setFolder(directory);
+
+	folderName = dlg.pickFolder();
+	if (!folderName.empty())
 	{
-		BROWSEINFO info;
-		memset(&info, 0, sizeof(info));
-		info.hwndOwner = parent;
-		info.pidlRoot = NULL;
-		TCHAR szDisplayName[MAX_PATH]{};
-		info.pszDisplayName = szDisplayName;
-		info.lpszTitle = TEXT("Select a folder");
-		info.ulFlags = 0;
-		info.lpfn = BrowseCallbackProc;
-		info.lParam = reinterpret_cast<LPARAM>(defaultDir);
-
-		// Execute the browsing dialog.
-		LPITEMIDLIST pidl = ::SHBrowseForFolder(&info);
-
-		// pidl will be null if they cancel the browse dialog.
-		// pidl will be not null when they select a folder.
-		if (pidl)
-		{
-			// Try to convert the pidl to a display generic_string.
-			// Return is true if success.
-			TCHAR szDir[MAX_PATH];
-			if (::SHGetPathFromIDList(pidl, szDir))
-				// Set edit control to the directory path.
-				folderName = szDir;
-			pShellMalloc->Free(pidl);
-		}
-		pShellMalloc->Release();
+		// Send the result back to the edit control
+		if (outputCtrlID != 0)
+			::SetDlgItemText(parent, outputCtrlID, folderName.c_str());
 	}
 	return folderName;
 }
 
 
+generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
+{
+	return folderBrowser(parent, TEXT("Select a folder"), 0, defaultDir);
+}
+NOT USED by HEXEDIT*/
+
+
 void ClientRectToScreenRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt{};
+	POINT		pt;
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
@@ -295,7 +208,7 @@ std::vector<generic_string> tokenizeString(const generic_string & tokenString, c
 
 void ScreenRectToClientRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt{};
+	POINT		pt;
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
@@ -705,21 +618,21 @@ generic_string PathAppend(generic_string& strDest, const generic_string& str2app
 		return strDest;
 	}
 
-	if (strDest.empty() && not str2append.empty()) // "" + titi
+	if (strDest.empty() && !str2append.empty()) // "" + titi
 	{
 		strDest = str2append;
 		return strDest;
 	}
 
-	if (strDest[strDest.length() - 1] == '\\' && (not str2append.empty() && str2append[0] == '\\')) // toto\ + \titi
+	if (strDest[strDest.length() - 1] == '\\' && (!str2append.empty() && str2append[0] == '\\')) // toto\ + \titi
 	{
 		strDest.erase(strDest.length() - 1, 1);
 		strDest += str2append;
 		return strDest;
 	}
 
-	if ((strDest[strDest.length() - 1] == '\\' && (not str2append.empty() && str2append[0] != '\\')) // toto\ + titi
-		|| (strDest[strDest.length() - 1] != '\\' && (not str2append.empty() && str2append[0] == '\\'))) // toto + \titi
+	if ((strDest[strDest.length() - 1] == '\\' && (!str2append.empty() && str2append[0] != '\\')) // toto\ + titi
+		|| (strDest[strDest.length() - 1] != '\\' && (!str2append.empty() && str2append[0] == '\\'))) // toto + \titi
 	{
 		strDest += str2append;
 		return strDest;
@@ -1034,7 +947,7 @@ bool allPatternsAreExclusion(const std::vector<generic_string> patterns)
 			break;
 		}
 	}
-	return not oneInclusionPatternFound;
+	return !oneInclusionPatternFound;
 }
 
 generic_string GetLastErrorAsString(DWORD errorCode)
@@ -1086,6 +999,8 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
 		return NULL;
 	}
 
+	NppDarkMode::setDarkTooltips(hwndTip, NppDarkMode::ToolTipsType::tooltip);
+
 	// Associate the tooltip with the tool.
 	TOOLINFO toolInfo = { 0 };
 	toolInfo.cbSize = sizeof(toolInfo);
@@ -1093,6 +1008,48 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
 	toolInfo.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 	toolInfo.uId = (UINT_PTR)hwndTool;
 	toolInfo.lpszText = pszText;
+	if (!SendMessage(hwndTip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo))
+	{
+		DestroyWindow(hwndTip);
+		return NULL;
+	}
+
+	SendMessage(hwndTip, TTM_ACTIVATE, TRUE, 0);
+	SendMessage(hwndTip, TTM_SETMAXTIPWIDTH, 0, 200);
+	// Make tip stay 15 seconds
+	SendMessage(hwndTip, TTM_SETDELAYTIME, TTDT_AUTOPOP, MAKELPARAM((15000), (0)));
+
+	return hwndTip;
+}
+
+HWND CreateToolTipRect(int toolID, HWND hWnd, HINSTANCE hInst, const PTSTR pszText, const RECT rc)
+{
+	if (!toolID || !hWnd || !pszText)
+	{
+		return NULL;
+	}
+
+	// Create the tooltip. g_hInst is the global instance handle.
+	HWND hwndTip = CreateWindowEx(0, TOOLTIPS_CLASS, NULL,
+		WS_POPUP | TTS_ALWAYSTIP | TTS_BALLOON,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		hWnd, NULL,
+		hInst, NULL);
+
+	if (!hwndTip)
+	{
+		return NULL;
+	}
+
+	// Associate the tooltip with the tool.
+	TOOLINFO toolInfo = { 0 };
+	toolInfo.cbSize = sizeof(toolInfo);
+	toolInfo.hwnd = hWnd;
+	toolInfo.uFlags = TTF_SUBCLASS;
+	toolInfo.uId = toolID;
+	toolInfo.lpszText = pszText;
+	toolInfo.rect = rc;
 	if (!SendMessage(hwndTip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo))
 	{
 		DestroyWindow(hwndTip);
@@ -1177,7 +1134,7 @@ bool isCertificateValidated(const generic_string & fullFilePath, const generic_s
 		CertInfo.SerialNumber = pSignerInfo->SerialNumber;
 
 		pCertContext = CertFindCertificateInStore(hStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_SUBJECT_CERT, (PVOID)&CertInfo, NULL);
-		if (not pCertContext)
+		if (!pCertContext)
 		{
 			generic_string errorMessage = TEXT("Certificate context: ");
 			errorMessage += GetLastErrorAsString(GetLastError());
@@ -1329,3 +1286,40 @@ void getFilesInFolder(std::vector<generic_string>& files, const generic_string& 
 	::FindClose(hFindFile);
 }
 
+void trim(generic_string& str)
+{
+	// remove any leading or trailing spaces from str
+
+	generic_string::size_type pos = str.find_last_not_of(' ');
+
+	if (pos != generic_string::npos)
+	{
+		str.erase(pos + 1);
+		pos = str.find_first_not_of(' ');
+		if (pos != generic_string::npos) str.erase(0, pos);
+	}
+	else str.erase(str.begin(), str.end());
+}
+
+int nbDigitsFromNbLines(size_t nbLines)
+{
+	int nbDigits = 0; // minimum number of digit should be 4
+	if (nbLines < 10) nbDigits = 1;
+	else if (nbLines < 100) nbDigits = 2;
+	else if (nbLines < 1000) nbDigits = 3;
+	else if (nbLines < 10000) nbDigits = 4;
+	else if (nbLines < 100000) nbDigits = 5;
+	else if (nbLines < 1000000) nbDigits = 6;
+	else // rare case
+	{
+		nbDigits = 7;
+		nbLines /= 1000000;
+
+		while (nbLines)
+		{
+			nbLines /= 10;
+			++nbDigits;
+		}
+	}
+	return nbDigits;
+}

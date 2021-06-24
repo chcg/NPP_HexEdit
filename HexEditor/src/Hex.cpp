@@ -269,7 +269,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			NLChangeNppMenu((HINSTANCE)g_hModule, nppData._nppHandle, PLUGIN_NAME, funcItem, nbFunc);
 
 			g_TBHex.hToolbarBmp = (HBITMAP)::LoadImage((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDB_TB_HEX), IMAGE_BITMAP, 0, 0, (LR_DEFAULTSIZE | LR_LOADMAP3DCOLORS));
-			::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
+			::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON_DEPRECATED, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
 			break;
 		}
 		case NPPN_READY:
@@ -1595,11 +1595,11 @@ eNppCoding GetNppEncoding(void)
 	eNppCoding	ret = eNppCoding::HEX_CODE_NPP_ASCI;
 	HMENU		hMenu = (HMENU)::SendMessage(nppData._nppHandle, NPPM_INTERNAL_GETMENU, 0, 0);
 
-	if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2BE, MF_BYCOMMAND) & MF_CHECKED) != 0)
+	if ((::GetMenuState(hMenu, IDM_FORMAT_UTF_16BE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
 		ret = eNppCoding::HEX_CODE_NPP_USCBE;
 	}
-	else if ((::GetMenuState(hMenu, IDM_FORMAT_UCS_2LE, MF_BYCOMMAND) & MF_CHECKED) != 0)
+	else if ((::GetMenuState(hMenu, IDM_FORMAT_UTF_16LE, MF_BYCOMMAND) & MF_CHECKED) != 0)
 	{
 		ret = eNppCoding::HEX_CODE_NPP_USCLE;
 	}
