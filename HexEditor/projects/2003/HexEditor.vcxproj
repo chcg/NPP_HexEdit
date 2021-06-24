@@ -273,7 +273,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\Ccpp\Common.cpp" />
     <ClCompile Include="..\..\..\Common\Ccpp\StaticDialog.cpp" />
-    <ClCompile Include="..\..\..\Common\Ccpp\NppDarkModeDumy.cpp" />
+    <ClCompile Include="..\..\..\Common\Ccpp\NppDarkModeDummy.cpp" />
     <ClCompile Include="..\..\src\HelpDlg\HelpDialog.cpp" />
     <ClCompile Include="..\..\src\HelpDlg\URLCtrl.cpp" />
     <ClCompile Include="..\..\src\Hex.cpp" />

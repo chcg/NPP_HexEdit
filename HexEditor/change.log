@@ -4,7 +4,7 @@ Change-log for HexEditor.dll
 ------------------------------------------------------------------------------------
 21/04/24  v0.9.9 :
 ------------------------------------------------------------------------------------
-    Fix: Fonts are now drawn in default mode. #43
+    Fix: Fonts are now drawn in default mode. #46
     New: arm64 support
     Note: usage of VS2019
     Note: reduced compiler and VS code analysis warnings
