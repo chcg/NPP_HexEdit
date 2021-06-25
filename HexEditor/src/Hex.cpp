@@ -269,6 +269,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			NLChangeNppMenu((HINSTANCE)g_hModule, nppData._nppHandle, PLUGIN_NAME, funcItem, nbFunc);
 
 			g_TBHex.hToolbarBmp = (HBITMAP)::LoadImage((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDB_TB_HEX), IMAGE_BITMAP, 0, 0, (LR_DEFAULTSIZE | LR_LOADMAP3DCOLORS));
+			g_TBHex.hToolbarIcon = (HICON)::LoadIcon((HINSTANCE)g_hModule, MAKEINTRESOURCE(IDI_TB_HEX));
 			::SendMessage(nppData._nppHandle, NPPM_ADDTOOLBARICON_DEPRECATED, (WPARAM)funcItem[0]._cmdID, (LPARAM)&g_TBHex);
 			break;
 		}

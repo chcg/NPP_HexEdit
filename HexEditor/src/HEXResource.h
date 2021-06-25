@@ -20,6 +20,7 @@
 
 
 #define IDB_TB_HEX								1001
+#define IDI_TB_HEX								1002
 
 
 #define IDD_HEX_DLG				20000

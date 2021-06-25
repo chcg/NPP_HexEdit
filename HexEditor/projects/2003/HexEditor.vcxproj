@@ -325,6 +325,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\hex.bmp" />
+    <Image Include="..\..\res\hex.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.editorconfig" />
