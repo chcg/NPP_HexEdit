@@ -28,7 +28,9 @@ extern char	hexMask[256][3];
 
 
 MultiTypeCombo::MultiTypeCombo() : Window()
-, _hCombo(NULL)
+, _hNpp(nullptr)
+, _hCombo(nullptr)
+, _currData()
 , _currDataType(eCodingType::HEX_CODE_ASCI)
 , _docCodePage(eNppCoding::HEX_CODE_NPP_ASCI)
 {
