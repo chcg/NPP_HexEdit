@@ -10,5 +10,4 @@ AppVeyor `VS2019`  [![Build status](https://ci.appveyor.com/api/projects/status/
 
 Further repos at github:
 - https://github.com/JetNpp/HexEditor
-- https://github.com/darkdragon-001/NPP-Plugins-HexEditor
 - https://github.com/mackwai/NPPHexEditor
