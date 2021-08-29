@@ -1,10 +1,9 @@
-version: 0.9.9.{build}
+version: 0.9.10.{build}
 image: Visual Studio 2019
 
 
 environment:
   matrix:
-  #- PlatformToolset: v141_xp
   - PlatformToolset: v142
 
 platform:
@@ -26,7 +25,6 @@ install:
     - if "%platform%"=="arm64" set archi=amd64_arm64
     - if "%platform%"=="arm64" set platform_input=arm64
 
-    - if "%PlatformToolset%"=="v141_xp" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
     - if "%PlatformToolset%"=="v142" call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
 
 
