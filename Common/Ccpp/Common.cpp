@@ -23,6 +23,8 @@
 
 #include "StaticDialog.h"
 //#include "CustomFileDialog.h" //MODIFIED by HEXEDIT
+
+//#include "FileInterface.h" //MODIFIED by HEXEDIT
 #include "Common.h"
 #include "Utf8.h"
 //#include <Parameters.h> //MODIFIED by HEXEDIT
@@ -111,26 +113,25 @@ generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath)
 	return fullFilePathName;
 }
 
-
+/*NOT USED by HEXEDIT
 void writeFileContent(const TCHAR *file2write, const char *content2write)
 {
-	FILE *f = generic_fopen(file2write, TEXT("w+c"));
-	fwrite(content2write, sizeof(content2write[0]), strlen(content2write), f);
-	fflush(f);
-	fclose(f);
+	Win32_IO_File file(file2write, Win32_IO_File::Mode::WRITE);
+
+	if (file.isOpened())
+		file.writeStr(content2write);
 }
 
 
 void writeLog(const TCHAR *logFileName, const char *log2write)
 {
-	FILE *f = generic_fopen(logFileName, TEXT("a+c"));
-	fwrite(log2write, sizeof(log2write[0]), strlen(log2write), f);
-	fputc('\n', f);
-	fflush(f);
-	fclose(f);
+	Win32_IO_File file(logFileName, Win32_IO_File::Mode::APPEND);
+
+	if (file.isOpened())
+		file.writeStr(log2write);
 }
 
-/*NOT USED by HEXEDIT
+
 generic_string folderBrowser(HWND parent, const generic_string & title, int outputCtrlID, const TCHAR *defaultStr)
 {
 	generic_string folderName;
@@ -972,7 +973,7 @@ generic_string GetLastErrorAsString(DWORD errorCode)
 	return errorMsg;
 }
 
-HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
+HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText, bool isRTL)
 {
 	if (!toolID || !hDlg || !pszText)
 	{
@@ -987,7 +988,7 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText)
 	}
 
 	// Create the tooltip. g_hInst is the global instance handle.
-	HWND hwndTip = CreateWindowEx(0, TOOLTIPS_CLASS, NULL,
+	HWND hwndTip = CreateWindowEx(isRTL ? WS_EX_LAYOUTRTL : 0, TOOLTIPS_CLASS, NULL,
 		WS_POPUP | TTS_ALWAYSTIP | TTS_BALLOON,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
@@ -1071,10 +1072,12 @@ bool isCertificateValidated(const generic_string & fullFilePath, const generic_s
 	HCERTSTORE hStore = NULL;
 	HCRYPTMSG hMsg = NULL;
 	PCCERT_CONTEXT pCertContext = NULL;
-	BOOL result;
-	DWORD dwEncoding, dwContentType, dwFormatType;
+	BOOL result = FALSE;
+	DWORD dwEncoding = 0;
+	DWORD dwContentType = 0;
+	DWORD dwFormatType = 0;
 	PCMSG_SIGNER_INFO pSignerInfo = NULL;
-	DWORD dwSignerInfo;
+	DWORD dwSignerInfo = 0;
 	CERT_INFO CertInfo;
 	LPTSTR szName = NULL;
 
@@ -1333,25 +1336,106 @@ int nbDigitsFromNbLines(size_t nbLines)
 	return nbDigits;
 }
 
+namespace
+{
+	constexpr TCHAR timeFmtEscapeChar = 0x1;
+	constexpr TCHAR middayFormat[] = _T("tt");
+
+	// Returns AM/PM string defined by the system locale for the specified time.
+	// This string may be empty or customized.
+	generic_string getMiddayString(const TCHAR* localeName, const SYSTEMTIME& st)
+	{
+		generic_string midday;
+		midday.resize(MAX_PATH);
+		int ret = GetTimeFormatEx(localeName, 0, &st, middayFormat, &midday[0], static_cast<int>(midday.size()));
+		if (ret > 0)
+			midday.resize(ret - 1); // Remove the null-terminator.
+		else
+			midday.clear();
+		return midday;
+	}
+
+	// Replaces conflicting time format specifiers by a special character.
+	bool escapeTimeFormat(generic_string& format)
+	{
+		bool modified = false;
+		for (auto& ch : format)
+		{
+			if (ch == middayFormat[0])
+			{
+				ch = timeFmtEscapeChar;
+				modified = true;
+			}
+		}
+		return modified;
+	}
+
+	// Replaces special time format characters by actual AM/PM string.
+	void unescapeTimeFormat(generic_string& format, const generic_string& midday)
+	{
+		if (midday.empty())
+		{
+			auto it = std::remove(format.begin(), format.end(), timeFmtEscapeChar);
+			if (it != format.end())
+				format.erase(it, format.end());
+		}
+		else
+		{
+			size_t i = 0;
+			while ((i = format.find(timeFmtEscapeChar, i)) != generic_string::npos)
+			{
+				if (i + 1 < format.size() && format[i + 1] == timeFmtEscapeChar)
+				{
+					// 'tt' => AM/PM
+					format.erase(i, std::size(middayFormat) - 1);
+					format.insert(i, midday);
+				}
+				else
+				{
+					// 't' => A/P
+					format[i] = midday[0];
+				}
+			}
+		}
+	}
+}
+
 generic_string getDateTimeStrFrom(const generic_string& dateTimeFormat, const SYSTEMTIME& st)
 {
-	generic_string dateTimeStr = dateTimeFormat;
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("Y"), std::to_wstring(st.wYear));
-	wchar_t buf[3];
-	_snwprintf(buf, sizeof(buf), TEXT("%02d"), st.wMonth);
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("M"), buf);
+	const TCHAR* localeName = LOCALE_NAME_USER_DEFAULT;
+	const DWORD flags = 0;
 
-	_snwprintf(buf, sizeof(buf), TEXT("%02d"), st.wDay);
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("D"), buf);
+	constexpr int bufferSize = MAX_PATH;
+	TCHAR buffer[bufferSize] = {};
+	int ret = 0;
 
-	_snwprintf(buf, sizeof(buf), TEXT("%02d"), st.wHour);
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("h"), buf);
 
-	_snwprintf(buf, sizeof(buf), TEXT("%02d"), st.wMinute);
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("m"), buf);
+	// 1. Escape 'tt' that means AM/PM or 't' that means A/P.
+	// This is needed to avoid conflict with 'M' date format that stands for month.
+	generic_string newFormat = dateTimeFormat;
+	const bool hasMiddayFormat = escapeTimeFormat(newFormat);
 
-	_snwprintf(buf, sizeof(buf), TEXT("%02d"), st.wSecond);
-	dateTimeStr = stringReplace(dateTimeStr, TEXT("s"), buf);
+	// 2. Format the time (h/m/s/t/H).
+	ret = GetTimeFormatEx(localeName, flags, &st, newFormat.c_str(), buffer, bufferSize);
+	if (ret != 0)
+	{
+		// 3. Format the date (d/y/g/M). 
+		// Now use the buffer as a format string to process the format specifiers not recognized by GetTimeFormatEx().
+		ret = GetDateFormatEx(localeName, flags, &st, buffer, buffer, bufferSize, nullptr);
+	}
 
-	return dateTimeStr;
+	if (ret != 0)
+	{
+		if (hasMiddayFormat)
+		{
+			// 4. Now format only the AM/PM string.
+			const generic_string midday = getMiddayString(localeName, st);
+			generic_string result = buffer;
+			unescapeTimeFormat(result, midday);
+			return result;
+		}
+		return buffer;
+	}
+
+	return {};
 }
