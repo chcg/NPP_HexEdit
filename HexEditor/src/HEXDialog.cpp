@@ -1077,12 +1077,7 @@ void HexEdit::Copy(void)
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
-		//char strs[] = "Geeks";
-		//string s = "";
-		//s.assign(clipboard.text, clipboard.text + length);
-		//std::wstring stemp = std::wstring(s.begin(), s.end());
-		//LPCWSTR sw = stemp.c_str();
-		//::MessageBox(_hParent, sw, _T("Explorer"), MB_OK | MB_ICONERROR);
+
 		/* copy data into scintilla handle (encoded if necessary) */
 		hSciTgt = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 
