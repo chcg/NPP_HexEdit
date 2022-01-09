@@ -114,7 +114,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 			case LVN_GETDISPINFO:
 			{
 				static CHAR  text[129] = "\0";
-				LV_ITEM * lvItem = (LV_ITEM*)(&((NMLVDISPINFO*)lParam)->item);
+				LV_ITEM* lvItem = (LV_ITEM*)(&((NMLVDISPINFO*)lParam)->item);
 
 				if (lvItem->mask & LVIF_TEXT)
 				{
@@ -175,7 +175,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 						tCmpResult* pCmpResult = _pCurProp->pCmpResult;
 						if ((pCmpResult->lenCmpCache == 0) ||
 							((curPos < pCmpResult->offCmpCache) ||
-							((curPos - pCmpResult->offCmpCache) >= CACHE_FILL))) {
+								((curPos - pCmpResult->offCmpCache) >= CACHE_FILL))) {
 
 							DWORD	hasRead = 0;
 							INT     offCmpCache = (curPos - CACHE_FILL) - (curPos % _pCurProp->columns);
@@ -1043,7 +1043,7 @@ void HexEdit::UpdateHeader(BOOL)
 		if (items)
 		{
 			items = items / _pCurProp->columns / _pCurProp->bits;
-			ListView_SetItemCountEx(_hListCtrl, ((_currLength%VIEW_ROW) ? items + 1 : items), LVSICF_NOSCROLL);
+			ListView_SetItemCountEx(_hListCtrl, ((_currLength % VIEW_ROW) ? items + 1 : items), LVSICF_NOSCROLL);
 		}
 		else
 		{
@@ -1061,8 +1061,6 @@ void HexEdit::UpdateHeader(BOOL)
 		}
 	}
 }
-
-
 void HexEdit::Copy(void)
 {
 	if (_pCurProp == NULL)
@@ -1079,7 +1077,12 @@ void HexEdit::Copy(void)
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
-
+		//char strs[] = "Geeks";
+		//string s = "";
+		//s.assign(clipboard.text, clipboard.text + length);
+		//std::wstring stemp = std::wstring(s.begin(), s.end());
+		//LPCWSTR sw = stemp.c_str();
+		//::MessageBox(_hParent, sw, _T("Explorer"), MB_OK | MB_ICONERROR);
 		/* copy data into scintilla handle (encoded if necessary) */
 		hSciTgt = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 
@@ -1161,7 +1164,7 @@ void HexEdit::Copy(void)
 					length = clipboard.stride;
 					if (LittleEndianChange(hSciTgt, _hParentHandle, &offset, &length) == TRUE) {
 						::SendMessage(hSciTgt, SCI_SETSEL, posBeg - offset, (LPARAM)posBeg - offset + clipboard.stride);
-						::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i*clipboard.stride]);
+						::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i * clipboard.stride]);
 						posBeg += VIEW_ROW;
 					}
 				}
@@ -1275,7 +1278,7 @@ void HexEdit::Cut(void)
 						for (UINT i = 0; i < clipboard.items; i++)
 						{
 							::SendMessage(hSciTgt, SCI_SETSEL, posBeg - offset, (LPARAM)posBeg - offset + clipboard.stride);
-							::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i*clipboard.stride]);
+							::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i * clipboard.stride]);
 							::SendMessage(hSciTgt, SCI_REPLACESEL, 0, (LPARAM)"\0");
 							/* replace selection with "" */
 							if (eError::E_OK != replaceLittleToBig(_hParentHandle, NULL, 0, posBeg, clipboard.stride, 0))
@@ -1399,7 +1402,7 @@ void HexEdit::Paste(void)
 			UINT	lineCnt = ScintillaMsg(hSciTgt, SCI_GETLINECOUNT);
 			UINT	charPerLine = ScintillaMsg(hSciTgt, SCI_LINELENGTH, 0);
 			LPSTR	buffer = (LPSTR)new CHAR[charPerLine + 1];
-			LPSTR   target = (LPSTR)new CHAR[charPerLine*lineCnt + 1];
+			LPSTR   target = (LPSTR)new CHAR[charPerLine * lineCnt + 1];
 
 			if ((buffer != NULL) && (target != NULL))
 			{
@@ -1424,7 +1427,7 @@ void HexEdit::Paste(void)
 
 						/* get chars */
 						UINT	i = 0;
-						char*	p_end = buffer + curLength;
+						char* p_end = buffer + curLength;
 						p_buffer = &buffer[size];
 
 						while (i < (UINT)(p_end - p_buffer))
@@ -1602,7 +1605,7 @@ void HexEdit::Paste(void)
 		/* destory scintilla handle */
 		CleanScintillaBuf(hSciTgt);
 		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
-	}
+		}
 	else
 	{
 		HWND	hSciTgt = NULL;
@@ -1673,9 +1676,9 @@ void HexEdit::Paste(void)
 			posEnd = posBeg + g_clipboard.stride;
 			for (UINT i = 0; i < g_clipboard.items; i++)
 			{
-				::SendMessage(hSciTgt, SCI_ADDTEXT, g_clipboard.stride, (LPARAM)&g_clipboard.text[i*g_clipboard.stride]);
+				::SendMessage(hSciTgt, SCI_ADDTEXT, g_clipboard.stride, (LPARAM)&g_clipboard.text[i * g_clipboard.stride]);
 				UpdateBookmarks(posBeg, g_clipboard.stride);
-				if (eError::E_OK != replaceLittleToBig(_hParentHandle, hSciTgt, i*g_clipboard.stride, posBeg, stride, g_clipboard.stride))
+				if (eError::E_OK != replaceLittleToBig(_hParentHandle, hSciTgt, i * g_clipboard.stride, posBeg, stride, g_clipboard.stride))
 				{
 					LITTLE_DELETE_ERROR;
 					return;
@@ -1697,7 +1700,7 @@ void HexEdit::Paste(void)
 
 	}
 	SciSubClassWrp::execute(SCI_ENDUNDOACTION);
-}
+	}
 
 void HexEdit::SelectAll(void)
 {
@@ -1821,7 +1824,7 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 			{
 				ScintillaGetText(_hParentHandle, text, posBeg, _currLength);
 				AddressConvert(text, _currLength - posBeg);
-				memset(&text[(_currLength - posBeg)*FACTOR], 0x20, SUBITEM_LENGTH);
+				memset(&text[(_currLength - posBeg) * FACTOR], 0x20, SUBITEM_LENGTH);
 				text[SUBITEM_LENGTH] = 0;
 			}
 		}
@@ -1918,7 +1921,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 			{
 				for (UINT j = 1; j <= _pCurProp->bits; j++)
 				{
-					*pText = temp[_pCurProp->bits*i - j];
+					*pText = temp[_pCurProp->bits * i - j];
 					pText++;
 				}
 			}
@@ -1948,7 +1951,7 @@ void HexEdit::BinHexConvert(LPSTR text, INT length)
 	}
 	else
 	{
-		char*	pText = temp;
+		char* pText = temp;
 		for (INT i = 0; i < length; i++)
 		{
 			text[i] = 0;
@@ -2015,6 +2018,10 @@ void HexEdit::TrackMenu(POINT pt)
 	::AppendMenu(hMenu, MF_STRING | style, 2, _T("Copy"));
 	::AppendMenu(hMenu, MF_STRING | ((!SciSubClassWrp::execute(SCI_CANPASTE)) ? MF_GRAYED : 0), 3, _T("Paste"));
 	::AppendMenu(hMenu, MF_STRING | style, 4, _T("Delete"));
+	::AppendMenu(hMenu, MF_SEPARATOR, 0, _T("-----------------"));
+	::AppendMenu(hMenu, MF_STRING | style, 15, _T("Cut Binary Content"));
+	::AppendMenu(hMenu, MF_STRING | style, 13, _T("Copy Binary Content"));
+	::AppendMenu(hMenu, MF_STRING | ((!SciSubClassWrp::execute(SCI_CANPASTE)) ? MF_GRAYED : 0), 14, _T("Paste Binary Content"));
 	::AppendMenu(hMenu, MF_SEPARATOR, 0, _T("-----------------"));
 	::AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, _T("View in"));
 	::AppendMenu(hMenu, MF_SEPARATOR, 0, _T("-----------------"));
@@ -2152,6 +2159,20 @@ void HexEdit::TrackMenu(POINT pt)
 	{
 		_pCurProp->isLittle ^= TRUE;
 		break;
+	}
+	case 13:
+	{
+		CopyBinary();
+		break;
+	}
+	case 14:
+	{
+		PasteBinary();
+		break;
+	}
+	case 15:
+	{
+		CutBinary();
 	}
 	default:
 		isChanged = FALSE;
@@ -2333,7 +2354,7 @@ void HexEdit::SelectItem(UINT iItem, UINT iSubItem, INT iCursor)
 		_pCurProp->isSel = FALSE;
 
 		if ((editMax == _currLength + _pCurProp->bits) && (_pCurProp->cursorSubItem == 1) &&
-			((_currLength / VIEW_ROW) == static_cast<UINT>(ListView_GetItemCount(_hListCtrl)) ))
+			((_currLength / VIEW_ROW) == static_cast<UINT>(ListView_GetItemCount(_hListCtrl))))
 		{
 			UINT itemCnt = ListView_GetItemCount(_hListCtrl);
 			ListView_SetItemCountEx(_hListCtrl, itemCnt + 1, 0);
@@ -2603,7 +2624,7 @@ BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM)
 
 	InvalidateList();
 	return FALSE;
-}
+	}
 
 
 void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
@@ -2715,14 +2736,14 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		if ((_pCurProp->anchorSubItem == _pCurProp->cursorSubItem) &&
 			(_pCurProp->anchorPos > _pCurProp->cursorPos) &&
 			(((_pCurProp->anchorItem == _pCurProp->cursorItem) && (_pCurProp->selection == eSel::HEX_SEL_NORM)) ||
-			(_pCurProp->selection == eSel::HEX_SEL_BLOCK)))
+				(_pCurProp->selection == eSel::HEX_SEL_BLOCK)))
 		{
 			firstCur = _pCurProp->cursorPos;
 			lastCur = _pCurProp->anchorPos;
 		}
 
 		INT			factor1 = (firstCur % _pCurProp->bits) * FACTOR;
-		INT			factor2 = (lastCur  % _pCurProp->bits) * FACTOR;
+		INT			factor2 = (lastCur % _pCurProp->bits) * FACTOR;
 
 		switch (_pCurProp->selection)
 		{
@@ -2971,7 +2992,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 		_pCurProp->isSel = FALSE;
 
 		if ((editMax == _currLength + 1) && (iCursor == 0) &&
-			((_currLength / VIEW_ROW) == static_cast<UINT>(ListView_GetItemCount(_hListCtrl)) ))
+			((_currLength / VIEW_ROW) == static_cast<UINT>(ListView_GetItemCount(_hListCtrl))))
 		{
 			INT itemCnt = ListView_GetItemCount(_hListCtrl);
 			ListView_SetItemCountEx(_hListCtrl, itemCnt + 1, 0);
@@ -3166,7 +3187,7 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 		else {
 			/* add char */
 			if (_pCurProp->isLittle == TRUE) {
-				SciSubClassWrp::execute(SCI_SETCURRENTPOS, _currLength - (_currLength%_pCurProp->bits));
+				SciSubClassWrp::execute(SCI_SETCURRENTPOS, _currLength - (_currLength % _pCurProp->bits));
 			}
 			SciSubClassWrp::execute(SCI_ADDTEXT, 1, (LPARAM)&wParam);
 		}
@@ -3261,7 +3282,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 		if (((_pCurProp->selection == eSel::HEX_SEL_BLOCK) && ((_pCurProp->anchorSubItem > _pCurProp->cursorSubItem) ||
 			((_pCurProp->anchorSubItem == _pCurProp->cursorSubItem) && (_pCurProp->anchorPos > _pCurProp->cursorPos)))) ||
 			(((_pCurProp->anchorItem > _pCurProp->cursorItem) && (_pCurProp->selection == eSel::HEX_SEL_NORM)) ||
-			((_pCurProp->anchorPos > _pCurProp->cursorPos) && (_pCurProp->anchorItem == _pCurProp->cursorItem) && (_pCurProp->selection == eSel::HEX_SEL_NORM))))
+				((_pCurProp->anchorPos > _pCurProp->cursorPos) && (_pCurProp->anchorItem == _pCurProp->cursorItem) && (_pCurProp->selection == eSel::HEX_SEL_NORM))))
 		{
 			firstCur = _pCurProp->cursorPos;
 			lastCur = _pCurProp->anchorPos - 1;
@@ -4029,7 +4050,7 @@ void HexEdit::CutBookmarkLines(void)
 			if (LittleEndianChange(hSciTgt, _hParentHandle, &offset, &length) == TRUE)
 			{
 				::SendMessage(hSciTgt, SCI_SETSEL, 0, (LPARAM)length);
-				::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i*VIEW_ROW]);
+				::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i * VIEW_ROW]);
 				SciSubClassWrp::execute(SCI_SETSEL, offset, (LPARAM)offset + length);
 				SciSubClassWrp::execute(SCI_REPLACESEL, 0, (LPARAM)"\0");
 			}
@@ -4102,7 +4123,7 @@ void HexEdit::CopyBookmarkLines(void)
 			if (LittleEndianChange(hSciTgt, _hParentHandle, &offset, &length) == TRUE)
 			{
 				::SendMessage(hSciTgt, SCI_SETSEL, 0, (LPARAM)length);
-				::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i*VIEW_ROW]);
+				::SendMessage(hSciTgt, SCI_GETSELTEXT, 0, (LPARAM)&clipboard.text[i * VIEW_ROW]);
 			}
 		}
 	}
@@ -4455,4 +4476,194 @@ void HexEdit::ConvertSelHEXToNpp(void)
 		}
 		}
 	}
+}
+////Code taken from NPP code, and modified to match hex-editor Copy
+//https://github.com/notepad-plus-plus/notepad-plus-plus/blob/9be4eeb4e6b59b28593af5c9f89c9612ea571674/PowerEditor/src/NppCommands.cpp
+void HexEdit::getText(char* dest, size_t start, size_t end) const
+{
+	Sci_TextRange tr;
+	tr.chrg.cpMin = static_cast<long>(start);
+	tr.chrg.cpMax = static_cast<long>(end);
+	tr.lpstrText = dest;
+	execute(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+}
+char* HexEdit::getWordFromRange(char* txt, int size, int pos1, int pos2)
+{
+	if (!size)
+		return NULL;
+	if (pos1 > pos2)
+	{
+		int tmp = pos1;
+		pos1 = pos2;
+		pos2 = tmp;
+	}
+
+	if (size < pos2 - pos1)
+		return NULL;
+
+	getText(txt, pos1, pos2);
+	return txt;
+}
+bool HexEdit::expandWordSelection()
+{
+	pair<int, int> wordRange = getWordRange();
+	if (wordRange.first != wordRange.second)
+	{
+		SciSubClassWrp::execute(SCI_SETSELECTIONSTART, wordRange.first);
+		SciSubClassWrp::execute(SCI_SETSELECTIONEND, wordRange.second);
+		return true;
+	}
+	return false;
+}
+pair<int, int> HexEdit::getWordRange()
+{
+	auto caretPos = SciSubClassWrp::execute(SCI_GETCURRENTPOS, 0, 0);
+	int startPos = static_cast<int>(SciSubClassWrp::execute(SCI_WORDSTARTPOSITION, caretPos, true));
+	int endPos = static_cast<int>(SciSubClassWrp::execute(SCI_WORDENDPOSITION, caretPos, true));
+	return pair<int, int>(startPos, endPos);
+}
+
+
+char* HexEdit::getSelectedText(char* txt, int size, bool expand)
+{
+	if (!size)
+		return NULL;
+	Sci_CharacterRange range = getSelection();
+	if (range.cpMax == range.cpMin && expand)
+	{
+		expandWordSelection();
+		range = getSelection();
+	}
+	if (!(size > (range.cpMax - range.cpMin)))	//there must be atleast 1 byte left for zero terminator
+	{
+		range.cpMax = range.cpMin + size - 1;	//keep room for zero terminator
+	}
+	//getText(txt, range.cpMin, range.cpMax);
+	return getWordFromRange(txt, size, range.cpMin, range.cpMax);
+}
+void HexEdit::PasteBinary(void)
+{
+	//std::lock_guard<std::mutex> lock(command_mutex);
+	if (!IsClipboardFormatAvailable(CF_TEXT))
+		return;
+
+	if (!OpenClipboard(NULL))
+		return;
+
+	HGLOBAL hglb = GetClipboardData(CF_TEXT);
+	if (hglb != NULL)
+	{
+		char* lpchar = (char*)GlobalLock(hglb);
+		if (lpchar != NULL)
+		{
+			UINT cf_nppTextLen = RegisterClipboardFormat(CF_NPPTEXTLEN);
+			if (IsClipboardFormatAvailable(cf_nppTextLen))
+			{
+				HGLOBAL hglbLen = GetClipboardData(cf_nppTextLen);
+				if (hglbLen != NULL)
+				{
+					unsigned long* lpLen = (unsigned long*)GlobalLock(hglbLen);
+					if (lpLen != NULL)
+					{
+						execute(SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(""));
+						execute(SCI_ADDTEXT, *lpLen, reinterpret_cast<LPARAM>(lpchar));
+
+						GlobalUnlock(hglbLen);
+					}
+				}
+			}
+			else
+			{
+				execute(SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(lpchar));
+			}
+			GlobalUnlock(hglb);
+		}
+	}
+	CloseClipboard();
+}
+void HexEdit::CutBinary()
+{
+	CopyBinary();
+	Delete();
+}
+
+void HexEdit::CopyBinary(void)
+{
+
+	HWND		hSciTgt = nullptr;
+	INT			offset = 0;
+	INT			textLen = 0;
+	INT			posBeg = 0;
+	INT			posEnd = 0;
+
+	tClipboard	clipboard = { 0 };
+	size_t selectionStart = execute(SCI_GETSELECTIONSTART);
+	size_t selectionEnd = execute(SCI_GETSELECTIONEND);
+
+	int32_t strLen = static_cast<int32_t>(selectionEnd - selectionStart);
+	hSciTgt = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
+
+	GetSelection(&posBeg, &posEnd);
+	offset = posBeg;
+	textLen = CalcStride(posBeg, posEnd);
+
+	clipboard.length = textLen;
+	clipboard.text = (char*)new char[textLen + 1];
+	if (clipboard.text != NULL) {
+		if (LittleEndianChange(hSciTgt, _hParentHandle, &offset, &textLen) == TRUE) {
+			SciSubClassWrp::execute(SCI_SETSEL, posBeg, (LPARAM)posBeg + textLen);
+		}
+	}
+
+	textLen = static_cast<int32_t>(SciSubClassWrp::execute(SCI_GETSELTEXT, 0, 0)) - 1;
+	if (!textLen)
+		return;
+
+	char* pBinText = new char[textLen + 1];
+	getSelectedText(pBinText, textLen + 1, false);
+
+	// Open the clipboard, and empty it.
+	if (!OpenClipboard(NULL))
+		return;
+	EmptyClipboard();
+
+	// Allocate a global memory object for the text.
+	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (textLen + 1) * sizeof(unsigned char));
+	if (hglbCopy == NULL)
+	{
+		CloseClipboard();
+		return;
+	}
+
+	// Lock the handle and copy the text to the buffer.
+	unsigned char* lpucharCopy = (unsigned char*)GlobalLock(hglbCopy);
+	memcpy(lpucharCopy, pBinText, textLen * sizeof(unsigned char));
+	lpucharCopy[textLen] = 0;    // null character
+
+	GlobalUnlock(hglbCopy);
+
+	// Place the handle on the clipboard.
+	SetClipboardData(CF_TEXT, hglbCopy);
+
+
+	// Allocate a global memory object for the text length.
+	HGLOBAL hglbLenCopy = GlobalAlloc(GMEM_MOVEABLE, sizeof(unsigned long));
+	if (hglbLenCopy == NULL)
+	{
+		CloseClipboard();
+		return;
+	}
+
+	// Lock the handle and copy the text to the buffer.
+	unsigned long* lpLenCopy = (unsigned long*)GlobalLock(hglbLenCopy);
+	*lpLenCopy = textLen;
+
+	GlobalUnlock(hglbLenCopy);
+
+	// Place the handle on the clipboard.
+	UINT f = RegisterClipboardFormat(CF_NPPTEXTLEN);
+	SetClipboardData(f, hglbLenCopy);
+
+	CloseClipboard();
+
 }

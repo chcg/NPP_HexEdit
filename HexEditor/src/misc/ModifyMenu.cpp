@@ -31,6 +31,9 @@ tShortCut g_scList[] = {
 	{TRUE, IDM_EDIT_SELECTALL, {0}},
 	{TRUE, IDM_EDIT_DELETE, {0}},
 	{TRUE, IDM_EDIT_COPY, {0}},
+	{TRUE, IDM_EDIT_CUT_BINARY,{0}},
+	{TRUE, IDM_EDIT_PASTE_BINARY,{0}},
+	{TRUE, IDM_EDIT_COPY_BINARY,{0}},
 	{TRUE, IDM_EDIT_CUT, {0}},
 	{TRUE, IDM_EDIT_PASTE, {0}},
 	{TRUE, IDM_EDIT_REDO, {0}},
@@ -165,6 +168,9 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 				}
 				case IDM_EDIT_CUT:
 				case IDM_EDIT_COPY:
+				case IDM_EDIT_COPY_BINARY:
+				case IDM_EDIT_CUT_BINARY:
+				case IDM_EDIT_PASTE_BINARY:
 				case IDM_EDIT_UNDO:
 				case IDM_EDIT_REDO:
 				case IDM_EDIT_PASTE:
@@ -293,7 +299,7 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 	::DrawMenuBar(hWnd);
 }
 
-void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
+void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu>& vMenuInfo)
 {
 	tMenu	menuItem;
 	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
@@ -317,7 +323,7 @@ void StoreNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 	}
 }
 
-void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
+void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu>& vMenuInfo)
 {
 	UINT	nPos = 0;
 
@@ -334,7 +340,7 @@ void UpdateNppMenuInfo(HMENU hMenuItem, vector<tMenu> & vMenuInfo)
 }
 
 
-UINT CreateNppMenu(HMENU & hMenuItem, vector<tMenu> & vMenuInfo, const UINT* idArray)
+UINT CreateNppMenu(HMENU& hMenuItem, vector<tMenu>& vMenuInfo, const UINT* idArray)
 {
 	UINT    cnt = 0;
 	BOOL	lastSep = FALSE;
