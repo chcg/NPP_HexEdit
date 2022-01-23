@@ -766,6 +766,11 @@ LRESULT CALLBACK SubWndProcNotepad(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			case IDM_EDIT_COPY:
 				pCurHexEdit->Copy();
 				return TRUE;
+			case IDM_EDIT_COPY_BINARY:
+				pCurHexEdit->CopyBinary();
+				return TRUE;
+			case IDM_EDIT_PASTE_BINARY:
+				pCurHexEdit->PasteBinary();
 			case IDM_EDIT_PASTE:
 				pCurHexEdit->Paste();
 				return TRUE;

@@ -43,6 +43,7 @@ constexpr auto HEX_FIRST_TIME_VIS = (0xFFFFFFFF);
 #define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
 #define FULL_SUBITEM		((_pCurProp->cursorItem * VIEW_ROW + (_pCurProp->cursorSubItem * _pCurProp->bits)) <= _currLength)
 #define DUMP_FIELD			(_pCurProp->columns + 1)
+#define CF_NPPTEXTLEN	TEXT("Notepad++ Binary Text Length")
 
 extern tClipboard	g_clipboard;
 
@@ -64,7 +65,12 @@ public:
 			::DeleteObject(_hFont);
 		}
 	};
-
+	Sci_CharacterRange getSelection() const {
+		Sci_CharacterRange crange;
+		crange.cpMin = long(execute(SCI_GETSELECTIONSTART));
+		crange.cpMax = long(execute(SCI_GETSELECTIONEND));
+		return crange;
+	};
 	void doDialog(BOOL toggle = FALSE);
 
 	void UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc);
@@ -127,8 +133,12 @@ public:
 
 	/* functions for subclassing interface */
 	void Cut(void);
+	void CutBinary(void);
+	char* getSelectedText(char* txt, int size, bool expand);
 	void Copy(void);
+	void CopyBinary(void);
 	void Paste(void);
+	void PasteBinary(void);
 	void Delete(void);
 	void SelectAll(void);
 	void ZoomIn(void);
@@ -142,6 +152,8 @@ public:
 	void CopyBookmarkLines(void);
 	void PasteBookmarkLines(void);
 	void DeleteBookmarkLines(void);
+
+
 
 	void RedoUndo(UINT position, INT length, UINT code)
 	{
@@ -347,9 +359,14 @@ public:
 
 protected:
 	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
+	std::pair<int, int> getWordRange();
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
+	void getText(char* dest, size_t start, size_t end) const;
+	char* getWordFromRange(char* txt, int size, int pos1, int pos2);
+	bool expandWordSelection();
+	
 	void ReadArrayToList(LPSTR text, INT iItem, INT iSubItem);
 	void AddressConvert(LPSTR text, INT length);
 	void DumpConvert(LPSTR text, UINT length);
