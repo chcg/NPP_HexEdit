@@ -168,6 +168,8 @@
     #define    IDM_EDIT_INSERT_DATETIME_SHORT                   (IDM_EDIT + 84)
     #define    IDM_EDIT_INSERT_DATETIME_LONG                    (IDM_EDIT + 85)
     #define    IDM_EDIT_INSERT_DATETIME_CUSTOMIZED              (IDM_EDIT + 86)
+    #define    IDM_EDIT_COPY_ALL_NAMES                          (IDM_EDIT + 87)
+    #define    IDM_EDIT_COPY_ALL_PATHS                          (IDM_EDIT + 88)
 
     #define    IDM_EDIT_AUTOCOMPLETE                            (50000 + 0)
     #define    IDM_EDIT_AUTOCOMPLETE_CURRENTFILE                (50000 + 1)
@@ -249,6 +251,8 @@
 #define    IDM_MISC    (IDM + 3500)
     #define    IDM_DOCLIST_FILESCLOSE             (IDM_MISC + 1)
     #define    IDM_DOCLIST_FILESCLOSEOTHERS       (IDM_MISC + 2)
+    #define    IDM_DOCLIST_COPYNAMES              (IDM_MISC + 3)
+    #define    IDM_DOCLIST_COPYPATHS              (IDM_MISC + 4)
 
 
 #define IDM_VIEW    (IDM + 4000)                
@@ -529,6 +533,7 @@
     #define    IDM_LANG_USER_LIMIT         (IDM_LANG + 210)     //46210: Ajust with IDM_LANG_USER
     #define    IDM_LANG_USER_DLG           (IDM_LANG + 250)     //46250: Used for translation
     #define    IDM_LANG_OPENUDLDIR         (IDM_LANG + 300)
+    #define    IDM_LANG_UDLCOLLECTION_PROJECT_SITE   (IDM_LANG + 301)
 
 
 

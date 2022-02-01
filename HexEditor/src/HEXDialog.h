@@ -67,8 +67,8 @@ public:
 	};
 	Sci_CharacterRange getSelection() const {
 		Sci_CharacterRange crange;
-		crange.cpMin = long(execute(SCI_GETSELECTIONSTART));
-		crange.cpMax = long(execute(SCI_GETSELECTIONEND));
+		crange.cpMin = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONSTART));
+		crange.cpMax = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONEND));
 		return crange;
 	};
 	void doDialog(BOOL toggle = FALSE);
@@ -134,7 +134,7 @@ public:
 	/* functions for subclassing interface */
 	void Cut(void);
 	void CutBinary(void);
-	char* getSelectedText(char* txt, int size, bool expand);
+	char* getSelectedText(char* txt, size_t size, bool expand = true);
 	void Copy(void);
 	void CopyBinary(void);
 	void Paste(void);
@@ -359,12 +359,12 @@ public:
 
 protected:
 	INT_PTR CALLBACK run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam);
-	std::pair<int, int> getWordRange();
+	std::pair<size_t, size_t> getWordRange();
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
 	void getText(char* dest, size_t start, size_t end) const;
-	char* getWordFromRange(char* txt, int size, int pos1, int pos2);
+	char* getWordFromRange(char* txt, size_t size, size_t pos1, size_t pos2);
 	bool expandWordSelection();
 	
 	void ReadArrayToList(LPSTR text, INT iItem, INT iSubItem);

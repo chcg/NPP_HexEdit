@@ -20,7 +20,6 @@
 #include <cassert>
 #include <codecvt>
 #include <locale>
-
 #include "StaticDialog.h"
 //#include "CustomFileDialog.h" //MODIFIED by HEXEDIT
 
@@ -28,6 +27,7 @@
 #include "Common.h"
 #include "Utf8.h"
 //#include <Parameters.h> //MODIFIED by HEXEDIT
+//#include "Buffer.h" //MODIFIED by HEXEDIT
 #include "NppDarkMode.h" //MODIFIED by HEXEDIT, added
 
 void printInt(int int2print)
@@ -116,7 +116,7 @@ generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath)
 /*NOT USED by HEXEDIT
 void writeFileContent(const TCHAR *file2write, const char *content2write)
 {
-	Win32_IO_File file(file2write, Win32_IO_File::Mode::WRITE);
+	Win32_IO_File file(file2write);
 
 	if (file.isOpened())
 		file.writeStr(content2write);
@@ -125,10 +125,32 @@ void writeFileContent(const TCHAR *file2write, const char *content2write)
 
 void writeLog(const TCHAR *logFileName, const char *log2write)
 {
-	Win32_IO_File file(logFileName, Win32_IO_File::Mode::APPEND);
+	const DWORD accessParam{ GENERIC_READ | GENERIC_WRITE };
+	const DWORD shareParam{ FILE_SHARE_READ | FILE_SHARE_WRITE };
+	const DWORD dispParam{ OPEN_ALWAYS }; // Open existing file for writing without destroying it or create new
+	const DWORD attribParam{ FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH };
+	HANDLE hFile = ::CreateFileW(logFileName, accessParam, shareParam, NULL, dispParam, attribParam, NULL);
 
-	if (file.isOpened())
-		file.writeStr(log2write);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		LARGE_INTEGER offset;
+		offset.QuadPart = 0;
+		::SetFilePointerEx(hFile, offset, NULL, FILE_END);
+
+		SYSTEMTIME currentTime = { 0 };
+		::GetLocalTime(&currentTime);
+		generic_string dateTimeStrW = getDateTimeStrFrom(TEXT("yyyy-MM-dd HH:mm:ss"), currentTime);
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		std::string log2writeStr = converter.to_bytes(dateTimeStrW);
+		log2writeStr += "  ";
+		log2writeStr += log2write;
+		log2writeStr += "\n";
+
+		DWORD bytes_written = 0;
+		::WriteFile(hFile, log2writeStr.c_str(), static_cast<DWORD>(log2writeStr.length()), &bytes_written, NULL);
+
+		::FlushFileBuffers(hFile);
+	}
 }
 
 
@@ -305,7 +327,7 @@ generic_string purgeMenuItemString(const TCHAR * menuItemStr, bool keepAmpersand
 }
 
 
-const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT codepage, int lenMbcs, int *pLenWc, int *pBytesNotProcessed)
+const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t codepage, int lenMbcs, int* pLenWc, int* pBytesNotProcessed)
 {
 	// Do not process NULL pointer
 	if (!mbcs2Convert)
@@ -318,36 +340,37 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT c
 		return _wideCharStr;
 	}
 
+	UINT cp = static_cast<UINT>(codepage);
 	int bytesNotProcessed = 0;
 	int lenWc = 0;
 
 	// If length not specified, simply convert without checking
 	if (lenMbcs == -1)
 	{
-		lenWc = MultiByteToWideChar(codepage, 0, mbcs2Convert, lenMbcs, NULL, 0);
+		lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs, NULL, 0);
 	}
 	// Otherwise, test if we are cutting a multi-byte character at end of buffer
-	else if (lenMbcs != -1 && codepage == CP_UTF8) // For UTF-8, we know how to test it
+	else if (lenMbcs != -1 && cp == CP_UTF8) // For UTF-8, we know how to test it
 	{
 		int indexOfLastChar = Utf8::characterStart(mbcs2Convert, lenMbcs-1); // get index of last character
 		if (indexOfLastChar != 0 && !Utf8::isValid(mbcs2Convert+indexOfLastChar, lenMbcs-indexOfLastChar)) // if it is not valid we do not process it right now (unless its the only character in string, to ensure that we always progress, e.g. that bytesNotProcessed < lenMbcs)
 		{
 			bytesNotProcessed = lenMbcs-indexOfLastChar;
 		}
-		lenWc = MultiByteToWideChar(codepage, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, NULL, 0);
+		lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, NULL, 0);
 	}
 	else // For other encodings, ask system if there are any invalid characters; note that it will not correctly know if last character is cut when there are invalid characters inside the text
 	{
-		lenWc = MultiByteToWideChar(codepage, (lenMbcs == -1) ? 0 : MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs, NULL, 0);
+		lenWc = MultiByteToWideChar(cp, (lenMbcs == -1) ? 0 : MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs, NULL, 0);
 		if (lenWc == 0 && GetLastError() == ERROR_NO_UNICODE_TRANSLATION)
 		{
 			// Test without last byte
-			if (lenMbcs > 1) lenWc = MultiByteToWideChar(codepage, MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs-1, NULL, 0);
+			if (lenMbcs > 1) lenWc = MultiByteToWideChar(cp, MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs-1, NULL, 0);
 			if (lenWc == 0) // don't have to check that the error is still ERROR_NO_UNICODE_TRANSLATION, since only the length parameter changed
 			{
 				// TODO: should warn user about incorrect loading due to invalid characters
 				// We still load the file, but the system will either strip or replace invalid characters (including the last character, if cut in half)
-				lenWc = MultiByteToWideChar(codepage, 0, mbcs2Convert, lenMbcs, NULL, 0);
+				lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs, NULL, 0);
 			}
 			else
 			{
@@ -360,7 +383,7 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT c
 	if (lenWc > 0)
 	{
 		_wideCharStr.sizeTo(lenWc);
-		MultiByteToWideChar(codepage, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, _wideCharStr, lenWc);
+		MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, _wideCharStr, lenWc);
 	}
 	else
 		_wideCharStr.empty();
@@ -376,21 +399,21 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT c
 
 // "mstart" and "mend" are pointers to indexes in mbcs2Convert,
 // which are converted to the corresponding indexes in the returned wchar_t string.
-const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT codepage, int *mstart, int *mend)
+const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend)
 {
 	// Do not process NULL pointer
 	if (!mbcs2Convert) return NULL;
-
-	int len = MultiByteToWideChar(codepage, 0, mbcs2Convert, -1, NULL, 0);
+	UINT cp = static_cast<UINT>(codepage);
+	int len = MultiByteToWideChar(cp, 0, mbcs2Convert, -1, NULL, 0);
 	if (len > 0)
 	{
 		_wideCharStr.sizeTo(len);
-		len = MultiByteToWideChar(codepage, 0, mbcs2Convert, -1, _wideCharStr, len);
+		len = MultiByteToWideChar(cp, 0, mbcs2Convert, -1, _wideCharStr, len);
 
 		if ((size_t)*mstart < strlen(mbcs2Convert) && (size_t)*mend <= strlen(mbcs2Convert))
 		{
-			*mstart = MultiByteToWideChar(codepage, 0, mbcs2Convert, *mstart, _wideCharStr, 0);
-			*mend   = MultiByteToWideChar(codepage, 0, mbcs2Convert, *mend, _wideCharStr, 0);
+			*mstart = MultiByteToWideChar(cp, 0, mbcs2Convert, static_cast<int>(*mstart), _wideCharStr, 0);
+			*mend   = MultiByteToWideChar(cp, 0, mbcs2Convert, static_cast<int>(*mend), _wideCharStr, 0);
 			if (*mstart >= len || *mend >= len)
 			{
 				*mstart = 0;
@@ -408,16 +431,16 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, UINT c
 }
 
 
-const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, UINT codepage, int lenWc, int *pLenMbcs)
+const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, int lenWc, int* pLenMbcs)
 {
 	if (nullptr == wcharStr2Convert)
 		return nullptr;
-
-	int lenMbcs = WideCharToMultiByte(codepage, 0, wcharStr2Convert, lenWc, NULL, 0, NULL, NULL);
+	UINT cp = static_cast<UINT>(codepage);
+	int lenMbcs = WideCharToMultiByte(cp, 0, wcharStr2Convert, lenWc, NULL, 0, NULL, NULL);
 	if (lenMbcs > 0)
 	{
 		_multiByteStr.sizeTo(lenMbcs);
-		WideCharToMultiByte(codepage, 0, wcharStr2Convert, lenWc, _multiByteStr, lenMbcs, NULL, NULL);
+		WideCharToMultiByte(cp, 0, wcharStr2Convert, lenWc, _multiByteStr, lenMbcs, NULL, NULL);
 	}
 	else
 		_multiByteStr.empty();
@@ -428,21 +451,21 @@ const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, UIN
 }
 
 
-const char * WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, UINT codepage, long *mstart, long *mend)
+const char * WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend)
 {
 	if (nullptr == wcharStr2Convert)
 		return nullptr;
-
-	int len = WideCharToMultiByte(codepage, 0, wcharStr2Convert, -1, NULL, 0, NULL, NULL);
+	UINT cp = static_cast<UINT>(codepage);
+	int len = WideCharToMultiByte(cp, 0, wcharStr2Convert, -1, NULL, 0, NULL, NULL);
 	if (len > 0)
 	{
 		_multiByteStr.sizeTo(len);
-		len = WideCharToMultiByte(codepage, 0, wcharStr2Convert, -1, _multiByteStr, len, NULL, NULL); // not needed?
+		len = WideCharToMultiByte(cp, 0, wcharStr2Convert, -1, _multiByteStr, len, NULL, NULL); // not needed?
 
         if (*mstart < lstrlenW(wcharStr2Convert) && *mend < lstrlenW(wcharStr2Convert))
         {
-			*mstart = WideCharToMultiByte(codepage, 0, wcharStr2Convert, *mstart, NULL, 0, NULL, NULL);
-			*mend = WideCharToMultiByte(codepage, 0, wcharStr2Convert, *mend, NULL, 0, NULL, NULL);
+			*mstart = WideCharToMultiByte(cp, 0, wcharStr2Convert, (int)*mstart, NULL, 0, NULL, NULL);
+			*mend = WideCharToMultiByte(cp, 0, wcharStr2Convert, (int)*mend, NULL, 0, NULL, NULL);
 			if (*mstart >= len || *mend >= len)
 			{
 				*mstart = 0;
@@ -519,7 +542,6 @@ generic_string intToString(int val)
 
 	return generic_string(vt.rbegin(), vt.rend());
 }
-
 
 generic_string uintToString(unsigned int val)
 {
@@ -611,7 +633,7 @@ generic_string PathRemoveFileSpec(generic_string& path)
 }
 
 
-generic_string PathAppend(generic_string& strDest, const generic_string& str2append)
+generic_string pathAppend(generic_string& strDest, const generic_string& str2append)
 {
 	if (strDest.empty() && str2append.empty()) // "" + ""
 	{
@@ -918,6 +940,28 @@ bool str2Clipboard(const generic_string &str2cpy, HWND hwnd)
 	return true;
 }
 
+/*NOT USED by HEXEDIT
+bool buf2Clipborad(const std::vector<Buffer*>& buffers, bool isFullPath, HWND hwnd)
+{
+	const generic_string crlf = _T("\r\n");
+	generic_string selection;
+	for (auto&& buf : buffers)
+	{
+		if (buf)
+		{
+			const TCHAR* fileName = isFullPath ? buf->getFullPathName() : buf->getFileName();
+			if (fileName)
+				selection += fileName;
+		}
+		if (!selection.empty() && !endsWith(selection, crlf))
+			selection += crlf;
+	}
+	if (!selection.empty())
+		return str2Clipboard(selection, hwnd);
+	return false;
+}
+NOT USED by HEXEDIT*/
+
 bool matchInList(const TCHAR *fileName, const std::vector<generic_string> & patterns)
 {
 	bool is_matched = false;
@@ -935,6 +979,27 @@ bool matchInList(const TCHAR *fileName, const std::vector<generic_string> & patt
 			is_matched = true;
 	}
 	return is_matched;
+}
+
+bool matchInExcludeDirList(const TCHAR* dirName, const std::vector<generic_string>& patterns, size_t level)
+{
+	for (size_t i = 0, len = patterns.size(); i < len; ++i)
+	{
+		size_t patterLen = patterns[i].length();
+
+		if (patterLen > 3 && patterns[i][0] == '!' && patterns[i][1] == '+' && patterns[i][2] == '\\') // check for !+\folderPattern: for all levels - search this pattern recursively
+		{
+			if (PathMatchSpec(dirName, patterns[i].c_str() + 3))
+				return true;
+		}
+		else if (patterLen > 2 && patterns[i][0] == '!' && patterns[i][1] == '\\') // check for !\folderPattern: exclusive pattern for only the 1st level
+		{
+			if (level == 1)
+				if (PathMatchSpec(dirName, patterns[i].c_str() + 2))
+					return true;
+		}
+	}
+	return false;
 }
 
 bool allPatternsAreExclusion(const std::vector<generic_string> patterns)
@@ -1227,7 +1292,7 @@ bool isAssoCommandExisting(LPCTSTR FullPathName)
 std::wstring s2ws(const std::string& str)
 {
 	using convert_typeX = std::codecvt_utf8<wchar_t>;
-	std::wstring_convert<convert_typeX, wchar_t> converterX;
+	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in N++ string conversion s2ws!", L"Error in N++ string conversion s2ws!");
 
 	return converterX.from_bytes(str);
 }
@@ -1235,7 +1300,7 @@ std::wstring s2ws(const std::string& str)
 std::string ws2s(const std::wstring& wstr)
 {
 	using convert_typeX = std::codecvt_utf8<wchar_t>;
-	std::wstring_convert<convert_typeX, wchar_t> converterX;
+	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in N++ string conversion ws2s!", L"Error in N++ string conversion ws2s!");
 
 	return converterX.to_bytes(wstr);
 }
@@ -1268,7 +1333,7 @@ bool deleteFileOrFolder(const generic_string& f2delete)
 void getFilesInFolder(std::vector<generic_string>& files, const generic_string& extTypeFilter, const generic_string& inFolder)
 {
 	generic_string filter = inFolder;
-	PathAppend(filter, extTypeFilter);
+	pathAppend(filter, extTypeFilter);
 
 	WIN32_FIND_DATA foundData;
 	HANDLE hFindFile = ::FindFirstFile(filter.c_str(), &foundData);
@@ -1276,13 +1341,13 @@ void getFilesInFolder(std::vector<generic_string>& files, const generic_string& 
 	if (hFindFile != INVALID_HANDLE_VALUE && !(foundData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 	{
 		generic_string foundFullPath = inFolder;
-		PathAppend(foundFullPath, foundData.cFileName);
+		pathAppend(foundFullPath, foundData.cFileName);
 		files.push_back(foundFullPath);
 
 		while (::FindNextFile(hFindFile, &foundData))
 		{
 			generic_string foundFullPath2 = inFolder;
-			PathAppend(foundFullPath2, foundData.cFileName);
+			pathAppend(foundFullPath2, foundData.cFileName);
 			files.push_back(foundFullPath2);
 		}
 	}
@@ -1438,4 +1503,23 @@ generic_string getDateTimeStrFrom(const generic_string& dateTimeFormat, const SY
 	}
 
 	return {};
+}
+
+// Don't forget to use DeleteObject(createdFont) before leaving the program
+HFONT createFont(const TCHAR* fontName, int fontSize, bool isBold, HWND hDestParent)
+{
+	HDC hdc = GetDC(hDestParent);
+
+	LOGFONT logFont = { 0 };
+	logFont.lfHeight = -MulDiv(fontSize, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	if (isBold)
+		logFont.lfWeight = FW_BOLD;
+
+	_tcscpy_s(logFont.lfFaceName, fontName);
+
+	HFONT newFont = CreateFontIndirect(&logFont);
+
+	ReleaseDC(hDestParent, hdc);
+
+	return newFont;
 }

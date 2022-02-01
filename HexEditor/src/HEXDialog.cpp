@@ -4473,22 +4473,23 @@ void HexEdit::ConvertSelHEXToNpp(void)
 	}
 }
 ////Code taken from NPP code, and modified to match hex-editor Copy
-//https://github.com/notepad-plus-plus/notepad-plus-plus/blob/9be4eeb4e6b59b28593af5c9f89c9612ea571674/PowerEditor/src/NppCommands.cpp
+//https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/ScintillaComponent/ScintillaEditView.cpp
 void HexEdit::getText(char* dest, size_t start, size_t end) const
 {
 	Sci_TextRange tr;
-	tr.chrg.cpMin = static_cast<long>(start);
-	tr.chrg.cpMax = static_cast<long>(end);
+	tr.chrg.cpMin = static_cast<Sci_PositionCR>(start);
+	tr.chrg.cpMax = static_cast<Sci_PositionCR>(end);
 	tr.lpstrText = dest;
 	execute(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
 }
-char* HexEdit::getWordFromRange(char* txt, int size, int pos1, int pos2)
+
+char* HexEdit::getWordFromRange(char* txt, size_t size, size_t pos1, size_t pos2)
 {
 	if (!size)
 		return NULL;
 	if (pos1 > pos2)
 	{
-		int tmp = pos1;
+		size_t tmp = pos1;
 		pos1 = pos2;
 		pos2 = tmp;
 	}
@@ -4499,9 +4500,10 @@ char* HexEdit::getWordFromRange(char* txt, int size, int pos1, int pos2)
 	getText(txt, pos1, pos2);
 	return txt;
 }
+
 bool HexEdit::expandWordSelection()
 {
-	pair<int, int> wordRange = getWordRange();
+	pair<size_t, size_t> wordRange = getWordRange();
 	if (wordRange.first != wordRange.second)
 	{
 		SciSubClassWrp::execute(SCI_SETSELECTIONSTART, wordRange.first);
@@ -4510,16 +4512,16 @@ bool HexEdit::expandWordSelection()
 	}
 	return false;
 }
-pair<int, int> HexEdit::getWordRange()
+
+pair<size_t, size_t> HexEdit::getWordRange()
 {
-	auto caretPos = SciSubClassWrp::execute(SCI_GETCURRENTPOS, 0, 0);
-	int startPos = static_cast<int>(SciSubClassWrp::execute(SCI_WORDSTARTPOSITION, caretPos, true));
-	int endPos = static_cast<int>(SciSubClassWrp::execute(SCI_WORDENDPOSITION, caretPos, true));
-	return pair<int, int>(startPos, endPos);
+	size_t caretPos = SciSubClassWrp::execute(SCI_GETCURRENTPOS, 0, 0);
+	size_t startPos = SciSubClassWrp::execute(SCI_WORDSTARTPOSITION, caretPos, true);
+	size_t endPos = SciSubClassWrp::execute(SCI_WORDENDPOSITION, caretPos, true);
+	return pair<size_t, size_t>(startPos, endPos);
 }
 
-
-char* HexEdit::getSelectedText(char* txt, int size, bool expand)
+char* HexEdit::getSelectedText(char* txt, size_t size, bool expand)
 {
 	if (!size)
 		return NULL;
@@ -4529,13 +4531,13 @@ char* HexEdit::getSelectedText(char* txt, int size, bool expand)
 		expandWordSelection();
 		range = getSelection();
 	}
-	if (!(size > (range.cpMax - range.cpMin)))	//there must be atleast 1 byte left for zero terminator
+	if (!(static_cast<Sci_PositionCR>(size) > (range.cpMax - range.cpMin)))	//there must be atleast 1 byte left for zero terminator
 	{
-		range.cpMax = range.cpMin + size - 1;	//keep room for zero terminator
+		range.cpMax = range.cpMin + (Sci_PositionCR)size - 1;	//keep room for zero terminator
 	}
-	//getText(txt, range.cpMin, range.cpMax);
 	return getWordFromRange(txt, size, range.cpMin, range.cpMax);
 }
+
 void HexEdit::PasteBinary(void)
 {
 	//std::lock_guard<std::mutex> lock(command_mutex);
