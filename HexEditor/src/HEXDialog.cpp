@@ -980,7 +980,9 @@ void HexEdit::MoveView(void)
 		else if (::IsWindowVisible(_hParentHandle) == FALSE)
 		{
 			::ShowWindow(_hParentHandle, SW_SHOW);
+#ifdef ENABLE_CRASH_51
 			::SetFocus(_hParentHandle);
+#endif
 			::ShowWindow(_hSelf, SW_HIDE);
 			::ShowWindow(_hListCtrl, SW_HIDE);
 		}
@@ -4239,6 +4241,7 @@ void HexEdit::DeleteBookmarkLines(void)
 
 void HexEdit::SetStatusBar(void)
 {
+#ifdef ENABLE_FLICKERING_STATUSBAR_WITHOUT_51
 	if (_pCurProp && _pCurProp->isVisible == TRUE)
 	{
 		TCHAR buffer[64] = { 0 };
@@ -4262,6 +4265,7 @@ void HexEdit::SetStatusBar(void)
 		/* display information in which mode it is (BigEndian or Little) */
 		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_UNICODE_TYPE, (LPARAM)(_pCurProp->isLittle == FALSE ? _T("BigEndian") : _T("LittleEndian")));
 	}
+#endif
 }
 
 
