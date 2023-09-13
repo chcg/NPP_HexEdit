@@ -4601,7 +4601,7 @@ void HexEdit::CopyBinary(void)
 	size_t selectionStart = execute(SCI_GETSELECTIONSTART);
 	size_t selectionEnd = execute(SCI_GETSELECTIONEND);
 
-	int32_t strLen = static_cast<int32_t>(selectionEnd - selectionStart);
+	int32_t selectionLen = static_cast<int32_t>(selectionEnd - selectionStart);
 	hSciTgt = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 
 	GetSelection(&posBeg, &posEnd);
