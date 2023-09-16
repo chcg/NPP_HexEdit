@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <unordered_set>
 #include <algorithm>
+#include <tchar.h>
 
 
 const bool dirUp = true;
@@ -36,31 +37,20 @@ const bool dirDown = false;
 #define BCKGRD_COLOR (RGB(255,102,102))
 #define TXT_COLOR    (RGB(255,255,255))
 
-#define generic_strtol wcstol
-#define generic_strncpy wcsncpy
-#define generic_stricmp _wcsicmp //MODIFIED by HEXEDIT 
-#define generic_strncmp wcsncmp
-#define generic_strnicmp wcsnicmp
-#define generic_strncat wcsncat
-#define generic_strchr wcschr
-#define generic_atoi _wtoi
-#define generic_itoa _itow
-#define generic_atof _wtof
-#define generic_strtok wcstok
-#define generic_strftime wcsftime
-#define generic_fprintf fwprintf
-#define generic_sprintf swprintf
-#define generic_sscanf swscanf
-#define generic_fopen _wfopen
-#define generic_fgets fgetws
-#define COPYDATA_FILENAMES COPYDATA_FILENAMESW
-#define NPP_INTERNAL_FUCTION_STR TEXT("Notepad++::InternalFunction")
+#ifndef __MINGW32__
+#define WCSTOK wcstok
+#else
+#define WCSTOK wcstok_s
+#endif
+
+
+#define NPP_INTERNAL_FUCTION_STR L"Notepad++::InternalFunction"
 
 typedef std::basic_string<TCHAR> generic_string;
 typedef std::basic_stringstream<TCHAR> generic_stringstream;
 
-//NOT USED by HEXEDIT generic_string folderBrowser(HWND parent, const generic_string & title = TEXT(""), int outputCtrlID = 0, const TCHAR *defaultStr = NULL);
-//NOT USED by HEXEDIT generic_string getFolderName(HWND parent, const TCHAR *defaultDir = NULL);
+generic_string folderBrowser(HWND parent, const generic_string & title = TEXT(""), int outputCtrlID = 0, const TCHAR *defaultStr = NULL);
+generic_string getFolderName(HWND parent, const TCHAR *defaultDir = NULL);
 
 void printInt(int int2print);
 void printStr(const TCHAR *str2print);
@@ -77,7 +67,7 @@ void ScreenRectToClientRect(HWND hWnd, RECT* rect);
 std::wstring string2wstring(const std::string & rString, UINT codepage);
 std::string wstring2string(const std::wstring & rwString, UINT codepage);
 bool isInList(const TCHAR *token, const TCHAR *list);
-generic_string BuildMenuFileName(int filenameLen, unsigned int pos, const generic_string &filename);
+generic_string BuildMenuFileName(int filenameLen, unsigned int pos, const generic_string &filename, bool ordinalNumber = true);
 
 std::string getFileContent(const TCHAR *file2read);
 generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath);
@@ -131,7 +121,7 @@ protected:
 			{
 				if (_allocLen)
 					delete[] _str;
-				_allocLen = max(size, initSize);
+				_allocLen = std::max<size_t>(size, initSize);
 				_str = new T[_allocLen];
 			}
 		}
@@ -159,10 +149,6 @@ protected:
 };
 
 
-
-#define MACRO_RECORDING_IN_PROGRESS 1
-#define MACRO_RECORDING_HAS_STOPPED 2
-
 #define REBARBAND_SIZE sizeof(REBARBANDINFO)
 
 generic_string PathRemoveFileSpec(generic_string & path);
@@ -171,9 +157,9 @@ COLORREF getCtrlBgColor(HWND hWnd);
 generic_string stringToUpper(generic_string strToConvert);
 generic_string stringToLower(generic_string strToConvert);
 generic_string stringReplace(generic_string subject, const generic_string& search, const generic_string& replace);
-std::vector<generic_string> stringSplit(const generic_string& input, const generic_string& delimiter);
+void stringSplit(const generic_string& input, const generic_string& delimiter, std::vector<generic_string>& output);
 bool str2numberVector(generic_string str2convert, std::vector<size_t>& numVect);
-generic_string stringJoin(const std::vector<generic_string>& strings, const generic_string& separator);
+void stringJoin(const std::vector<generic_string>& strings, const generic_string& separator, generic_string& joinedString);
 generic_string stringTakeWhileAdmissable(const generic_string& input, const generic_string& admissable);
 double stodLocale(const generic_string& str, _locale_t loc, size_t* idx = NULL);
 
@@ -191,7 +177,7 @@ generic_string uintToString(unsigned int val);
 HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText, bool isRTL);
 HWND CreateToolTipRect(int toolID, HWND hWnd, HINSTANCE hInst, const PTSTR pszText, const RECT rc);
 
-//NOT USED by HEXEDIT bool isCertificateValidated(const generic_string & fullFilePath, const generic_string & subjectName2check);
+bool isCertificateValidated(const generic_string & fullFilePath, const generic_string & subjectName2check);
 bool isAssoCommandExisting(LPCTSTR FullPathName);
 
 std::wstring s2ws(const std::string& str);
@@ -227,11 +213,70 @@ template<typename T> size_t vecRemoveDuplicates(std::vector<T>& vec, bool isSort
 	return vec.size();
 }
 
-void trim(generic_string& str);
-bool endsWith(const generic_string& s, const generic_string& suffix);
+void trim(std::wstring& str);
 
 int nbDigitsFromNbLines(size_t nbLines);
 
 generic_string getDateTimeStrFrom(const generic_string& dateTimeFormat, const SYSTEMTIME& st);
 
 HFONT createFont(const TCHAR* fontName, int fontSize, bool isBold, HWND hDestParent);
+bool removeReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath);
+
+bool isWin32NamespacePrefixedFileName(const generic_string& fileName);
+bool isWin32NamespacePrefixedFileName(const TCHAR* szFileName);
+bool isUnsupportedFileName(const generic_string& fileName);
+bool isUnsupportedFileName(const TCHAR* szFileName);
+
+class Version final
+{
+public:
+	Version() = default;
+	Version(const generic_string& versionStr);
+
+	void setVersionFrom(const generic_string& filePath);
+	generic_string toString();
+	bool isNumber(const generic_string& s) const {
+		return !s.empty() &&
+			find_if(s.begin(), s.end(), [](TCHAR c) { return !_istdigit(c); }) == s.end();
+	};
+
+	int compareTo(const Version& v2c) const;
+
+	bool operator < (const Version& v2c) const {
+		return compareTo(v2c) == -1;
+	};
+
+	bool operator <= (const Version& v2c) const {
+		int r = compareTo(v2c);
+		return r == -1 || r == 0;
+	};
+
+	bool operator > (const Version& v2c) const {
+		return compareTo(v2c) == 1;
+	};
+
+	bool operator >= (const Version& v2c) const {
+		int r = compareTo(v2c);
+		return r == 1 || r == 0;
+	};
+
+	bool operator == (const Version& v2c) const {
+		return compareTo(v2c) == 0;
+	};
+
+	bool operator != (const Version& v2c) const {
+		return compareTo(v2c) != 0;
+	};
+
+	bool empty() const {
+		return _major == 0 && _minor == 0 && _patch == 0 && _build == 0;
+	}
+
+	bool isCompatibleTo(const Version& from, const Version& to) const;
+
+private:
+	unsigned long _major = 0;
+	unsigned long _minor = 0;
+	unsigned long _patch = 0;
+	unsigned long _build = 0;
+};

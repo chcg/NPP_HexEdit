@@ -59,7 +59,7 @@ std::string getFileContent(const TCHAR *file2read)
 	const size_t blockSize = 1024;
 	char data[blockSize];
 	std::string wholeFileContent = "";
-	FILE *fp = generic_fopen(file2read, TEXT("rb"));
+	FILE *fp = _wfopen(file2read, TEXT("rb"));
 
 	size_t lenFile = 0;
 	do
@@ -128,16 +128,16 @@ void writeLog(const TCHAR *logFileName, const char *log2write)
 	const DWORD accessParam{ GENERIC_READ | GENERIC_WRITE };
 	const DWORD shareParam{ FILE_SHARE_READ | FILE_SHARE_WRITE };
 	const DWORD dispParam{ OPEN_ALWAYS }; // Open existing file for writing without destroying it or create new
-	const DWORD attribParam{ FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH };
+	const DWORD attribParam{ FILE_ATTRIBUTE_NORMAL };
 	HANDLE hFile = ::CreateFileW(logFileName, accessParam, shareParam, NULL, dispParam, attribParam, NULL);
 
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
-		LARGE_INTEGER offset;
+		LARGE_INTEGER offset{};
 		offset.QuadPart = 0;
 		::SetFilePointerEx(hFile, offset, NULL, FILE_END);
 
-		SYSTEMTIME currentTime = { 0 };
+		SYSTEMTIME currentTime = {};
 		::GetLocalTime(&currentTime);
 		generic_string dateTimeStrW = getDateTimeStrFrom(TEXT("yyyy-MM-dd HH:mm:ss"), currentTime);
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -150,6 +150,7 @@ void writeLog(const TCHAR *logFileName, const char *log2write)
 		::WriteFile(hFile, log2writeStr.c_str(), static_cast<DWORD>(log2writeStr.length()), &bytes_written, NULL);
 
 		::FlushFileBuffers(hFile);
+		::CloseHandle(hFile);
 	}
 }
 
@@ -190,7 +191,7 @@ NOT USED by HEXEDIT*/
 
 void ClientRectToScreenRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
@@ -231,7 +232,7 @@ std::vector<generic_string> tokenizeString(const generic_string & tokenString, c
 
 void ScreenRectToClientRect(HWND hWnd, RECT* rect)
 {
-	POINT		pt;
+	POINT		pt{};
 
 	pt.x		 = rect->left;
 	pt.y		 = rect->top;
@@ -263,7 +264,7 @@ bool isInList(const TCHAR *token, const TCHAR *list)
 	const size_t wordLen = 64;
 	size_t listLen = lstrlen(list);
 
-	TCHAR word[wordLen];
+	TCHAR word[wordLen] = { '\0' };
 	size_t i = 0;
 	size_t j = 0;
 
@@ -276,7 +277,7 @@ bool isInList(const TCHAR *token, const TCHAR *list)
 				word[j] = '\0';
 				j = 0;
 
-				if (!generic_stricmp(token, word))
+				if (!_wcsicmp(token, word))
 					return true;
 			}
 		}
@@ -334,7 +335,7 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 		return nullptr;
 
 	// Do not process empty strings
-	if (lenMbcs == 0 || lenMbcs == -1 && mbcs2Convert[0] == 0)
+	if (lenMbcs == 0 || (lenMbcs == -1 && mbcs2Convert[0] == 0))
 	{
 		_wideCharStr.empty();
 		return _wideCharStr;
@@ -433,8 +434,9 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 
 const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, int lenWc, int* pLenMbcs)
 {
-	if (nullptr == wcharStr2Convert)
+	if (!wcharStr2Convert)
 		return nullptr;
+
 	UINT cp = static_cast<UINT>(codepage);
 	int lenMbcs = WideCharToMultiByte(cp, 0, wcharStr2Convert, lenWc, NULL, 0, NULL, NULL);
 	if (lenMbcs > 0)
@@ -453,8 +455,9 @@ const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, siz
 
 const char * WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend)
 {
-	if (nullptr == wcharStr2Convert)
+	if (!wcharStr2Convert)
 		return nullptr;
+
 	UINT cp = static_cast<UINT>(codepage);
 	int len = WideCharToMultiByte(cp, 0, wcharStr2Convert, -1, NULL, 0, NULL, NULL);
 	if (len > 0)
@@ -559,24 +562,34 @@ generic_string uintToString(unsigned int val)
 }
 
 // Build Recent File menu entries from given
-generic_string BuildMenuFileName(int filenameLen, unsigned int pos, const generic_string &filename)
+generic_string BuildMenuFileName(int filenameLen, unsigned int pos, const generic_string &filename, bool ordinalNumber)
 {
 	generic_string strTemp;
 
-	if (pos < 9)
+	if (ordinalNumber)
 	{
-		strTemp.push_back('&');
-		strTemp.push_back('1' + static_cast<TCHAR>(pos));
-	}
-	else if (pos == 9)
-	{
-		strTemp.append(TEXT("1&0"));
+		if (pos < 9)
+		{
+			strTemp.push_back('&');
+			strTemp.push_back('1' + static_cast<TCHAR>(pos));
+		}
+		else if (pos == 9)
+		{
+			strTemp.append(TEXT("1&0"));
+		}
+		else
+		{
+			div_t splitDigits = div(pos + 1, 10);
+			strTemp.append(uintToString(splitDigits.quot));
+			strTemp.push_back('&');
+			strTemp.append(uintToString(splitDigits.rem));
+		}
+		strTemp.append(TEXT(": "));
 	}
 	else
 	{
-		strTemp.append(uintToString(pos + 1));
+		strTemp.push_back('&');
 	}
-	strTemp.append(TEXT(": "));
 
 	if (filenameLen > 0)
 	{
@@ -711,7 +724,7 @@ COLORREF getCtrlBgColor(HWND hWnd)
 generic_string stringToUpper(generic_string strToConvert)
 {
     std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), 
-        [](TCHAR ch){ return static_cast<TCHAR>(_totupper(ch)); }
+        [](wchar_t ch){ return static_cast<wchar_t>(towupper(ch)); }
     );
     return strToConvert;
 }
@@ -735,11 +748,10 @@ generic_string stringReplace(generic_string subject, const generic_string& searc
 }
 
 
-std::vector<generic_string> stringSplit(const generic_string& input, const generic_string& delimiter)
+void stringSplit(const generic_string& input, const generic_string& delimiter, std::vector<generic_string>& output)
 {
 	size_t start = 0U;
 	size_t end = input.find(delimiter);
-	std::vector<generic_string> output;
 	const size_t delimiterLength = delimiter.length();
 	while (end != std::string::npos)
 	{
@@ -748,7 +760,6 @@ std::vector<generic_string> stringSplit(const generic_string& input, const gener
 		end = input.find(delimiter, start);
 	}
 	output.push_back(input.substr(start, end));
-	return output;
 }
 
 
@@ -773,8 +784,9 @@ bool str2numberVector(generic_string str2convert, std::vector<size_t>& numVect)
 		}
 	}
 
-	std::vector<generic_string> v = stringSplit(str2convert, TEXT(" "));
-	for (auto i : v)
+	std::vector<generic_string> v;
+	stringSplit(str2convert, TEXT(" "), v);
+	for (const auto& i : v)
 	{
 		// Don't treat empty string and the number greater than 9999
 		if (!i.empty() && i.length() < 5)
@@ -785,19 +797,17 @@ bool str2numberVector(generic_string str2convert, std::vector<size_t>& numVect)
 	return true;
 }
 
-generic_string stringJoin(const std::vector<generic_string>& strings, const generic_string& separator)
+void stringJoin(const std::vector<generic_string>& strings, const generic_string& separator, generic_string& joinedString)
 {
-	generic_string joined;
 	size_t length = strings.size();
 	for (size_t i = 0; i < length; ++i)
 	{
-		joined += strings.at(i);
+		joinedString += strings.at(i);
 		if (i != length - 1)
 		{
-			joined += separator;
+			joinedString += separator;
 		}
 	}
-	return joined;
 }
 
 
@@ -816,7 +826,7 @@ generic_string stringTakeWhileAdmissable(const generic_string& input, const gene
 }
 
 
-double stodLocale(const generic_string& str, _locale_t loc, size_t* idx)
+double stodLocale(const generic_string& str, [[maybe_unused]] _locale_t loc, size_t* idx)
 {
 	// Copied from the std::stod implementation but uses _wcstod_l instead of wcstod.
 	const wchar_t* ptr = str.c_str();
@@ -923,7 +933,7 @@ bool str2Clipboard(const generic_string &str2cpy, HWND hwnd)
 		::CloseClipboard();
 		return false;
 	}
-	_tcscpy_s(pStr, len2Allocate / sizeof(TCHAR), str2cpy.c_str());
+	wcscpy_s(pStr, len2Allocate / sizeof(TCHAR), str2cpy.c_str());
 	::GlobalUnlock(hglbCopy);
 	// Place the handle on the clipboard.
 	unsigned int clipBoardFormat = CF_UNICODETEXT;
@@ -953,7 +963,7 @@ bool buf2Clipborad(const std::vector<Buffer*>& buffers, bool isFullPath, HWND hw
 			if (fileName)
 				selection += fileName;
 		}
-		if (!selection.empty() && !endsWith(selection, crlf))
+		if (!selection.empty() && !selection.ends_with(crlf))
 			selection += crlf;
 	}
 	if (!selection.empty())
@@ -1068,7 +1078,7 @@ HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText, 
 	NppDarkMode::setDarkTooltips(hwndTip, NppDarkMode::ToolTipsType::tooltip);
 
 	// Associate the tooltip with the tool.
-	TOOLINFO toolInfo = { 0 };
+	TOOLINFO toolInfo = {};
 	toolInfo.cbSize = sizeof(toolInfo);
 	toolInfo.hwnd = hDlg;
 	toolInfo.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
@@ -1109,7 +1119,7 @@ HWND CreateToolTipRect(int toolID, HWND hWnd, HINSTANCE hInst, const PTSTR pszTe
 	}
 
 	// Associate the tooltip with the tool.
-	TOOLINFO toolInfo = { 0 };
+	TOOLINFO toolInfo = {};
 	toolInfo.cbSize = sizeof(toolInfo);
 	toolInfo.hwnd = hWnd;
 	toolInfo.uFlags = TTF_SUBCLASS;
@@ -1143,7 +1153,7 @@ bool isCertificateValidated(const generic_string & fullFilePath, const generic_s
 	DWORD dwFormatType = 0;
 	PCMSG_SIGNER_INFO pSignerInfo = NULL;
 	DWORD dwSignerInfo = 0;
-	CERT_INFO CertInfo;
+	CERT_INFO CertInfo{};
 	LPTSTR szName = NULL;
 
 	generic_string subjectName;
@@ -1280,11 +1290,10 @@ bool isAssoCommandExisting(LPCTSTR FullPathName)
 
 		// check if association exist
 		hres = AssocQueryString(ASSOCF_VERIFY|ASSOCF_INIT_IGNOREUNKNOWN, ASSOCSTR_COMMAND, ext, NULL, buffer, &bufferLen);
-        
+
         isAssoCommandExisting = (hres == S_OK)                  // check if association exist and no error
-			&& (buffer != NULL)                                 // check if buffer is not NULL
 			&& (wcsstr(buffer, TEXT("notepad++.exe")) == NULL); // check association with notepad++
-        
+
 	}
 	return isAssoCommandExisting;
 }
@@ -1292,7 +1301,7 @@ bool isAssoCommandExisting(LPCTSTR FullPathName)
 std::wstring s2ws(const std::string& str)
 {
 	using convert_typeX = std::codecvt_utf8<wchar_t>;
-	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in N++ string conversion s2ws!", L"Error in N++ string conversion s2ws!");
+	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in Notepad++ string conversion s2ws!", L"Error in Notepad++ string conversion s2ws!");
 
 	return converterX.from_bytes(str);
 }
@@ -1300,7 +1309,7 @@ std::wstring s2ws(const std::string& str)
 std::string ws2s(const std::wstring& wstr)
 {
 	using convert_typeX = std::codecvt_utf8<wchar_t>;
-	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in N++ string conversion ws2s!", L"Error in N++ string conversion ws2s!");
+	std::wstring_convert<convert_typeX, wchar_t> converterX("Error in Notepad++ string conversion ws2s!", L"Error in Notepad++ string conversion ws2s!");
 
 	return converterX.to_bytes(wstr);
 }
@@ -1313,7 +1322,7 @@ bool deleteFileOrFolder(const generic_string& f2delete)
 	actionFolder[len] = 0;
 	actionFolder[len + 1] = 0;
 
-	SHFILEOPSTRUCT fileOpStruct = { 0 };
+	SHFILEOPSTRUCT fileOpStruct = {};
 	fileOpStruct.hwnd = NULL;
 	fileOpStruct.pFrom = actionFolder;
 	fileOpStruct.pTo = NULL;
@@ -1354,28 +1363,18 @@ void getFilesInFolder(std::vector<generic_string>& files, const generic_string& 
 	::FindClose(hFindFile);
 }
 
-void trim(generic_string& str)
+// remove any leading or trailing spaces from str
+void trim(std::wstring& str)
 {
-	// remove any leading or trailing spaces from str
+	std::wstring::size_type pos = str.find_last_not_of(' ');
 
-	generic_string::size_type pos = str.find_last_not_of(' ');
-
-	if (pos != generic_string::npos)
+	if (pos != std::wstring::npos)
 	{
 		str.erase(pos + 1);
 		pos = str.find_first_not_of(' ');
-		if (pos != generic_string::npos) str.erase(0, pos);
+		if (pos != std::wstring::npos) str.erase(0, pos);
 	}
 	else str.erase(str.begin(), str.end());
-}
-
-bool endsWith(const generic_string& s, const generic_string& suffix)
-{
-#if defined(_MSVC_LANG) && (_MSVC_LANG > 201402L)
-#error Replace this function with basic_string::ends_with
-#endif
-	size_t pos = s.find(suffix);
-	return pos != s.npos && ((s.length() - pos) == suffix.length());
 }
 
 int nbDigitsFromNbLines(size_t nbLines)
@@ -1390,7 +1389,7 @@ int nbDigitsFromNbLines(size_t nbLines)
 	else // rare case
 	{
 		nbDigits = 7;
-		nbLines /= 1000000;
+		nbLines /= 10000000;
 
 		while (nbLines)
 		{
@@ -1510,16 +1509,323 @@ HFONT createFont(const TCHAR* fontName, int fontSize, bool isBold, HWND hDestPar
 {
 	HDC hdc = GetDC(hDestParent);
 
-	LOGFONT logFont = { 0 };
+	LOGFONT logFont = {};
 	logFont.lfHeight = -MulDiv(fontSize, GetDeviceCaps(hdc, LOGPIXELSY), 72);
 	if (isBold)
 		logFont.lfWeight = FW_BOLD;
 
-	_tcscpy_s(logFont.lfFaceName, fontName);
+	wcscpy_s(logFont.lfFaceName, fontName);
 
 	HFONT newFont = CreateFontIndirect(&logFont);
 
 	ReleaseDC(hDestParent, hdc);
 
 	return newFont;
+}
+
+bool removeReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath)
+{
+	if (!PathFileExists(fileFullPath))
+		return false;
+
+	DWORD dwFileAttribs = ::GetFileAttributes(fileFullPath);
+	dwFileAttribs &= ~FILE_ATTRIBUTE_READONLY;
+	return (::SetFileAttributes(fileFullPath, dwFileAttribs) != FALSE);
+}
+
+/*NOT USED by HEXEDIT
+
+// "For file I/O, the "\\?\" prefix to a path string tells the Windows APIs to disable all string parsing
+// and to send the string that follows it straight to the file system..."
+// Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-file-namespaces
+bool isWin32NamespacePrefixedFileName(const generic_string& fileName)
+{
+	// TODO:
+	// ?! how to handle similar NT Object Manager path style prefix case \??\...
+	// (the \??\ prefix instructs the NT Object Manager to search in the caller's local device directory for an alias...)
+
+	// the following covers the \\?\... raw Win32-filenames or the \\?\UNC\... UNC equivalents
+	// and also its *nix like forward slash equivalents
+	return (fileName.starts_with(TEXT("\\\\?\\")) || fileName.starts_with(TEXT("//?/")));
+}
+
+bool isWin32NamespacePrefixedFileName(const TCHAR* szFileName)
+{
+	const generic_string fileName = szFileName;
+	return isWin32NamespacePrefixedFileName(fileName);
+}
+
+
+bool isUnsupportedFileName(const generic_string& fileName)
+{
+	bool isUnsupported = true;
+
+	// until the Notepad++ (and its plugins) will not be prepared for filenames longer than the MAX_PATH,
+	// we have to limit also the maximum supported length below
+	if ((fileName.size() > 0) && (fileName.size() < MAX_PATH))
+	{
+		// possible raw filenames can contain space(s) or dot(s) at its end (e.g. "\\?\C:\file."), but the Notepad++ advanced
+		// Open/SaveAs IFileOpenDialog/IFileSaveDialog COM-interface based dialogs currently do not handle this well
+		// (but e.g. direct Notepad++ Ctrl+S works ok even with these filenames)
+		// 
+		// Exception for the standard filenames ending with the dot-char:
+		// - when someone tries to open e.g. the 'C:\file.', we will accept that as this is the way how to work with filenames
+		//   without an extension (some of the WINAPI calls used later trim that dot-char automatically ...)
+		if (!(fileName.ends_with(_T('.')) && isWin32NamespacePrefixedFileName(fileName)) && !fileName.ends_with(_T(' ')))
+		{
+			bool invalidASCIIChar = false;
+
+			for (size_t pos = 0; pos < fileName.size(); ++pos)
+			{
+				TCHAR c = fileName.at(pos);
+				if (c <= 31)
+				{
+					invalidASCIIChar = true;
+				}
+				else
+				{
+					// as this could be also a complete filename with path and there could be also a globbing used,
+					// we tolerate here some other reserved Win32-filename chars: /, \, :, ?, *
+					switch (c)
+					{
+						case '<':
+						case '>':
+						case '"':
+						case '|':
+							invalidASCIIChar = true;
+							break;
+					}
+				}
+
+				if (invalidASCIIChar)
+					break;
+			}
+
+			if (!invalidASCIIChar)
+			{
+				// strip input string to a filename without a possible path and extension(s)
+				generic_string fileNameOnly;
+				size_t pos = fileName.find_first_of(TEXT("."));
+				if (pos != std::string::npos)
+					fileNameOnly = fileName.substr(0, pos);
+				else
+					fileNameOnly = fileName;
+
+				pos = fileNameOnly.find_last_of(TEXT("\\"));
+				if (pos == std::string::npos)
+					pos = fileNameOnly.find_last_of(TEXT("/"));
+				if (pos != std::string::npos)
+					fileNameOnly = fileNameOnly.substr(pos + 1);
+
+				const std::vector<generic_string>  reservedWin32NamespaceDeviceList{
+				TEXT("CON"), TEXT("PRN"), TEXT("AUX"), TEXT("NUL"),
+				TEXT("COM1"), TEXT("COM2"), TEXT("COM3"), TEXT("COM4"), TEXT("COM5"), TEXT("COM6"), TEXT("COM7"), TEXT("COM8"), TEXT("COM9"),
+				TEXT("LPT1"), TEXT("LPT2"), TEXT("LPT3"), TEXT("LPT4"), TEXT("LPT5"), TEXT("LPT6"), TEXT("LPT7"), TEXT("LPT8"), TEXT("LPT9")
+				};
+
+				// last check is for all the old reserved Windows OS filenames
+				if (std::find(reservedWin32NamespaceDeviceList.begin(), reservedWin32NamespaceDeviceList.end(), fileNameOnly) == reservedWin32NamespaceDeviceList.end())
+				{
+					// ok, the current filename tested is not even on the blacklist
+					isUnsupported = false;
+				}
+			}
+		}
+	}
+
+	return isUnsupported;
+}
+
+
+bool isUnsupportedFileName(const TCHAR* szFileName)
+{
+	const generic_string fileName = szFileName;
+	return isUnsupportedFileName(fileName);
+}
+NOT USED by HEXEDIT*/
+
+Version::Version(const generic_string& versionStr)
+{
+	try {
+		auto ss = tokenizeString(versionStr, '.');
+
+		if (ss.size() > 4)
+		{
+			std::wstring msg(L"\"");
+			msg += versionStr;
+			msg += L"\"";
+			msg += TEXT(": Version parts are more than 4. The string to parse is not a valid version format. Let's make it default value in catch block.");
+			throw msg;
+		}
+
+		int i = 0;
+		std::vector<unsigned long*> v = { &_major, &_minor, &_patch, &_build };
+		for (const auto& s : ss)
+		{
+			if (!isNumber(s))
+			{
+				std::wstring msg(L"\"");
+				msg += versionStr;
+				msg += L"\"";
+				msg += TEXT(": One of version character is not number. The string to parse is not a valid version format. Let's make it default value in catch block.");
+				throw msg;
+			}
+			*(v[i]) = std::stoi(s);
+
+			++i;
+		}
+	}
+#ifdef DEBUG
+	catch (const std::wstring& s)
+	{
+		_major = 0;
+		_minor = 0;
+		_patch = 0;
+		_build = 0;
+
+		throw s;
+	}
+#endif
+	catch (...)
+	{
+		_major = 0;
+		_minor = 0;
+		_patch = 0;
+		_build = 0;
+#ifdef DEBUG
+		throw std::wstring(TEXT("Unknown exception from \"Version::Version(const generic_string& versionStr)\""));
+#endif
+	}
+}
+
+/*NOT USED by HEXEDIT
+void Version::setVersionFrom(const generic_string& filePath)
+{
+	if (!filePath.empty() && ::PathFileExists(filePath.c_str()))
+	{
+		DWORD uselessArg = 0; // this variable is for passing the ignored argument to the functions
+		DWORD bufferSize = ::GetFileVersionInfoSize(filePath.c_str(), &uselessArg);
+
+		if (bufferSize <= 0)
+			return;
+
+		unsigned char* buffer = new unsigned char[bufferSize];
+		::GetFileVersionInfo(filePath.c_str(), 0, bufferSize, buffer);
+
+		VS_FIXEDFILEINFO* lpFileInfo = nullptr;
+		UINT cbFileInfo = 0;
+		VerQueryValue(buffer, TEXT("\\"), reinterpret_cast<LPVOID*>(&lpFileInfo), &cbFileInfo);
+		if (cbFileInfo)
+		{
+			_major = (lpFileInfo->dwFileVersionMS & 0xFFFF0000) >> 16;
+			_minor = lpFileInfo->dwFileVersionMS & 0x0000FFFF;
+			_patch = (lpFileInfo->dwFileVersionLS & 0xFFFF0000) >> 16;
+			_build = lpFileInfo->dwFileVersionLS & 0x0000FFFF;
+		}
+		delete[] buffer;
+	}
+}
+NOT USED by HEXEDIT*/
+ 
+generic_string Version::toString()
+{
+	if (_build == 0 && _patch == 0 && _minor == 0 && _major == 0) // ""
+	{
+		return TEXT("");
+	}
+	else if (_build == 0 && _patch == 0 && _minor == 0) // "major"
+	{
+		return std::to_wstring(_major);
+	}
+	else if (_build == 0 && _patch == 0) // "major.minor"
+	{
+		std::wstring v = std::to_wstring(_major);
+		v += TEXT(".");
+		v += std::to_wstring(_minor);
+		return v;
+	}
+	else if (_build == 0) // "major.minor.patch"
+	{
+		std::wstring v = std::to_wstring(_major);
+		v += TEXT(".");
+		v += std::to_wstring(_minor);
+		v += TEXT(".");
+		v += std::to_wstring(_patch);
+		return v;
+	}
+
+	// "major.minor.patch.build"
+	std::wstring ver = std::to_wstring(_major);
+	ver += TEXT(".");
+	ver += std::to_wstring(_minor);
+	ver += TEXT(".");
+	ver += std::to_wstring(_patch);
+	ver += TEXT(".");
+	ver += std::to_wstring(_build);
+
+	return ver;
+}
+
+int Version::compareTo(const Version& v2c) const
+{
+	if (_major > v2c._major)
+		return 1;
+	else if (_major < v2c._major)
+		return -1;
+	else // (_major == v2c._major)
+	{
+		if (_minor > v2c._minor)
+			return 1;
+		else if (_minor < v2c._minor)
+			return -1;
+		else // (_minor == v2c._minor)
+		{
+			if (_patch > v2c._patch)
+				return 1;
+			else if (_patch < v2c._patch)
+				return -1;
+			else // (_patch == v2c._patch)
+			{
+				if (_build > v2c._build)
+					return 1;
+				else if (_build < v2c._build)
+					return -1;
+				else // (_build == v2c._build)
+				{
+					return 0;
+				}
+			}
+		}
+	}
+}
+
+bool Version::isCompatibleTo(const Version& from, const Version& to) const
+{
+	// This method determinates if Version object is in between "from" version and "to" version, it's useful for testing compatibility of application.
+	// test in versions <from, to> example: 
+	// 1. <0.0.0.0, 0.0.0.0>: both from to versions are empty, so it's 
+	// 2. <6.9, 6.9>: plugin is compatible to only v6.9
+	// 3. <4.2, 6.6.6>: from v4.2 (included) to v6.6.6 (included)
+	// 4. <0.0.0.0, 8.2.1>: all version until v8.2.1 (included)
+	// 5. <8.3, 0.0.0.0>: from v8.3 (included) to the latest verrsion
+	
+	if (empty()) // if this version is empty, then no compatible to all version
+		return false;
+
+	if (from.empty() && to.empty()) // both versions "from" and "to" are empty: it's considered compatible, whatever this version is (match to 1)
+	{
+		return true;
+	}
+
+	if (from <= *this && to >= *this) // from_ver <= this_ver <= to_ver (match to 2, 3 and 4)
+	{
+		return true;
+	}
+		
+	if (from <= *this && to.empty()) // from_ver <= this_ver (match to 5)
+	{
+		return true;
+	}
+
+	return false;
 }

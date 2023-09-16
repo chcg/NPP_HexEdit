@@ -43,11 +43,15 @@ public :
 
 	virtual void create(int dialogID, bool isRTL = false, bool msgDestParent = true);
 
-    virtual bool isCreated() const {
-		return (_hSelf != NULL);
+	virtual bool isCreated() const {
+		return (_hSelf != nullptr);
 	}
 
-	void goToCenter();
+	void getMappedChildRect(HWND hChild, RECT& rcChild) const;
+	void getMappedChildRect(int idChild, RECT& rcChild) const;
+	void redrawDlgItem(const int nIDDlgItem, bool forceUpdate = false) const;
+
+	void goToCenter(UINT swpFlags = SWP_SHOWWINDOW);
 
 	void display(bool toShow = true, bool enhancedPositioningCheckWhenShowing = false) const;
 
@@ -65,10 +69,10 @@ public :
 		::SendDlgItemMessage(_hSelf, checkControlID, BM_SETCHECK, checkOrNot ? BST_CHECKED : BST_UNCHECKED, 0);
 	}
 
-    virtual void destroy() override;
+	void destroy() override;
 
 protected:
-	RECT _rc = { 0 };
+	RECT _rc{};
 	static intptr_t CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 	virtual intptr_t CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 

@@ -41,7 +41,7 @@ public:
 		eUtf8Plain,
 		eLast
 	};
-	static const utf8 k_Boms[encodingType::eLast][3];
+	static const utf8 k_Boms[static_cast<size_t>(encodingType::eLast)][3];
 };
 
 // Reads UTF-16 and outputs UTF-8

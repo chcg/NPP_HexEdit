@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2021 Don HO <don.h@free.fr>
+// Copyright (C)2023 Don HO <don.h@free.fr>
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,12 +19,14 @@
 //
 // Notepad++ version: begin
 //
-#define NOTEPAD_PLUS_VERSION TEXT("Notepad++ v8.1")
+#define NOTEPAD_PLUS_VERSION TEXT("Notepad++ v8.5.7")
 
 // should be X.Y : ie. if VERSION_DIGITALVALUE == 4, 7, 1, 0 , then X = 4, Y = 71
 // ex : #define VERSION_VALUE TEXT("5.63\0")
-#define VERSION_VALUE TEXT("8.1\0")
-#define VERSION_DIGITALVALUE 8, 1, 0, 0
+#define VERSION_INTERNAL_VALUE TEXT("8.57\0")
+
+#define VERSION_PRODUCT_VALUE TEXT("8.5.7\0")
+#define VERSION_DIGITALVALUE 8, 5, 7, 0
 
 // Notepad++ version: end
 
@@ -33,8 +35,10 @@
 #define IDC_STATIC    -1
 #endif
 
+#define IDI_NPPABOUT_LOGO        99
 #define IDI_M30ICON             100
 #define IDI_CHAMELEON           101
+#define IDI_CHAMELEON_DM        102
 //#define IDI_JESUISCHARLIE     102
 //#define IDI_GILETJAUNE        102
 //#define IDI_SAMESEXMARRIAGE   102
@@ -89,6 +93,7 @@
 #define IDI_VIEW_FILEBROWSER_ICON         243
 #define IDI_VIEW_FUNCLIST_ICON            244
 #define IDI_VIEW_MONITORING_ICON          245
+#define IDI_VIEW_DOCLIST_ICON             392 //continuing from IDI_VIEW_DOCLIST_ICON_DM2's ID
 
 //
 // TOOLBAR ICO - set 1, Dark Mode
@@ -138,6 +143,7 @@
 #define IDI_VIEW_FILEBROWSER_ICON_DM      288
 #define IDI_VIEW_FUNCLIST_ICON_DM         289
 #define IDI_VIEW_MONITORING_ICON_DM       290
+#define IDI_VIEW_DOCLIST_ICON_DM          393 //continuing from IDI_VIEW_DOCLIST_ICON's ID
 
 //
 // TOOLBAR ICO - set 2
@@ -187,6 +193,7 @@
 #define IDI_VIEW_FILEBROWSER_ICON2        343
 #define IDI_VIEW_FUNCLIST_ICON2           344
 #define IDI_VIEW_MONITORING_ICON2         345
+#define IDI_VIEW_DOCLIST_ICON2            394 //continuing from IDI_VIEW_DOCLIST_ICON_DM's ID
 
 //
 // TOOLBAR ICO - set 2, Dark Mode
@@ -236,6 +243,7 @@
 #define IDI_VIEW_FILEBROWSER_ICON_DM2     388
 #define IDI_VIEW_FUNCLIST_ICON_DM2        389
 #define IDI_VIEW_MONITORING_ICON_DM2      390
+#define IDI_VIEW_DOCLIST_ICON_DM2         391
 
 
 
@@ -254,26 +262,32 @@
 #define IDI_DELETE_ICON          525
 
 
-#define IDI_PROJECT_WORKSPACE        601
-#define IDI_PROJECT_WORKSPACEDIRTY    602
+#define IDI_PROJECT_WORKSPACE          601
+#define IDI_PROJECT_WORKSPACEDIRTY     602
 #define IDI_PROJECT_PROJECT            603
-#define IDI_PROJECT_FOLDEROPEN        604
+#define IDI_PROJECT_FOLDEROPEN         604
 #define IDI_PROJECT_FOLDERCLOSE        605
-#define IDI_PROJECT_FILE            606
+#define IDI_PROJECT_FILE               606
 #define IDI_PROJECT_FILEINVALID        607
-#define IDI_FB_ROOTOPEN        608
-#define IDI_FB_ROOTCLOSE        609
-#define IDI_FB_SELECTCURRENTFILE        610
-#define IDI_FB_FOLDALL                  611
-#define IDI_FB_EXPANDALL                612
+#define IDI_FB_ROOTOPEN                608
+#define IDI_FB_ROOTCLOSE               609
+#define IDI_FB_SELECTCURRENTFILE       610
+#define IDI_FB_FOLDALL                 611
+#define IDI_FB_EXPANDALL               612
+#define IDI_FB_SELECTCURRENTFILE_DM    613
+#define IDI_FB_FOLDALL_DM              614
+#define IDI_FB_EXPANDALL_DM            615
 
-#define IDI_FUNCLIST_ROOT            620
-#define IDI_FUNCLIST_NODE            621
-#define IDI_FUNCLIST_LEAF            622
+#define IDI_FUNCLIST_ROOT              620
+#define IDI_FUNCLIST_NODE              621
+#define IDI_FUNCLIST_LEAF              622
 
-#define IDI_FUNCLIST_SORTBUTTON        631
-#define IDI_FUNCLIST_RELOADBUTTON    632
-
+#define IDI_FUNCLIST_SORTBUTTON              631
+#define IDI_FUNCLIST_RELOADBUTTON            632
+#define IDI_FUNCLIST_PREFERENCEBUTTON        633
+#define IDI_FUNCLIST_SORTBUTTON_DM           634
+#define IDI_FUNCLIST_RELOADBUTTON_DM         635
+#define IDI_FUNCLIST_PREFERENCEBUTTON_DM     636
 
 
 
@@ -337,25 +351,78 @@
 #define IDR_CLOSETAB_INACT_DM  1543
 #define IDR_CLOSETAB_HOVER_DM  1544
 #define IDR_CLOSETAB_PUSH_DM   1545
+#define IDR_DOCLIST            1546
+#define IDR_DOCLIST_ICO        1547
 
-#define ID_MACRO 20000
-#define ID_MACRO_LIMIT 20200
+#define IDR_FILEBROWSER_ICO2      1550
+#define IDR_FILEBROWSER_ICO_DM    1551
+#define IDR_FUNC_LIST_ICO2        1552
+#define IDR_FUNC_LIST_ICO_DM      1553
+#define IDR_DOCMAP_ICO2           1554
+#define IDR_DOCMAP_ICO_DM         1555
+#define IDR_DOCLIST_ICO2          1556
+#define IDR_DOCLIST_ICO_DM        1557
+#define IDR_PROJECTPANEL_ICO2     1558
+#define IDR_PROJECTPANEL_ICO_DM   1559
+#define IDR_CLIPBOARDPANEL_ICO2   1560
+#define IDR_CLIPBOARDPANEL_ICO_DM 1561
+#define IDR_ASCIIPANEL_ICO2       1562
+#define IDR_ASCIIPANEL_ICO_DM     1563
 
-#define ID_USER_CMD 21000
-#define ID_USER_CMD_LIMIT 21200
+#define ID_MACRO                           20000
+//                                     O     .
+//                                     C     .
+//                                     C     .
+//                                     U     .
+//                                     P     .
+//                                     I     .
+//                                     E     .
+//                                     D     .
+#define ID_MACRO_LIMIT                     20499
 
-#define ID_PLUGINS_CMD 22000
-#define ID_PLUGINS_CMD_LIMIT 22500
 
-#define ID_PLUGINS_CMD_DYNAMIC       23000
-#define ID_PLUGINS_CMD_DYNAMIC_LIMIT 24999
+#define ID_USER_CMD                        21000
+//                                     O     .
+//                                     C     .
+//                                     C     .
+//                                     U     .
+//                                     P     .
+//                                     I     .
+//                                     E     .
+//                                     D     .
+#define ID_USER_CMD_LIMIT                  21499
 
-#define MARKER_PLUGINS          3
-#define MARKER_PLUGINS_LIMIT   19
-/*UNLOAD
-#define ID_PLUGINS_REMOVING 22501
-#define ID_PLUGINS_REMOVING_END 22600
-*/
+
+#define ID_PLUGINS_CMD                     22000
+//                                     O     .
+//                                     C     .
+//                                     C     .
+//                                     U     .
+//                                     P     .
+//                                     I     .
+//                                     E     .
+//                                     D     .
+#define ID_PLUGINS_CMD_LIMIT               22999
+
+
+#define ID_PLUGINS_CMD_DYNAMIC             23000
+//                                     O     .
+//                                     C     .
+//                                     C     .
+//                                     U     .
+//                                     P     .
+//                                     I     .
+//                                     E     .
+//                                     D     .
+#define ID_PLUGINS_CMD_DYNAMIC_LIMIT       24999
+
+
+#define MARKER_PLUGINS          1
+#define MARKER_PLUGINS_LIMIT   15
+
+#define INDICATOR_PLUGINS          9  // indicators 8 and below are reserved by Notepad++ (URL_INDIC=8)
+#define INDICATOR_PLUGINS_LIMIT   20  // indicators 21 and up are reserved by Notepad++ (SCE_UNIVERSAL_FOUND_STYLE_EXT5=21)
+
 
 
 //#define IDM 40000
@@ -424,8 +491,11 @@
 #define IDC_DEBUGINFO_EDIT 1751
 #define IDC_DEBUGINFO_COPYLINK 1752
 
-#define IDD_DOSAVEORNOTBOX 1760
-#define IDC_DOSAVEORNOTTEX 1761
+#define IDD_DOSAVEORNOTBOX  1760
+#define IDC_DOSAVEORNOTTEXT 1761
+
+#define IDD_DOSAVEALLBOX    1765
+#define IDC_DOSAVEALLTEXT   1766
 
 //#define IDD_USER_DEFINE_BOX       1800
 //#define IDD_RUN_DLG               1900
@@ -452,9 +522,9 @@
 //#define IDD_STYLER_DLG    2200
 //#define IDD_GLOBAL_STYLER_DLG    2300
 
-#define IDD_VALUE_DLG       2400
-#define IDC_VALUE_STATIC  2401
-#define IDC_VALUE_EDIT      2402
+//#define IDD_VALUE_DLG       2400
+//#define IDC_VALUE_STATIC  2401
+//#define IDC_VALUE_EDIT      2402
 
 #define IDD_BUTTON_DLG       2410
 #define IDC_RESTORE_BUTTON  2411
@@ -478,7 +548,7 @@
 //#define IDD_FINDCHARACTERS      2900
 
 //See VerticalFileSwitcher_rc.h
-//#define IDD_FILESWITCHER_PANEL      3000
+//#define IDD_DOCLIST      3000
 
 //See ProjectPanel_rc.h
 //#define IDD_PROJECTPANEL      3100
@@ -557,7 +627,7 @@
 	#define NPPM_INTERNAL_EXPORTFUNCLISTANDQUIT         (NOTEPADPLUS_USER_INTERNAL + 46)
 	#define NPPM_INTERNAL_PRNTANDQUIT                   (NOTEPADPLUS_USER_INTERNAL + 47)
 	#define NPPM_INTERNAL_SAVEBACKUP        		    (NOTEPADPLUS_USER_INTERNAL + 48)
-	#define NPPM_INTERNAL_STOPMONITORING                (NOTEPADPLUS_USER_INTERNAL + 49) // Used by Monitoring feature
+	#define NPPM_INTERNAL_STOPMONITORING                (NOTEPADPLUS_USER_INTERNAL + 49)  // Used by Monitoring feature
 	#define NPPM_INTERNAL_EDGEBACKGROUND                (NOTEPADPLUS_USER_INTERNAL + 50)
 	#define NPPM_INTERNAL_EDGEMULTISETSIZE              (NOTEPADPLUS_USER_INTERNAL + 51)
 	#define NPPM_INTERNAL_UPDATECLICKABLELINKS          (NOTEPADPLUS_USER_INTERNAL + 52)
@@ -569,6 +639,22 @@
 	#define NPPM_INTERNAL_UPDATETEXTZONEPADDING         (NOTEPADPLUS_USER_INTERNAL + 58)
 	#define NPPM_INTERNAL_REFRESHDARKMODE				(NOTEPADPLUS_USER_INTERNAL + 59)
 	#define NPPM_INTERNAL_SCINTILLAFINDERCOPYPATHS      (NOTEPADPLUS_USER_INTERNAL + 60)
+	#define NPPM_INTERNAL_REFRESHWORKDIR                (NOTEPADPLUS_USER_INTERNAL + 61)
+	#define NPPM_INTERNAL_VIRTUALSPACE                  (NOTEPADPLUS_USER_INTERNAL + 62)
+	#define NPPM_INTERNAL_CARETLINEFRAME                (NOTEPADPLUS_USER_INTERNAL + 63)
+	#define NPPM_INTERNAL_CRLFFORMCHANGED               (NOTEPADPLUS_USER_INTERNAL + 64)
+	#define NPPM_INTERNAL_CRLFLAUNCHSTYLECONF           (NOTEPADPLUS_USER_INTERNAL + 65)
+	#define NPPM_INTERNAL_LAUNCHPREFERENCES             (NOTEPADPLUS_USER_INTERNAL + 66)
+	#define NPPM_INTERNAL_ENABLECHANGEHISTORY           (NOTEPADPLUS_USER_INTERNAL + 67)
+	#define NPPM_INTERNAL_CLEANSMARTHILITING            (NOTEPADPLUS_USER_INTERNAL + 68)
+	#define NPPM_INTERNAL_CLEANBRACEMATCH               (NOTEPADPLUS_USER_INTERNAL + 69)
+	#define NPPM_INTERNAL_WINDOWSSESSIONEXIT            (NOTEPADPLUS_USER_INTERNAL + 70)
+	#define NPPM_INTERNAL_RESTOREFROMTRAY               (NOTEPADPLUS_USER_INTERNAL + 71)
+	#define NPPM_INTERNAL_SETNPC                        (NOTEPADPLUS_USER_INTERNAL + 72)
+	#define NPPM_INTERNAL_NPCFORMCHANGED                (NOTEPADPLUS_USER_INTERNAL + 73)
+	#define NPPM_INTERNAL_NPCLAUNCHSTYLECONF            (NOTEPADPLUS_USER_INTERNAL + 74)
+	#define NPPM_INTERNAL_CLOSEDOC                      (NOTEPADPLUS_USER_INTERNAL + 75)
+	#define NPPM_INTERNAL_EXTERNALLEXERBUFFER           (NOTEPADPLUS_USER_INTERNAL + 76)
 
 // See Notepad_plus_msgs.h
 //#define NOTEPADPLUS_USER   (WM_USER + 1000)
@@ -603,7 +689,7 @@
 
 
 #define MACRO_USER    (WM_USER + 4000)
-	#define WM_GETCURRENTMACROSTATUS (MACRO_USER + 01)
+//	#define WM_GETCURRENTMACROSTATUS (MACRO_USER + 01) // Replaced with NPPM_GETCURRENTMACROSTATUS
 	#define WM_MACRODLGRUNMACRO       (MACRO_USER + 02)
 
 
@@ -627,3 +713,6 @@
 #define MENUINDEX_MACRO    8
 #define MENUINDEX_RUN      9
 #define MENUINDEX_PLUGINS  10
+#define MENUINDEX_WINDOW   11
+#define MENUINDEX_HELP     12
+#define MENUINDEX_LIST     14

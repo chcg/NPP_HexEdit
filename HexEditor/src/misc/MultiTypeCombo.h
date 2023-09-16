@@ -33,7 +33,7 @@ typedef enum class eCodingType
 	HEX_CODE_MAX
 } eCodingType;
 
-const TCHAR strCode[eCodingType::HEX_CODE_MAX][16] =
+const TCHAR strCode[static_cast<size_t>(eCodingType::HEX_CODE_MAX)][16] =
 {
 	_T("Hexadecimal"),
 	_T("ANSI String"),

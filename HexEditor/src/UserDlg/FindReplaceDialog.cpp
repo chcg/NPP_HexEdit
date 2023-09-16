@@ -45,7 +45,7 @@ void FindReplaceDlg::doDialog(HWND hParent, BOOL findReplace)
 		create(IDD_FINDREPLACE_DLG);
 		::SendMessage(_hParent, NPPM_MODELESSDIALOG, MODELESSDIALOGADD, (LPARAM)_hSelf);
 
-		ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
+		ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC_DEPRECATED, 0, 0);
 		if (EnableDlgTheme != NULL)
 			EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
 	}

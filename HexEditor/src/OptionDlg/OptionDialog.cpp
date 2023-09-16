@@ -80,7 +80,7 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 
 		goToCenter();
 
-		ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0);
+		ETDTProc	EnableDlgTheme = (ETDTProc)::SendMessage(_nppData._nppHandle, NPPM_GETENABLETHEMETEXTUREFUNC_DEPRECATED, 0, 0);
 		if (EnableDlgTheme != NULL)
 			EnableDlgTheme(_hSelf, ETDT_ENABLETAB);
 
