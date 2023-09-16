@@ -4480,7 +4480,7 @@ void HexEdit::ConvertSelHEXToNpp(void)
 //https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/ScintillaComponent/ScintillaEditView.cpp
 void HexEdit::getText(char* dest, size_t start, size_t end) const
 {
-	Sci_TextRange tr;
+	Sci_TextRange tr{};
 	tr.chrg.cpMin = static_cast<Sci_PositionCR>(start);
 	tr.chrg.cpMax = static_cast<Sci_PositionCR>(end);
 	tr.lpstrText = dest;

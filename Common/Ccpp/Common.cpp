@@ -30,6 +30,7 @@
 //#include "Buffer.h" //MODIFIED by HEXEDIT
 #include "NppDarkMode.h" //MODIFIED by HEXEDIT, added
 
+/*NOT USED by HEXEDIT
 void printInt(int int2print)
 {
 	TCHAR str[32];
@@ -113,7 +114,7 @@ generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath)
 	return fullFilePathName;
 }
 
-/*NOT USED by HEXEDIT
+
 void writeFileContent(const TCHAR *file2write, const char *content2write)
 {
 	Win32_IO_File file(file2write);
@@ -186,7 +187,6 @@ generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
 {
 	return folderBrowser(parent, TEXT("Select a folder"), 0, defaultDir);
 }
-NOT USED by HEXEDIT*/
 
 
 void ClientRectToScreenRect(HWND hWnd, RECT* rect)
@@ -681,7 +681,7 @@ generic_string pathAppend(generic_string& strDest, const generic_string& str2app
 	return strDest;
 }
 
-
+NOT USED by HEXEDIT*/
 COLORREF getCtrlBgColor(HWND hWnd)
 {
 	COLORREF crRet = CLR_INVALID;
@@ -720,7 +720,7 @@ COLORREF getCtrlBgColor(HWND hWnd)
 	return crRet;
 }
 
-
+/*NOT USED by HEXEDIT
 generic_string stringToUpper(generic_string strToConvert)
 {
     std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), 
@@ -950,7 +950,7 @@ bool str2Clipboard(const generic_string &str2cpy, HWND hwnd)
 	return true;
 }
 
-/*NOT USED by HEXEDIT
+
 bool buf2Clipborad(const std::vector<Buffer*>& buffers, bool isFullPath, HWND hwnd)
 {
 	const generic_string crlf = _T("\r\n");
@@ -970,7 +970,6 @@ bool buf2Clipborad(const std::vector<Buffer*>& buffers, bool isFullPath, HWND hw
 		return str2Clipboard(selection, hwnd);
 	return false;
 }
-NOT USED by HEXEDIT*/
 
 bool matchInList(const TCHAR *fileName, const std::vector<generic_string> & patterns)
 {
@@ -1026,6 +1025,7 @@ bool allPatternsAreExclusion(const std::vector<generic_string> patterns)
 	return !oneInclusionPatternFound;
 }
 
+NOT USED by HEXEDIT*/
 generic_string GetLastErrorAsString(DWORD errorCode)
 {
 	generic_string errorMsg(_T(""));
@@ -1048,6 +1048,7 @@ generic_string GetLastErrorAsString(DWORD errorCode)
 	return errorMsg;
 }
 
+/*NOT USED by HEXEDIT
 HWND CreateToolTip(int toolID, HWND hDlg, HINSTANCE hInst, const PTSTR pszText, bool isRTL)
 {
 	if (!toolID || !hDlg || !pszText)
@@ -1140,7 +1141,6 @@ HWND CreateToolTipRect(int toolID, HWND hWnd, HINSTANCE hInst, const PTSTR pszTe
 	return hwndTip;
 }
 
-/*NOT USED by HEXEDIT
 bool isCertificateValidated(const generic_string & fullFilePath, const generic_string & subjectName2check)
 {
 	bool isOK = false;
@@ -1272,7 +1272,6 @@ bool isCertificateValidated(const generic_string & fullFilePath, const generic_s
 
 	return isOK;
 }
-NOT USED by HEXEDIT*/
 
 bool isAssoCommandExisting(LPCTSTR FullPathName)
 {
@@ -1533,7 +1532,6 @@ bool removeReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath)
 	return (::SetFileAttributes(fileFullPath, dwFileAttribs) != FALSE);
 }
 
-/*NOT USED by HEXEDIT
 
 // "For file I/O, the "\\?\" prefix to a path string tells the Windows APIs to disable all string parsing
 // and to send the string that follows it straight to the file system..."
@@ -1642,7 +1640,6 @@ bool isUnsupportedFileName(const TCHAR* szFileName)
 	const generic_string fileName = szFileName;
 	return isUnsupportedFileName(fileName);
 }
-NOT USED by HEXEDIT*/
 
 Version::Version(const generic_string& versionStr)
 {
@@ -1698,7 +1695,6 @@ Version::Version(const generic_string& versionStr)
 	}
 }
 
-/*NOT USED by HEXEDIT
 void Version::setVersionFrom(const generic_string& filePath)
 {
 	if (!filePath.empty() && ::PathFileExists(filePath.c_str()))
@@ -1725,7 +1721,6 @@ void Version::setVersionFrom(const generic_string& filePath)
 		delete[] buffer;
 	}
 }
-NOT USED by HEXEDIT*/
  
 generic_string Version::toString()
 {
@@ -1829,3 +1824,4 @@ bool Version::isCompatibleTo(const Version& from, const Version& to) const
 
 	return false;
 }
+NOT USED by HEXEDIT*/

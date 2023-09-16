@@ -208,7 +208,7 @@ LRESULT URLCtrl::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		    if (_hfUnderlined == 0)
 		    {
 			    // Get the default GUI font
-			    LOGFONT lf;
+				LOGFONT lf{};
                 HFONT hf = (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
 
 			    // Add UNDERLINE attribute

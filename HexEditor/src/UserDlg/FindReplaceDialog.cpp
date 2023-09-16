@@ -80,8 +80,8 @@ INT_PTR CALLBACK FindReplaceDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM
 	}
 	case WM_ACTIVATE:
 	{
-		UINT	posBeg;
-		UINT	posEnd;
+		UINT	posBeg = 0;
+		UINT	posEnd = 0;
 
 		::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
 		::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_IN_SEL), ((posBeg == posEnd) ? FALSE : TRUE));
@@ -187,7 +187,7 @@ INT_PTR CALLBACK FindReplaceDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM
 
 void FindReplaceDlg::initDialog(void)
 {
-	TCITEM		item;
+	TCITEM		item{};
 	TCHAR		txtTab[32];
 
 	item.mask = TCIF_TEXT;
@@ -689,7 +689,7 @@ void FindReplaceDlg::processAll(UINT process)
 		}
 		case REPLACE_ALL:
 		{
-			UINT	pos;
+			UINT	pos = 0;
 			::SendMessage(_hParentHandle, HEXM_GETPOS, 0, (LPARAM)&pos);
 			::SendMessage(_hParentHandle, HEXM_SETPOS, 0, (LPARAM)pos);
 

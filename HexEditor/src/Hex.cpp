@@ -616,7 +616,7 @@ void CleanScintillaBuf(HWND hWnd)
  */
 UINT ScintillaGetText(char *text, INT start, INT end)
 {
-	Sci_TextRange tr;
+	Sci_TextRange tr{};
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
 	tr.lpstrText = text;
@@ -625,7 +625,7 @@ UINT ScintillaGetText(char *text, INT start, INT end)
 
 UINT ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
 {
-	Sci_TextRange tr;
+	Sci_TextRange tr{};
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
 	tr.lpstrText = text;

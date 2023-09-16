@@ -51,7 +51,7 @@ LRESULT ColorCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 	case WM_LBUTTONDBLCLK:
 	{
 		RECT		rc;
-		POINT		pt;
+		POINT		pt{};
 		::GetWindowRect(hwnd, &rc);
 		pt.x = rc.left;
 		pt.y = rc.bottom;
