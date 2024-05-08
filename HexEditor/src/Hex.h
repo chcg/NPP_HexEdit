@@ -241,12 +241,17 @@ typedef enum class eError
 	E_MEMORY = -3
 } eError;
 
+//should be in sync with https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/Parameters.h#L100
+//currently enum UniMode {uni8Bit=0, uniUTF8=1, uni16BE=2, uni16LE=3, uniCookie=4, uni7Bit=5, uni16BE_NoBOM=6, uni16LE_NoBOM=7, uniEnd};
 typedef enum class UniMode {
 	uni8Bit,
 	uniUTF8,
 	uni16BE,
 	uni16LE,
 	uniCookie,
+	uni7Bit,
+	uni16BE_NoBOM,
+	uni16LE_NoBOM,
 	uniEnd
 } UniMode;
 
