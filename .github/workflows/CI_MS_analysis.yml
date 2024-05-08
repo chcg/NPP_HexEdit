@@ -1,4 +1,4 @@
-name: CI_build
+name: CI_MS_analysis
 
 on: [push, pull_request]
 
