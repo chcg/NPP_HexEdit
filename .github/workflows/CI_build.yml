@@ -23,7 +23,7 @@ jobs:
       working-directory: HexEditor\projects\2003\
       run: msbuild HexEditor.vcxproj /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v143"
 
-    - uses: olegtarasov/get-tag@v2.1.3
+    - uses: olegtarasov/get-tag@v2.1.4
       id: tagName
 
     - name: zip artifacts for ${{ matrix.build_platform }}
