@@ -45,7 +45,7 @@ typedef enum class ePropStr {
 
 static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *, DWORD, LPARAM lParam)
 {
-	vector<generic_string> *pvStrFont = (vector<generic_string> *)lParam;
+	vector<std::wstring> *pvStrFont = (vector<std::wstring> *)lParam;
 	size_t vectSize = pvStrFont->size();
 	if (vectSize == 0)
 		pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
@@ -115,7 +115,7 @@ INT_PTR CALLBACK OptionDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPar
 		lf.lfCharSet = DEFAULT_CHARSET;
 		lf.lfPitchAndFamily = FIXED_PITCH | FF_DONTCARE;
 
-		vector<generic_string>	vFontList;
+		vector<std::wstring>	vFontList;
 		vFontList.push_back(_T(""));
 		HDC hDC = ::GetDC(NULL);
 		::EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)EnumFontFamExProc, (LPARAM)&vFontList, 0);

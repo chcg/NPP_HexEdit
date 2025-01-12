@@ -1198,7 +1198,7 @@ void HexEdit::Copy(void)
 
 		/* destory scintilla handle */
 		CleanScintillaBuf(hSciTgt);
-		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 		g_clipboard = clipboard;
 	}
@@ -1283,7 +1283,7 @@ void HexEdit::Cut(void)
 								LITTLE_DELETE_ERROR;
 								/* destory scintilla handle */
 								CleanScintillaBuf(hSciTgt);
-								::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+								::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 								return;
 							}
 							UpdateBookmarks(posBeg, -((INT)clipboard.stride));
@@ -1325,7 +1325,7 @@ void HexEdit::Cut(void)
 						LITTLE_DELETE_ERROR;
 						/* destory scintilla handle */
 						CleanScintillaBuf(hSciTgt);
-						::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+						::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 						return;
 					}
 					SetPosition(posBeg);
@@ -1343,7 +1343,7 @@ void HexEdit::Cut(void)
 
 		/* destory scintilla handle */
 		CleanScintillaBuf(hSciTgt);
-		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 		/* convert to hex if usefull */
 		if (clipboard.text != NULL)
@@ -1601,7 +1601,7 @@ void HexEdit::Paste(void)
 
 		/* destory scintilla handle */
 		CleanScintillaBuf(hSciTgt);
-		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 		}
 	else
 	{
@@ -1693,7 +1693,7 @@ void HexEdit::Paste(void)
 		}
 		/* destory scintilla handle */
 		CleanScintillaBuf(hSciTgt);
-		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 	}
 	SciSubClassWrp::execute(SCI_ENDUNDOACTION);
@@ -4061,7 +4061,7 @@ void HexEdit::CutBookmarkLines(void)
 
 	/* destory scintilla handle */
 	CleanScintillaBuf(hSciTgt);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 	/* convert to hex if usefull */
 	if (clipboard.text != NULL)
@@ -4131,7 +4131,7 @@ void HexEdit::CopyBookmarkLines(void)
 
 	/* destory scintilla handle */
 	CleanScintillaBuf(hSciTgt);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 	/* convert to hex if usefull */
 	if (clipboard.text != NULL)
@@ -4207,7 +4207,7 @@ void HexEdit::PasteBookmarkLines(void)
 
 	/* destory scintilla handle */
 	CleanScintillaBuf(hSciTgt);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciTgt);
 
 	SciSubClassWrp::execute(SCI_ENDUNDOACTION);
 }

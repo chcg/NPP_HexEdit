@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2021 Don HO <don.h@free.fr>
+// Copyright (C)2024 Don HO <don.h@free.fr>
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #include <windows.h>
 #include "StaticDialog.h"
 #include "Common.h"
-#include "NppDarkMode.h"
+//#include "NppDarkMode.h"
 
 StaticDialog::~StaticDialog()
 {
@@ -79,15 +79,32 @@ void StaticDialog::goToCenter(UINT swpFlags)
 {
 	RECT rc{};
 	::GetClientRect(_hParent, &rc);
+	if ((rc.left == rc.right) || (rc.top == rc.bottom))
+		swpFlags |= SWP_NOSIZE; // sizing has no sense here
+
 	POINT center{};
 	center.x = rc.left + (rc.right - rc.left)/2;
 	center.y = rc.top + (rc.bottom - rc.top)/2;
 	::ClientToScreen(_hParent, &center);
+	if ((center.x == -32000) && (center.y == -32000)) // https://devblogs.microsoft.com/oldnewthing/20041028-00/?p=37453
+		swpFlags |= SWP_NOMOVE; // moving has no sense here (owner wnd is minimized)
 
 	int x = center.x - (_rc.right - _rc.left)/2;
 	int y = center.y - (_rc.bottom - _rc.top)/2;
 
 	::SetWindowPos(_hSelf, HWND_TOP, x, y, _rc.right - _rc.left, _rc.bottom - _rc.top, swpFlags);
+	if (((swpFlags & SWP_NOMOVE) != SWP_NOMOVE) && ((swpFlags & SWP_SHOWWINDOW) == SWP_SHOWWINDOW))
+		::SendMessageW(_hSelf, DM_REPOSITION, 0, 0);
+}
+
+bool StaticDialog::moveForDpiChange()
+{
+	if (_dpiManager.getDpi() != _dpiManager.getDpiForWindow(_hParent))
+	{
+		goToCenter(SWP_HIDEWINDOW | SWP_NOSIZE | SWP_NOACTIVATE);
+		return true;
+	}
+	return false;
 }
 
 void StaticDialog::display(bool toShow, bool enhancedPositioningCheckWhenShowing) const
@@ -130,8 +147,9 @@ void StaticDialog::display(bool toShow, bool enhancedPositioningCheckWhenShowing
 				newTop = workAreaRect.top;
 
 			if ((newLeft != rc.left) || (newTop != rc.top)) // then the virtual screen size has shrunk
-				// Remember that MoveWindow wants width/height.
-				::MoveWindow(_hSelf, newLeft, newTop, rc.right - rc.left, rc.bottom - rc.top, TRUE);
+				::SetWindowPos(_hSelf, nullptr, newLeft, newTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+			else
+				::SendMessageW(_hSelf, DM_REPOSITION, 0, 0);
 		}
 	}
 
@@ -206,7 +224,7 @@ HGLOBAL StaticDialog::makeRTLResource(int dialogID, DLGTEMPLATE **ppMyDlgTemplat
 	if (!hDlgTemplate)
 		return NULL;
 
-	DLGTEMPLATE *pDlgTemplate = static_cast<DLGTEMPLATE *>(::LockResource(hDlgTemplate));
+	const DLGTEMPLATE *pDlgTemplate = static_cast<DLGTEMPLATE *>(::LockResource(hDlgTemplate));
 	if (!pDlgTemplate)
 		return NULL;
 
@@ -245,13 +263,14 @@ void StaticDialog::create(int dialogID, bool isRTL, bool msgDestParent)
 
 	if (!_hSelf)
 	{
-		generic_string errMsg = TEXT("CreateDialogParam() return NULL.\rGetLastError(): ");
+		std::wstring errMsg = L"CreateDialogParam() return NULL.\rGetLastError(): ";
 		errMsg += GetLastErrorAsString();
-		::MessageBox(NULL, errMsg.c_str(), TEXT("In StaticDialog::create()"), MB_OK);
+		::MessageBox(NULL, errMsg.c_str(), L"In StaticDialog::create()", MB_OK);
 		return;
 	}
 
 	NppDarkMode::setDarkTitleBar(_hSelf);
+	setDpi();
 
 	// if the destination of message NPPM_MODELESSDIALOG is not its parent, then it's the grand-parent
 	::SendMessage(msgDestParent ? _hParent : (::GetParent(_hParent)), NPPM_MODELESSDIALOG, MODELESSDIALOGADD, reinterpret_cast<WPARAM>(_hSelf));

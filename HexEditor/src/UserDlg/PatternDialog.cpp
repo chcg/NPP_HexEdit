@@ -229,14 +229,14 @@ BOOL PatternDlg::onInsert(void)
 
 			/* free allocated space */
 			CleanScintillaBuf(hSciPat);
-			::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
+			::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciPat);
 			return FALSE;
 		}
 	}
 
 	/* free allocated space */
 	CleanScintillaBuf(hSciPat);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciPat);
 
 	if (bRet == TRUE) {
 		/* add text to combo ;) */
@@ -333,7 +333,7 @@ BOOL PatternDlg::onReplace(void)
 
 				/* free allocated space */
 				CleanScintillaBuf(hSciPat);
-				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
+				::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciPat);
 				return FALSE;
 			}
 		}
@@ -344,7 +344,7 @@ BOOL PatternDlg::onReplace(void)
 
 	/* free allocated space */
 	CleanScintillaBuf(hSciPat);
-	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciPat);
+	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED, 0, (LPARAM)hSciPat);
 
 	if (bRet == TRUE) {
 		/* add text to combo ;) */

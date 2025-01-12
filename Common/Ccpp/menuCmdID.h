@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2021 Don HO <don.h@free.fr>
+// Copyright (C)2024 Don HO <don.h@free.fr>
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -47,10 +47,11 @@
     #define    IDM_FILE_OPEN_DEFAULT_VIEWER              (IDM_FILE + 23)
     #define    IDM_FILE_CLOSEALL_UNCHANGED               (IDM_FILE + 24)
     #define    IDM_FILE_CONTAININGFOLDERASWORKSPACE      (IDM_FILE + 25)
+    #define    IDM_FILE_CLOSEALL_BUT_PINNED              (IDM_FILE + 26)
 // IMPORTANT: If list above is modified, you have to change the following values:
  
 // To be updated if new menu item(s) is (are) added in menu "File"
-    #define    IDM_FILEMENU_LASTONE             IDM_FILE_CONTAININGFOLDERASWORKSPACE
+    #define    IDM_FILEMENU_LASTONE             IDM_FILE_CLOSEALL_BUT_PINNED
 
 // 0 based position of command "Exit" including the bars in the file menu
 // and without counting "Recent files history" items
@@ -171,6 +172,16 @@
     #define    IDM_EDIT_COPY_ALL_NAMES                          (IDM_EDIT + 87)
     #define    IDM_EDIT_COPY_ALL_PATHS                          (IDM_EDIT + 88)
     #define    IDM_EDIT_BEGINENDSELECT_COLUMNMODE               (IDM_EDIT + 89)
+    #define    IDM_EDIT_MULTISELECTALL                          (IDM_EDIT + 90)
+    #define    IDM_EDIT_MULTISELECTALLMATCHCASE                 (IDM_EDIT + 91)
+    #define    IDM_EDIT_MULTISELECTALLWHOLEWORD                 (IDM_EDIT + 92)
+    #define    IDM_EDIT_MULTISELECTALLMATCHCASEWHOLEWORD        (IDM_EDIT + 93)
+    #define    IDM_EDIT_MULTISELECTNEXT                         (IDM_EDIT + 94)
+    #define    IDM_EDIT_MULTISELECTNEXTMATCHCASE                (IDM_EDIT + 95)
+    #define    IDM_EDIT_MULTISELECTNEXTWHOLEWORD                (IDM_EDIT + 96)
+    #define    IDM_EDIT_MULTISELECTNEXTMATCHCASEWHOLEWORD       (IDM_EDIT + 97)
+    #define    IDM_EDIT_MULTISELECTUNDO                         (IDM_EDIT + 98)
+    #define    IDM_EDIT_MULTISELECTSSKIP                        (IDM_EDIT + 99)
 
     #define    IDM_EDIT_AUTOCOMPLETE                            (50000 + 0)
     #define    IDM_EDIT_AUTOCOMPLETE_CURRENTFILE                (50000 + 1)
@@ -264,33 +275,33 @@
 
 #define IDM_VIEW    (IDM + 4000)                
     //#define    IDM_VIEW_TOOLBAR_HIDE            (IDM_VIEW + 1)
-    #define    IDM_VIEW_TOOLBAR_REDUCE            (IDM_VIEW + 2)    
-    #define    IDM_VIEW_TOOLBAR_ENLARGE           (IDM_VIEW + 3)
-    #define    IDM_VIEW_TOOLBAR_STANDARD          (IDM_VIEW + 4)
-    #define    IDM_VIEW_REDUCETABBAR              (IDM_VIEW + 5)
-    #define    IDM_VIEW_LOCKTABBAR                (IDM_VIEW + 6) 
-    #define    IDM_VIEW_DRAWTABBAR_TOPBAR         (IDM_VIEW + 7)
-    #define    IDM_VIEW_DRAWTABBAR_INACIVETAB     (IDM_VIEW + 8) 
+    //#define    IDM_VIEW_TOOLBAR_REDUCE            (IDM_VIEW + 2)    
+    //#define    IDM_VIEW_TOOLBAR_ENLARGE           (IDM_VIEW + 3)
+    //#define    IDM_VIEW_TOOLBAR_STANDARD          (IDM_VIEW + 4)
+    //#define    IDM_VIEW_REDUCETABBAR              (IDM_VIEW + 5)
+    //#define    IDM_VIEW_LOCKTABBAR                (IDM_VIEW + 6) 
+    //#define    IDM_VIEW_DRAWTABBAR_TOPBAR         (IDM_VIEW + 7)
+    //#define    IDM_VIEW_DRAWTABBAR_INACIVETAB     (IDM_VIEW + 8) 
     #define    IDM_VIEW_POSTIT                    (IDM_VIEW + 9)
     #define    IDM_VIEW_FOLDALL                   (IDM_VIEW + 10)
     #define    IDM_VIEW_DISTRACTIONFREE           (IDM_VIEW + 11)
-    #define    IDM_VIEW_LINENUMBER                (IDM_VIEW + 12)
-    #define    IDM_VIEW_SYMBOLMARGIN              (IDM_VIEW + 13)
-    #define    IDM_VIEW_FOLDERMAGIN               (IDM_VIEW + 14)
-    #define    IDM_VIEW_FOLDERMAGIN_SIMPLE        (IDM_VIEW + 15)
-    #define    IDM_VIEW_FOLDERMAGIN_ARROW         (IDM_VIEW + 16)
-    #define    IDM_VIEW_FOLDERMAGIN_CIRCLE        (IDM_VIEW + 17)
-    #define    IDM_VIEW_FOLDERMAGIN_BOX           (IDM_VIEW + 18)
+    //#define    IDM_VIEW_LINENUMBER                (IDM_VIEW + 12)
+    //#define    IDM_VIEW_SYMBOLMARGIN              (IDM_VIEW + 13)
+    //#define    IDM_VIEW_FOLDERMAGIN               (IDM_VIEW + 14)
+    //#define    IDM_VIEW_FOLDERMAGIN_SIMPLE        (IDM_VIEW + 15)
+    //#define    IDM_VIEW_FOLDERMAGIN_ARROW         (IDM_VIEW + 16)
+    //#define    IDM_VIEW_FOLDERMAGIN_CIRCLE        (IDM_VIEW + 17)
+    //#define    IDM_VIEW_FOLDERMAGIN_BOX           (IDM_VIEW + 18)
     #define    IDM_VIEW_ALL_CHARACTERS            (IDM_VIEW + 19)
     #define    IDM_VIEW_INDENT_GUIDE              (IDM_VIEW + 20)
-    #define    IDM_VIEW_CURLINE_HILITING          (IDM_VIEW + 21)
+    //#define    IDM_VIEW_CURLINE_HILITING          (IDM_VIEW + 21)
     #define    IDM_VIEW_WRAP                      (IDM_VIEW + 22)
     #define    IDM_VIEW_ZOOMIN                    (IDM_VIEW + 23)
     #define    IDM_VIEW_ZOOMOUT                   (IDM_VIEW + 24)
     #define    IDM_VIEW_TAB_SPACE                 (IDM_VIEW + 25)
     #define    IDM_VIEW_EOL                       (IDM_VIEW + 26)
-    #define    IDM_VIEW_TOOLBAR_REDUCE_SET2       (IDM_VIEW + 27)
-    #define    IDM_VIEW_TOOLBAR_ENLARGE_SET2      (IDM_VIEW + 28)
+    //#define    IDM_VIEW_TOOLBAR_REDUCE_SET2       (IDM_VIEW + 27)
+    //#define    IDM_VIEW_TOOLBAR_ENLARGE_SET2      (IDM_VIEW + 28)
     #define    IDM_VIEW_UNFOLDALL                 (IDM_VIEW + 29)
     #define    IDM_VIEW_FOLD_CURRENT              (IDM_VIEW + 30)
     #define    IDM_VIEW_UNFOLD_CURRENT            (IDM_VIEW + 31)
@@ -300,17 +311,17 @@
     #define    IDM_VIEW_SYNSCROLLV                (IDM_VIEW + 35)
     #define    IDM_VIEW_SYNSCROLLH                (IDM_VIEW + 36)
     //#define    IDM_VIEW_EDGENONE                  (IDM_VIEW + 37)
-    #define    IDM_VIEW_DRAWTABBAR_CLOSEBOTTUN    (IDM_VIEW + 38)
-    #define    IDM_VIEW_DRAWTABBAR_DBCLK2CLOSE    (IDM_VIEW + 39)
-    #define    IDM_VIEW_REFRESHTABAR              (IDM_VIEW + 40)
+    //#define    IDM_VIEW_DRAWTABBAR_CLOSEBOTTUN    (IDM_VIEW + 38)
+    //#define    IDM_VIEW_DRAWTABBAR_DBCLK2CLOSE    (IDM_VIEW + 39)
+    //#define    IDM_VIEW_REFRESHTABAR              (IDM_VIEW + 40)
     #define    IDM_VIEW_WRAP_SYMBOL               (IDM_VIEW + 41)
     #define    IDM_VIEW_HIDELINES                 (IDM_VIEW + 42)
-    #define    IDM_VIEW_DRAWTABBAR_VERTICAL       (IDM_VIEW + 43)
-    #define    IDM_VIEW_DRAWTABBAR_MULTILINE      (IDM_VIEW + 44)
+    //#define    IDM_VIEW_DRAWTABBAR_VERTICAL       (IDM_VIEW + 43)
+    //#define    IDM_VIEW_DRAWTABBAR_MULTILINE      (IDM_VIEW + 44)
     //#define    IDM_VIEW_DOCCHANGEMARGIN           (IDM_VIEW + 45)
-    #define    IDM_VIEW_LWDEF                     (IDM_VIEW + 46)
-    #define    IDM_VIEW_LWALIGN                   (IDM_VIEW + 47)
-    #define    IDM_VIEW_LWINDENT                  (IDM_VIEW + 48)
+    //#define    IDM_VIEW_LWDEF                     (IDM_VIEW + 46)
+    //#define    IDM_VIEW_LWALIGN                   (IDM_VIEW + 47)
+    #define    IDM_PINTAB                         (IDM_VIEW + 48)
     #define    IDM_VIEW_SUMMARY                   (IDM_VIEW + 49)
 
     #define    IDM_VIEW_FOLD                      (IDM_VIEW + 50)
@@ -378,6 +389,8 @@
     #define    IDM_VIEW_TAB_COLOUR_3              (IDM_VIEW + 113)
     #define    IDM_VIEW_TAB_COLOUR_4              (IDM_VIEW + 114)
     #define    IDM_VIEW_TAB_COLOUR_5              (IDM_VIEW + 115)
+    #define    IDM_VIEW_TAB_START                 (IDM_VIEW + 116)
+    #define    IDM_VIEW_TAB_END                   (IDM_VIEW + 117)
 
     #define    IDM_VIEW_NPC                       (IDM_VIEW + 130)
     #define    IDM_VIEW_NPC_CCUNIEOL              (IDM_VIEW + 131)
@@ -386,7 +399,8 @@
     #define    IDM_VIEW_CLONE_TO_ANOTHER_VIEW    10002
     #define    IDM_VIEW_GOTO_NEW_INSTANCE        10003
     #define    IDM_VIEW_LOAD_IN_NEW_INSTANCE     10004
-
+    #define    IDM_VIEW_GOTO_START               10005
+    #define    IDM_VIEW_GOTO_END                 10006
 
 #define    IDM_FORMAT    (IDM + 5000)
     #define    IDM_FORMAT_TODOS             (IDM_FORMAT + 1)
@@ -546,6 +560,9 @@
     #define    IDM_LANG_MSSQL              (IDM_LANG + 86)
     #define    IDM_LANG_GDSCRIPT           (IDM_LANG + 87)
     #define    IDM_LANG_HOLLYWOOD          (IDM_LANG + 88)
+    #define    IDM_LANG_GOLANG             (IDM_LANG + 89)
+    #define    IDM_LANG_RAKU               (IDM_LANG + 90)
+    #define    IDM_LANG_TOML               (IDM_LANG + 91)
     
     #define    IDM_LANG_EXTERNAL           (IDM_LANG + 165)
     #define    IDM_LANG_EXTERNAL_LIMIT     (IDM_LANG + 179)
@@ -579,7 +596,7 @@
 //    #define    IDM_SETTING_HISTORY_SIZE             (IDM_SETTING + 3)
 //    #define    IDM_SETTING_EDGE_SIZE                (IDM_SETTING + 4)
     #define    IDM_SETTING_IMPORTPLUGIN             (IDM_SETTING + 5)
-    #define    IDM_SETTING_IMPORTSTYLETHEMS         (IDM_SETTING + 6)
+    #define    IDM_SETTING_IMPORTSTYLETHEMES        (IDM_SETTING + 6)
     #define    IDM_SETTING_TRAYICON                 (IDM_SETTING + 8)
     #define    IDM_SETTING_SHORTCUT_MAPPER          (IDM_SETTING + 9)
     #define    IDM_SETTING_REMEMBER_LAST_SESSION    (IDM_SETTING + 10)

@@ -33,6 +33,8 @@
 #include <shlobj.h>
 #include <assert.h>
 
+#pragma warning(disable : 4995)
+
 using namespace std;
 
 /* menu entry count */
@@ -343,7 +345,7 @@ void loadSettings(void)
 	/* Test if config path exist, if not create */
 	if (::PathFileExists(configPath) == FALSE)
 	{
-		vector<generic_string>  vPaths;
+		vector<std::wstring>  vPaths;
 
 		*_tcsrchr(configPath, '\\') = NULL;
 		do {
