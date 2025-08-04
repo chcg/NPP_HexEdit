@@ -778,7 +778,7 @@ void FindReplaceDlg::changeCoding(void)
 }
 
 
-void FindReplaceDlg::getSelText(tComboInfo* info)
+void FindReplaceDlg::getSelText(tComboInfo* info) const
 {
 	if (info == NULL)
 		return;

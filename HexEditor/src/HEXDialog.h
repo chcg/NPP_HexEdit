@@ -519,7 +519,7 @@ private:
 		return FALSE;
 	};
 
-	void DrawCursor(HDC hDc, RECT & rcPos, BOOL drawRect = FALSE)
+	void DrawCursor(HDC hDc, RECT & rcPos, BOOL drawRect = FALSE) const
 	{
 		if (drawRect == TRUE) {
 			if (isFocusRect() == TRUE) {
@@ -582,7 +582,7 @@ private:
 		InvalidateNotepad();
 	};
 
-	void EnsureVisible(UINT iItem, UINT iSubItem)
+	void EnsureVisible(UINT iItem, UINT iSubItem) const
 	{
 		RECT	rcView = { 0 };
 		RECT	rcSubItem = { 0 };

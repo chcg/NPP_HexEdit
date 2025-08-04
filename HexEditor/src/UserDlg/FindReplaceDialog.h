@@ -87,7 +87,7 @@ private:
 	void onFind(BOOL isVolatile);
 	void onReplace(void);
 	void changeCoding(void);
-	void getSelText(tComboInfo* info);
+	void getSelText(tComboInfo* info) const;
 	void processAll(UINT process);
 
 	BOOL isChecked(int id) const {
