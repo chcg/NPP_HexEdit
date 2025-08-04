@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#include <windows.h>
 #include <algorithm>
 #include <stdexcept>
 #include <shlwapi.h>
@@ -334,7 +335,7 @@ wstring purgeMenuItemString(const wchar_t * menuItemStr, bool keepAmpersand)
 }
 
 
-const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t codepage, int lenMbcs, int* pLenWc, int* pBytesNotProcessed)
+const wchar_t* WcharMbcsConvertor::char2wchar(const char* mbcs2Convert, size_t codepage, int lenMbcs, int* pLenWc, int* pBytesNotProcessed)
 {
 	// Do not process NULL pointer
 	if (!mbcs2Convert)
@@ -359,12 +360,12 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 	// Otherwise, test if we are cutting a multi-byte character at end of buffer
 	else if (lenMbcs != -1 && cp == CP_UTF8) // For UTF-8, we know how to test it
 	{
-		int indexOfLastChar = Utf8::characterStart(mbcs2Convert, lenMbcs-1); // get index of last character
-		if (indexOfLastChar != 0 && !Utf8::isValid(mbcs2Convert+indexOfLastChar, lenMbcs-indexOfLastChar)) // if it is not valid we do not process it right now (unless its the only character in string, to ensure that we always progress, e.g. that bytesNotProcessed < lenMbcs)
+		int indexOfLastChar = Utf8::characterStart(mbcs2Convert, lenMbcs - 1); // get index of last character
+		if (indexOfLastChar != 0 && !Utf8::isValid(mbcs2Convert + indexOfLastChar, lenMbcs - indexOfLastChar)) // if it is not valid we do not process it right now (unless its the only character in string, to ensure that we always progress, e.g. that bytesNotProcessed < lenMbcs)
 		{
-			bytesNotProcessed = lenMbcs-indexOfLastChar;
+			bytesNotProcessed = lenMbcs - indexOfLastChar;
 		}
-		lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, NULL, 0);
+		lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs - bytesNotProcessed, NULL, 0);
 	}
 	else // For other encodings, ask system if there are any invalid characters; note that it will not correctly know if last character is cut when there are invalid characters inside the text
 	{
@@ -372,7 +373,7 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 		if (lenWc == 0 && GetLastError() == ERROR_NO_UNICODE_TRANSLATION)
 		{
 			// Test without last byte
-			if (lenMbcs > 1) lenWc = MultiByteToWideChar(cp, MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs-1, NULL, 0);
+			if (lenMbcs > 1) lenWc = MultiByteToWideChar(cp, MB_ERR_INVALID_CHARS, mbcs2Convert, lenMbcs - 1, NULL, 0);
 			if (lenWc == 0) // don't have to check that the error is still ERROR_NO_UNICODE_TRANSLATION, since only the length parameter changed
 			{
 				// TODO: should warn user about incorrect loading due to invalid characters
@@ -385,12 +386,20 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 				bytesNotProcessed = 1;
 			}
 		}
+		else if (lenWc == 0)
+		{
+			lenWc = MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs, NULL, 0);
+		}
 	}
 
 	if (lenWc > 0)
 	{
 		_wideCharStr.sizeTo(lenWc);
-		MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs-bytesNotProcessed, _wideCharStr, lenWc);
+		MultiByteToWideChar(cp, 0, mbcs2Convert, lenMbcs - bytesNotProcessed, _wideCharStr, lenWc);
+		if (lenMbcs == -1)
+			_wideCharStr[lenWc - 1] = '\0';
+		else
+			_wideCharStr[lenWc] = '\0';
 	}
 	else
 		_wideCharStr.empty();
@@ -406,22 +415,37 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 
 // "mstart" and "mend" are pointers to indexes in mbcs2Convert,
 // which are converted to the corresponding indexes in the returned wchar_t string.
-const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend)
+const wchar_t* WcharMbcsConvertor::char2wchar(const char* mbcs2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend, int mbcsLen)
 {
 	// Do not process NULL pointer
 	if (!mbcs2Convert) return NULL;
+
+	if (mbcsLen == 0 || (mbcsLen == -1 && mbcs2Convert[0] == 0))
+	{
+		_wideCharStr.empty();
+		*mstart = 0;
+		*mend = 0;
+		return _wideCharStr;
+	}
+
 	UINT cp = static_cast<UINT>(codepage);
-	int len = MultiByteToWideChar(cp, 0, mbcs2Convert, -1, NULL, 0);
+	int len = MultiByteToWideChar(cp, 0, mbcs2Convert, mbcsLen ? mbcsLen : -1, NULL, 0);
+
 	if (len > 0)
 	{
 		_wideCharStr.sizeTo(len);
-		len = MultiByteToWideChar(cp, 0, mbcs2Convert, -1, _wideCharStr, len);
+		len = MultiByteToWideChar(cp, 0, mbcs2Convert, mbcsLen ? mbcsLen : -1, _wideCharStr, len);
+		if (mbcsLen == -1) // added
+			_wideCharStr[len - 1] = '\0';
+		else
+			_wideCharStr[len] = '\0';
 
-		if ((size_t)*mstart < strlen(mbcs2Convert) && (size_t)*mend <= strlen(mbcs2Convert))
+		intptr_t mbcsLen2 = mbcsLen ? mbcsLen : (intptr_t)strlen(mbcs2Convert);
+		if (*mstart < mbcsLen2 && *mend <= mbcsLen2)
 		{
 			*mstart = MultiByteToWideChar(cp, 0, mbcs2Convert, static_cast<int>(*mstart), _wideCharStr, 0);
-			*mend   = MultiByteToWideChar(cp, 0, mbcs2Convert, static_cast<int>(*mend), _wideCharStr, 0);
-			if (*mstart >= len || *mend >= len)
+			*mend = MultiByteToWideChar(cp, 0, mbcs2Convert, static_cast<int>(*mend), _wideCharStr, 0);
+			if (*mstart >= len || *mend > len)
 			{
 				*mstart = 0;
 				*mend = 0;
@@ -438,10 +462,16 @@ const wchar_t * WcharMbcsConvertor::char2wchar(const char * mbcs2Convert, size_t
 }
 
 
-const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, int lenWc, int* pLenMbcs)
+const char* WcharMbcsConvertor::wchar2char(const wchar_t* wcharStr2Convert, size_t codepage, int lenWc, int* pLenMbcs)
 {
 	if (!wcharStr2Convert)
 		return nullptr;
+
+	if (lenWc == 0 || (lenWc == -1 && wcharStr2Convert[0] == 0))
+	{
+		_multiByteStr.empty();
+		return _multiByteStr;
+	}
 
 	UINT cp = static_cast<UINT>(codepage);
 	int lenMbcs = WideCharToMultiByte(cp, 0, wcharStr2Convert, lenWc, NULL, 0, NULL, NULL);
@@ -449,6 +479,10 @@ const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, siz
 	{
 		_multiByteStr.sizeTo(lenMbcs);
 		WideCharToMultiByte(cp, 0, wcharStr2Convert, lenWc, _multiByteStr, lenMbcs, NULL, NULL);
+		if (lenWc == -1)
+			_multiByteStr[lenMbcs - 1] = '\0';
+		else
+			_multiByteStr[lenMbcs] = '\0';
 	}
 	else
 		_multiByteStr.empty();
@@ -459,23 +493,38 @@ const char* WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, siz
 }
 
 
-const char * WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend)
+const char* WcharMbcsConvertor::wchar2char(const wchar_t* wcharStr2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend, int wcharLenIn, int* lenOut)
 {
 	if (!wcharStr2Convert)
 		return nullptr;
 
+	if (wcharLenIn == 0 || (wcharLenIn == -1 && wcharStr2Convert[0] == 0))
+	{
+		_multiByteStr.empty();
+		*mstart = 0;
+		*mend = 0;
+		return _multiByteStr;
+	}
+
 	UINT cp = static_cast<UINT>(codepage);
-	int len = WideCharToMultiByte(cp, 0, wcharStr2Convert, -1, NULL, 0, NULL, NULL);
+
+	int len = WideCharToMultiByte(cp, 0, wcharStr2Convert, wcharLenIn ? wcharLenIn : -1, NULL, 0, NULL, NULL);
+
 	if (len > 0)
 	{
 		_multiByteStr.sizeTo(len);
-		len = WideCharToMultiByte(cp, 0, wcharStr2Convert, -1, _multiByteStr, len, NULL, NULL); // not needed?
+		len = WideCharToMultiByte(cp, 0, wcharStr2Convert, wcharLenIn ? wcharLenIn : -1, _multiByteStr, len, NULL, NULL);
+		if (wcharLenIn == -1)
+			_multiByteStr[len - 1] = '\0';
+		else
+			_multiByteStr[len] = '\0';
 
-        if (*mstart < lstrlenW(wcharStr2Convert) && *mend < lstrlenW(wcharStr2Convert))
-        {
+		intptr_t wcharLenIn2 = wcharLenIn ? wcharLenIn : (intptr_t)wcslen(wcharStr2Convert);
+		if (*mstart < wcharLenIn2 && *mend < wcharLenIn2)
+		{
 			*mstart = WideCharToMultiByte(cp, 0, wcharStr2Convert, (int)*mstart, NULL, 0, NULL, NULL);
 			*mend = WideCharToMultiByte(cp, 0, wcharStr2Convert, (int)*mend, NULL, 0, NULL, NULL);
-			if (*mstart >= len || *mend >= len)
+			if (*mstart >= len || *mend > len)
 			{
 				*mstart = 0;
 				*mend = 0;
@@ -483,8 +532,14 @@ const char * WcharMbcsConvertor::wchar2char(const wchar_t * wcharStr2Convert, si
 		}
 	}
 	else
+	{
 		_multiByteStr.empty();
+		*mstart = 0;
+		*mend = 0;
+	}
 
+	if (lenOut)
+		*lenOut = len;
 	return _multiByteStr;
 }
 
@@ -1209,7 +1264,7 @@ bool isCertificateValidated(const wstring & fullFilePath, const wstring & subjec
 	catch (...)
 	{
 		// Unknown error
-		wstring errorMessage = L"Unknown exception occured. ";
+		wstring errorMessage = L"Unknown exception occurred. ";
 		errorMessage += GetLastErrorAsString(GetLastError());
 		MessageBox(NULL, errorMessage.c_str(), L"Certificate checking", MB_OK);
 	}
@@ -1272,7 +1327,7 @@ bool deleteFileOrFolder(const wstring& f2delete)
 	return (res == 0);
 }
 
-// Get a vector of full file paths in a given folder. File extension type filter should be *.*, *.xml, *.dll... according the type of file you want to get.  
+// Get a vector of full file paths in a given folder. File extension type filter should be *.*, *.xml, *.dll... according to the type of file you want to get.  
 void getFilesInFolder(std::vector<wstring>& files, const wstring& extTypeFilter, const wstring& inFolder)
 {
 	wstring filter = inFolder;
@@ -1466,6 +1521,31 @@ bool removeReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath)
 	return (::SetFileAttributes(fileFullPath, dwFileAttribs) != FALSE);
 }
 
+// return false when failed, otherwise true and then the isChangedToReadOnly output will be set
+// accordingly to the changed file R/O-state
+bool toggleReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath, bool& isChangedToReadOnly)
+{
+	DWORD dwFileAttribs = ::GetFileAttributes(fileFullPath);
+	if (dwFileAttribs == INVALID_FILE_ATTRIBUTES || (dwFileAttribs & FILE_ATTRIBUTE_DIRECTORY))
+		return false;
+
+	if (dwFileAttribs & FILE_ATTRIBUTE_READONLY)
+		dwFileAttribs &= ~FILE_ATTRIBUTE_READONLY;
+	else
+		dwFileAttribs |= FILE_ATTRIBUTE_READONLY;
+	
+	if (::SetFileAttributes(fileFullPath, dwFileAttribs))
+	{
+		isChangedToReadOnly = (dwFileAttribs & FILE_ATTRIBUTE_READONLY) != 0;
+		return true;
+	}
+	else
+	{
+		// probably the ERROR_ACCESS_DENIED (5) (TODO: UAC-prompt candidate)
+		return false;
+	}
+}
+
 // "For file I/O, the "\\?\" prefix to a path string tells the Windows APIs to disable all string parsing
 // and to send the string that follows it straight to the file system..."
 // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-file-namespaces
@@ -1533,15 +1613,14 @@ bool isUnsupportedFileName(const wstring& fileName)
 
 			if (!invalidASCIIChar)
 			{
-				// strip input string to a filename without a possible path and extension(s)
+				// strip input string to a filename without a possible path and/or ending dot-char
 				wstring fileNameOnly;
-				size_t pos = fileName.find_first_of(L".");
-				if (pos != std::string::npos)
-					fileNameOnly = fileName.substr(0, pos);
+				if (fileName.ends_with(L'.'))
+					fileNameOnly = fileName.substr(0, fileName.rfind(L"."));
 				else
 					fileNameOnly = fileName;
 
-				pos = fileNameOnly.find_last_of(L"\\");
+				size_t pos = fileNameOnly.find_last_of(L"\\");
 				if (pos == std::string::npos)
 					pos = fileNameOnly.find_last_of(L"/");
 				if (pos != std::string::npos)
@@ -1732,13 +1811,13 @@ int Version::compareTo(const Version& v2c) const
 
 bool Version::isCompatibleTo(const Version& from, const Version& to) const
 {
-	// This method determinates if Version object is in between "from" version and "to" version, it's useful for testing compatibility of application.
+	// This method determines if Version object is in between "from" version and "to" version, it's useful for testing compatibility of application.
 	// test in versions <from, to> example: 
 	// 1. <0.0.0.0, 0.0.0.0>: both from to versions are empty, so it's 
 	// 2. <6.9, 6.9>: plugin is compatible to only v6.9
 	// 3. <4.2, 6.6.6>: from v4.2 (included) to v6.6.6 (included)
 	// 4. <0.0.0.0, 8.2.1>: all version until v8.2.1 (included)
-	// 5. <8.3, 0.0.0.0>: from v8.3 (included) to the latest verrsion
+	// 5. <8.3, 0.0.0.0>: from v8.3 (included) to the latest version
 	
 	if (empty()) // if this version is empty, then no compatible to all version
 		return false;
@@ -1909,3 +1988,174 @@ bool doesPathExist(const wchar_t* path, DWORD milliSec2wait, bool* isTimeoutReac
 }
 
 NOT USED by HEXEDIT*/
+
+#if defined(__GNUC__)
+#define LAMBDA_STDCALL __attribute__((__stdcall__))
+#else
+#define LAMBDA_STDCALL 
+#endif
+
+// check if the window rectangle intersects with any currently active monitor's working area
+// (this func handles also possible extended monitors mode aka the MS Virtual Screen)
+bool isWindowVisibleOnAnyMonitor(const RECT& rectWndIn)
+{
+	struct Param4InOut
+	{
+		const RECT& rectWndIn;
+		bool isWndVisibleOut = false;
+	};
+
+	// callback func to check for intersection with each existing monitor
+	auto callback = []([[maybe_unused]] HMONITOR hMon, [[maybe_unused]] HDC hdc, LPRECT lprcMon, LPARAM lpInOut) -> BOOL LAMBDA_STDCALL
+	{
+		Param4InOut* paramInOut = reinterpret_cast<Param4InOut*>(lpInOut);
+		RECT rectIntersection{};
+		if (::IntersectRect(&rectIntersection, &(paramInOut->rectWndIn), lprcMon))
+		{
+			paramInOut->isWndVisibleOut = true; // the window is at least partially visible on this monitor
+			return FALSE; // ok, stop the enumeration
+		}
+		return TRUE; // continue enumeration as no intersection yet
+	};
+
+	// get scaled Virtual Screen size (scaled coordinates are saved by the Notepad++ into config.xml)
+	// - for unscaled, one has to 1st set the SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2) & then use GetSystemMetricsForDpi with 96
+	// - for getting the VS RECT, we cannot use here the SystemParametersInfo with SPI_GETWORKAREA!
+	//   (while the SPI_SETWORKAREA is working with the VS coordinates the SPI_GETWORKAREA not...)
+	RECT rectVirtualScreen{ ::GetSystemMetrics(SM_XVIRTUALSCREEN), ::GetSystemMetrics(SM_YVIRTUALSCREEN),
+		::GetSystemMetrics(SM_CXVIRTUALSCREEN), ::GetSystemMetrics(SM_CYVIRTUALSCREEN) }; 
+
+	// 1) Before checking for intersections with individual monitors, we verify if the window's rectangle
+	//    is within the MS Virtual Screen area. If it is outside, this func exits with false early,
+	//    as the window in question cannot be visible on any individual monitor present.
+	RECT rectIntersection{};
+	if (!::IntersectRect(&rectIntersection, &rectWndIn, &rectVirtualScreen))
+	{
+		// the window in question is completely outside the overall Virtual Screen bounds
+		return false;
+	}
+
+	// 2) Using the EnumDisplayMonitors WINAPI to check each present monitor's visible area, we ensure that we are only looking
+	//    at monitors that are part of the Virtual Screen but not at Virtual Space coordinates where is NOT a monitor present.
+	Param4InOut param4InOut{ rectWndIn, false };
+	::EnumDisplayMonitors(NULL, &rectVirtualScreen, callback, reinterpret_cast<LPARAM>(&param4InOut));
+	return param4InOut.isWndVisibleOut;
+}
+
+#pragma warning(disable:4996) // 'GetVersionExW': was declared deprecated
+bool isCoreWindows()
+{
+	bool isCoreWindows = false;
+
+	// older Windows (Windows Server 2008 R2-) check 1st
+	OSVERSIONINFOEXW osviex{};
+	osviex.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
+	if (::GetVersionEx(reinterpret_cast<LPOSVERSIONINFOW>(&osviex)))
+	{
+		DWORD dwReturnedProductType = 0;
+		if (::GetProductInfo(osviex.dwMajorVersion, osviex.dwMinorVersion, osviex.wServicePackMajor, osviex.wServicePackMinor, &dwReturnedProductType))
+		{
+			switch (dwReturnedProductType)
+			{
+				case PRODUCT_STANDARD_SERVER_CORE:
+				case PRODUCT_STANDARD_A_SERVER_CORE:
+				case PRODUCT_STANDARD_SERVER_CORE_V:
+				case PRODUCT_STANDARD_SERVER_SOLUTIONS_CORE:
+				case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE:
+				case PRODUCT_ENTERPRISE_SERVER_CORE:
+				case PRODUCT_ENTERPRISE_SERVER_CORE_V:
+				case PRODUCT_DATACENTER_SERVER_CORE:
+				case PRODUCT_DATACENTER_A_SERVER_CORE:
+				case PRODUCT_DATACENTER_SERVER_CORE_V:
+				case PRODUCT_STORAGE_STANDARD_SERVER_CORE:
+				case PRODUCT_STORAGE_WORKGROUP_SERVER_CORE:
+				case PRODUCT_STORAGE_ENTERPRISE_SERVER_CORE:
+				case PRODUCT_STORAGE_EXPRESS_SERVER_CORE:
+				case PRODUCT_WEB_SERVER_CORE:
+					isCoreWindows = true;
+			}
+		}
+	}
+
+	if (!isCoreWindows)
+	{
+		// in Core Server 2012+, the recommended way to determine is via the Registry
+		HKEY hKey = nullptr;
+		if (::RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+			0, KEY_READ, &hKey) == ERROR_SUCCESS)
+		{
+			constexpr size_t bufLen = 127;
+			wchar_t wszBuf[bufLen + 1]{}; // +1 ... to be always NULL-terminated string
+			DWORD dataSize = sizeof(wchar_t) * bufLen;
+			if (::RegQueryValueExW(hKey, L"InstallationType", nullptr, nullptr, reinterpret_cast<LPBYTE>(&wszBuf), &dataSize) == ERROR_SUCCESS)
+			{
+				if (lstrcmpiW(wszBuf, L"Server Core") == 0)
+					isCoreWindows = true;
+			}
+			::RegCloseKey(hKey);
+			hKey = nullptr;
+		}
+	}
+
+	return isCoreWindows;
+}
+
+bool ControlInfoTip::init(HINSTANCE hInst, HWND ctrl2attached, HWND ctrl2attachedParent, const wstring& tipStr, bool isRTL, unsigned int remainTimeMillisecond /* = 0 */)
+{
+	_hWndInfoTip = CreateWindowEx(isRTL ? WS_EX_LAYOUTRTL : 0, TOOLTIPS_CLASS, NULL,
+		WS_POPUP | TTS_ALWAYSTIP | TTS_BALLOON,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		ctrl2attachedParent, NULL,
+		hInst, NULL);
+
+	if (!_hWndInfoTip)
+		return false;
+
+	_toolInfo.cbSize = sizeof(_toolInfo);
+	_toolInfo.hwnd = ctrl2attachedParent;
+	_toolInfo.uFlags = TTF_IDISHWND | TTF_TRACK;
+	_toolInfo.uId = (UINT_PTR)ctrl2attached;
+	_toolInfo.lpszText = const_cast<PTSTR>(tipStr.c_str());
+
+	if (!SendMessage(_hWndInfoTip, TTM_ADDTOOL, 0, (LPARAM)&_toolInfo))
+	{
+		::DestroyWindow(_hWndInfoTip);
+		_hWndInfoTip = nullptr;
+		return false;
+	}
+
+	SendMessage(_hWndInfoTip, TTM_SETMAXTIPWIDTH, 0, 200);
+	SendMessage(_hWndInfoTip, TTM_ACTIVATE, TRUE, 0);
+
+	if (remainTimeMillisecond)
+		SetTimer(ctrl2attachedParent, IDT_HIDE_TOOLTIP, remainTimeMillisecond, NULL);
+
+	return true;
+}
+
+void ControlInfoTip::show() const
+{
+	if (!isValid())	return;
+
+	RECT rcComboBox;
+	GetWindowRect(reinterpret_cast<HWND>(_toolInfo.uId), &rcComboBox);
+
+	int xPos = rcComboBox.left + (rcComboBox.right - rcComboBox.left) / 2;
+	int yPos = rcComboBox.top + 25;
+
+	SendMessage(_hWndInfoTip, TTM_TRACKPOSITION, 0, MAKELPARAM(xPos, yPos));
+	SendMessage(_hWndInfoTip, TTM_TRACKACTIVATE, (WPARAM)TRUE, (LPARAM)&_toolInfo);
+}
+
+void ControlInfoTip::hide()
+{
+	if (_hWndInfoTip)
+	{
+		SendMessage(_hWndInfoTip, TTM_TRACKACTIVATE, (WPARAM)FALSE, (LPARAM)&_toolInfo);
+		DestroyWindow(_hWndInfoTip);
+		_hWndInfoTip = nullptr;
+	}
+}
+
+#pragma warning(default:4996)

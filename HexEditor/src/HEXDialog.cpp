@@ -3820,7 +3820,7 @@ void HexEdit::SetSelection(UINT posBegin, UINT posEnd, eSel selection, BOOL isEN
 			_pCurProp->cursorPos = (posEnd % _pCurProp->bits) * FACTOR;
 		}
 
-		/* correction for corsor view */
+		/* correction for cursor view */
 		if ((_pCurProp->cursorPos == 0) && (isEND == TRUE)) {
 			_pCurProp->cursorSubItem = DUMP_FIELD;
 			_pCurProp->cursorPos = VIEW_ROW;
@@ -4480,11 +4480,11 @@ void HexEdit::ConvertSelHEXToNpp(void)
 //https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/ScintillaComponent/ScintillaEditView.cpp
 void HexEdit::getText(char* dest, size_t start, size_t end) const
 {
-	Sci_TextRange tr{};
+	Sci_TextRangeFull tr{};
 	tr.chrg.cpMin = static_cast<Sci_PositionCR>(start);
 	tr.chrg.cpMax = static_cast<Sci_PositionCR>(end);
 	tr.lpstrText = dest;
-	execute(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+	execute(SCI_GETTEXTRANGEFULL, 0, reinterpret_cast<LPARAM>(&tr));
 }
 
 char* HexEdit::getWordFromRange(char* txt, size_t size, size_t pos1, size_t pos2)
@@ -4529,7 +4529,7 @@ char* HexEdit::getSelectedText(char* txt, size_t size, bool expand)
 {
 	if (!size)
 		return NULL;
-	Sci_CharacterRange range = getSelection();
+	Sci_CharacterRangeFull range = getSelection();
 	if (range.cpMax == range.cpMin && expand)
 	{
 		expandWordSelection();

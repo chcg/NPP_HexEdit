@@ -618,20 +618,20 @@ void CleanScintillaBuf(HWND hWnd)
  */
 UINT ScintillaGetText(char *text, INT start, INT end)
 {
-	Sci_TextRange tr{};
+	Sci_TextRangeFull tr{};
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
 	tr.lpstrText = text;
-	return (UINT)ScintillaMsg(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+	return (UINT)ScintillaMsg(SCI_GETTEXTRANGEFULL, 0, reinterpret_cast<LPARAM>(&tr));
 }
 
 UINT ScintillaGetText(HWND hWnd, char *text, INT start, INT end)
 {
-	Sci_TextRange tr{};
+	Sci_TextRangeFull tr{};
 	tr.chrg.cpMin = start;
 	tr.chrg.cpMax = end;
 	tr.lpstrText = text;
-	return (UINT)::SendMessage(hWnd, SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+	return (UINT)::SendMessage(hWnd, SCI_GETTEXTRANGEFULL, 0, reinterpret_cast<LPARAM>(&tr));
 }
 
 
@@ -1075,10 +1075,10 @@ void SystemUpdate(void)
 
 			if (isAllocOk == TRUE)
 			{
-				::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMESPRIMARY, (WPARAM)fileNames1, (LPARAM)docCnt1);
+				::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMESPRIMARY_DEPRECATED, (WPARAM)fileNames1, (LPARAM)docCnt1);
 				hexEdit1.UpdateDocs(fileNames1, docCnt1, openDoc1);
 
-				::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMESSECOND, (WPARAM)fileNames2, (LPARAM)docCnt2);
+				::SendMessage(nppData._nppHandle, NPPM_GETOPENFILENAMESSECOND_DEPRECATED, (WPARAM)fileNames2, (LPARAM)docCnt2);
 				hexEdit2.UpdateDocs(fileNames2, docCnt2, openDoc2);
 
 				/* update edit */

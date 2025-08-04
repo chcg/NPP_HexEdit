@@ -65,8 +65,8 @@ public:
 			::DeleteObject(_hFont);
 		}
 	};
-	Sci_CharacterRange getSelection() const {
-		Sci_CharacterRange crange;
+	Sci_CharacterRangeFull getSelection() const {
+		Sci_CharacterRangeFull crange{};
 		crange.cpMin = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONSTART));
 		crange.cpMax = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONEND));
 		return crange;

@@ -1,5 +1,5 @@
 // This file is part of Notepad++ project
-// Copyright (C)2024 Don HO <don.h@free.fr>
+// Copyright (C)2025 Don HO <don.h@free.fr>
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@
     #define    IDM_FILE_OPEN_FOLDER                      (IDM_FILE + 19)
     #define    IDM_FILE_OPEN_CMD                         (IDM_FILE + 20)
     #define    IDM_FILE_RESTORELASTCLOSEDFILE            (IDM_FILE + 21)
-    #define    IDM_FILE_OPENFOLDERASWORSPACE             (IDM_FILE + 22)
+    #define    IDM_FILE_OPENFOLDERASWORKSPACE            (IDM_FILE + 22)
     #define    IDM_FILE_OPEN_DEFAULT_VIEWER              (IDM_FILE + 23)
     #define    IDM_FILE_CLOSEALL_UNCHANGED               (IDM_FILE + 24)
     #define    IDM_FILE_CONTAININGFOLDERASWORKSPACE      (IDM_FILE + 25)
@@ -110,12 +110,12 @@
     #define    IDM_MACRO_SAVECURRENTMACRO                       (IDM_EDIT + 25)
     #define    IDM_EDIT_RTL                                     (IDM_EDIT + 26)
     #define    IDM_EDIT_LTR                                     (IDM_EDIT + 27)
-    #define    IDM_EDIT_SETREADONLY                             (IDM_EDIT + 28)
+    #define    IDM_EDIT_TOGGLEREADONLY                          (IDM_EDIT + 28)
     #define    IDM_EDIT_FULLPATHTOCLIP                          (IDM_EDIT + 29)
     #define    IDM_EDIT_FILENAMETOCLIP                          (IDM_EDIT + 30)
     #define    IDM_EDIT_CURRENTDIRTOCLIP                        (IDM_EDIT + 31)
     #define    IDM_MACRO_RUNMULTIMACRODLG                       (IDM_EDIT + 32)
-    #define    IDM_EDIT_CLEARREADONLY                           (IDM_EDIT + 33)
+    #define    IDM_EDIT_TOGGLESYSTEMREADONLY                    (IDM_EDIT + 33)
     #define    IDM_EDIT_COLUMNMODE                              (IDM_EDIT + 34)
     #define    IDM_EDIT_BLOCK_COMMENT_SET                       (IDM_EDIT + 35)
     #define    IDM_EDIT_BLOCK_UNCOMMENT                         (IDM_EDIT + 36)
@@ -182,6 +182,8 @@
     #define    IDM_EDIT_MULTISELECTNEXTMATCHCASEWHOLEWORD       (IDM_EDIT + 97)
     #define    IDM_EDIT_MULTISELECTUNDO                         (IDM_EDIT + 98)
     #define    IDM_EDIT_MULTISELECTSSKIP                        (IDM_EDIT + 99)
+    #define    IDM_EDIT_SORTLINES_LOCALE_ASCENDING              (IDM_EDIT + 100)
+    #define    IDM_EDIT_SORTLINES_LOCALE_DESCENDING             (IDM_EDIT + 101)
 
     #define    IDM_EDIT_AUTOCOMPLETE                            (50000 + 0)
     #define    IDM_EDIT_AUTOCOMPLETE_CURRENTFILE                (50000 + 1)
@@ -281,17 +283,17 @@
     //#define    IDM_VIEW_REDUCETABBAR              (IDM_VIEW + 5)
     //#define    IDM_VIEW_LOCKTABBAR                (IDM_VIEW + 6) 
     //#define    IDM_VIEW_DRAWTABBAR_TOPBAR         (IDM_VIEW + 7)
-    //#define    IDM_VIEW_DRAWTABBAR_INACIVETAB     (IDM_VIEW + 8) 
+    //#define    IDM_VIEW_DRAWTABBAR_INACTIVETAB    (IDM_VIEW + 8) 
     #define    IDM_VIEW_POSTIT                    (IDM_VIEW + 9)
     #define    IDM_VIEW_FOLDALL                   (IDM_VIEW + 10)
     #define    IDM_VIEW_DISTRACTIONFREE           (IDM_VIEW + 11)
     //#define    IDM_VIEW_LINENUMBER                (IDM_VIEW + 12)
     //#define    IDM_VIEW_SYMBOLMARGIN              (IDM_VIEW + 13)
-    //#define    IDM_VIEW_FOLDERMAGIN               (IDM_VIEW + 14)
-    //#define    IDM_VIEW_FOLDERMAGIN_SIMPLE        (IDM_VIEW + 15)
-    //#define    IDM_VIEW_FOLDERMAGIN_ARROW         (IDM_VIEW + 16)
-    //#define    IDM_VIEW_FOLDERMAGIN_CIRCLE        (IDM_VIEW + 17)
-    //#define    IDM_VIEW_FOLDERMAGIN_BOX           (IDM_VIEW + 18)
+    //#define    IDM_VIEW_FOLDERMARGIN              (IDM_VIEW + 14)
+    //#define    IDM_VIEW_FOLDERMARGIN_SIMPLE       (IDM_VIEW + 15)
+    //#define    IDM_VIEW_FOLDERMARGIN_ARROW        (IDM_VIEW + 16)
+    //#define    IDM_VIEW_FOLDERMARGIN_CIRCLE       (IDM_VIEW + 17)
+    //#define    IDM_VIEW_FOLDERMARGIN_BOX          (IDM_VIEW + 18)
     #define    IDM_VIEW_ALL_CHARACTERS            (IDM_VIEW + 19)
     #define    IDM_VIEW_INDENT_GUIDE              (IDM_VIEW + 20)
     //#define    IDM_VIEW_CURLINE_HILITING          (IDM_VIEW + 21)
@@ -469,7 +471,6 @@
     #define    IDM_FORMAT_KOI8R_CYRILLIC    (IDM_FORMAT_ENCODE + 48)
     #define    IDM_FORMAT_ENCODE_END        IDM_FORMAT_KOI8R_CYRILLIC
     
-    //#define    IDM_FORMAT_CONVERT           200
 
 #define    IDM_LANG    (IDM + 6000)
     #define    IDM_LANGSTYLE_CONFIG_DLG    (IDM_LANG + 1)
@@ -563,12 +564,14 @@
     #define    IDM_LANG_GOLANG             (IDM_LANG + 89)
     #define    IDM_LANG_RAKU               (IDM_LANG + 90)
     #define    IDM_LANG_TOML               (IDM_LANG + 91)
-    
+    #define    IDM_LANG_SAS                (IDM_LANG + 92)
+    #define    IDM_LANG_ERRORLIST          (IDM_LANG + 93)
+
     #define    IDM_LANG_EXTERNAL           (IDM_LANG + 165)
     #define    IDM_LANG_EXTERNAL_LIMIT     (IDM_LANG + 179)
 
     #define    IDM_LANG_USER               (IDM_LANG + 180)     //46180: Used for translation
-    #define    IDM_LANG_USER_LIMIT         (IDM_LANG + 210)     //46210: Ajust with IDM_LANG_USER
+    #define    IDM_LANG_USER_LIMIT         (IDM_LANG + 210)     //46210: Adjust with IDM_LANG_USER
     #define    IDM_LANG_USER_DLG           (IDM_LANG + 250)     //46250: Used for translation
     #define    IDM_LANG_OPENUDLDIR         (IDM_LANG + 300)
     #define    IDM_LANG_UDLCOLLECTION_PROJECT_SITE   (IDM_LANG + 301)
@@ -582,7 +585,7 @@
     #define    IDM_FORUM            (IDM_ABOUT  + 4)
     //#define    IDM_PLUGINSHOME      (IDM_ABOUT  + 5)
     #define    IDM_UPDATE_NPP       (IDM_ABOUT  + 6)
-    #define    IDM_WIKIFAQ          (IDM_ABOUT  + 7)
+    //#define    IDM_WIKIFAQ          (IDM_ABOUT  + 7)
     //#define    IDM_HELP             (IDM_ABOUT  + 8)
     #define    IDM_CONFUPDATERPROXY (IDM_ABOUT  + 9)
     #define    IDM_CMDLINEARGUMENTS (IDM_ABOUT  + 10)
@@ -592,7 +595,7 @@
 
 #define    IDM_SETTING    (IDM + 8000)
 //    #define    IDM_SETTING_TAB_SIZE                 (IDM_SETTING + 1)
-//    #define    IDM_SETTING_TAB_REPLCESPACE          (IDM_SETTING + 2)
+//    #define    IDM_SETTING_TAB_REPLACESPACE         (IDM_SETTING + 2)
 //    #define    IDM_SETTING_HISTORY_SIZE             (IDM_SETTING + 3)
 //    #define    IDM_SETTING_EDGE_SIZE                (IDM_SETTING + 4)
     #define    IDM_SETTING_IMPORTPLUGIN             (IDM_SETTING + 5)

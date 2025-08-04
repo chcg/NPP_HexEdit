@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <windows.h>
+#include <commctrl.h>
 #include <iso646.h>
 #include <cstdint>
 #include <unordered_set>
@@ -48,7 +49,7 @@ const bool dirDown = false;
 #endif
 
 
-#define NPP_INTERNAL_FUCTION_STR L"Notepad++::InternalFunction"
+#define NPP_INTERNAL_FUNCTION_STR L"Notepad++::InternalFunction"
 
 
 std::wstring folderBrowser(HWND parent, const std::wstring & title = L"", int outputCtrlID = 0, const wchar_t *defaultStr = NULL);
@@ -87,17 +88,18 @@ public:
 		return instance;
 	}
 
-	const wchar_t * char2wchar(const char *mbStr, size_t codepage, int lenMbcs =-1, int* pLenOut=NULL, int* pBytesNotProcessed=NULL);
-	const wchar_t * char2wchar(const char *mbcs2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend);
-	const char * wchar2char(const wchar_t *wcStr, size_t codepage, int lenIn = -1, int* pLenOut = NULL);
-	const char * wchar2char(const wchar_t *wcStr, size_t codepage, intptr_t* mstart, intptr_t* mend);
+	const wchar_t* char2wchar(const char* mbStr, size_t codepage, int lenMbcs = -1, int* pLenOut = NULL, int* pBytesNotProcessed = NULL);
+	const wchar_t* char2wchar(const char* mbcs2Convert, size_t codepage, intptr_t* mstart, intptr_t* mend, int len = 0);
+	size_t getSizeW() { return _wideCharStr.size(); };
+	const char* wchar2char(const wchar_t* wcStr, size_t codepage, int lenIn = -1, int* pLenOut = NULL);
+	const char* wchar2char(const wchar_t* wcStr, size_t codepage, intptr_t* mstart, intptr_t* mend, int lenIn = 0, int* lenOut = nullptr);
+	size_t getSizeA() { return _multiByteStr.size(); };
 
-	const char * encode(UINT fromCodepage, UINT toCodepage, const char *txt2Encode, int lenIn = -1, int* pLenOut=NULL, int* pBytesNotProcessed=NULL)
-	{
+	const char* encode(UINT fromCodepage, UINT toCodepage, const char* txt2Encode, int lenIn = -1, int* pLenOut = NULL, int* pBytesNotProcessed = NULL) {
 		int lenWc = 0;
-        const wchar_t * strW = char2wchar(txt2Encode, fromCodepage, lenIn, &lenWc, pBytesNotProcessed);
-        return wchar2char(strW, toCodepage, lenWc, pLenOut);
-    }
+		const wchar_t* strW = char2wchar(txt2Encode, fromCodepage, lenIn, &lenWc, pBytesNotProcessed);
+		return wchar2char(strW, toCodepage, lenWc, pLenOut);
+	}
 
 protected:
 	WcharMbcsConvertor() = default;
@@ -112,45 +114,45 @@ protected:
 	WcharMbcsConvertor(WcharMbcsConvertor&&) = delete;
 	WcharMbcsConvertor& operator= (WcharMbcsConvertor&&) = delete;
 
-	template <class T>
-	class StringBuffer final
+	template <class T> class StringBuffer final
 	{
 	public:
 		~StringBuffer() { if (_allocLen) delete[] _str; }
 
-		void sizeTo(size_t size)
-		{
-			if (_allocLen < size)
+		void sizeTo(size_t size) {
+			if (_allocLen < size + 1)
 			{
 				if (_allocLen)
 					delete[] _str;
-				_allocLen = std::max<size_t>(size, initSize);
-				_str = new T[_allocLen];
+				_allocLen = std::max<size_t>(size + 1, initSize);
+				_str = new T[_allocLen]{};
 			}
+			_dataLen = size;
 		}
 
-		void empty()
-		{
+		void empty() {
 			static T nullStr = 0; // routines may return an empty string, with null terminator, without allocating memory; a pointer to this null character will be returned in that case
 			if (_allocLen == 0)
 				_str = &nullStr;
 			else
 				_str[0] = 0;
+			_dataLen = 0;
 		}
 
+		size_t size() const { return _dataLen; }
 		operator T* () { return _str; }
 		operator const T* () const { return _str; }
 
 	protected:
 		static const int initSize = 1024;
 		size_t _allocLen = 0;
+		size_t _dataLen = 0;
 		T* _str = nullptr;
 	};
 
 	StringBuffer<char> _multiByteStr;
 	StringBuffer<wchar_t> _wideCharStr;
 };
-
 
 #define REBARBAND_SIZE sizeof(REBARBANDINFO)
 
@@ -219,6 +221,7 @@ std::wstring getDateTimeStrFrom(const std::wstring& dateTimeFormat, const SYSTEM
 
 HFONT createFont(const wchar_t* fontName, int fontSize, bool isBold, HWND hDestParent);
 bool removeReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath);
+bool toggleReadOnlyFlagFromFileAttributes(const wchar_t* fileFullPath, bool& isChangedToReadOnly);
 
 bool isWin32NamespacePrefixedFileName(const std::wstring& fileName);
 bool isWin32NamespacePrefixedFileName(const wchar_t* szFileName);
@@ -288,3 +291,43 @@ BOOL getFileAttributesExWithTimeout(const wchar_t* filePath, WIN32_FILE_ATTRIBUT
 bool doesFileExist(const wchar_t* filePath, DWORD milliSec2wait = 0, bool* isTimeoutReached = nullptr);
 bool doesDirectoryExist(const wchar_t* dirPath, DWORD milliSec2wait = 0, bool* isTimeoutReached = nullptr);
 bool doesPathExist(const wchar_t* path, DWORD milliSec2wait = 0, bool* isTimeoutReached = nullptr);
+
+
+// check if the window rectangle intersects with any currently active monitor's working area
+bool isWindowVisibleOnAnyMonitor(const RECT& rectWndIn);
+
+bool isCoreWindows();
+
+
+#define IDT_HIDE_TOOLTIP 1001
+
+class ControlInfoTip final
+{
+public:
+	ControlInfoTip() {};
+	~ControlInfoTip() {
+		if (_hWndInfoTip) {
+			hide();
+		}
+	};
+	bool init(HINSTANCE hInst, HWND ctrl2attached, HWND ctrl2attachedParent, const std::wstring& tipStr, bool isRTL, unsigned int remainTimeMillisecond = 0); // remainTimeMillisecond = 0: no timeout
+
+	bool isValid() const {
+		return _hWndInfoTip != nullptr;
+	};
+
+	HWND getTipHandle() const {
+		return _hWndInfoTip;
+	};
+
+	void show() const;
+	
+	void hide();
+
+private:
+	HWND _hWndInfoTip = nullptr;
+	TOOLINFO _toolInfo = {};
+
+	ControlInfoTip(const ControlInfoTip&) = delete;
+	ControlInfoTip& operator=(const ControlInfoTip&) = delete;
+};

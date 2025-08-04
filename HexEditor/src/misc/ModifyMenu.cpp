@@ -176,11 +176,11 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 				case IDM_EDIT_PASTE:
 				case IDM_EDIT_DELETE:
 				case IDM_EDIT_SELECTALL:
-				case IDM_EDIT_SETREADONLY:
+				case IDM_EDIT_TOGGLEREADONLY:
 				case IDM_EDIT_FULLPATHTOCLIP:
 				case IDM_EDIT_FILENAMETOCLIP:
 				case IDM_EDIT_CURRENTDIRTOCLIP:
-				case IDM_EDIT_CLEARREADONLY:
+				case IDM_EDIT_TOGGLESYSTEMREADONLY:
 				case IDM_OPEN_ALL_RECENT_FILE:
 				case IDM_CLEAN_RECENT_FILE_LIST:
 				{
@@ -291,7 +291,7 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_VIEW));
 	}
 
-	/* activate/deactive menu entries */
+	/* activate/deactivate menu entries */
 	::EnableMenuItem(hMenu, MENUINDEX_FORMAT, MF_BYPOSITION | (toHexStyle ? MF_GRAYED : MF_ENABLED));
 	::EnableMenuItem(hMenu, MENUINDEX_LANGUAGE, MF_BYPOSITION | (toHexStyle ? MF_GRAYED : MF_ENABLED));
 	::EnableMenuItem(hMenu, MENUINDEX_MACRO, MF_BYPOSITION | (toHexStyle ? MF_GRAYED : MF_ENABLED));
