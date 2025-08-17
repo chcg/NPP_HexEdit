@@ -100,7 +100,7 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci);
 void StoreNppMenuInfo(HMENU hMenuItem, std::vector<tMenu> & vMenuInfo);
 void UpdateNppMenuInfo(HMENU hMenuItem, std::vector<tMenu> & vMenuInfo);
 UINT CreateNppMenu(HMENU & hMenuItem, std::vector<tMenu> & vMenuInfo, const UINT* idArray = NULL);
-void DestroyNppMenuHndl(HMENU hMenuItem);
+void DestroyNppMenuHndl(HMENU hMenuItem, const HMENU hRootMenuItem);
 void ClearMenuStructures(void);
 
 

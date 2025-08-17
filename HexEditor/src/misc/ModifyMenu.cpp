@@ -17,6 +17,7 @@
 
 #include "hex.h"
 #include "ModifyMenu.h"
+#include "PluginInterface.h"
 
 using namespace std;
 
@@ -51,7 +52,7 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 	if ((toHexStyle == isMenuHex) || (hSci != g_HSource))
 		return;
 
-	TCHAR	text[64];
+	TCHAR	text[menuItemSize];
 	HMENU hMenu = (HMENU)::SendMessage(hWnd, NPPM_INTERNAL_GETMENU, 0, 0);
 
 	if (hMenu == NULL)
@@ -141,9 +142,9 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 		}
 
 		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_FILE, text, 64, MF_BYPOSITION);
+		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_FILE), ::GetSubMenu(hMenu, MENUINDEX_FILE));  // This line must be executed first
+		::GetMenuString(hMenu, MENUINDEX_FILE, text, menuItemSize, MF_BYPOSITION);
 		::ModifyMenu(hMenu, MENUINDEX_FILE, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_FILE));
 	}
 
 	/* create own menu for EDIT */
@@ -204,9 +205,9 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 		}
 
 		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_EDIT, text, 64, MF_BYPOSITION);
+		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_EDIT), ::GetSubMenu(hMenu, MENUINDEX_EDIT));  // This line must be executed first
+		::GetMenuString(hMenu, MENUINDEX_EDIT, text, menuItemSize, MF_BYPOSITION);
 		::ModifyMenu(hMenu, MENUINDEX_EDIT, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_EDIT));
 	}
 
 	/* create own menu for SEARCH */
@@ -266,9 +267,9 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 		}
 
 		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_SEARCH, text, 64, MF_BYPOSITION);
+		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_SEARCH), ::GetSubMenu(hMenu, MENUINDEX_SEARCH));  // This line must be executed first
+		::GetMenuString(hMenu, MENUINDEX_SEARCH, text, menuItemSize, MF_BYPOSITION);
 		::ModifyMenu(hMenu, MENUINDEX_SEARCH, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_SEARCH));
 	}
 
 	/* create own menu for VIEW */
@@ -286,9 +287,9 @@ void ChangeNppMenu(HWND hWnd, BOOL toHexStyle, HWND hSci)
 		}
 
 		/* exchange menus */
-		::GetMenuString(hMenu, MENUINDEX_VIEW, text, 64, MF_BYPOSITION);
+		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_VIEW), ::GetSubMenu(hMenu, MENUINDEX_VIEW));  // This line must be executed first
+		::GetMenuString(hMenu, MENUINDEX_VIEW, text, menuItemSize, MF_BYPOSITION);
 		::ModifyMenu(hMenu, MENUINDEX_VIEW, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)hMenuTemp, text);
-		DestroyNppMenuHndl(::GetSubMenu(hMenu, MENUINDEX_VIEW));
 	}
 
 	/* activate/deactivate menu entries */
@@ -406,18 +407,31 @@ UINT CreateNppMenu(HMENU& hMenuItem, vector<tMenu>& vMenuInfo, const UINT* idArr
 }
 
 
-void DestroyNppMenuHndl(HMENU hMenuItem)
+void DestroyNppMenuHndl(HMENU hMenuItem, const HMENU hRootMenuItem)
 {
-	UINT	elemCnt = ::GetMenuItemCount(hMenuItem);
+	// The original version of this function had two issues:
+	// 1. It only recursively destroys all submenus (HMENU objects), but does not call RemoveMenu to remove the subitems from the menu. This causes the menu items to still appear in the UI, resulting in: menu items still visible but with no submenu or invalid entries.
+	// 2. It recursively destroys the top-level menus of the main menu (File, Edit, Search, View...), which causes significant changes in the menu appearance. (See the attached image)
 
-	for (UINT nPos = 0; nPos < elemCnt; nPos++)
+	// assert(hRootMenuItem != nullptr);
+	int elemCnt = ::GetMenuItemCount(hMenuItem);
+
+	// Delete from back to front to avoid index confusion
+	for (int nPos = elemCnt - 1; nPos >= 0; nPos--)
 	{
-		if (::GetMenuState(hMenuItem, nPos, MF_BYPOSITION) & MF_POPUP)
+		UINT state = ::GetMenuState(hMenuItem, nPos, MF_BYPOSITION);
+		if (state & MF_POPUP)
 		{
-			DestroyNppMenuHndl(::GetSubMenu(hMenuItem, nPos));
+			HMENU hSubMenu = ::GetSubMenu(hMenuItem, nPos);
+			DestroyNppMenuHndl(hSubMenu, hRootMenuItem);
 		}
+
+		// Remove the item, whether it's a popup or a normal item
+		::RemoveMenu(hMenuItem, nPos, MF_BYPOSITION);
 	}
-	::DestroyMenu(hMenuItem);
+
+	if (hMenuItem != hRootMenuItem)  // Do not destroy the main menu item here, otherwise the handle will change, causing significant visual differences in the menu.
+		::DestroyMenu(hMenuItem);
 }
 
 
@@ -431,7 +445,7 @@ void ClearMenuStructures(void)
 
 void GetShortCuts(HWND hWnd)
 {
-	TCHAR   text[64];
+	TCHAR   text[menuItemSize];
 	LPTSTR  pSc = NULL;
 	LPTSTR  pScKey = NULL;
 	UINT    max = sizeof(g_scList) / sizeof(tShortCut);
@@ -443,7 +457,7 @@ void GetShortCuts(HWND hWnd)
 	for (UINT i = 0; i < max; i++)
 	{
 		g_scList[i].isEnable = FALSE;
-		if (::GetMenuString(hMenu, g_scList[i].uID, text, 64, MF_BYCOMMAND) != 0)
+		if (::GetMenuString(hMenu, g_scList[i].uID, text, menuItemSize, MF_BYCOMMAND) != 0)
 		{
 			pSc = _tcsstr(text, _T("\t"));
 			if (pSc != NULL) {

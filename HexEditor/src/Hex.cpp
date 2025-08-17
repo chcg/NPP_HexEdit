@@ -289,6 +289,12 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			pCurHexEdit->doDialog();
 			break;
 		}
+		case NPPN_BUFFERACTIVATED:
+		{
+			//Fixed the issue where the second tab cannot switch to HEX mode
+			SystemUpdate();
+			break;
+		}
 		default:
 			break;
 		}
