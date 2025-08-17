@@ -67,8 +67,8 @@ public:
 	};
 	Sci_CharacterRangeFull getSelection() const {
 		Sci_CharacterRangeFull crange{};
-		crange.cpMin = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONSTART));
-		crange.cpMax = static_cast<Sci_PositionCR>(execute(SCI_GETSELECTIONEND));
+		crange.cpMin = static_cast<Sci_Position>(execute(SCI_GETSELECTIONSTART));
+		crange.cpMax = static_cast<Sci_Position>(execute(SCI_GETSELECTIONEND));
 		return crange;
 	};
 	void doDialog(BOOL toggle = FALSE);

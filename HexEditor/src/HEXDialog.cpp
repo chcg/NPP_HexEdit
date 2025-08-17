@@ -4481,8 +4481,8 @@ void HexEdit::ConvertSelHEXToNpp(void)
 void HexEdit::getText(char* dest, size_t start, size_t end) const
 {
 	Sci_TextRangeFull tr{};
-	tr.chrg.cpMin = static_cast<Sci_PositionCR>(start);
-	tr.chrg.cpMax = static_cast<Sci_PositionCR>(end);
+	tr.chrg.cpMin = static_cast<Sci_Position>(start);
+	tr.chrg.cpMax = static_cast<Sci_Position>(end);
 	tr.lpstrText = dest;
 	execute(SCI_GETTEXTRANGEFULL, 0, reinterpret_cast<LPARAM>(&tr));
 }
@@ -4535,9 +4535,9 @@ char* HexEdit::getSelectedText(char* txt, size_t size, bool expand)
 		expandWordSelection();
 		range = getSelection();
 	}
-	if (!(static_cast<Sci_PositionCR>(size) > (range.cpMax - range.cpMin)))	//there must be atleast 1 byte left for zero terminator
+	if (!(static_cast<Sci_Position>(size) > (range.cpMax - range.cpMin)))	//there must be atleast 1 byte left for zero terminator
 	{
-		range.cpMax = range.cpMin + (Sci_PositionCR)size - 1;	//keep room for zero terminator
+		range.cpMax = range.cpMin + (Sci_Position)size - 1;	//keep room for zero terminator
 	}
 	return getWordFromRange(txt, size, range.cpMin, range.cpMax);
 }
