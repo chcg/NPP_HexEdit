@@ -134,8 +134,8 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 				if (_pCurProp == NULL)
 					break;
 
-				RECT	rc = { 0 };
-				RECT	rcSubItem = { 0 };
+				RECT	rc {};
+				RECT	rcSubItem {};
 				LPNMLVCUSTOMDRAW lpCD = (LPNMLVCUSTOMDRAW)lParam;
 
 				switch (lpCD->nmcd.dwDrawStage)
@@ -211,7 +211,7 @@ INT_PTR CALLBACK HexEdit::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam
 						_rcMemDc = rc;
 
 						/* calculate header position */
-						RECT	rcHeader = { 0 };
+						RECT	rcHeader {};
 						::GetWindowRect(_hHeader, &rcHeader);
 						ScreenToClient(_hHeader, &rcHeader);
 
@@ -1075,7 +1075,7 @@ void HexEdit::Copy(void)
 		INT			length = 0;
 		INT			posBeg = 0;
 		INT			posEnd = 0;
-		tClipboard	clipboard = { 0 };
+		tClipboard	clipboard {};
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
@@ -1217,7 +1217,7 @@ void HexEdit::Cut(void)
 		INT			length = 0;
 		INT			posBeg = 0;
 		INT			posEnd = 0;
-		tClipboard	clipboard = { 0 };
+		tClipboard	clipboard {};
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
@@ -2287,8 +2287,8 @@ void HexEdit::Delete(void)
 
 void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 {
-	RECT		rc = { 0 };
-	SIZE		size = { 0 };
+	RECT		rc {};
+	SIZE		size {};
 	COLORREF    color = getColor(eColorType::HEX_COLOR_REG_TXT);
 	TCHAR		text[17]{};
 
@@ -2883,7 +2883,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 
 void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UINT beg, UINT length, eSelItem sel, eSelType type)
 {
-	SIZE		size = { 0 };
+	SIZE		size {};
 	UINT		diff = 0;
 	COLORREF	rgbBk = 0;
 	COLORREF	rgbTxt = 0;
@@ -3207,8 +3207,8 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
 	RECT		rc{};
 	TCHAR		text[129]{};
-	RECT		rcCursor = { 0 };
-	SIZE		size = { 0 };
+	RECT		rcCursor {};
+	SIZE		size {};
 	UINT		diff = VIEW_ROW;
 
 	/* get list informations */
@@ -3344,7 +3344,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 
 void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT length, eSelType type)
 {
-	SIZE		size = { 0 };
+	SIZE		size {};
 	COLORREF	rgbBk = 0;
 	COLORREF	rgbTxt = 0;
 	COLORREF	rgbTBkReg = getColor(eColorType::HEX_COLOR_REG_BK);
@@ -3962,8 +3962,8 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 	if ((_pCurProp->vBookmarks.size() == 0) && (length != 0))
 		return;
 
-	RECT	rcOld = { 0 };
-	RECT	rcNew = { 0 };
+	RECT	rcOld {};
+	RECT	rcNew {};
 
 	for (UINT i = 0; i < _pCurProp->vBookmarks.size(); i++)
 	{
@@ -4244,7 +4244,7 @@ void HexEdit::SetStatusBar(void)
 #ifdef ENABLE_FLICKERING_STATUSBAR_WITHOUT_51
 	if (_pCurProp && _pCurProp->isVisible == TRUE)
 	{
-		TCHAR buffer[64] = { 0 };
+		TCHAR buffer[64]{};
 
 		/* set mode */
 		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_TYPE, (LPARAM)_T("Hex Edit View"));
@@ -4597,7 +4597,7 @@ void HexEdit::CopyBinary(void)
 	INT			posBeg = 0;
 	INT			posEnd = 0;
 
-	tClipboard	clipboard = { 0 };
+	tClipboard	clipboard {};
 
 	hSciTgt = (HWND)::SendMessage(_hParent, NPPM_CREATESCINTILLAHANDLE, 0, (LPARAM)_hSelf);
 

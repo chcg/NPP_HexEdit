@@ -584,8 +584,8 @@ private:
 
 	void EnsureVisible(UINT iItem, UINT iSubItem) const
 	{
-		RECT	rcView = { 0 };
-		RECT	rcSubItem = { 0 };
+		RECT	rcView {};
+		RECT	rcSubItem {};
 
 		ListView_EnsureVisible(_hListCtrl, iItem, TRUE);
 

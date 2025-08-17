@@ -288,7 +288,7 @@ void FindReplaceDlg::updateDialog(void)
 	_pReplaceCombo->setDocCodePage(codepage);
 
 	/* get selected length */
-	tComboInfo	info = { 0 };
+	tComboInfo	info {};
 
 	getSelText(&info);
 	if (info.length != 0) {
@@ -313,7 +313,7 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 	BOOL		loopEnd = FALSE;
 	BOOL		doWrap = FALSE;
 	BOOL		wrapDone = FALSE;
-	tComboInfo	info = { 0 };
+	tComboInfo	info {};
 
 	if (_hSCI == NULL)
 	{
@@ -645,8 +645,8 @@ void FindReplaceDlg::processAll(UINT process)
 		} while (loopEnd == FALSE);
 	}
 
-	TCHAR	TEMP[128] = { 0 };
-	TCHAR	text[128] = { 0 };
+	TCHAR	TEMP[128] {};
+	TCHAR	text[128] {};
 
 	/* display result */
 	if (cnt == 0)

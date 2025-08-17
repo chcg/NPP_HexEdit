@@ -69,7 +69,7 @@ LRESULT MultiTypeCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 		if (g_clipboard.text != NULL)
 		{
-			tComboInfo	info = { 0 };
+			tComboInfo	info {};
 
 			info.length = g_clipboard.length;
 			memcpy(info.text, g_clipboard.text, info.length);
