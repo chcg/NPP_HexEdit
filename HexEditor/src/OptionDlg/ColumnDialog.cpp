@@ -36,7 +36,7 @@ UINT ColumnDlg::doDialogAddWidth(UINT width)
 
 INT_PTR CALLBACK ColumnDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 {
-	TCHAR	text[16];
+	TCHAR	text[16]{};
 
 	switch (Message)
 	{
@@ -53,6 +53,7 @@ INT_PTR CALLBACK ColumnDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 			::SetWindowText(_hSelf, _T("Address Width"));
 			NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("AddressWidth"));
 		}
+		::SendMessage(_hParent, NPPM_DARKMODESUBCLASSANDTHEME, static_cast<WPARAM>(NppDarkMode::dmfInit), reinterpret_cast<LPARAM>(_hSelf));
 		break;
 	}
 	case WM_COMMAND:
