@@ -1037,7 +1037,7 @@ void SystemUpdate(void)
 	OutputDebugString(_T("SystemUpdate\n"));
 
 	UINT		oldSC = currentSC;
-	TCHAR		pszNewPath[MAX_PATH] = { 0 };
+	TCHAR		pszNewPath[MAX_PATH] {};
 
 	/* update open files */
 	UpdateCurrentHScintilla();
@@ -1472,11 +1472,11 @@ eError replaceLittleToBig(HWND hTarget, HWND hSource, INT startSrc, INT startTgt
 
 void DoCompare(void)
 {
-	TCHAR		szFile[MAX_PATH];
+	TCHAR		szFile[MAX_PATH]{};
 	BOOL		doMatch = TRUE;
 	tHexProp	hexProp1 = hexEdit1.GetHexProp();
 	tHexProp	hexProp2 = hexEdit2.GetHexProp();
-	tCmpResult	cmpResult = { 0 };
+	tCmpResult	cmpResult {};
 
 	if ((hexProp1.bits != hexProp2.bits) || (hexProp1.columns != hexProp2.columns) || (hexProp1.isBin != hexProp2.isBin))
 	{
