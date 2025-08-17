@@ -86,7 +86,7 @@ LRESULT ColorCombo::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 }
 
 
-void ColorCombo::DrawColor(HDC hDcExt)
+void ColorCombo::DrawColor(HDC hDcExt) const
 {
 	HDC		hDc = NULL;
 	HBRUSH	hBrush = ::CreateSolidBrush(_rgbCol);

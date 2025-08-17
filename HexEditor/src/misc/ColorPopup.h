@@ -51,7 +51,7 @@ public:
 	virtual void destroy() override {
 		::DestroyWindow(_hSelf);
 	};
-	COLORREF getSelColor() { return _color; };
+	COLORREF getSelColor() const { return _color; };
 
 private:
 	HWND		_hNpp = nullptr;

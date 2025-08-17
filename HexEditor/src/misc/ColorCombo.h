@@ -59,14 +59,14 @@ public:
 		_rgbCol = rgbCol;
 		::RedrawWindow(_comboBoxInfo.hwndItem, &_comboBoxInfo.rcItem, NULL, TRUE);
 	};
-	void getColor(LPCOLORREF p_rgbCol) {
+	void getColor(LPCOLORREF p_rgbCol) const {
 		if (p_rgbCol != NULL) {
 			*p_rgbCol = _rgbCol;
 		}
 	};
 
 private:
-	void DrawColor(HDC hDcExt = NULL);
+	void DrawColor(HDC hDcExt = NULL) const;
 
 private:
 	HWND					_hNpp;
