@@ -64,8 +64,7 @@ BEGIN
     CTEXT           "At first, I would like to thank Don for his great program and his support to create this plugin. Also I would like to thank Vitaliy and\nRichard Mant for their support.",
                     IDC_STATIC_THX,7,67,216,25
     CTEXT           "HEX-Editor Plugin for Notepad++ v8.8.3                       v0.9.13",
-                    IDC_STATIC,7,7,216,17,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME |
-                    WS_EX_TRANSPARENT
+                    IDC_STATIC,7,7,216,17,SS_CENTERIMAGE, WS_EX_TRANSPARENT
     LTEXT           "https://sourceforge.net/projects/npp-plugins",
                     IDC_NPP_PLUGINS_URL,65,52,158,9
     LTEXT           "URL:",IDC_STATIC,12,52,21,9
