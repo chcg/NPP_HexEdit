@@ -32,7 +32,7 @@ jobs:
 
     - name: Archive artifacts for ${{ matrix.build_platform }}
       if: matrix.build_configuration == 'Release'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
           name: HexEditor_${{ steps.tagName.outputs.tag }}_${{ matrix.build_platform }}.zip
           path: HexEditor_${{ steps.tagName.outputs.tag }}_${{ matrix.build_platform }}.zip
