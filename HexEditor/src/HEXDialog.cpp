@@ -3127,11 +3127,14 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 }
 #pragma warning(pop)
 
-
 BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 {
-	// For raw byte input (like Alt+03), use the raw value directly
 	BYTE byteValue = (BYTE)(wParam & 0xFF);
+
+	// Convert ASCII digits to their numeric byte values in dump view
+	if (byteValue >= '0' && byteValue <= '9') {
+		byteValue = byteValue - '0';  // Convert '0'-'9' to 0-9
+	}
 
 	switch (byteValue)
 	{
@@ -3163,14 +3166,14 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 		}
 
 		if (_currLength != GetCurrentPos()) {
-			/* update text - use raw byte value */
+			/* update text - use converted byte value */
 			SciSubClassWrp::execute(SCI_SETTARGETSTART, posBeg);
 			SciSubClassWrp::execute(SCI_SETTARGETEND, posBeg + 1);
 			SciSubClassWrp::execute(SCI_REPLACETARGET, 1, (LPARAM)&byteValue);
 			SciSubClassWrp::execute(SCI_SETSEL, posBeg + 1, posBeg + 1);
 		}
 		else {
-			/* add char - use raw byte value */
+			/* add char - use converted byte value */
 			if (_pCurProp->isLittle == TRUE) {
 				SciSubClassWrp::execute(SCI_SETCURRENTPOS, _currLength - (_currLength % _pCurProp->bits));
 			}
@@ -3190,7 +3193,6 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 	}
 	return TRUE;
 }
-
 void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
 	RECT rc{};
