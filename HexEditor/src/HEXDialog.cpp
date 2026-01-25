@@ -1882,25 +1882,20 @@ void HexEdit::AddressConvert(LPSTR text, INT length)
 
 void HexEdit::DumpConvert(LPSTR text, UINT length)
 {
+	// Convert to wide characters but store in a way that preserves the mapping
+	static wchar_t wideBuffer[129];
+
 	if (_pCurProp->isLittle == FALSE)
 	{
-		// Convert each byte to its Unicode representation
-		wchar_t wideTemp[129];
 		for (UINT i = 0; i < length; i++)
 		{
 			unsigned char byte = (unsigned char)text[i];
-			wideTemp[i] = cp437_to_unicode[byte];
+			wideBuffer[i] = cp437_to_unicode[byte];
 		}
-		wideTemp[length] = L'\0';
-
-		// Convert back to multibyte for display
-		WideCharToMultiByte(CP_UTF8, 0, wideTemp, length + 1, text, 129, NULL, NULL);
+		wideBuffer[length] = L'\0';
 	}
 	else
 	{
-		wchar_t wideTemp[129];
-		char* pText = text;
-
 		UINT offset = length % _pCurProp->bits;
 		UINT max = length / _pCurProp->bits + (offset ? 1 : 0);
 
@@ -1912,14 +1907,14 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 			for (UINT j = 1; j <= blockSize && widePos < length; j++)
 			{
 				unsigned char byte = (unsigned char)text[_pCurProp->bits * i - j];
-				wideTemp[widePos++] = cp437_to_unicode[byte];
+				wideBuffer[widePos++] = cp437_to_unicode[byte];
 			}
 		}
-		wideTemp[widePos] = L'\0';
-
-		// Convert back to multibyte for display
-		WideCharToMultiByte(CP_UTF8, 0, wideTemp, widePos + 1, text, 129, NULL, NULL);
+		wideBuffer[widePos] = L'\0';
 	}
+
+	// Store pointer to wide buffer in text (hack but works)
+	*((wchar_t**)text) = wideBuffer;
 }
 
 
@@ -3197,29 +3192,54 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 	}
 	return TRUE;
 }
-
 void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
-	RECT		rc{};
-	TCHAR		text[129]{};
-	RECT		rcCursor {};
-	SIZE		size {};
-	UINT		diff = VIEW_ROW;
+	RECT rc{};
+	TCHAR text[129]{};
+	RECT rcCursor{};
+	SIZE size{};
+	UINT diff = VIEW_ROW;
 
-	/* get list informations */
+	// Get list informations - but we'll override for dump
 	ListView_GetItemText(_hListCtrl, item, subItem, text, 129);
 	ListView_GetSubItemRect(_hListCtrl, item, subItem, LVIR_BOUNDS, &rc);
 
-	/* calculate cursor start position */
+	// For dump field, get the wide character representation
+	if (subItem == static_cast<int>(DUMP_FIELD))
+	{
+		CHAR rawText[129];
+		UINT posBeg = item * VIEW_ROW;
+
+		if ((posBeg + VIEW_ROW) <= _currLength)
+		{
+			ScintillaGetText(_hParentHandle, rawText, posBeg, posBeg + VIEW_ROW);
+			diff = VIEW_ROW;
+		}
+		else
+		{
+			ScintillaGetText(_hParentHandle, rawText, posBeg, _currLength);
+			diff = _currLength - posBeg;
+		}
+
+		// Convert to wide characters for display
+		wchar_t wideText[129];
+		for (UINT i = 0; i < diff; i++)
+		{
+			unsigned char byte = (unsigned char)rawText[i];
+			wideText[i] = cp437_to_unicode[byte];
+		}
+		wideText[diff] = L'\0';
+
+		// Copy to text buffer (assuming UNICODE build)
+		wcscpy(text, wideText);
+	}
+
+	// Rest of function remains the same, but now text contains proper Unicode
 	rc.left += 6;
 	rcCursor = rc;
 	rcCursor.right = rcCursor.left;
 
-	/* draw normal text */
-	if (static_cast<UINT>(ListView_GetItemCount(_hListCtrl)) == (item + 1)) {
-		diff = _currLength - (item * VIEW_ROW);
-		memset(&text[diff], 0x20, 129 - diff);
-	}
+	// Draw normal text - now with proper Unicode characters
 	DrawPartOfDumpText(hDc, rc, text, 0, diff, eSelType::HEX_COLOR_REG);
 
 	/* draw compare highlight */
