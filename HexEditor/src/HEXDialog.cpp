@@ -3130,12 +3130,10 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 
 BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 {
-#ifdef UNICODE
-	WCHAR	wText = (WCHAR)wParam;
-	::WideCharToMultiByte(CP_ACP, 0, (LPTSTR)&wText, -1, (LPSTR)&wParam, 1, NULL, NULL);
-#endif
+	// For raw byte input (like Alt+03), use the raw value directly
+	BYTE byteValue = (BYTE)(wParam & 0xFF);
 
-	switch (wParam)
+	switch (byteValue)
 	{
 	case 0x08:		/* Back     */
 	case 0x09:		/* TAB		*/
@@ -3165,18 +3163,18 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 		}
 
 		if (_currLength != GetCurrentPos()) {
-			/* update text */
+			/* update text - use raw byte value */
 			SciSubClassWrp::execute(SCI_SETTARGETSTART, posBeg);
 			SciSubClassWrp::execute(SCI_SETTARGETEND, posBeg + 1);
-			SciSubClassWrp::execute(SCI_REPLACETARGET, 1, (LPARAM)&wParam);
+			SciSubClassWrp::execute(SCI_REPLACETARGET, 1, (LPARAM)&byteValue);
 			SciSubClassWrp::execute(SCI_SETSEL, posBeg + 1, posBeg + 1);
 		}
 		else {
-			/* add char */
+			/* add char - use raw byte value */
 			if (_pCurProp->isLittle == TRUE) {
 				SciSubClassWrp::execute(SCI_SETCURRENTPOS, _currLength - (_currLength % _pCurProp->bits));
 			}
-			SciSubClassWrp::execute(SCI_ADDTEXT, 1, (LPARAM)&wParam);
+			SciSubClassWrp::execute(SCI_ADDTEXT, 1, (LPARAM)&byteValue);
 		}
 
 		_onChar = TRUE;
@@ -3192,6 +3190,7 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 	}
 	return TRUE;
 }
+
 void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
 	RECT rc{};
