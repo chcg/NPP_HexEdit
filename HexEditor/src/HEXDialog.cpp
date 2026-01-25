@@ -1884,46 +1884,41 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 {
 	if (_pCurProp->isLittle == FALSE)
 	{
-		/* i must be unsigned */
-		for (INT i = length - 1; i >= 0; --i)
+		// Convert each byte to its Unicode representation
+		wchar_t wideTemp[129];
+		for (UINT i = 0; i < length; i++)
 		{
-			text[i] = ascii[(UCHAR)text[i]];
+			unsigned char byte = (unsigned char)text[i];
+			wideTemp[i] = cp437_to_unicode[byte];
 		}
+		wideTemp[length] = L'\0';
+
+		// Convert back to multibyte for display
+		WideCharToMultiByte(CP_UTF8, 0, wideTemp, length + 1, text, 129, NULL, NULL);
 	}
 	else
 	{
-		CHAR	temp[129]{};
-		LPSTR	pText = text;
-
-		/* i must be unsigned */
-		for (UINT i = 0; i < length; i++)
-		{
-			temp[i] = ascii[(UCHAR)text[i]];
-		}
+		wchar_t wideTemp[129];
+		char* pText = text;
 
 		UINT offset = length % _pCurProp->bits;
-		UINT max = length / _pCurProp->bits + 1;
+		UINT max = length / _pCurProp->bits + (offset ? 1 : 0);
 
+		UINT widePos = 0;
 		for (UINT i = 1; i <= max; i++)
 		{
-			if (i == max)
+			UINT blockSize = (i == max && offset) ? offset : _pCurProp->bits;
+
+			for (UINT j = 1; j <= blockSize && widePos < length; j++)
 			{
-				for (UINT j = 1; j <= offset && j <= length; j++)
-				{
-					*pText = temp[length - j];
-					pText++;
-				}
-			}
-			else
-			{
-				for (UINT j = 1; j <= _pCurProp->bits; j++)
-				{
-					*pText = temp[_pCurProp->bits * i - j];
-					pText++;
-				}
+				unsigned char byte = (unsigned char)text[_pCurProp->bits * i - j];
+				wideTemp[widePos++] = cp437_to_unicode[byte];
 			}
 		}
-		*pText = NULL;
+		wideTemp[widePos] = L'\0';
+
+		// Convert back to multibyte for display
+		WideCharToMultiByte(CP_UTF8, 0, wideTemp, widePos + 1, text, 129, NULL, NULL);
 	}
 }
 
@@ -2319,7 +2314,7 @@ void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 	}
 
 	::SetTextColor(hDc, color);
-	::DrawText(hDc, text, _pCurProp->addWidth, &rc, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, text, _pCurProp->addWidth, &rc, DT_LEFT | DT_HEX_VIEW);
 }
 
 
@@ -2956,7 +2951,7 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 
 	/* draw text */
 	COLORREF rgbOldTxt = ::SetTextColor(hDc, rgbTxt);
-	::DrawText(hDc, &text[beg], diff, &rcText, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, &text[beg], diff, &rcText, DT_LEFT | DT_HEX_VIEW);
 	::SetTextColor(hDc, rgbOldTxt);
 }
 
@@ -3383,7 +3378,7 @@ void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT l
 
 	/* draw text */
 	COLORREF rgbOldTxt = ::SetTextColor(hDc, rgbTxt);
-	::DrawText(hDc, &text[beg], length, &rc, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, &text[beg], length, &rc, DT_LEFT | DT_HEX_VIEW);
 	::SetTextColor(hDc, rgbOldTxt);
 }
 
