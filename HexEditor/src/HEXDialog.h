@@ -37,7 +37,7 @@
 
 constexpr auto HEX_FIRST_TIME_VIS = (0xFFFFFFFF);
 
-#define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER)
+#define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER | DT_NOPREFIX)
 #define	VIEW_ROW			(_pCurProp->columns * _pCurProp->bits)
 #define FACTOR				((_pCurProp->isBin == TRUE)?8:2)
 #define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
