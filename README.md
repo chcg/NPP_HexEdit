@@ -4,6 +4,7 @@ Notepad++ Plugin Hexedit
 This is an unofficial repo with source code from:  
 https://sourceforge.net/projects/npp-plugins/files/Hex%20Editor/
 
+![dos-preview](ascii-dos-oem.png)
 
 Build Status
 ------------

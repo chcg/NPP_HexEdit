@@ -37,7 +37,7 @@
 
 constexpr auto HEX_FIRST_TIME_VIS = (0xFFFFFFFF);
 
-#define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX)
+#define DT_HEX_VIEW			(DT_SINGLELINE | DT_VCENTER | DT_NOPREFIX)
 #define	VIEW_ROW			(_pCurProp->columns * _pCurProp->bits)
 #define FACTOR				((_pCurProp->isBin == TRUE)?8:2)
 #define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
@@ -455,7 +455,8 @@ private:
 		if (hDc != NULL) {
 			_hFont = ::CreateFont(-MulDiv(g_iFontSize[_fontSize], GetDeviceCaps(hDc, LOGPIXELSY), 72) - zoomFactor, 0, 0, 0,
 				(isFontBold() == TRUE) ? FW_BOLD : FW_NORMAL, isFontItalic(), isFontUnderline(),
-				0, ANSI_CHARSET, OUT_TT_ONLY_PRECIS, 0, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, getFontName());
+				0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+				FIXED_PITCH | FF_DONTCARE, getFontName());
 			if (_hFont)
 			{
 				::SendMessage(_hListCtrl, WM_SETFONT, reinterpret_cast<WPARAM>(_hFont), 0);

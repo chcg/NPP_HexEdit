@@ -1882,49 +1882,39 @@ void HexEdit::AddressConvert(LPSTR text, INT length)
 
 void HexEdit::DumpConvert(LPSTR text, UINT length)
 {
+	// Convert to wide characters but store in a way that preserves the mapping
+	static wchar_t wideBuffer[129];
+
 	if (_pCurProp->isLittle == FALSE)
 	{
-		/* i must be unsigned */
-		for (INT i = length - 1; i >= 0; --i)
+		for (UINT i = 0; i < length; i++)
 		{
-			text[i] = ascii[(UCHAR)text[i]];
+			unsigned char byte = (unsigned char)text[i];
+			wideBuffer[i] = cp437_to_unicode[byte];
 		}
+		wideBuffer[length] = L'\0';
 	}
 	else
 	{
-		CHAR	temp[129]{};
-		LPSTR	pText = text;
-
-		/* i must be unsigned */
-		for (UINT i = 0; i < length; i++)
-		{
-			temp[i] = ascii[(UCHAR)text[i]];
-		}
-
 		UINT offset = length % _pCurProp->bits;
-		UINT max = length / _pCurProp->bits + 1;
+		UINT max = length / _pCurProp->bits + (offset ? 1 : 0);
 
+		UINT widePos = 0;
 		for (UINT i = 1; i <= max; i++)
 		{
-			if (i == max)
+			UINT blockSize = (i == max && offset) ? offset : _pCurProp->bits;
+
+			for (UINT j = 1; j <= blockSize && widePos < length; j++)
 			{
-				for (UINT j = 1; j <= offset && j <= length; j++)
-				{
-					*pText = temp[length - j];
-					pText++;
-				}
-			}
-			else
-			{
-				for (UINT j = 1; j <= _pCurProp->bits; j++)
-				{
-					*pText = temp[_pCurProp->bits * i - j];
-					pText++;
-				}
+				unsigned char byte = (unsigned char)text[_pCurProp->bits * i - j];
+				wideBuffer[widePos++] = cp437_to_unicode[byte];
 			}
 		}
-		*pText = NULL;
+		wideBuffer[widePos] = L'\0';
 	}
+
+	// Store pointer to wide buffer in text (hack but works)
+	*((wchar_t**)text) = wideBuffer;
 }
 
 
@@ -2319,7 +2309,7 @@ void HexEdit::DrawAddressText(HDC hDc, DWORD iItem)
 	}
 
 	::SetTextColor(hDc, color);
-	::DrawText(hDc, text, _pCurProp->addWidth, &rc, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, text, _pCurProp->addWidth, &rc, DT_LEFT | DT_HEX_VIEW);
 }
 
 
@@ -2956,7 +2946,7 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 
 	/* draw text */
 	COLORREF rgbOldTxt = ::SetTextColor(hDc, rgbTxt);
-	::DrawText(hDc, &text[beg], diff, &rcText, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, &text[beg], diff, &rcText, DT_LEFT | DT_HEX_VIEW);
 	::SetTextColor(hDc, rgbOldTxt);
 }
 
@@ -3137,15 +3127,16 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 }
 #pragma warning(pop)
 
-
 BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 {
-#ifdef UNICODE
-	WCHAR	wText = (WCHAR)wParam;
-	::WideCharToMultiByte(CP_ACP, 0, (LPTSTR)&wText, -1, (LPSTR)&wParam, 1, NULL, NULL);
-#endif
+	BYTE byteValue = (BYTE)(wParam & 0xFF);
 
-	switch (wParam)
+	// Convert ASCII digits to their numeric byte values in dump view
+	if (byteValue >= '0' && byteValue <= '9') {
+		byteValue = byteValue - '0';  // Convert '0'-'9' to 0-9
+	}
+
+	switch (byteValue)
 	{
 	case 0x08:		/* Back     */
 	case 0x09:		/* TAB		*/
@@ -3175,18 +3166,18 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 		}
 
 		if (_currLength != GetCurrentPos()) {
-			/* update text */
+			/* update text - use converted byte value */
 			SciSubClassWrp::execute(SCI_SETTARGETSTART, posBeg);
 			SciSubClassWrp::execute(SCI_SETTARGETEND, posBeg + 1);
-			SciSubClassWrp::execute(SCI_REPLACETARGET, 1, (LPARAM)&wParam);
+			SciSubClassWrp::execute(SCI_REPLACETARGET, 1, (LPARAM)&byteValue);
 			SciSubClassWrp::execute(SCI_SETSEL, posBeg + 1, posBeg + 1);
 		}
 		else {
-			/* add char */
+			/* add char - use converted byte value */
 			if (_pCurProp->isLittle == TRUE) {
 				SciSubClassWrp::execute(SCI_SETCURRENTPOS, _currLength - (_currLength % _pCurProp->bits));
 			}
-			SciSubClassWrp::execute(SCI_ADDTEXT, 1, (LPARAM)&wParam);
+			SciSubClassWrp::execute(SCI_ADDTEXT, 1, (LPARAM)&byteValue);
 		}
 
 		_onChar = TRUE;
@@ -3202,29 +3193,54 @@ BOOL HexEdit::OnCharDump(WPARAM wParam, LPARAM lParam)
 	}
 	return TRUE;
 }
-
 void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 {
-	RECT		rc{};
-	TCHAR		text[129]{};
-	RECT		rcCursor {};
-	SIZE		size {};
-	UINT		diff = VIEW_ROW;
+	RECT rc{};
+	TCHAR text[129]{};
+	RECT rcCursor{};
+	SIZE size{};
+	UINT diff = VIEW_ROW;
 
-	/* get list informations */
+	// Get list informations - but we'll override for dump
 	ListView_GetItemText(_hListCtrl, item, subItem, text, 129);
 	ListView_GetSubItemRect(_hListCtrl, item, subItem, LVIR_BOUNDS, &rc);
 
-	/* calculate cursor start position */
+	// For dump field, get the wide character representation
+	if (subItem == static_cast<int>(DUMP_FIELD))
+	{
+		CHAR rawText[129];
+		UINT posBeg = item * VIEW_ROW;
+
+		if ((posBeg + VIEW_ROW) <= _currLength)
+		{
+			ScintillaGetText(_hParentHandle, rawText, posBeg, posBeg + VIEW_ROW);
+			diff = VIEW_ROW;
+		}
+		else
+		{
+			ScintillaGetText(_hParentHandle, rawText, posBeg, _currLength);
+			diff = _currLength - posBeg;
+		}
+
+		// Convert to wide characters for display
+		wchar_t wideText[129];
+		for (UINT i = 0; i < diff; i++)
+		{
+			unsigned char byte = (unsigned char)rawText[i];
+			wideText[i] = cp437_to_unicode[byte];
+		}
+		wideText[diff] = L'\0';
+
+		// Copy to text buffer (assuming UNICODE build)
+		wcscpy(text, wideText);
+	}
+
+	// Rest of function remains the same, but now text contains proper Unicode
 	rc.left += 6;
 	rcCursor = rc;
 	rcCursor.right = rcCursor.left;
 
-	/* draw normal text */
-	if (static_cast<UINT>(ListView_GetItemCount(_hListCtrl)) == (item + 1)) {
-		diff = _currLength - (item * VIEW_ROW);
-		memset(&text[diff], 0x20, 129 - diff);
-	}
+	// Draw normal text - now with proper Unicode characters
 	DrawPartOfDumpText(hDc, rc, text, 0, diff, eSelType::HEX_COLOR_REG);
 
 	/* draw compare highlight */
@@ -3383,7 +3399,7 @@ void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT l
 
 	/* draw text */
 	COLORREF rgbOldTxt = ::SetTextColor(hDc, rgbTxt);
-	::DrawText(hDc, &text[beg], length, &rc, DT_LEFT | DT_HEX_VIEW);
+	::DrawTextW(hDc, &text[beg], length, &rc, DT_LEFT | DT_HEX_VIEW);
 	::SetTextColor(hDc, rgbOldTxt);
 }
 
