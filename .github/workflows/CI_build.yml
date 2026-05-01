@@ -38,7 +38,7 @@ jobs:
           path: HexEditor_${{ steps.tagName.outputs.tag }}_${{ matrix.build_platform }}.zip
 
     - name: Create release on tagging
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       if: startsWith(github.ref, 'refs/tags/')
       with:
           files: HexEditor_${{ steps.tagName.outputs.tag }}_${{ matrix.build_platform }}.zip
