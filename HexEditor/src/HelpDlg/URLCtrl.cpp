@@ -182,7 +182,7 @@ LRESULT URLCtrl::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		    // Draw the text!
 			wchar_t szWinText[MAX_PATH] = { '\0' };
             ::GetWindowText(hwnd, szWinText, MAX_PATH);
-            ::DrawText(hdc, szWinText, -1, &rect, dwDTStyle);
+            ::DrawTextW(hdc, szWinText, -1, &rect, dwDTStyle);
 
             ::SelectObject(hdc, hOld);
 
