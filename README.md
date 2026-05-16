@@ -1,5 +1,5 @@
-# NPP_HexEdit
-Notepad++ Plugin Hexedit
+# NPP_HexEditor
+Notepad++ Plugin Hex-Editor
 
 This is an unofficial repo with source code from:  
 https://sourceforge.net/projects/npp-plugins/files/Hex%20Editor/
